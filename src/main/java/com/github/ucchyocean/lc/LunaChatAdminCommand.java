@@ -44,6 +44,8 @@ public class LunaChatAdminCommand implements CommandExecutor {
             return doRemove(sender, args);
         } else if ( args[0].equalsIgnoreCase("format") ) {
             return doFormat(sender, args);
+        } else if ( args[0].equalsIgnoreCase("moderator") ) {
+            return doModerator(sender, args);
         } else {
             printUsage(sender, label);
             return true;
@@ -151,7 +153,9 @@ public class LunaChatAdminCommand implements CommandExecutor {
         String format = "";
         if ( args.length >= 3 ) {
             name = args[1];
-            format = args[2];
+            for ( int i=2; i<args.length; i++ ) {
+                format = format + args[i] + " ";
+            }
         } else {
             sender.sendMessage(Utility.replaceColorCode(
                     PREERR + Resources.get("errmsgCommand")));
@@ -172,6 +176,53 @@ public class LunaChatAdminCommand implements CommandExecutor {
                 Utility.replaceColorCode(
                         PREINFO + Resources.get("cmdmsgFormat")),
                 format));
+        
+        return true;
+    }
+
+    /**
+     * モデレーターを設定する
+     * @param sender 
+     * @param args 
+     * @return
+     */
+    private boolean doModerator(CommandSender sender, String[] args) {
+
+        // 実行引数から、設定するチャンネルを取得する
+        String name = "";
+        String moderator = "";
+        if ( args.length >= 3 ) {
+            name = args[1];
+            moderator = args[2];
+        } else {
+            sender.sendMessage(Utility.replaceColorCode(
+                    PREERR + Resources.get("errmsgCommand")));
+            return true;
+        }
+        
+        // チャンネルが存在するかどうかをチェックする
+        ArrayList<String> channels = LunaChat.manager.getNames();
+        if ( !channels.contains(name) ) {
+            sender.sendMessage(Utility.replaceColorCode(
+                    PREERR + Resources.get("errmsgNotExist")));
+            return true;
+        }
+        
+        // チャンネルのメンバーかどうかをチェックする
+        Channel channel = LunaChat.manager.getChannel(name);
+        if ( !channel.members.contains(moderator) ) {
+            sender.sendMessage(Utility.replaceColorCode(
+                    PREERR + Resources.get("errmsgNomemberOther")));
+            return true;
+        }
+        
+        // 設定する
+        channel.moderator = moderator;
+        
+        sender.sendMessage(String.format(
+                Utility.replaceColorCode(
+                        PREINFO + Resources.get("cmdmsgModerator")),
+                name, moderator));
         
         return true;
     }

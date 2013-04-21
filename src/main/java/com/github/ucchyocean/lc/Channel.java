@@ -23,6 +23,9 @@ public class Channel {
     /** 参加者 */
     protected List<String> members;
     
+    /** チャンネルモデレータ */
+    protected String moderator;
+    
     /** BANされたプレイヤー */
     protected List<String> banned;
     
@@ -51,6 +54,7 @@ public class Channel {
         this.members = new ArrayList<String>();
         this.format = DEFAULT_FORMAT;
         this.banned = new ArrayList<String>();
+        this.moderator = "";
     }
     
     /**
@@ -65,6 +69,7 @@ public class Channel {
         this.members = members;
         this.format = DEFAULT_FORMAT;
         this.banned = new ArrayList<String>();
+        this.moderator = "";
     }
     
     /**
@@ -73,6 +78,15 @@ public class Channel {
      * @param message 発言をするメッセージ
      */
     protected void chat(Player player, String message) {
+        
+        // Japanize変換
+        if ( LunaChat.config.displayJapanize ) {
+            // 2byteコードを含まない場合にのみ、処理を行う
+            if ( message.getBytes().length == message.length() ) {
+                String kana = KanaConverter.conv(message);
+                message = message + "(" + kana + ")";
+            }
+        }
         
         String msg = format.replace("%ch", name);
         msg = msg.replace("%username", player.getDisplayName());
@@ -99,6 +113,9 @@ public class Channel {
      */
     protected void addMember(String name) {
         
+        if ( members.size() == 0 ) {
+            moderator = name;
+        }
         if ( !members.contains(name) ) {
             members.add(name);
             sendJoinQuitMessage(true, name);
@@ -112,10 +129,26 @@ public class Channel {
      */
     protected void removeMember(String name) {
         
-        if ( !members.contains(name) ) {
+        if ( moderator.equals(name) ) {
+            if ( members.size() > 0 ) {
+                String last = moderator;
+                moderator = members.get(0);
+                sendInformation(String.format(
+                        Utility.replaceColorCode(
+                                Resources.get("moderatorChangedMessage")),
+                        this.name, last, moderator));
+            } else {
+                moderator = "";
+            }
+        }
+        if ( members.contains(name) ) {
             members.remove(name);
             sendJoinQuitMessage(false, name);
-            LunaChat.manager.save();
+            if ( LunaChat.config.zeroMemberRemove && members.size() <= 0 ) {
+                LunaChat.manager.removeChannel(this.name);
+            } else {
+                LunaChat.manager.save();
+            }
         }
     }
     
@@ -136,17 +169,26 @@ public class Channel {
         msg = msg.replace("%username", player);
         msg = Utility.replaceColorCode(msg);
         
+        sendInformation(msg);
+    }
+    
+    /**
+     * 情報をチャンネルメンバーに流します。
+     * @param message メッセージ
+     */
+    private void sendInformation(String message) {
+        
         // オンラインのプレイヤーに送信する
         for ( String member : members ) {
             Player p = LunaChat.getPlayerExact(member);
             if ( p != null ) {
-                p.sendMessage(msg);
+                p.sendMessage(message);
             }
         }
         
         // ロギング
         if ( LunaChat.config.loggingChat ) {
-            LunaChat.log(msg);
+            LunaChat.log(message);
         }
     }
 }

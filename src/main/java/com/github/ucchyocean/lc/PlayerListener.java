@@ -62,11 +62,13 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
     
-        // チャンネルチャット情報を表示する
-        Player player = event.getPlayer();
-        ArrayList<String> list = LunaChat.manager.getList(player);
-        for ( String msg : list ) {
-            player.sendMessage(msg);
+        if ( LunaChat.config.showListOnJoin ) {
+            // チャンネルチャット情報を表示する
+            Player player = event.getPlayer();
+            ArrayList<String> list = LunaChat.manager.getList(player);
+            for ( String msg : list ) {
+                player.sendMessage(msg);
+            }
         }
     }
 }

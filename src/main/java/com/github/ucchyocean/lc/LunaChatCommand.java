@@ -100,9 +100,25 @@ public class LunaChatCommand implements CommandExecutor {
         // チャンネルが存在するかどうかをチェックする
         ArrayList<String> channels = LunaChat.manager.getNames();
         if ( !channels.contains(channelName) ) {
-            sender.sendMessage(Utility.replaceColorCode(
-                    PREERR + Resources.get("errmsgNotExist")));
-            return true;
+            if ( LunaChat.config.createChannelOnJoinCommand ) {
+                // 存在しないチャットには、チャンネルを作って入る設定の場合
+                
+                // チャンネル作成
+                Channel c = LunaChat.manager.createChannel(channelName, "");
+                c.addMember(((Player)sender).getName());
+                sender.sendMessage(String.format(
+                        Utility.replaceColorCode(
+                                PREINFO + Resources.get("cmdmsgCreate")),
+                        channelName));
+                return true;
+                
+            } else {
+                // 存在しないチャットには入れない設定の場合
+                
+                sender.sendMessage(Utility.replaceColorCode(
+                        PREERR + Resources.get("errmsgNotExist")));
+                return true;
+            }
         }
         
         
@@ -414,22 +430,19 @@ public class LunaChatCommand implements CommandExecutor {
             return true;
         }
         
-        // 指定されたユーザーが居ない場合は、エラーを表示して終了する
-        Player kicked = LunaChat.getPlayerExact(kickedName);
-        if ( kicked == null ) {
-            sender.sendMessage(String.format(
-                    Utility.replaceColorCode(
-                            PREERR + Resources.get("errmsgNotfoundPlayer")),
-                    kicked));
-            return true;
-        }
-        
         // デフォルト参加チャンネルを取得、取得できない場合はエラー表示して終了する
         Player kicker = (Player)sender;
         Channel channel = LunaChat.manager.getDefaultChannelByPlayer(kicker);
         if ( channel == null ) {
             sender.sendMessage(Utility.replaceColorCode(
                     PREERR + Resources.get("errmsgNoJoin")));
+            return true;
+        }
+        
+        // モデレーターかどうか確認する
+        if ( !kicker.getName().equals(channel.moderator) ) {
+            sender.sendMessage(Utility.replaceColorCode(
+                    PREERR + Resources.get("errmsgNotModerator")));
             return true;
         }
         
@@ -441,15 +454,20 @@ public class LunaChatCommand implements CommandExecutor {
         }
         
         // キック実行
+        Player kicked = LunaChat.getPlayerExact(kickedName);
         channel.removeMember(kickedName);
+        
         sender.sendMessage(String.format(
                 Utility.replaceColorCode(
                         PREINFO + Resources.get("cmdmsgKick")),
                 kickedName, channel.name));
-        kicked.sendMessage(String.format(
-                Utility.replaceColorCode(
-                        PREINFO + Resources.get("cmdmsgKicked")),
-                channel.name));
+        
+        if ( kicked != null ) {
+            kicked.sendMessage(String.format(
+                    Utility.replaceColorCode(
+                            PREINFO + Resources.get("cmdmsgKicked")),
+                    channel.name));
+        }
         
         return true;
     }
@@ -479,22 +497,19 @@ public class LunaChatCommand implements CommandExecutor {
             return true;
         }
         
-        // 指定されたユーザーが居ない場合は、エラーを表示して終了する
-        Player kicked = LunaChat.getPlayerExact(kickedName);
-        if ( kicked == null ) {
-            sender.sendMessage(String.format(
-                    Utility.replaceColorCode(
-                            PREERR + Resources.get("errmsgNotfoundPlayer")),
-                    kicked));
-            return true;
-        }
-        
         // デフォルト参加チャンネルを取得、取得できない場合はエラー表示して終了する
         Player kicker = (Player)sender;
         Channel channel = LunaChat.manager.getDefaultChannelByPlayer(kicker);
         if ( channel == null ) {
             sender.sendMessage(Utility.replaceColorCode(
                     PREERR + Resources.get("errmsgNoJoin")));
+            return true;
+        }
+        
+        // モデレーターかどうか確認する
+        if ( !kicker.getName().equals(channel.moderator) ) {
+            sender.sendMessage(Utility.replaceColorCode(
+                    PREERR + Resources.get("errmsgNotModerator")));
             return true;
         }
         
@@ -506,16 +521,20 @@ public class LunaChatCommand implements CommandExecutor {
         }
         
         // BAN実行
+        Player kicked = LunaChat.getPlayerExact(kickedName);
         channel.banned.add(kickedName);
         channel.removeMember(kickedName);
+
         sender.sendMessage(String.format(
                 Utility.replaceColorCode(
                         PREINFO + Resources.get("cmdmsgBan")),
                 kickedName, channel.name));
-        kicked.sendMessage(String.format(
-                Utility.replaceColorCode(
-                        PREINFO + Resources.get("cmdmsgBanned")),
-                channel.name));
+        if ( kicked != null ) {
+            kicked.sendMessage(String.format(
+                    Utility.replaceColorCode(
+                            PREINFO + Resources.get("cmdmsgBanned")),
+                    channel.name));
+        }
         
         return true;
     }

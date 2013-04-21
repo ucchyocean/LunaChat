@@ -36,6 +36,12 @@ public class LunaChatConfig {
     /** 全てのメンバーが退出したときに、チャンネルを削除するかどうか */
     protected boolean zeroMemberRemove;
     
+    /** ログイン時に、参加中チャンネルを表示するかどうか */
+    protected boolean showListOnJoin;
+    
+    /** /ch join コマンドで存在しないチャンネルを指定したときに、チャンネルを新規作成して入室するかどうか */
+    protected boolean createChannelOnJoinCommand;
+    
     /**
      * コンストラクタ
      */
@@ -56,13 +62,16 @@ public class LunaChatConfig {
         LunaChat.instance.reloadConfig();
         FileConfiguration config = LunaChat.instance.getConfig();
         
-        displayJapanize = config.getBoolean("displayJapanize", false);
+        displayJapanize = config.getBoolean("displayJapanize", true);
         noJoinAsGlobal = config.getBoolean("noJoinAsGlobal", true);
         loggingChat = config.getBoolean("loggingChat", true);
         globalMarker = config.getString("globalMarker", "!");
         autoLeavingOnMove = config.getBoolean("autoLeavingOnMove", false);
         autoLeavingOnQuit = config.getBoolean("autoLeavingOnQuit", false);
         zeroMemberRemove = config.getBoolean("zeroMemberRemove", false);
+        showListOnJoin = config.getBoolean("showListOnJoin", false);
+        createChannelOnJoinCommand = 
+                config.getBoolean("createChannelOnJoinCommand", true);
     }
 
     /**

@@ -3,10 +3,13 @@ defaultFormat: '&a[%ch]%username&a: %msg'
 joinMessage: '&a[%ch]&7%username さんがチャンネルチャットに参加しました。'
 quitMessage: '&a[%ch]&7%username さんがチャンネルチャットから退出しました。'
 breakupMessage: '&a[%s]&7チャンネルチャットが削除されました。'
+moderatorChangedMessage: '&a[%s]&7モデレータ %s さんが退出するので、%s さんが次のモデレータになりました。'
 
-listFirstLine: '&8---------- &3Channel List &8----------'
+listFirstLine: '&8---------- &bChannel List &8----------'
 listEndLine: '&8----------------------------------'
 listFormat: '&8| &f%s&8(&c%d&8/&c%d&8) &a%s'
+
+membersFirstLine: '&8---------- &bMember List &8----------'
 
 infoPrefix: '&7[LC]'
 errorPrefix: '&4[LC]'
@@ -28,6 +31,8 @@ cmdmsgReload: 'config.yml を再読み込みしました。'
 cmdmsgCreate: 'チャンネル %s を新規作成しました。'
 cmdmsgRemove: 'チャンネル %s を削除しました。'
 cmdmsgFormat: 'メッセージフォーマットを %s に設定しました。'
+cmdmsgModerator: 'チャンネル %s の %s さんをモデレーターに設定しました。'
+
 
 errmsgIngame: 'このコマンドはゲーム内からしか実行できません。'
 errmsgCommand: 'コマンドの指定が正しくありません。'
@@ -42,6 +47,8 @@ errmsgInvitedAlreadyExist: '招待された %s さんは、既にチャンネル
 errmsgInvitedAlreadyJoin: 'あなたは既にチャンネルに参加しています。'
 errmsgNoJoin: 'あなたは現在チャンネルに参加していません。'
 errmsgBanned: 'あなたはこのチャンネルからBANされています。'
+errmsgNotModerator: 'あなたはモデレーターではないため、そのコマンドを実行できません。'
+
 
 usageJoin: '&7/%s join (channel) - チャンネルに参加します。'
 usageLeave: '&7/%s leave - 参加しているチャンネルから退出します。'

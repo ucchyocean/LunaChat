@@ -1,12 +1,14 @@
-# LunaChat v1.0.0
+# LunaChat v1.1.0
 # @author     ucchy
 # @license    GPLv3
 # @copyright  Copyright ucchy 2013
 
-displayJapanize: false
+displayJapanize: true
 noJoinAsGlobal: true
 loggingChat: true
 globalMarker: '!'
-autoLeavingOnMove: false
-autoLeavingOnQuit: false
+# autoLeavingOnMove: false
+# autoLeavingOnQuit: false
 zeroMemberRemove: false
+showListOnJoin: false
+createChannelOnJoinCommand: true

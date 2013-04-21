@@ -35,6 +35,7 @@ public class ChannelManager {
     private static final String KEY_FORMAT = "format";
     private static final String KEY_MEMBERS = "members";
     private static final String KEY_BANNED = "banned";
+    private static final String KEY_MODERATOR = "moderator";
     
     private File file;
     private HashMap<String, Channel> channels;
@@ -113,6 +114,7 @@ public class ChannelManager {
         String format = section.getString(KEY_FORMAT, DEFAULT_FORMAT);
         List<String> members = section.getStringList(KEY_MEMBERS);
         List<String> banned = section.getStringList(KEY_BANNED);
+        String moderator = section.getString(KEY_MODERATOR, "");
         if ( members == null ) {
             members = new ArrayList<String>();
         }
@@ -120,6 +122,7 @@ public class ChannelManager {
         Channel channel = new Channel(name, desc, members);
         channel.format = format;
         channel.banned = banned;
+        channel.moderator = moderator;
         return channel;
     }
     
@@ -138,6 +141,7 @@ public class ChannelManager {
                 config.set("channels." + key + "." + KEY_FORMAT, channel.format);
                 config.set("channels." + key + "." + KEY_MEMBERS, channel.members);
                 config.set("channels." + key + "." + KEY_BANNED, channel.banned);
+                config.set("channels." + key + "." + KEY_MODERATOR, channel.moderator);
             }
             
             for ( String key : defaultChannels.keySet() ) {
@@ -150,6 +154,16 @@ public class ChannelManager {
             e.printStackTrace();
             return false;
         }
+    }
+    
+    /**
+     * チャンネルをアップデートする
+     * @param channel 
+     */
+    protected void updateChannel(Channel channel) {
+        String key = channel.name;
+        channels.put(key, channel);
+        save();
     }
     
     /**

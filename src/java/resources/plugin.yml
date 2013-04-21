@@ -1,6 +1,6 @@
 name: LunaChat
 main: com.github.ucchyocean.lc.LunaChat
-version: 1.0.0
+version: 1.1.0
 author: ucchy
 description: チャンネルチャットプラグイン
 commands:
@@ -14,6 +14,7 @@ commands:
            /<command> invite (channel) (name) - 指定した人をチャンネルチャットに招待します。
            /<command> accept - 招待を受けてチャンネルチャットに入室します。
            /<command> deny - 招待を拒否します。
+           /<command>
            /<command> kick (name) - 指定した人をチャンネルチャットからキックします。
            /<command> ban (name) - 指定した人をチャンネルチャットからBANします。
     permission: lunachat.user
@@ -26,6 +27,7 @@ commands:
            /<command> create (channel) [description] - チャンネルを作成します。
            /<command> remove (channel) - チャンネルを削除します。
            /<command> format (channel) (format) - チャンネルのメッセージフォーマットを設定します。
+           /<command> moderator (channel) (player) - チャンネルのモデレーターを指定したプレイヤーに設定します。
     permission: lunachat.admin
     permission-message: パーミッション "<permission>" が無いため、実行できません。
 permissions:
