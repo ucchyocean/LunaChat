@@ -21,7 +21,7 @@ public class LunaChatAdminCommand implements CommandExecutor {
     private static final String PREERR = Resources.get("errorPrefix");
     
     private static final String[] USAGE_KEYS = {
-        "usageReload", "usageCreate", "usageRemove"
+        "usageReload", "usageCreate", "usageRemove", "usageFormat"
     };
 
     /**
@@ -42,6 +42,8 @@ public class LunaChatAdminCommand implements CommandExecutor {
             return doCreate(sender, args);
         } else if ( args[0].equalsIgnoreCase("remove") ) {
             return doRemove(sender, args);
+        } else if ( args[0].equalsIgnoreCase("format") ) {
+            return doFormat(sender, args);
         } else {
             printUsage(sender, label);
             return true;
@@ -101,6 +103,12 @@ public class LunaChatAdminCommand implements CommandExecutor {
         return true;
     }
 
+    /**
+     * チャンネルの削除をする
+     * @param sender 
+     * @param args 
+     * @return
+     */
     private boolean doRemove(CommandSender sender, String[] args) {
 
         // 実行引数から、削除するチャンネルを取得する
@@ -127,6 +135,44 @@ public class LunaChatAdminCommand implements CommandExecutor {
                 Utility.replaceColorCode(
                         PREINFO + Resources.get("cmdmsgRemove")),
                 name));
+        return true;
+    }
+
+    /**
+     * チャンネルのメッセージフォーマットを設定する
+     * @param sender 
+     * @param args 
+     * @return
+     */
+    private boolean doFormat(CommandSender sender, String[] args) {
+
+        // 実行引数から、設定するチャンネルを取得する
+        String name = "";
+        String format = "";
+        if ( args.length >= 3 ) {
+            name = args[1];
+            format = args[2];
+        } else {
+            sender.sendMessage(Utility.replaceColorCode(
+                    PREERR + Resources.get("errmsgCommand")));
+            return true;
+        }
+        
+        // チャンネルが存在するかどうかをチェックする
+        ArrayList<String> channels = LunaChat.manager.getNames();
+        if ( !channels.contains(name) ) {
+            sender.sendMessage(Utility.replaceColorCode(
+                    PREERR + Resources.get("errmsgNotExist")));
+            return true;
+        }
+        
+        Channel channel = LunaChat.manager.getChannel(name);
+        channel.format = format;
+        sender.sendMessage(String.format(
+                Utility.replaceColorCode(
+                        PREINFO + Resources.get("cmdmsgFormat")),
+                format));
+        
         return true;
     }
 

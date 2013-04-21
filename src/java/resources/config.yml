@@ -4,7 +4,7 @@
 # @copyright  Copyright ucchy 2013
 
 displayJapanize: false
-noJoinAsGlobal: false
+noJoinAsGlobal: true
 loggingChat: true
 globalMarker: '!'
 autoLeavingOnMove: false

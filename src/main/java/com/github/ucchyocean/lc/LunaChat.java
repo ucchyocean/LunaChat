@@ -31,12 +31,19 @@ public class LunaChat extends JavaPlugin {
     @Override
     public void onEnable() {
 
+        // 変数などの初期化
         instance = this;
         config = new LunaChatConfig();
         manager = new ChannelManager();
         inviteMap = new HashMap<String, String>();
         inviterMap = new HashMap<String, String>();
+        
+        // リスナーの登録
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
+        
+        // コマンドの登録
+        getCommand("lunachat").setExecutor(new LunaChatCommand());
+        getCommand("lunachatadmin").setExecutor(new LunaChatAdminCommand());
     }
 
     /**

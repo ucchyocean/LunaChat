@@ -25,12 +25,13 @@ commands:
            /<command> reload - config.ymlの再読み込みをします。
            /<command> create (channel) [description] - チャンネルを作成します。
            /<command> remove (channel) - チャンネルを削除します。
+           /<command> format (channel) (format) - チャンネルのメッセージフォーマットを設定します。
     permission: lunachat.admin
     permission-message: パーミッション "<permission>" が無いため、実行できません。
 permissions:
   lunachat.user:
     description: lunachatのユーザーコマンドの使用権限
-    default: op
+    default: true
   lunachat.admin:
     description: lunachatの管理コマンドの使用権限
-    default: true
+    default: op

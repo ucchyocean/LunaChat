@@ -57,7 +57,7 @@ public class LunaChatConfig {
         FileConfiguration config = LunaChat.instance.getConfig();
         
         displayJapanize = config.getBoolean("displayJapanize", false);
-        noJoinAsGlobal = config.getBoolean("noJoinAsGlobal", false);
+        noJoinAsGlobal = config.getBoolean("noJoinAsGlobal", true);
         loggingChat = config.getBoolean("loggingChat", true);
         globalMarker = config.getString("globalMarker", "!");
         autoLeavingOnMove = config.getBoolean("autoLeavingOnMove", false);

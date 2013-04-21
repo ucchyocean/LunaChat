@@ -68,18 +68,29 @@ public class LunaChatCommand implements CommandExecutor {
     private boolean doJoin(CommandSender sender, String[] args) {
 
         // プレイヤーでなければ終了する
-        if ( sender instanceof Player ) {
+        if ( !(sender instanceof Player) ) {
             sender.sendMessage(Utility.replaceColorCode(
                     PREERR + Resources.get("errmsgIngame")));
             return true;
         }
         
         // 実行引数から、参加するチャンネルを取得する
-        String channel = "";
+        String channelName = "";
+        StringBuilder message = new StringBuilder();
         if ( !args[0].equalsIgnoreCase("join") ) {
-            channel = args[0];
+            channelName = args[0];
+            if ( args.length >= 2 ) {
+                for ( int i=1; i<args.length; i++ ) {
+                    message.append(args[i] + " ");
+                }
+            }
         } else if ( args.length >= 2 ) {
-            channel = args[1];
+            channelName = args[1];
+            if ( args.length >= 3 ) {
+                for ( int i=2; i<args.length; i++ ) {
+                    message.append(args[i] + " ");
+                }
+            }
         } else {
             sender.sendMessage(Utility.replaceColorCode(
                     PREERR + Resources.get("errmsgCommand")));
@@ -88,22 +99,46 @@ public class LunaChatCommand implements CommandExecutor {
         
         // チャンネルが存在するかどうかをチェックする
         ArrayList<String> channels = LunaChat.manager.getNames();
-        if ( !channels.contains(channel) ) {
+        if ( !channels.contains(channelName) ) {
             sender.sendMessage(Utility.replaceColorCode(
                     PREERR + Resources.get("errmsgNotExist")));
             return true;
         }
         
-        // チャンネルに参加する or 発言先を変更する
+        
+        // デフォルト発言先をチェックする
         Player player = (Player)sender;
-        Channel c = LunaChat.manager.getChannel(channel);
-        if ( c.members.contains(player.getName()) ) {
-            // TODO
+        Channel channel = LunaChat.manager.getChannel(channelName);
+        
+        // BANされていないか確認する
+        if ( channel.banned.contains(player.getName()) ) {
+            sender.sendMessage(Utility.replaceColorCode(
+                    PREERR + Resources.get("errmsgBanned")));
+            return true;
+        }
+        
+        
+        if ( channel.members.contains(player.getName()) ) {
+            
+            // 何かメッセージがあるなら、そのままチャット送信する
+            if ( message.length() > 0 ) {
+                channel.chat(player, message.toString());
+                return true;
+            }
+
+            // デフォルトの発言先に設定する
+            LunaChat.manager.setDefaultChannel(player, channelName);
+            sender.sendMessage(String.format(
+                    Utility.replaceColorCode(PREINFO + Resources.get("cmdmsgSet")),
+                    channelName));
+
         } else {
-            c.addMember(player.getName());
+            // チャンネルに参加し、デフォルトの発言先に設定する
+            channel.addMember(player.getName());
+            LunaChat.manager.setDefaultChannel(player, channelName);
             sender.sendMessage(String.format(
                     Utility.replaceColorCode(PREINFO + Resources.get("cmdmsgJoin")),
-                    channel));
+                    channelName));
         }
         
         return true;
@@ -118,7 +153,7 @@ public class LunaChatCommand implements CommandExecutor {
     private boolean doLeave(CommandSender sender, String[] args) {
 
         // プレイヤーでなければ終了する
-        if ( sender instanceof Player ) {
+        if ( !(sender instanceof Player) ) {
             sender.sendMessage(Utility.replaceColorCode(
                     PREERR + Resources.get("errmsgIngame")));
             return true;
@@ -169,8 +204,13 @@ public class LunaChatCommand implements CommandExecutor {
      */
     private boolean doList(CommandSender sender, String[] args) {
         
+        Player player = null;
+        if ( sender instanceof Player ) {
+            player = (Player)sender;
+        }
+        
         // リストを取得して表示する
-        ArrayList<String> list = LunaChat.manager.getList();
+        ArrayList<String> list = LunaChat.manager.getList(player);
         for ( String msg : list ) {
             sender.sendMessage(msg);
         }
@@ -186,7 +226,7 @@ public class LunaChatCommand implements CommandExecutor {
     private boolean doInvite(CommandSender sender, String[] args) {
 
         // プレイヤーでなければ終了する
-        if ( sender instanceof Player ) {
+        if ( !(sender instanceof Player) ) {
             sender.sendMessage(Utility.replaceColorCode(
                     PREERR + Resources.get("errmsgIngame")));
             return true;
@@ -267,7 +307,7 @@ public class LunaChatCommand implements CommandExecutor {
     private boolean doAccept(CommandSender sender, String[] args) {
 
         // プレイヤーでなければ終了する
-        if ( sender instanceof Player ) {
+        if ( !(sender instanceof Player) ) {
             sender.sendMessage(Utility.replaceColorCode(
                     PREERR + Resources.get("errmsgIngame")));
             return true;
@@ -319,7 +359,7 @@ public class LunaChatCommand implements CommandExecutor {
     private boolean doDeny(CommandSender sender, String[] args) {
 
         // プレイヤーでなければ終了する
-        if ( sender instanceof Player ) {
+        if ( !(sender instanceof Player) ) {
             sender.sendMessage(Utility.replaceColorCode(
                     PREERR + Resources.get("errmsgIngame")));
             return true;
@@ -358,7 +398,7 @@ public class LunaChatCommand implements CommandExecutor {
     private boolean doKick(CommandSender sender, String[] args) {
 
         // プレイヤーでなければ終了する
-        if ( sender instanceof Player ) {
+        if ( !(sender instanceof Player) ) {
             sender.sendMessage(Utility.replaceColorCode(
                     PREERR + Resources.get("errmsgIngame")));
             return true;
@@ -384,10 +424,9 @@ public class LunaChatCommand implements CommandExecutor {
             return true;
         }
         
-        // 参加チャンネルを取得、取得できない場合はエラー表示して終了する
-        // TODO: 複数参加可能にし、発言しているチャンネルを対象にする
+        // デフォルト参加チャンネルを取得、取得できない場合はエラー表示して終了する
         Player kicker = (Player)sender;
-        Channel channel = LunaChat.manager.getChannelByPlayer(kicker);
+        Channel channel = LunaChat.manager.getDefaultChannelByPlayer(kicker);
         if ( channel == null ) {
             sender.sendMessage(Utility.replaceColorCode(
                     PREERR + Resources.get("errmsgNoJoin")));
@@ -405,11 +444,11 @@ public class LunaChatCommand implements CommandExecutor {
         channel.removeMember(kickedName);
         sender.sendMessage(String.format(
                 Utility.replaceColorCode(
-                        PREERR + Resources.get("cmdmsgKick")),
+                        PREINFO + Resources.get("cmdmsgKick")),
                 kickedName, channel.name));
         kicked.sendMessage(String.format(
                 Utility.replaceColorCode(
-                        PREERR + Resources.get("cmdmsgKicked")),
+                        PREINFO + Resources.get("cmdmsgKicked")),
                 channel.name));
         
         return true;
@@ -424,7 +463,7 @@ public class LunaChatCommand implements CommandExecutor {
     private boolean doBan(CommandSender sender, String[] args) {
 
         // プレイヤーでなければ終了する
-        if ( sender instanceof Player ) {
+        if ( !(sender instanceof Player) ) {
             sender.sendMessage(Utility.replaceColorCode(
                     PREERR + Resources.get("errmsgIngame")));
             return true;
@@ -450,10 +489,9 @@ public class LunaChatCommand implements CommandExecutor {
             return true;
         }
         
-        // 参加チャンネルを取得、取得できない場合はエラー表示して終了する
-        // TODO: 複数参加可能にし、発言しているチャンネルを対象にする
+        // デフォルト参加チャンネルを取得、取得できない場合はエラー表示して終了する
         Player kicker = (Player)sender;
-        Channel channel = LunaChat.manager.getChannelByPlayer(kicker);
+        Channel channel = LunaChat.manager.getDefaultChannelByPlayer(kicker);
         if ( channel == null ) {
             sender.sendMessage(Utility.replaceColorCode(
                     PREERR + Resources.get("errmsgNoJoin")));
@@ -472,11 +510,11 @@ public class LunaChatCommand implements CommandExecutor {
         channel.removeMember(kickedName);
         sender.sendMessage(String.format(
                 Utility.replaceColorCode(
-                        PREERR + Resources.get("cmdmsgBan")),
+                        PREINFO + Resources.get("cmdmsgBan")),
                 kickedName, channel.name));
         kicked.sendMessage(String.format(
                 Utility.replaceColorCode(
-                        PREERR + Resources.get("cmdmsgBanned")),
+                        PREINFO + Resources.get("cmdmsgBanned")),
                 channel.name));
         
         return true;

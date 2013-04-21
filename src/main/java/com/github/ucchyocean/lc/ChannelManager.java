@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -37,6 +38,7 @@ public class ChannelManager {
     
     private File file;
     private HashMap<String, Channel> channels;
+    private HashMap<String, String> defaultChannels;
 
     /**
      * コンストラクタ
@@ -66,85 +68,37 @@ public class ChannelManager {
         YamlConfiguration config = 
                 YamlConfiguration.loadConfiguration(file);
         
+        // チャンネル設定のロード
         if ( channels == null ) {
             channels = new HashMap<String, Channel>();
         } else {
             channels.clear();
         }
         
-        Set<String> keyset = config.getValues(false).keySet();
-        for ( String key : keyset ) {
-            ConfigurationSection section = config.getConfigurationSection(key);
-            Channel channel = getChannelFromSection(section);
-            channels.put(key, channel);
-        }
-    }
-
-    /**
-     * 保存する
-     */
-    protected boolean save() {
-        
-        try {
-            YamlConfiguration config = 
-                    YamlConfiguration.loadConfiguration(file);
-            
-            for ( String key : channels.keySet() ) {
-                Channel channel = channels.get(key);
-                config.set(key + "." + KEY_DESC, channel.description);
-                config.set(key + "." + KEY_FORMAT, channel.format);
-                config.set(key + "." + KEY_MEMBERS, channel.members);
-                config.set(key + "." + KEY_BANNED, channel.banned);
+        if ( config.contains("channels") ) {
+            ConfigurationSection section = config.getConfigurationSection("channels");
+            Set<String> keyset = section.getValues(false).keySet();
+            for ( String key : keyset ) {
+                ConfigurationSection sec = section.getConfigurationSection(key);
+                Channel channel = getChannelFromSection(sec);
+                channels.put(key, channel);
             }
-            
-            config.save(file);
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
         }
-    }
-    
-    /**
-     * チャンネルの名前リストを返す
-     * @return チャンネルの名前
-     */
-    protected ArrayList<String> getNames() {
         
-        ArrayList<String> names = new ArrayList<String>();
-        for ( String k : channels.keySet() ) {
-            names.add(k);
+        // デフォルト設定のロード
+        if ( defaultChannels == null ) {
+            defaultChannels = new HashMap<String, String>();
+        } else {
+            defaultChannels.clear();
         }
-        return names;
-    }
-    
-    /**
-     * リスト表示用のリストを返す
-     * @return リスト
-     */
-    protected ArrayList<String> getList() {
         
-        ArrayList<String> items = new ArrayList<String>();
-        items.add(Utility.replaceColorCode(LIST_FIRSTLINE));
-        for ( String key : channels.keySet() ) {
-            Channel channel = channels.get(key);
-            String desc = channel.description;
-            int onlineNum = 0;
-            for ( String pname : channel.members ) {
-                Player p = LunaChat.getPlayerExact(pname);
-                if ( p != null && p.isOnline() ) {
-                    onlineNum++;
-                }
+        if ( config.contains("defaults") ) {
+            ConfigurationSection section = config.getConfigurationSection("defaults");
+            Set<String> keyset = section.getValues(false).keySet();
+            for ( String key : keyset ) {
+                defaultChannels.put(key, section.getString(key));
             }
-            int memberNum = channel.members.size();
-            String item = String.format(
-                    Utility.replaceColorCode(LIST_FORMAT), 
-                    key, onlineNum, memberNum, desc);
-            items.add(item);
         }
-        items.add(LIST_ENDLINE);
-        
-        return items;
     }
     
     /**
@@ -170,20 +124,129 @@ public class ChannelManager {
     }
     
     /**
+     * 保存する
+     */
+    protected boolean save() {
+        
+        try {
+            YamlConfiguration config = 
+                    YamlConfiguration.loadConfiguration(file);
+            
+            for ( String key : channels.keySet() ) {
+                Channel channel = channels.get(key);
+                config.set("channels." + key + "." + KEY_DESC, channel.description);
+                config.set("channels." + key + "." + KEY_FORMAT, channel.format);
+                config.set("channels." + key + "." + KEY_MEMBERS, channel.members);
+                config.set("channels." + key + "." + KEY_BANNED, channel.banned);
+            }
+            
+            for ( String key : defaultChannels.keySet() ) {
+                config.set("defaults." + key, defaultChannels.get(key));
+            }
+            
+            config.save(file);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    /**
+     * チャンネルの名前リストを返す
+     * @return チャンネルの名前
+     */
+    protected ArrayList<String> getNames() {
+        
+        ArrayList<String> names = new ArrayList<String>();
+        for ( String k : channels.keySet() ) {
+            names.add(k);
+        }
+        return names;
+    }
+    
+    /**
+     * リスト表示用のリストを返す
+     * @param player プレイヤー、指定しない場合はnullにする
+     * @return リスト
+     */
+    protected ArrayList<String> getList(Player player) {
+        
+        ArrayList<String> items = new ArrayList<String>();
+        String dchannel = "";
+        if ( player != null ) {
+            dchannel = defaultChannels.get(player.getName());
+            if ( dchannel == null ) {
+                dchannel = "";
+            }
+        }
+        
+        items.add(Utility.replaceColorCode(LIST_FIRSTLINE));
+        for ( String key : channels.keySet() ) {
+            Channel channel = channels.get(key);
+            String disp = key;
+            if ( key.equals(dchannel) ) {
+                disp = ChatColor.RED + key;
+            }
+            String desc = channel.description;
+            int onlineNum = 0;
+            for ( String pname : channel.members ) {
+                Player p = LunaChat.getPlayerExact(pname);
+                if ( p != null && p.isOnline() ) {
+                    onlineNum++;
+                }
+            }
+            int memberNum = channel.members.size();
+            String item = String.format(
+                    Utility.replaceColorCode(LIST_FORMAT), 
+                    disp, onlineNum, memberNum, desc);
+            items.add(item);
+        }
+        items.add(Utility.replaceColorCode(LIST_ENDLINE));
+        
+        return items;
+    }
+    
+    /**
      * プレイヤーが参加しているチャンネルを返す
      * @param player プレイヤー
      * @return チャンネル
      */
-    protected Channel getChannelByPlayer(Player player) {
+    protected ArrayList<Channel> getChannelByPlayer(Player player) {
         
+        ArrayList<Channel> result = new ArrayList<Channel>();
         String name = player.getName();
         for ( String key : channels.keySet() ) {
             Channel channel = channels.get(key);
             if ( channel.members.contains(name) ) {
-                return channel;
+                result.add(channel);
             }
         }
-        return null;
+        return result;
+    }
+    
+    /**
+     * プレイヤーが参加しているデフォルトのチャンネルを返す
+     * @param player プレイヤー
+     * @return チャンネル
+     */
+    protected Channel getDefaultChannelByPlayer(Player player) {
+        
+        String name = defaultChannels.get(player.getName());
+        if ( name == null || !channels.containsKey(name) ) {
+            return null;
+        }
+        return channels.get(name);
+    }
+    
+    /**
+     * プレイヤーのデフォルトチャンネルを設定する
+     * @param player プレイヤー
+     * @param cname チャンネル名
+     */
+    protected void setDefaultChannel(Player player, String cname) {
+        defaultChannels.put(player.getName(), cname);
+        save();
     }
     
     /**
@@ -214,8 +277,15 @@ public class ChannelManager {
         }
         Channel channel = getChannel(name);
         if ( channel != null ) {
-            // TODO チャンネルのメンバーを強制解散させる
-            
+            // チャンネルのメンバーを強制解散させる
+            String message = String.format(Utility.replaceColorCode(
+                    Resources.get("breakupMessage")), name);
+            for ( String pname : channel.members ) {
+                Player player = LunaChat.getPlayerExact(pname);
+                if ( player != null ) {
+                    player.sendMessage(message);
+                }
+            }
         }
         save();
     }

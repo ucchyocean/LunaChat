@@ -5,10 +5,13 @@
  */
 package com.github.ucchyocean.lc;
 
+import java.util.ArrayList;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 /**
  * @author ucchy
@@ -31,9 +34,9 @@ public class PlayerListener implements Listener {
         }
         
         Player player = event.getPlayer();
-        Channel channel = LunaChat.manager.getChannelByPlayer(player);
+        Channel channel = LunaChat.manager.getDefaultChannelByPlayer(player);
         
-        // チャンネルに所属していない場合
+        // デフォルトの発言先が無い場合
         if ( channel == null ) {
             if ( LunaChat.config.noJoinAsGlobal ) {
                 // グローバル発言にする（＝つまり、何もしないで終了する）
@@ -50,5 +53,20 @@ public class PlayerListener implements Listener {
         
         // もとのイベントをキャンセル
         event.setCancelled(true);
+    }
+    
+    /**
+     * プレイヤーのサーバー参加ごとに呼び出されるメソッド
+     * @param event プレイヤー参加イベント
+     */
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event) {
+    
+        // チャンネルチャット情報を表示する
+        Player player = event.getPlayer();
+        ArrayList<String> list = LunaChat.manager.getList(player);
+        for ( String msg : list ) {
+            player.sendMessage(msg);
+        }
     }
 }
