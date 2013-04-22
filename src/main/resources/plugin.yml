@@ -1,6 +1,6 @@
 name: LunaChat
 main: com.github.ucchyocean.lc.LunaChat
-version: 1.1.0
+version: 1.2.0
 author: ucchy
 description: チャンネルチャットプラグイン
 commands:
