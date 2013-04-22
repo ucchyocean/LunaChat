@@ -8,6 +8,7 @@ package com.github.ucchyocean.lc;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 /**
@@ -16,6 +17,11 @@ import org.bukkit.entity.Player;
  */
 public class Channel {
 
+    private static final String INFO_FIRSTLINE = Resources.get("channelInfoFirstLine");
+    private static final String INFO_PREFIX = Resources.get("channelInfoPrefix");
+    private static final String LIST_ENDLINE = Resources.get("listEndLine");
+    private static final String LIST_FORMAT = Resources.get("listFormat");
+    
     private static final String DEFAULT_FORMAT = Resources.get("defaultFormat");
     private static final String MSG_JOIN = Resources.get("joinMessage");
     private static final String MSG_QUIT = Resources.get("quitMessage");
@@ -201,5 +207,66 @@ public class Channel {
         if ( LunaChat.config.loggingChat ) {
             LunaChat.log(message);
         }
+    }
+    
+    /**
+     * チャンネル情報を返す
+     * @return チャンネル情報
+     */
+    protected ArrayList<String> getInfo() {
+        
+        ArrayList<String> info = new ArrayList<String>();
+        info.add(Utility.replaceColorCode(INFO_FIRSTLINE));
+        
+        // メンバーの人数を数える
+        int onlineNum = 0;
+        for ( String pname : members ) {
+            if ( isOnline(pname) ) {
+                onlineNum++;
+            }
+        }
+        int memberNum = members.size();
+        
+        info.add( String.format(
+                Utility.replaceColorCode(LIST_FORMAT), 
+                name, onlineNum, memberNum, description) );
+        
+        // メンバーを、5人ごとに表示する
+        StringBuffer buf = new StringBuffer();
+        for ( int i=0; i<members.size(); i++ ) {
+            
+            if ( i%5 == 0 ) {
+                if ( i != 0 ) {
+                    info.add(buf.toString());
+                    buf = new StringBuffer();
+                }
+                buf.append(Utility.replaceColorCode(INFO_PREFIX));
+            }
+            
+            String name = members.get(i);
+            String disp;
+            if ( moderator.equals(name) ) {
+                disp = ChatColor.RED + name;
+            } else if ( isOnline(members.get(i)) ) {
+                disp = ChatColor.WHITE + name;
+            } else {
+                disp = ChatColor.GRAY + name;
+            }
+            buf.append(disp + ",");
+        }
+        info.add(buf.toString());
+        info.add(Utility.replaceColorCode(LIST_ENDLINE));
+        
+        return info;
+    }
+    
+    /**
+     * 指定された名前のプレイヤーがオンラインかどうかを確認する
+     * @param name プレイヤー名
+     * @return オンラインかどうか
+     */
+    private boolean isOnline(String name) {
+        Player p = LunaChat.getPlayerExact(name);
+        return ( p != null && p.isOnline() );
     }
 }

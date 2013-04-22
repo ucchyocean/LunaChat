@@ -9,9 +9,10 @@ listFirstLine: '&8---------- &bChannel List &8----------'
 listEndLine: '&8----------------------------------'
 listFormat: '&8| &f%s&8(&c%d&8/&c%d&8) &a%s'
 
-membersFirstLine: '&8---------- &bMember List &8----------'
+channelInfoFirstLine: '&8---------- &bChannel Info &8----------'
+channelInfoPrefix: '&8| '
 
-infoMotdFirstLine: '&8----- &3あなたが参加中のチャット &8-----'
+motdFirstLine: '&8----- &3あなたが参加中のチャット &8-----'
 
 infoPrefix: '&7[LC]'
 errorPrefix: '&4[LC]'
@@ -63,6 +64,7 @@ usageDeny: '&7/%s deny - 招待を拒否します。'
 usageKick: '&7/%s kick (name) - 指定した人をチャンネルチャットからキックします。'
 usageBan: '&7/%s ban (name) - 指定した人をチャンネルチャットからBANします。'
 usagePardon: '&7/%s pardon (name) - 指定した人のBANを解除します。'
+usageInfo: '&7/%s info [channel] - チャンネルの情報を表示します。'
 
 usageReload: '&7/%s reload - config.ymlの再読み込みをします。'
 usageCreate: '&7/%s create (channel) [description] - チャンネルを作成します。'

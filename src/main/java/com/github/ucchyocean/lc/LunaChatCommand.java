@@ -56,6 +56,8 @@ public class LunaChatCommand implements CommandExecutor {
             return doBan(sender, args);
         } else if (args[0].equalsIgnoreCase("pardon")) {
             return doPardon(sender, args);
+        } else if (args[0].equalsIgnoreCase("info")) {
+            return doInfo(sender, args);
         } else {
             return doJoin(sender, args);
         }
@@ -548,6 +550,53 @@ public class LunaChatCommand implements CommandExecutor {
         return true;
     }
     
+    /**
+     * チャンネル情報を表示する
+     * 
+     * @param sender 
+     * @param args 
+     * @return
+     */
+    private boolean doInfo(CommandSender sender, String[] args) {
+
+        Player player = null;
+        if (sender instanceof Player) {
+            player = (Player) sender;
+        }
+        
+        // 引数チェック
+        // このコマンドは、コンソールでも実行できるが、その場合はチャンネル名を指定する必要がある
+        String cname;
+        if ( player != null && args.length <= 1 ) {
+            cname = LunaChat.manager.getDefault(player.getName());
+        } else if ( args.length >= 2 ) {
+            cname = args[1];
+        } else {
+            sendResourceMessage(sender, PREERR, "errmsgCommand");
+            return true;
+        }
+        
+        // チャンネルが存在するかどうか確認する
+        Channel channel = LunaChat.manager.getChannel(cname);
+        if ( channel == null ) {
+            sendResourceMessage(sender, PREERR, "errmsgNotExist");
+            return true;
+        }
+        
+        // BANされていないかどうか確認する
+        if ( channel.banned.contains(player.getName()) ) {
+            sendResourceMessage(sender, PREERR, "errmsgBanned");
+            return true;
+        }
+
+        // 情報を取得して表示する
+        ArrayList<String> list = channel.getInfo();
+        for (String msg : list) {
+            sender.sendMessage(msg);
+        }
+        return true;
+    }
+
     /**
      * コマンドの使い方を senderに送る
      *

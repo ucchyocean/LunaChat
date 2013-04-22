@@ -27,7 +27,7 @@ public class ChannelManager {
     private static final String LIST_ENDLINE = Resources.get("listEndLine");
     private static final String LIST_FORMAT = Resources.get("listFormat");
     
-    private static final String MOTD_FIRSTLINE = Resources.get("infoMotdFirstLine");
+    private static final String MOTD_FIRSTLINE = Resources.get("motdFirstLine");
     
     private static final String DEFAULT_FORMAT = Resources.get("defaultFormat");
     
@@ -202,6 +202,10 @@ public class ChannelManager {
         items.add(Utility.replaceColorCode(LIST_FIRSTLINE));
         for ( String key : channels.keySet() ) {
             Channel channel = channels.get(key);
+            if ( channel.banned.contains(playerName) ) {
+                continue;
+            }
+            
             String disp = ChatColor.WHITE + key;
             if ( key.equals(dchannel) ) {
                 disp = ChatColor.RED + key;

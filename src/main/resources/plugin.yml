@@ -17,6 +17,7 @@ commands:
            /<command> kick (name) - 指定した人をチャンネルチャットからキックします。
            /<command> ban (name) - 指定した人をチャンネルチャットからBANします。
            /<command> pardon (name) - 指定した人のBANを解除します。
+           /<command> info [channel] - チャンネルの情報を表示します。
     permission: lunachat.user
     permission-message: パーミッション "<permission>" が無いため、実行できません。
   lunachatadmin:
