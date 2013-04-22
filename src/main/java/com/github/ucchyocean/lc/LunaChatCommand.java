@@ -166,33 +166,31 @@ public class LunaChatCommand implements CommandExecutor {
             return true;
         }
 
-        // 実行引数から、参加するチャンネルを取得する
-        String channel = "";
+        // 実行引数から退出するチャンネルを取得する
+        // 指定が無いならデフォルトの発言先にする
+        Player player = (Player) sender;
+        String channelName = LunaChat.manager.getDefault(player.getName());
         if (args.length >= 2) {
-            channel = args[1];
-        } else {
-            sendResourceMessage(sender, PREERR, "errmsgCommand");
-            return true;
+            channelName = args[1];
         }
 
         // チャンネルが存在するかどうかをチェックする
         ArrayList<String> channels = LunaChat.manager.getNames();
-        if (!channels.contains(channel)) {
+        if (!channels.contains(channelName)) {
             sendResourceMessage(sender, PREERR, "errmsgNotExist");
             return true;
         }
 
         // チャンネルのメンバーかどうかを確認する
-        Player player = (Player) sender;
-        Channel c = LunaChat.manager.getChannel(channel);
-        if (!c.members.contains(player.getName())) {
+        Channel channel = LunaChat.manager.getChannel(channelName);
+        if (!channel.members.contains(player.getName())) {
             sendResourceMessage(sender, PREERR, "errmsgNomember");
             return true;
         }
 
         // チャンネルから退出する
-        c.removeMember(player.getName());
-        sendResourceMessage(sender, PREINFO, "cmdmsgLeave", channel);
+        channel.removeMember(player.getName());
+        sendResourceMessage(sender, PREINFO, "cmdmsgLeave", channelName);
         return true;
     }
 
@@ -233,12 +231,18 @@ public class LunaChatCommand implements CommandExecutor {
             return true;
         }
 
-        // 実行引数から、参加するチャンネル、招待する人を取得する
-        String channelName = "";
+        // デフォルトの発言先を取得する
+        Player inviter = (Player) sender;
+        String channelName = LunaChat.manager.getDefault(inviter.getName());
+        if ( channelName == null ) {
+            sendResourceMessage(sender, PREERR, "errmsgNoJoin");
+            return true;
+        }
+        
+        // 実行引数から招待する人を取得する
         String invitedName = "";
-        if (args.length >= 3) {
-            channelName = args[1];
-            invitedName = args[2];
+        if (args.length >= 2) {
+            invitedName = args[1];
         } else {
             sendResourceMessage(sender, PREERR, "errmsgCommand");
             return true;
@@ -253,7 +257,6 @@ public class LunaChatCommand implements CommandExecutor {
         }
 
         // チャンネルのメンバーかどうかを確認する
-        Player inviter = (Player) sender;
         Channel channel = LunaChat.manager.getChannel(channelName);
         if (!channel.members.contains(inviter.getName())) {
             sendResourceMessage(sender, PREERR, "errmsgNomember");

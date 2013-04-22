@@ -14,7 +14,6 @@ commands:
            /<command> invite (channel) (name) - 指定した人をチャンネルチャットに招待します。
            /<command> accept - 招待を受けてチャンネルチャットに入室します。
            /<command> deny - 招待を拒否します。
-           /<command>
            /<command> kick (name) - 指定した人をチャンネルチャットからキックします。
            /<command> ban (name) - 指定した人をチャンネルチャットからBANします。
            /<command> pardon (name) - 指定した人のBANを解除します。
