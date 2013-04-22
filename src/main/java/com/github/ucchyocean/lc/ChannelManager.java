@@ -204,7 +204,7 @@ public class ChannelManager {
             if ( key.equals(dchannel) ) {
                 disp = ChatColor.RED + key;
             }
-            if ( channel.members.contains(playerName) ) {
+            if ( player != null && !channel.members.contains(playerName) ) {
                 disp = ChatColor.GRAY + key;
             }
             String desc = channel.description;
