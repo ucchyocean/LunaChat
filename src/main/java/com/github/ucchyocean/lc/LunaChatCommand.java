@@ -327,7 +327,7 @@ public class LunaChatCommand implements CommandExecutor {
 
         // 参加する
         channel.addMember(player.getName());
-        sendResourceMessage(sender, PREINFO, "cmdmsgJoin", channel);
+        sendResourceMessage(sender, PREINFO, "cmdmsgJoin", channel.name);
 
         return true;
     }
