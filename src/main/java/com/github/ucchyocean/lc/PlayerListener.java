@@ -27,7 +27,9 @@ public class PlayerListener implements Listener {
     public void onChat(AsyncPlayerChatEvent event) {
         
         // 頭にglobalMarkerが付いている場合は、グローバル発言にする
-        if ( event.getMessage().startsWith(LunaChat.config.globalMarker) ) {
+        if ( LunaChat.config.globalMarker != null && 
+                !LunaChat.config.globalMarker.equals("") &&
+                event.getMessage().startsWith(LunaChat.config.globalMarker) ) {
             int offset = LunaChat.config.globalMarker.length();
             event.setMessage(event.getMessage().substring(offset));
             return;
