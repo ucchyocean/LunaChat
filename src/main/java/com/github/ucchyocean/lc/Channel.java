@@ -129,20 +129,6 @@ public class Channel {
      */
     protected void removeMember(String name) {
         
-        // モデレーターの変更がある場合、次のモデレーターを選出する
-        if ( moderator.equals(name) ) {
-            if ( members.size() > 0 ) {
-                String last = moderator;
-                moderator = members.get(0);
-                sendInformation(String.format(
-                        Utility.replaceColorCode(
-                                Resources.get("moderatorChangedMessage")),
-                        this.name, last, moderator));
-            } else {
-                moderator = "";
-            }
-        }
-        
         // デフォルト発言先が退出するチャンネルと一致する場合、
         // デフォルト発言先を削除する
         String def = LunaChat.manager.getDefault(name);
@@ -156,8 +142,23 @@ public class Channel {
             sendJoinQuitMessage(false, name);
             if ( LunaChat.config.zeroMemberRemove && members.size() <= 0 ) {
                 LunaChat.manager.removeChannel(this.name);
+                return;
             } else {
                 LunaChat.manager.save();
+            }
+        }
+        
+        // モデレーターの変更がある場合、次のモデレーターを選出する
+        if ( moderator.equals(name) ) {
+            if ( members.size() > 0 ) {
+                String last = moderator;
+                moderator = members.get(0);
+                sendInformation(String.format(
+                        Utility.replaceColorCode(
+                                Resources.get("moderatorChangedMessage")),
+                        this.name, last, moderator));
+            } else {
+                moderator = "";
             }
         }
     }
