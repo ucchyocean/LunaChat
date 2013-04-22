@@ -63,5 +63,6 @@ usageReload: '&7/%s reload - config.ymlの再読み込みをします。'
 usageCreate: '&7/%s create (channel) [description] - チャンネルを作成します。'
 usageRemove: '&7/%s remove (channel) - チャンネルを削除します。'
 usageFormat: '&7/%s format (channel) (format) - チャンネルのメッセージフォーマットを設定します。'
+usageModerator: '&7/%s moderator (channel) (player) - チャンネルのモデレーターを指定したプレイヤーに設定します。'
 
 infoMotdFirstLine: '&8----- &3あなたが参加中のチャット &8-----'
