@@ -26,6 +26,8 @@ cmdmsgKick: '%s さんを、チャンネル %s からキックしました。'
 cmdmsgKicked: 'チャンネル %s からキックされました。'
 cmdmsgBan: '%s さんを、チャンネル %s からBANしました。'
 cmdmsgBanned: 'チャンネル %s からBANされました。'
+cmdmsgPardon: '%s さんの、チャンネル %s のBANを解除しました。'
+cmdmsgPardoned: 'チャンネル %s のBANが解除されました。'
 
 cmdmsgReload: 'config.yml を再読み込みしました。'
 cmdmsgCreate: 'チャンネル %s を新規作成しました。'
@@ -48,7 +50,7 @@ errmsgInvitedAlreadyJoin: 'あなたは既にチャンネルに参加してい�
 errmsgNoJoin: 'あなたは現在チャンネルに参加していません。'
 errmsgBanned: 'あなたはこのチャンネルからBANされています。'
 errmsgNotModerator: 'あなたはモデレーターではないため、そのコマンドを実行できません。'
-
+errmsgNotBanned: '指定されたプレイヤーはBANリストに含まれていません。'
 
 usageJoin: '&7/%s join (channel) - チャンネルに参加します。'
 usageLeave: '&7/%s leave - 参加しているチャンネルから退出します。'
@@ -58,6 +60,7 @@ usageAccept: '&7/%s accept - 招待を受けてチャンネルチャットに入
 usageDeny: '&7/%s deny - 招待を拒否します。'
 usageKick: '&7/%s kick (name) - 指定した人をチャンネルチャットからキックします。'
 usageBan: '&7/%s ban (name) - 指定した人をチャンネルチャットからBANします。'
+usagePardon: '&7/%s pardon (name) - 指定した人のBANを解除します。'
 
 usageReload: '&7/%s reload - config.ymlの再読み込みをします。'
 usageCreate: '&7/%s create (channel) [description] - チャンネルを作成します。'

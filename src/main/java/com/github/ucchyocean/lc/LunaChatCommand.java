@@ -22,8 +22,8 @@ public class LunaChatCommand implements CommandExecutor {
     private static final String PREERR = Resources.get("errorPrefix");
 
     private static final String[] USAGE_KEYS = {
-        "usageJoin", "usageLeave", "usageList", "usageInvite",
-        "usageAccept", "usageDeny", "usageKick", "usageBan",
+        "usageJoin", "usageLeave", "usageList", "usageInvite", "usageAccept", 
+        "usageDeny", "usageKick", "usageBan", "usagePardon",
     };
 
     /**
@@ -54,6 +54,8 @@ public class LunaChatCommand implements CommandExecutor {
             return doKick(sender, args);
         } else if (args[0].equalsIgnoreCase("ban")) {
             return doBan(sender, args);
+        } else if (args[0].equalsIgnoreCase("pardon")) {
+            return doPardon(sender, args);
         } else {
             return doJoin(sender, args);
         }
@@ -485,6 +487,64 @@ public class LunaChatCommand implements CommandExecutor {
         return true;
     }
 
+    /**
+     * 指定したプレイヤーのBANを解除する
+     * 
+     * @param sender 
+     * @param args 
+     * @return
+     */
+    private boolean doPardon(CommandSender sender, String[] args) {
+
+        // プレイヤーでなければ終了する
+        if (!(sender instanceof Player)) {
+            sendResourceMessage(sender, PREERR, "errmsgIngame");
+            return true;
+        }
+
+        // 実行引数から、BAN解除するユーザーを取得する
+        String kickedName = "";
+        if (args.length >= 2) {
+            kickedName = args[1];
+        } else {
+            sendResourceMessage(sender, PREERR, "errmsgCommand");
+            return true;
+        }
+
+        // デフォルト参加チャンネルを取得、取得できない場合はエラー表示して終了する
+        Player kicker = (Player) sender;
+        Channel channel = LunaChat.manager.getDefaultChannelByPlayer(kicker.getName());
+        if (channel == null) {
+            sendResourceMessage(sender, PREERR, "errmsgNoJoin");
+            return true;
+        }
+
+        // モデレーターかどうか確認する
+        if (!kicker.getName().equals(channel.moderator)) {
+            sendResourceMessage(sender, PREERR, "errmsgNotModerator");
+            return true;
+        }
+
+        // BAN解除されるプレイヤーがBANされているかどうかチェックする
+        if (!channel.banned.contains(kickedName)) {
+            sendResourceMessage(sender, PREERR, "errmsgNotBanned");
+            return true;
+        }
+
+        // BAN解除実行
+        Player kicked = LunaChat.getPlayerExact(kickedName);
+        channel.banned.remove(kickedName);
+
+        sendResourceMessage(sender, PREINFO,
+                "cmdmsgPardon", kickedName, channel.name);
+        if (kicked != null) {
+            sendResourceMessage(kicked, PREINFO,
+                    "cmdmsgPardoned", channel.name);
+        }
+
+        return true;
+    }
+    
     /**
      * コマンドの使い方を senderに送る
      *
