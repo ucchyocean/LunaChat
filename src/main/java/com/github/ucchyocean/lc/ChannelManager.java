@@ -188,7 +188,9 @@ public class ChannelManager {
         
         ArrayList<String> items = new ArrayList<String>();
         String dchannel = "";
+        String playerName = "";
         if ( player != null ) {
+            playerName = player.getName();
             dchannel = defaultChannels.get(player.getName());
             if ( dchannel == null ) {
                 dchannel = "";
@@ -198,9 +200,12 @@ public class ChannelManager {
         items.add(Utility.replaceColorCode(LIST_FIRSTLINE));
         for ( String key : channels.keySet() ) {
             Channel channel = channels.get(key);
-            String disp = key;
+            String disp = ChatColor.WHITE + key;
             if ( key.equals(dchannel) ) {
                 disp = ChatColor.RED + key;
+            }
+            if ( channel.members.contains(playerName) ) {
+                disp = ChatColor.GRAY + key;
             }
             String desc = channel.description;
             int onlineNum = 0;
