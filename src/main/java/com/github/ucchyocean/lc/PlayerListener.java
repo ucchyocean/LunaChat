@@ -30,8 +30,20 @@ public class PlayerListener implements Listener {
         if ( LunaChat.config.globalMarker != null && 
                 !LunaChat.config.globalMarker.equals("") &&
                 event.getMessage().startsWith(LunaChat.config.globalMarker) ) {
+            
             int offset = LunaChat.config.globalMarker.length();
-            event.setMessage(event.getMessage().substring(offset));
+            String message = event.getMessage().substring(offset);
+            
+            // Japanize変換
+            if ( LunaChat.config.displayJapanize ) {
+                // 2byteコードを含まない場合にのみ、処理を行う
+                if ( message.getBytes().length == message.length() ) {
+                    String kana = KanaConverter.conv(message);
+                    message = message + "(" + kana + ")";
+                }
+            }
+
+            event.setMessage(message);
             return;
         }
         
@@ -41,7 +53,19 @@ public class PlayerListener implements Listener {
         // デフォルトの発言先が無い場合
         if ( channel == null ) {
             if ( LunaChat.config.noJoinAsGlobal ) {
-                // グローバル発言にする（＝つまり、何もしないで終了する）
+                // グローバル発言にする
+                
+                // Japanize変換
+                if ( LunaChat.config.displayJapanize ) {
+                    // 2byteコードを含まない場合にのみ、処理を行う
+                    String message = event.getMessage();
+                    if ( message.getBytes().length == message.length() ) {
+                        String kana = KanaConverter.conv(message);
+                        message = message + "(" + kana + ")";
+                    }
+                    event.setMessage(message);
+                }
+
                 return;
             } else {
                 // 発言をキャンセルして終了する
