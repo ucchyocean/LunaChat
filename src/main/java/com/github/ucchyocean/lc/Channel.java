@@ -129,6 +129,7 @@ public class Channel {
      */
     protected void removeMember(String name) {
         
+        // モデレーターの変更がある場合、次のモデレーターを選出する
         if ( moderator.equals(name) ) {
             if ( members.size() > 0 ) {
                 String last = moderator;
@@ -141,6 +142,15 @@ public class Channel {
                 moderator = "";
             }
         }
+        
+        // デフォルト発言先が退出するチャンネルと一致する場合、
+        // デフォルト発言先を削除する
+        String def = LunaChat.manager.getDefault(name);
+        if ( def != null && def.equals(this.name) ) {
+            LunaChat.manager.removeDefault(name);
+        }
+        
+        // 実際にメンバーから削除する
         if ( members.contains(name) ) {
             members.remove(name);
             sendJoinQuitMessage(false, name);

@@ -36,7 +36,7 @@ public class PlayerListener implements Listener {
         }
         
         Player player = event.getPlayer();
-        Channel channel = LunaChat.manager.getDefaultChannelByPlayer(player);
+        Channel channel = LunaChat.manager.getDefaultChannelByPlayer(player.getName());
         
         // デフォルトの発言先が無い場合
         if ( channel == null ) {

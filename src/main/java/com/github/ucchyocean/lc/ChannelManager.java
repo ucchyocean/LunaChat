@@ -244,13 +244,32 @@ public class ChannelManager {
      * @param player プレイヤー
      * @return チャンネル
      */
-    protected Channel getDefaultChannelByPlayer(Player player) {
+    protected Channel getDefaultChannelByPlayer(String name) {
         
-        String name = defaultChannels.get(player.getName());
-        if ( name == null || !channels.containsKey(name) ) {
+        String cname = defaultChannels.get(name);
+        if ( cname == null || !channels.containsKey(cname) ) {
             return null;
         }
-        return channels.get(name);
+        return channels.get(cname);
+    }
+    
+    /**
+     * 指定した名前のプレイヤーに設定されている、デフォルトチャンネル名を取得する
+     * @param name プレイヤー名
+     * @return デフォルトチャンネル名
+     */
+    protected String getDefault(String name) {
+        return defaultChannels.get(name);
+    }
+    
+    /**
+     * 指定した名前のプレイヤーに設定されている、デフォルトチャンネルを削除する
+     * @param name プレイヤー名
+     */
+    protected void removeDefault(String name) {
+        if ( defaultChannels.containsKey(name) ) {
+            defaultChannels.remove(name);
+        }
     }
     
     /**
@@ -258,8 +277,8 @@ public class ChannelManager {
      * @param player プレイヤー
      * @param cname チャンネル名
      */
-    protected void setDefaultChannel(Player player, String cname) {
-        defaultChannels.put(player.getName(), cname);
+    protected void setDefaultChannel(String name, String cname) {
+        defaultChannels.put(name, cname);
         save();
     }
     
@@ -285,6 +304,10 @@ public class ChannelManager {
         return channel;
     }
     
+    /**
+     * チャンネルを削除する
+     * @param name 削除するチャンネル名
+     */
     protected void removeChannel(String name) {
         if ( channels.containsKey(name) ) {
             channels.remove(name);

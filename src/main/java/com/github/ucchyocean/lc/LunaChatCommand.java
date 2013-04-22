@@ -135,14 +135,14 @@ public class LunaChatCommand implements CommandExecutor {
             }
 
             // デフォルトの発言先に設定する
-            LunaChat.manager.setDefaultChannel(player, channelName);
+            LunaChat.manager.setDefaultChannel(player.getName(), channelName);
             sendResourceMessage(sender, PREINFO, "cmdmsgSet", channelName);
 
         } else {
             // チャンネルに参加し、デフォルトの発言先に設定する
             channel.addMember(player.getName());
             sendResourceMessage(sender, PREINFO, "cmdmsgJoin", channelName);
-            LunaChat.manager.setDefaultChannel(player, channelName);
+            LunaChat.manager.setDefaultChannel(player.getName(), channelName);
             sendResourceMessage(sender, PREINFO, "cmdmsgSet", channelName);
         }
 
@@ -394,7 +394,7 @@ public class LunaChatCommand implements CommandExecutor {
 
         // デフォルト参加チャンネルを取得、取得できない場合はエラー表示して終了する
         Player kicker = (Player) sender;
-        Channel channel = LunaChat.manager.getDefaultChannelByPlayer(kicker);
+        Channel channel = LunaChat.manager.getDefaultChannelByPlayer(kicker.getName());
         if (channel == null) {
             sendResourceMessage(sender, PREERR, "errmsgNoJoin");
             return true;
@@ -452,7 +452,7 @@ public class LunaChatCommand implements CommandExecutor {
 
         // デフォルト参加チャンネルを取得、取得できない場合はエラー表示して終了する
         Player kicker = (Player) sender;
-        Channel channel = LunaChat.manager.getDefaultChannelByPlayer(kicker);
+        Channel channel = LunaChat.manager.getDefaultChannelByPlayer(kicker.getName());
         if (channel == null) {
             sendResourceMessage(sender, PREERR, "errmsgNoJoin");
             return true;
