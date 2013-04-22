@@ -91,7 +91,7 @@ public class PlayerListener implements Listener {
         if ( LunaChat.config.showListOnJoin ) {
             // チャンネルチャット情報を表示する
             Player player = event.getPlayer();
-            ArrayList<String> list = LunaChat.manager.getList(player);
+            ArrayList<String> list = LunaChat.manager.getListForMotd(player);
             for ( String msg : list ) {
                 player.sendMessage(msg);
             }

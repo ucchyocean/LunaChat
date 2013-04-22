@@ -27,6 +27,8 @@ public class ChannelManager {
     private static final String LIST_ENDLINE = Resources.get("listEndLine");
     private static final String LIST_FORMAT = Resources.get("listFormat");
     
+    private static final String MOTD_FIRSTLINE = Resources.get("infoMotdFirstLine");
+    
     private static final String DEFAULT_FORMAT = Resources.get("defaultFormat");
     
     private static final String FILE_NAME = "channels.yml";
@@ -206,6 +208,50 @@ public class ChannelManager {
             }
             if ( player != null && !channel.members.contains(playerName) ) {
                 disp = ChatColor.GRAY + key;
+            }
+            String desc = channel.description;
+            int onlineNum = 0;
+            for ( String pname : channel.members ) {
+                Player p = LunaChat.getPlayerExact(pname);
+                if ( p != null && p.isOnline() ) {
+                    onlineNum++;
+                }
+            }
+            int memberNum = channel.members.size();
+            String item = String.format(
+                    Utility.replaceColorCode(LIST_FORMAT), 
+                    disp, onlineNum, memberNum, desc);
+            items.add(item);
+        }
+        items.add(Utility.replaceColorCode(LIST_ENDLINE));
+        
+        return items;
+    }
+    
+    /**
+     * プレイヤーのサーバー参加時用の参加チャンネルリストを返す
+     * @param player プレイヤー
+     * @return リスト
+     */
+    protected ArrayList<String> getListForMotd(Player player) {
+        
+        ArrayList<String> items = new ArrayList<String>();
+        String playerName = player.getName();
+        String dchannel = defaultChannels.get(player.getName());
+        if ( dchannel == null ) {
+            dchannel = "";
+        }
+        
+        items.add(Utility.replaceColorCode(MOTD_FIRSTLINE));
+        for ( String key : channels.keySet() ) {
+            Channel channel = channels.get(key);
+            if ( !channel.members.contains(playerName) ) {
+                continue;
+            }
+            
+            String disp = ChatColor.WHITE + key;
+            if ( key.equals(dchannel) ) {
+                disp = ChatColor.RED + key;
             }
             String desc = channel.description;
             int onlineNum = 0;

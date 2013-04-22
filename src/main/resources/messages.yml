@@ -11,6 +11,8 @@ listFormat: '&8| &f%s&8(&c%d&8/&c%d&8) &a%s'
 
 membersFirstLine: '&8---------- &bMember List &8----------'
 
+infoMotdFirstLine: '&8----- &3あなたが参加中のチャット &8-----'
+
 infoPrefix: '&7[LC]'
 errorPrefix: '&4[LC]'
 
@@ -67,5 +69,3 @@ usageCreate: '&7/%s create (channel) [description] - チャンネルを作成し
 usageRemove: '&7/%s remove (channel) - チャンネルを削除します。'
 usageFormat: '&7/%s format (channel) (format) - チャンネルのメッセージフォーマットを設定します。'
 usageModerator: '&7/%s moderator (channel) (player) - チャンネルのモデレーターを指定したプレイヤーに設定します。'
-
-infoMotdFirstLine: '&8----- &3あなたが参加中のチャット &8-----'
