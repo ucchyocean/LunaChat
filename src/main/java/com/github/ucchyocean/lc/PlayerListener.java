@@ -40,11 +40,7 @@ public class PlayerListener implements Listener {
 
             // Japanize変換
             if ( LunaChat.config.displayJapanize ) {
-                // 2byteコードを含まない場合にのみ、処理を行う
-                if ( message.getBytes().length == message.length() ) {
-                    String kana = KanaConverter.conv(message);
-                    message = message + "(" + kana + ")";
-                }
+                message = addJapanize(message);
             }
 
             event.setMessage(message);
@@ -59,19 +55,37 @@ public class PlayerListener implements Listener {
             if ( LunaChat.config.noJoinAsGlobal ) {
                 // グローバル発言にする
 
-                // Japanize変換
-                if ( LunaChat.config.displayJapanize ) {
-                    // 2byteコードを含まない場合にのみ、処理を行う
-                    String message = event.getMessage();
-                    if ( message.getBytes().length == message.length() ) {
-                        String kana = KanaConverter.conv(message);
-                        message = message + "(" + kana + ")";
+                if ( !LunaChat.config.globalChannel.equals("") &&
+                        LunaChat.manager.getChannel(LunaChat.config.globalChannel) != null ) {
+                    
+                    Channel global = LunaChat.manager.getChannel(LunaChat.config.globalChannel);
+
+                    // もしグローバルのメンバーでなければ、まず参加させる
+                    if ( global.members.contains(player.getName()) ) {
+                        global.addMember(player.getName());
                     }
-                    event.setMessage(message);
+                    
+                    // チャンネルチャット発言
+                    global.chat(player, event.getMessage());
+
+                    // もとのイベントをキャンセル
+                    event.setCancelled(true);
+
+                    return;
+                    
+                } else {
+                    
+                    // Japanize変換
+                    if ( LunaChat.config.displayJapanize ) {
+                        event.setMessage( addJapanize(event.getMessage()) );
+                    }
+                    
+                    // 通常チャット発言（つまり、何もしないで終了）
+                    return;
                 }
 
-                return;
             } else {
+                
                 // 発言をキャンセルして終了する
                 event.setCancelled(true);
                 return;
@@ -94,9 +108,9 @@ public class PlayerListener implements Listener {
 
         Player player = event.getPlayer();
 
-        // サーバー初参加のプレイヤーを、既定のチャンネルへ参加させる
-        if ( player.hasPlayedBefore() &&
-                !LunaChat.config.joinChannelOnFirstVisit.equals("") ) {
+        // どのチャンネルにも所属していないプレイヤーを、既定のチャンネルへ参加させる
+        if ( LunaChat.manager.getChannelByPlayer(player).size() == 0 &&
+                !LunaChat.config.globalChannel.equals("") ) {
             tryJoinToDefaultChannel(player);
         }
 
@@ -116,7 +130,7 @@ public class PlayerListener implements Listener {
      */
     private boolean tryJoinToDefaultChannel(Player player) {
 
-        String channelName = LunaChat.config.joinChannelOnFirstVisit;
+        String channelName = LunaChat.config.globalChannel;
 
         // チャンネルが存在するかどうかをチェックする
         ArrayList<String> channels = LunaChat.manager.getNames();
@@ -169,5 +183,19 @@ public class PlayerListener implements Listener {
         String msg = String.format(
                 Utility.replaceColorCode(pre + Resources.get(key)), args);
         sender.sendMessage(msg);
+    }
+    
+    /**
+     * メッセージに2バイトコードが含まれていない場合に、かな文字を付加する
+     * @param message メッセージ
+     * @return かな文字付きのメッセージ
+     */
+    private String addJapanize(String message) {
+        // 2byteコードを含まない場合にのみ、処理を行う
+        if ( message.getBytes().length == message.length() ) {
+            String kana = KanaConverter.conv(message);
+            message = message + "(" + kana + ")";
+        }
+        return message;
     }
 }

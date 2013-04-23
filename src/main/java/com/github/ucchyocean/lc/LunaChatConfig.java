@@ -44,7 +44,7 @@ public class LunaChatConfig {
 
     /** サーバーに初参加したユーザーを参加させる、既定のチャンネル。
      *  参加させない場合は、から文字列 "" を指定すること。 */
-    protected String joinChannelOnFirstVisit;
+    protected String globalChannel;
 
     /**
      * コンストラクタ
@@ -76,8 +76,7 @@ public class LunaChatConfig {
         showListOnJoin = config.getBoolean("showListOnJoin", false);
         createChannelOnJoinCommand =
                 config.getBoolean("createChannelOnJoinCommand", true);
-        joinChannelOnFirstVisit = config.getString(
-                "joinChannelOnFirstVisit", "");
+        globalChannel = config.getString("globalChannel", "");
     }
 
     /**

@@ -12,3 +12,4 @@ globalMarker: '!'
 zeroMemberRemove: false
 showListOnJoin: false
 createChannelOnJoinCommand: true
+globalChannel: ''

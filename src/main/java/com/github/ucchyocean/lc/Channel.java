@@ -55,12 +55,7 @@ public class Channel {
      * @param description チャンネルの説明文
      */
     protected Channel(String name, String description) {
-        this.name = name;
-        this.description = description;
-        this.members = new ArrayList<String>();
-        this.format = DEFAULT_FORMAT;
-        this.banned = new ArrayList<String>();
-        this.moderator = "";
+        this(name, description, new ArrayList<String>());
     }
     
     /**
