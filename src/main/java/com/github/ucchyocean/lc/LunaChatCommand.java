@@ -23,7 +23,8 @@ public class LunaChatCommand implements CommandExecutor {
 
     private static final String[] USAGE_KEYS = {
         "usageJoin", "usageLeave", "usageList", "usageInvite", "usageAccept", 
-        "usageDeny", "usageKick", "usageBan", "usagePardon",
+        "usageDeny", "usageKick", "usageBan", "usagePardon", "usageCreate",
+        "usageRemove", "usageFormat", "usageModerator"
     };
 
     /**
@@ -58,6 +59,16 @@ public class LunaChatCommand implements CommandExecutor {
             return doPardon(sender, args);
         } else if (args[0].equalsIgnoreCase("info")) {
             return doInfo(sender, args);
+        } else if (args[0].equalsIgnoreCase("create")) {
+            return doCreate(sender, args);
+        } else if (args[0].equalsIgnoreCase("remove")) {
+            return doRemove(sender, args);
+        } else if (args[0].equalsIgnoreCase("format")) {
+            return doFormat(sender, args);
+        } else if (args[0].equalsIgnoreCase("moderator")) {
+            return doModerator(sender, args);
+        } else if (args[0].equalsIgnoreCase("reload")) {
+            return doReload(sender, args);
         } else {
             return doJoin(sender, args);
         }
@@ -408,7 +419,7 @@ public class LunaChatCommand implements CommandExecutor {
         }
 
         // モデレーターかどうか確認する
-        if (!kicker.getName().equals(channel.moderator)) {
+        if (!channel.moderator.contains(kicker.getName()) && !kicker.isOp()) {
             sendResourceMessage(sender, PREERR, "errmsgNotModerator");
             return true;
         }
@@ -466,7 +477,7 @@ public class LunaChatCommand implements CommandExecutor {
         }
 
         // モデレーターかどうか確認する
-        if (!kicker.getName().equals(channel.moderator)) {
+        if (!channel.moderator.contains(kicker.getName()) && !kicker.isOp()) {
             sendResourceMessage(sender, PREERR, "errmsgNotModerator");
             return true;
         }
@@ -525,7 +536,7 @@ public class LunaChatCommand implements CommandExecutor {
         }
 
         // モデレーターかどうか確認する
-        if (!kicker.getName().equals(channel.moderator)) {
+        if (!channel.moderator.contains(kicker.getName()) && !kicker.isOp()) {
             sendResourceMessage(sender, PREERR, "errmsgNotModerator");
             return true;
         }
@@ -597,6 +608,223 @@ public class LunaChatCommand implements CommandExecutor {
         return true;
     }
 
+    /**
+     * チャンネルを新規作成する
+     *
+     * @param sender
+     * @param args
+     * @return
+     */
+    private boolean doCreate(CommandSender sender, String[] args) {
+
+        // 実行引数から、作成するチャンネルを取得する
+        String name = "";
+        String desc = "";
+        if (args.length >= 2) {
+            name = args[1];
+            if (args.length >= 3) {
+                desc = args[2];
+            }
+        } else {
+            sendResourceMessage(sender, PREERR, "errmsgCommand");
+            return true;
+        }
+
+        // チャンネルが存在するかどうかをチェックする
+        ArrayList<String> channels = LunaChat.manager.getNames();
+        if (channels.contains(name)) {
+            sendResourceMessage(sender, PREERR, "errmsgExist");
+            return true;
+        }
+
+        // チャンネル作成
+        LunaChat.manager.createChannel(name, desc);
+        sendResourceMessage(sender, PREINFO, "cmdmsgCreate", name);
+        return true;
+    }
+
+    /**
+     * チャンネルの削除をする
+     *
+     * @param sender
+     * @param args
+     * @return
+     */
+    private boolean doRemove(CommandSender sender, String[] args) {
+
+        Player player = null;
+        if (sender instanceof Player) {
+            player = (Player) sender;
+        }
+        
+        // 引数チェック
+        // このコマンドは、コンソールでも実行できるが、その場合はチャンネル名を指定する必要がある
+        String cname;
+        if ( player != null && args.length <= 1 ) {
+            cname = LunaChat.manager.getDefault(player.getName());
+        } else if ( args.length >= 2 ) {
+            cname = args[1];
+        } else {
+            sendResourceMessage(sender, PREERR, "errmsgCommand");
+            return true;
+        }
+        
+        // チャンネルが存在するかどうか確認する
+        Channel channel = LunaChat.manager.getChannel(cname);
+        if ( channel == null ) {
+            sendResourceMessage(sender, PREERR, "errmsgNotExist");
+            return true;
+        }
+
+        // モデレーターかどうか確認する
+        if ( player != null ) {
+            if ( !channel.moderator.contains(player.getName()) && !player.isOp()) {
+                sendResourceMessage(sender, PREERR, "errmsgNotModerator");
+                return true;
+            }
+        }
+        
+        // チャンネル削除
+        LunaChat.manager.removeChannel(cname);
+        sendResourceMessage(sender, PREINFO, "cmdmsgRemove", cname);
+        return true;
+    }
+
+    /**
+     * チャンネルのメッセージフォーマットを設定する
+     *
+     * @param sender
+     * @param args
+     * @return
+     */
+    private boolean doFormat(CommandSender sender, String[] args) {
+
+        Player player = null;
+        if (sender instanceof Player) {
+            player = (Player) sender;
+        }
+        
+        // 引数チェック
+        // このコマンドは、コンソールでも実行できるが、その場合はチャンネル名を指定する必要がある
+        String format = "";
+        String cname;
+        if ( player != null && args.length >= 2 ) {
+            cname = LunaChat.manager.getDefault(player.getName());
+            for (int i = 1; i < args.length; i++) {
+                format = format + args[i] + " ";
+            }
+        } else if ( args.length >= 3 ) {
+            cname = args[1];
+            for (int i = 2; i < args.length; i++) {
+                format = format + args[i] + " ";
+            }
+        } else {
+            sendResourceMessage(sender, PREERR, "errmsgCommand");
+            return true;
+        }
+
+        // チャンネルが存在するかどうかをチェックする
+        ArrayList<String> channels = LunaChat.manager.getNames();
+        if (!channels.contains(cname)) {
+            sendResourceMessage(sender, PREERR, "errmsgNotExist");
+            return true;
+        }
+
+        // モデレーターかどうか確認する
+        Channel channel = LunaChat.manager.getChannel(cname);
+        if ( player != null ) {
+            if ( !channel.moderator.contains(player.getName()) && !player.isOp()) {
+                sendResourceMessage(sender, PREERR, "errmsgNotModerator");
+                return true;
+            }
+        }
+
+        // フォーマットの設定
+        channel.format = format;
+        sendResourceMessage(sender, PREINFO, "cmdmsgFormat", format);
+        return true;
+    }
+
+    /**
+     * モデレーターを設定する
+     *
+     * @param sender
+     * @param args
+     * @return
+     */
+    private boolean doModerator(CommandSender sender, String[] args) {
+
+        Player player = null;
+        if (sender instanceof Player) {
+            player = (Player) sender;
+        }
+        
+        // 引数チェック
+        // このコマンドは、コンソールでも実行できるが、その場合はチャンネル名を指定する必要がある
+        String cname = "";
+        ArrayList<String> moderator = new ArrayList<String>();
+        if ( player != null && args.length >= 2 ) {
+            cname = LunaChat.manager.getDefault(player.getName());
+            for (int i = 1; i < args.length; i++) {
+                moderator.add(args[i]);
+            }
+        } else if ( args.length >= 3 ) {
+            cname = args[1];
+            for (int i = 2; i < args.length; i++) {
+                moderator.add(args[i]);
+            }
+        } else {
+            sendResourceMessage(sender, PREERR, "errmsgCommand");
+            return true;
+        }
+
+        // チャンネルが存在するかどうかをチェックする
+        ArrayList<String> channels = LunaChat.manager.getNames();
+        if (!channels.contains(cname)) {
+            sendResourceMessage(sender, PREERR, "errmsgNotExist");
+            return true;
+        }
+
+        // モデレーターかどうか確認する
+        Channel channel = LunaChat.manager.getChannel(cname);
+        if ( player != null ) {
+            if ( !channel.moderator.contains(player.getName()) && !player.isOp()) {
+                sendResourceMessage(sender, PREERR, "errmsgNotModerator");
+                return true;
+            }
+        }
+
+        // 設定する
+        for ( String mod : moderator ) {
+            if ( mod.startsWith("-") ) {
+                String name = mod.substring(1);
+                channel.moderator.remove(name);
+                sendResourceMessage(sender, PREINFO,
+                        "cmdmsgModeratorMinus", name, cname);
+            } else {
+                channel.moderator.add(mod);
+                sendResourceMessage(sender, PREINFO,
+                        "cmdmsgModerator", mod, cname);
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * config.yml の再読み込みを行う
+     *
+     * @param sender
+     * @param args
+     * @return
+     */
+    private boolean doReload(CommandSender sender, String[] args) {
+
+        LunaChat.config.reloadConfig();
+        sendResourceMessage(sender, PREINFO, "cmdmsgReload");
+        return true;
+    }
+    
     /**
      * コマンドの使い方を senderに送る
      *

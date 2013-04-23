@@ -36,8 +36,8 @@ cmdmsgReload: 'config.yml を再読み込みしました。'
 cmdmsgCreate: 'チャンネル %s を新規作成しました。'
 cmdmsgRemove: 'チャンネル %s を削除しました。'
 cmdmsgFormat: 'メッセージフォーマットを %s に設定しました。'
-cmdmsgModerator: 'チャンネル %s の %s さんをモデレーターに設定しました。'
-
+cmdmsgModerator: '%s さんをチャンネル %s のモデレーターに設定しました。'
+cmdmsgModeratorMinus: '%s さんをチャンネル %s のモデレーターから外しました。'
 
 errmsgIngame: 'このコマンドはゲーム内からしか実行できません。'
 errmsgCommand: 'コマンドの指定が正しくありません。'

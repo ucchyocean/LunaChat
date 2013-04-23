@@ -11,30 +11,69 @@ commands:
            /<command> join (channel) - チャンネルに参加します。
            /<command> leave - 参加しているチャンネルから退出します。
            /<command> list - チャンネルのリストを表示します。
-           /<command> invite (channel) (name) - 指定した人をチャンネルチャットに招待します。
+           /<command> invite (name) - 指定した人をチャンネルチャットに招待します。
            /<command> accept - 招待を受けてチャンネルチャットに入室します。
            /<command> deny - 招待を拒否します。
            /<command> kick (name) - 指定した人をチャンネルチャットからキックします。
            /<command> ban (name) - 指定した人をチャンネルチャットからBANします。
            /<command> pardon (name) - 指定した人のBANを解除します。
            /<command> info [channel] - チャンネルの情報を表示します。
-    permission: lunachat.user
-    permission-message: パーミッション "<permission>" が無いため、実行できません。
-  lunachatadmin:
-    description: lunachatの管理コマンド
-    aliases: [lcadmin, lca]
-    usage: |
-           /<command> reload - config.ymlの再読み込みをします。
-           /<command> create (channel) [description] - チャンネルを作成します。
-           /<command> remove (channel) - チャンネルを削除します。
-           /<command> format (channel) (format) - チャンネルのメッセージフォーマットを設定します。
+           /<command> create (channel) - チャンネルを作成します。
+           /<command> remove [channel] - チャンネルを削除します。
+           /<command> format [channel] (format) - チャンネルのメッセージフォーマットを設定します。
            /<command> moderator (channel) (player) - チャンネルのモデレーターを指定したプレイヤーに設定します。
-    permission: lunachat.admin
-    permission-message: パーミッション "<permission>" が無いため、実行できません。
+           /<command> option (key=value) - チャンネルのオプションを設定します。
+           /<command> reload - config.ymlの再読み込みをします。
 permissions:
-  lunachat.user:
-    description: lunachatのユーザーコマンドの使用権限
+  lunachat.join:
+    description: joinコマンドの使用権限
+  lunachat.leave:
+    description: leaveコマンドの使用権限
+  lunachat.list:
+    description: listコマンドの使用権限
+  lunachat.invite:
+    description: inviteコマンドの使用権限
+  lunachat.accept:
+    description: acceptコマンドの使用権限
+  lunachat.deny:
+    description: denyコマンドの使用権限
+  lunachat.kick:
+    description: kickコマンドの使用権限
+  lunachat.ban:
+    description: banコマンドの使用権限
+  lunachat.pardon:
+    description: pardonコマンドの使用権限
+  lunachat.info:
+    description: infoコマンドの使用権限
+  lunachat.create:
+    description: createコマンドの使用権限
+  lunachat.remove:
+    description: removeコマンドの使用権限
+  lunachat.format:
+    description: formatコマンドの使用権限
+  lunachat.moderator:
+    description: moderatorコマンドの使用権限
+  lunachat.option:
+    description: optionコマンドの使用権限
+  lunachat.*:
+    children:
+      lunachat.join: true
+      lunachat.leave: true
+      lunachat.list: true
+      lunachat.invite: true
+      lunachat.accept: true
+      lunachat.deny: true
+      lunachat.kick: true
+      lunachat.ban: true
+      lunachat.pardon: true
+      lunachat.info: true
+      lunachat.create: true
+      lunachat.remove: true
+      lunachat.format: true
+      lunachat.moderator: true
+      lunachat.option: true
+    description: 全てのコマンドの使用権限
     default: true
-  lunachat.admin:
-    description: lunachatの管理コマンドの使用権限
+  lunachat.reload:
+    description: reloadコマンドの使用権限
     default: op

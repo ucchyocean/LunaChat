@@ -30,7 +30,7 @@ public class Channel {
     protected List<String> members;
     
     /** チャンネルモデレータ */
-    protected String moderator;
+    protected List<String> moderator;
     
     /** BANされたプレイヤー */
     protected List<String> banned;
@@ -70,7 +70,7 @@ public class Channel {
         this.members = members;
         this.format = DEFAULT_FORMAT;
         this.banned = new ArrayList<String>();
-        this.moderator = "";
+        this.moderator = new ArrayList<String>();
     }
     
     /**
@@ -115,7 +115,7 @@ public class Channel {
     protected void addMember(String name) {
         
         if ( members.size() == 0 ) {
-            moderator = name;
+            moderator.add(name);
         }
         if ( !members.contains(name) ) {
             members.add(name);
@@ -149,18 +149,9 @@ public class Channel {
             }
         }
         
-        // モデレーターの変更がある場合、次のモデレーターを選出する
-        if ( moderator.equals(name) ) {
-            if ( members.size() > 0 ) {
-                String last = moderator;
-                moderator = members.get(0);
-                sendInformation(String.format(
-                        Utility.replaceColorCode(
-                                Resources.get("moderatorChangedMessage")),
-                        this.name, last, moderator));
-            } else {
-                moderator = "";
-            }
+        // モデレーターだった場合は、モデレーターから除去する
+        if ( moderator.contains(name) ) {
+            moderator.remove(name);
         }
     }
     
@@ -240,15 +231,17 @@ public class Channel {
             
             String name = members.get(i);
             String disp;
-            if ( moderator.equals(name) ) {
-                disp = ChatColor.RED + name;
-            } else if ( isOnline(members.get(i)) ) {
+            if ( moderator.contains(name) ) {
+                name = "@" + name;
+            }
+            if ( isOnline(members.get(i)) ) {
                 disp = ChatColor.WHITE + name;
             } else {
                 disp = ChatColor.GRAY + name;
             }
             buf.append(disp + ",");
         }
+        
         info.add(buf.toString());
         info.add(Utility.replaceColorCode(LIST_ENDLINE));
         

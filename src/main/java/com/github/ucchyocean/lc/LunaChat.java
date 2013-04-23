@@ -43,7 +43,6 @@ public class LunaChat extends JavaPlugin {
         
         // コマンドの登録
         getCommand("lunachat").setExecutor(new LunaChatCommand());
-        getCommand("lunachatadmin").setExecutor(new LunaChatAdminCommand());
     }
 
     /**

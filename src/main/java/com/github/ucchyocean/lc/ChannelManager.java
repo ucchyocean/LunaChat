@@ -116,7 +116,7 @@ public class ChannelManager {
         String format = section.getString(KEY_FORMAT, DEFAULT_FORMAT);
         List<String> members = section.getStringList(KEY_MEMBERS);
         List<String> banned = section.getStringList(KEY_BANNED);
-        String moderator = section.getString(KEY_MODERATOR, "");
+        List<String> moderator = section.getStringList(KEY_MODERATOR);
         if ( members == null ) {
             members = new ArrayList<String>();
         }
