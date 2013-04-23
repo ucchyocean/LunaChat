@@ -6,6 +6,7 @@
 package com.github.ucchyocean.lc;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -24,7 +25,7 @@ public class LunaChatCommand implements CommandExecutor {
     private static final String[] USAGE_KEYS = {
         "usageJoin", "usageLeave", "usageList", "usageInvite", "usageAccept", 
         "usageDeny", "usageKick", "usageBan", "usagePardon", "usageCreate",
-        "usageRemove", "usageFormat", "usageModerator"
+        "usageRemove", "usageFormat", "usageModerator", "usageOption",
     };
 
     /**
@@ -67,6 +68,8 @@ public class LunaChatCommand implements CommandExecutor {
             return doFormat(sender, args);
         } else if (args[0].equalsIgnoreCase("moderator")) {
             return doModerator(sender, args);
+        } else if (args[0].equalsIgnoreCase("option")) {
+            return doOption(sender, args);
         } else if (args[0].equalsIgnoreCase("reload")) {
             return doReload(sender, args);
         } else {
@@ -808,6 +811,101 @@ public class LunaChatCommand implements CommandExecutor {
             }
         }
 
+        return true;
+    }
+
+    /**
+     * チャンネルのオプションを指定する
+     * 
+     * @param sender 
+     * @param args 
+     * @return
+     */
+    private boolean doOption(CommandSender sender, String[] args) {
+
+        Player player = null;
+        if (sender instanceof Player) {
+            player = (Player) sender;
+        }
+        
+        // 引数チェック
+        // このコマンドは、コンソールでも実行できるが、その場合はチャンネル名を指定する必要がある
+        ArrayList<String> optionsTemp = new ArrayList<String>();
+        String cname;
+        if ( player != null && args.length >= 2 ) {
+            cname = LunaChat.manager.getDefault(player.getName());
+            for (int i = 1; i < args.length; i++) {
+                optionsTemp.add(args[i]);
+            }
+        } else if ( args.length >= 3 ) {
+            cname = args[1];
+            for (int i = 2; i < args.length; i++) {
+                optionsTemp.add(args[i]);
+            }
+        } else {
+            sendResourceMessage(sender, PREERR, "errmsgCommand");
+            return true;
+        }
+
+        // チャンネルが存在するかどうかをチェックする
+        ArrayList<String> channels = LunaChat.manager.getNames();
+        if (!channels.contains(cname)) {
+            sendResourceMessage(sender, PREERR, "errmsgNotExist");
+            return true;
+        }
+
+        // モデレーターかどうか確認する
+        Channel channel = LunaChat.manager.getChannel(cname);
+        if ( player != null ) {
+            if ( !channel.moderator.contains(player.getName()) && !player.isOp()) {
+                sendResourceMessage(sender, PREERR, "errmsgNotModerator");
+                return true;
+            }
+        }
+        
+        // 指定内容を解析する
+        HashMap<String, String> options = new HashMap<String, String>();
+        for ( String t : optionsTemp ) {
+            int index = t.indexOf("=");
+            if ( index == -1 ) {
+                continue;
+            }
+            options.put(t.substring(0, index), t.substring(index + 1));
+        }
+        
+        // 設定する
+        boolean setOption = false;
+        if ( options.containsKey("description") ) {
+            channel.description = options.get("description");
+            sendResourceMessage(sender, PREINFO,
+                    "cmdmsgOption", "description", options.get("description"));
+            setOption = true;
+        }
+        if ( options.containsKey("password") ) {
+            channel.password = options.get("password");
+            sendResourceMessage(sender, PREINFO,
+                    "cmdmsgOption", "password", options.get("password"));
+            setOption = true;
+        }
+        if ( options.containsKey("visible") ) {
+            String temp = options.get("visible");
+            if ( temp.equalsIgnoreCase("false") ) {
+                channel.visible = false;
+                sendResourceMessage(sender, PREINFO,
+                        "cmdmsgOption", "visible", "false");
+                setOption = true;
+            } else if ( temp.equalsIgnoreCase("true") ) {
+                channel.visible = true;
+                sendResourceMessage(sender, PREINFO,
+                        "cmdmsgOption", "visible", "true");
+                setOption = true;
+            }
+        }
+
+        if ( !setOption ) {
+            sendResourceMessage(sender, PREERR, "errmsgInvalidOptions");
+        }
+        
         return true;
     }
 

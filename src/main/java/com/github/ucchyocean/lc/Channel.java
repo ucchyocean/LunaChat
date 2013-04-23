@@ -41,6 +41,12 @@ public class Channel {
     /** チャンネルの説明文 */
     protected String description;
     
+    /** チャンネルのパスワード */
+    protected String password;
+    
+    /** チャンネルリストに表示されるかどうか */
+    protected boolean visible;
+    
     /** メッセージフォーマット<br>
      * 指定可能なキーワードは下記のとおり<br>
      * %ch - チャンネル名<br>
@@ -71,6 +77,7 @@ public class Channel {
         this.format = DEFAULT_FORMAT;
         this.banned = new ArrayList<String>();
         this.moderator = new ArrayList<String>();
+        this.password = "";
     }
     
     /**

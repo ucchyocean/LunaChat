@@ -38,6 +38,7 @@ public class ChannelManager {
     private static final String KEY_MEMBERS = "members";
     private static final String KEY_BANNED = "banned";
     private static final String KEY_MODERATOR = "moderator";
+    private static final String KEY_PASSWORD = "password";
     
     private File file;
     private HashMap<String, Channel> channels;
@@ -117,6 +118,7 @@ public class ChannelManager {
         List<String> members = section.getStringList(KEY_MEMBERS);
         List<String> banned = section.getStringList(KEY_BANNED);
         List<String> moderator = section.getStringList(KEY_MODERATOR);
+        String password = section.getString(KEY_PASSWORD, "");
         if ( members == null ) {
             members = new ArrayList<String>();
         }
@@ -125,6 +127,7 @@ public class ChannelManager {
         channel.format = format;
         channel.banned = banned;
         channel.moderator = moderator;
+        channel.password = password;
         return channel;
     }
     
@@ -144,6 +147,7 @@ public class ChannelManager {
                 config.set("channels." + key + "." + KEY_MEMBERS, channel.members);
                 config.set("channels." + key + "." + KEY_BANNED, channel.banned);
                 config.set("channels." + key + "." + KEY_MODERATOR, channel.moderator);
+                config.set("channels." + key + "." + KEY_PASSWORD, channel.password);
             }
             
             for ( String key : defaultChannels.keySet() ) {
@@ -202,7 +206,14 @@ public class ChannelManager {
         items.add(Utility.replaceColorCode(LIST_FIRSTLINE));
         for ( String key : channels.keySet() ) {
             Channel channel = channels.get(key);
+            
+            // BANされているチャンネルは表示しない
             if ( channel.banned.contains(playerName) ) {
+                continue;
+            }
+            
+            // visible=false のチャンネルは表示しない
+            if ( !channel.visible ) {
                 continue;
             }
             
