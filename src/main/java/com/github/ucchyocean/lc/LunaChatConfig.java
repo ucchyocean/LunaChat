@@ -17,38 +17,42 @@ public class LunaChatConfig {
 
     /** Japanize変換をおこなうかどうか */
     protected boolean displayJapanize;
-    
+
     /** チャンネルチャットに入っていない人の発言を、グローバルとして扱うかどうか */
     protected boolean noJoinAsGlobal;
-    
+
     /** チャンネルチャットの発言内容を、ログに残すかどうか */
     protected boolean loggingChat;
-    
+
     /** グローバルマーカー  これが発言の頭に入っている場合は、強制的にグローバル発言になる */
     protected String globalMarker;
-    
+
     /** 発言先移動時に、移動元のチャンネルから退出するかどうか */
     protected boolean autoLeavingOnMove;
-    
+
     /** サーバーから退出したときに、全ての参加チャンネルから退出するかどうか */
     protected boolean autoLeavingOnQuit;
-    
+
     /** 全てのメンバーが退出したときに、チャンネルを削除するかどうか */
     protected boolean zeroMemberRemove;
-    
+
     /** ログイン時に、参加中チャンネルを表示するかどうか */
     protected boolean showListOnJoin;
-    
+
     /** /ch join コマンドで存在しないチャンネルを指定したときに、チャンネルを新規作成して入室するかどうか */
     protected boolean createChannelOnJoinCommand;
-    
+
+    /** サーバーに初参加したユーザーを参加させる、既定のチャンネル。
+     *  参加させない場合は、から文字列 "" を指定すること。 */
+    protected String joinChannelOnFirstVisit;
+
     /**
      * コンストラクタ
      */
     protected LunaChatConfig() {
         reloadConfig();
     }
-    
+
     /**
      * config.yml を再読み込みする
      */
@@ -61,7 +65,7 @@ public class LunaChatConfig {
 
         LunaChat.instance.reloadConfig();
         FileConfiguration config = LunaChat.instance.getConfig();
-        
+
         displayJapanize = config.getBoolean("displayJapanize", true);
         noJoinAsGlobal = config.getBoolean("noJoinAsGlobal", true);
         loggingChat = config.getBoolean("loggingChat", true);
@@ -70,8 +74,10 @@ public class LunaChatConfig {
         autoLeavingOnQuit = config.getBoolean("autoLeavingOnQuit", false);
         zeroMemberRemove = config.getBoolean("zeroMemberRemove", false);
         showListOnJoin = config.getBoolean("showListOnJoin", false);
-        createChannelOnJoinCommand = 
+        createChannelOnJoinCommand =
                 config.getBoolean("createChannelOnJoinCommand", true);
+        joinChannelOnFirstVisit = config.getString(
+                "joinChannelOnFirstVisit", "");
     }
 
     /**
