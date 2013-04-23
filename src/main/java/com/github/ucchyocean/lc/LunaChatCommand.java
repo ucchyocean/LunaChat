@@ -269,10 +269,10 @@ public class LunaChatCommand implements CommandExecutor {
             return true;
         }
 
-        // チャンネルのメンバーかどうかを確認する
+        // モデレーターかどうか確認する
         Channel channel = LunaChat.manager.getChannel(channelName);
-        if (!channel.members.contains(inviter.getName())) {
-            sendResourceMessage(sender, PREERR, "errmsgNomember");
+        if ( !channel.moderator.contains(inviter.getName()) && !inviter.isOp()) {
+            sendResourceMessage(sender, PREERR, "errmsgNotModerator");
             return true;
         }
 

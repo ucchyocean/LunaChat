@@ -21,7 +21,7 @@ commands:
            /<command> create (channel) - チャンネルを作成します。
            /<command> remove [channel] - チャンネルを削除します。
            /<command> format [channel] (format) - チャンネルのメッセージフォーマットを設定します。
-           /<command> moderator (channel) (player) - チャンネルのモデレーターを指定したプレイヤーに設定します。
+           /<command> moderator [channel] (player...) - チャンネルのモデレーターを指定したプレイヤーに設定します。
            /<command> option (key=value) - チャンネルのオプションを設定します。
            /<command> reload - config.ymlの再読み込みをします。
 permissions:
