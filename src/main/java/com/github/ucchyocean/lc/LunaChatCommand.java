@@ -134,7 +134,7 @@ public class LunaChatCommand implements CommandExecutor {
             }
         }
 
-        // デフォルト発言先をチェックする
+        // チャンネルを取得する
         Player player = (Player) sender;
         Channel channel = LunaChat.manager.getChannel(channelName);
 
@@ -157,6 +157,18 @@ public class LunaChatCommand implements CommandExecutor {
             sendResourceMessage(sender, PREINFO, "cmdmsgSet", channelName);
 
         } else {
+            
+            // パスワードが設定されている場合は、パスワードを確認する
+            if ( !channel.password.equals("") ) {
+                if ( !channel.password.equals(message.toString().trim()) ) {
+                    // パスワード不一致
+                    sendResourceMessage(sender, PREERR, "errmsgPassword1");
+                    sendResourceMessage(sender, PREERR, "errmsgPassword2");
+                    sendResourceMessage(sender, PREERR, "errmsgPassword3");
+                    return true;
+                }
+            }
+            
             // チャンネルに参加し、デフォルトの発言先に設定する
             channel.addMember(player.getName());
             sendResourceMessage(sender, PREINFO, "cmdmsgJoin", channelName);
@@ -745,6 +757,7 @@ public class LunaChatCommand implements CommandExecutor {
         // フォーマットの設定
         channel.format = format;
         sendResourceMessage(sender, PREINFO, "cmdmsgFormat", format);
+        LunaChat.manager.save();
         return true;
     }
 
@@ -811,6 +824,7 @@ public class LunaChatCommand implements CommandExecutor {
             }
         }
 
+        LunaChat.manager.save();
         return true;
     }
 
@@ -904,6 +918,8 @@ public class LunaChatCommand implements CommandExecutor {
 
         if ( !setOption ) {
             sendResourceMessage(sender, PREERR, "errmsgInvalidOptions");
+        } else {
+            LunaChat.manager.save();
         }
         
         return true;

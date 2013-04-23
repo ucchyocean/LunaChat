@@ -12,7 +12,7 @@ listFormat: '&8| &f%s&8(&c%d&8/&c%d&8) &a%s'
 channelInfoFirstLine: '&8---------- &bChannel Info &8----------'
 channelInfoPrefix: '&8| '
 
-motdFirstLine: '&8----- &3あなたが参加中のチャット &8-----'
+motdFirstLine: '&8----- &bあなたが参加中のチャット &8-----'
 
 infoPrefix: '&7[LC]'
 errorPrefix: '&4[LC]'
@@ -56,6 +56,9 @@ errmsgBanned: 'あなたはこのチャンネルからBANされています。'
 errmsgNotModerator: 'あなたはモデレーターではないため、そのコマンドを実行できません。'
 errmsgNotBanned: '指定されたプレイヤーはBANリストに含まれていません。'
 errmsgInvalidOptions: '有効なオプション指定が1つもありませんでした。'
+errmsgPassword1: 'このチャンネルはパスワードが設定されているため入れません。'
+errmsgPassword2: 'パスワードを指定して、チャンネルに入ってください。'
+errmsgPassword3: '/ch (channel) (password)'
 
 usageJoin: '&7/%s join (channel) - チャンネルに参加します。'
 usageLeave: '&7/%s leave - 参加しているチャンネルから退出します。'

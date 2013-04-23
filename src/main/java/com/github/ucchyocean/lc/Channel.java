@@ -78,6 +78,7 @@ public class Channel {
         this.banned = new ArrayList<String>();
         this.moderator = new ArrayList<String>();
         this.password = "";
+        this.visible = true;
     }
     
     /**

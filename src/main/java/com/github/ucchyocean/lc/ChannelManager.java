@@ -39,6 +39,7 @@ public class ChannelManager {
     private static final String KEY_BANNED = "banned";
     private static final String KEY_MODERATOR = "moderator";
     private static final String KEY_PASSWORD = "password";
+    private static final String KEY_VISIBLE = "visible";
     
     private File file;
     private HashMap<String, Channel> channels;
@@ -119,6 +120,7 @@ public class ChannelManager {
         List<String> banned = section.getStringList(KEY_BANNED);
         List<String> moderator = section.getStringList(KEY_MODERATOR);
         String password = section.getString(KEY_PASSWORD, "");
+        boolean visible = section.getBoolean(KEY_VISIBLE, true);
         if ( members == null ) {
             members = new ArrayList<String>();
         }
@@ -128,6 +130,7 @@ public class ChannelManager {
         channel.banned = banned;
         channel.moderator = moderator;
         channel.password = password;
+        channel.visible = visible;
         return channel;
     }
     
@@ -148,6 +151,7 @@ public class ChannelManager {
                 config.set("channels." + key + "." + KEY_BANNED, channel.banned);
                 config.set("channels." + key + "." + KEY_MODERATOR, channel.moderator);
                 config.set("channels." + key + "." + KEY_PASSWORD, channel.password);
+                config.set("channels." + key + "." + KEY_VISIBLE, channel.visible);
             }
             
             for ( String key : defaultChannels.keySet() ) {
