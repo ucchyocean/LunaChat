@@ -10,7 +10,10 @@ import java.util.HashMap;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 /**
  * @author ucchy
@@ -23,6 +26,8 @@ public class LunaChat extends JavaPlugin {
     protected static ChannelManager manager;
     protected static HashMap<String, String> inviteMap;
     protected static HashMap<String, String> inviterMap;
+
+    protected static PermissionsEx pex;
 
     /**
      * プラグインが有効化されたときに呼び出されるメソッド
@@ -37,6 +42,12 @@ public class LunaChat extends JavaPlugin {
         manager = new ChannelManager();
         inviteMap = new HashMap<String, String>();
         inviterMap = new HashMap<String, String>();
+
+        // PermissionsExのロード
+        Plugin temp = getServer().getPluginManager().getPlugin("PermissionsEx");
+        if ( temp != null && temp instanceof PermissionsEx ) {
+            pex = (PermissionsEx)temp;
+        }
 
         // リスナーの登録
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);

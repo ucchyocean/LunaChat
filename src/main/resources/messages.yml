@@ -1,4 +1,4 @@
-defaultFormat: '&a[%ch]%username&a: %msg'
+defaultFormat: '&a[%ch]%prefix%username%suffix&a: %msg'
 
 joinMessage: '&a[%ch]&7%username さんがチャンネルチャットに参加しました。'
 quitMessage: '&a[%ch]&7%username さんがチャンネルチャットから退出しました。'

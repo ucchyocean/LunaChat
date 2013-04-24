@@ -11,6 +11,9 @@ import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import ru.tehkode.permissions.PermissionUser;
+import ru.tehkode.permissions.bukkit.PermissionsEx;
+
 /**
  * @author ucchy
  * チャンネル
@@ -51,7 +54,9 @@ public class Channel {
      * 指定可能なキーワードは下記のとおり<br>
      * %ch - チャンネル名<br>
      * %username - ユーザー名<br>
-     * %msg - メッセージ
+     * %msg - メッセージ<br>
+     * %prefix - PermissionsExに設定するprefix<br>
+     * %suffix - PermissionsExに設定するsuffix
      * */
     protected String format;
 
@@ -97,10 +102,8 @@ public class Channel {
             }
         }
 
-        String msg = format.replace("%ch", name);
-        msg = msg.replace("%username", player.getDisplayName());
-        msg = msg.replace("%msg", message);
-        msg = Utility.replaceColorCode(msg);
+        // キーワード置き換え
+        String msg = replaceKeywords(format, player, message);
 
         // オンラインのプレイヤーに送信する
         for ( String member : members ) {
@@ -176,9 +179,10 @@ public class Channel {
         } else {
             msg = MSG_QUIT;
         }
-        msg = msg.replace("%ch", name);
-        msg = msg.replace("%username", player);
-        msg = Utility.replaceColorCode(msg);
+
+        // キーワード置き換え
+        Player p = LunaChat.getPlayerExact(player);
+        msg = replaceKeywords(msg, p, "");
 
         sendInformation(msg);
     }
@@ -264,5 +268,37 @@ public class Channel {
     private boolean isOnline(String name) {
         Player p = LunaChat.getPlayerExact(name);
         return ( p != null && p.isOnline() );
+    }
+
+    /**
+     * チャットフォーマット内のキーワードを置き換えする
+     * @param format チャットフォーマット
+     * @param player プレイヤー
+     * @param message プレイヤーの発言内容
+     * @return 置き換え結果
+     */
+    private String replaceKeywords(String format, Player player, String message) {
+
+        String msg = format.replace("%ch", name);
+        msg = msg.replace("%msg", message);
+
+        if ( player != null ) {
+            msg = msg.replace("%username", player.getDisplayName());
+
+            if ( msg.contains("%prefix") || msg.contains("%suffix") ) {
+                String prefix = "";
+                String suffix = "";
+                if ( LunaChat.pex != null ) {
+                    String world = player.getWorld().getName();
+                    PermissionUser user = PermissionsEx.getUser(player);
+                    prefix = user.getPrefix(world);
+                    suffix = user.getSuffix(world);
+                }
+                msg = msg.replace("%prefix", prefix);
+                msg = msg.replace("%suffix", suffix);
+            }
+        }
+
+        return Utility.replaceColorCode(msg);
     }
 }

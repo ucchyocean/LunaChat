@@ -36,5 +36,10 @@
       <artifactId>craftbukkit</artifactId>
       <version>1.5.1-R0.3-SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <groupId>ru.tehkode</groupId>
+      <artifactId>PermissionsEx</artifactId>
+      <version>1.19.5</version>
+    </dependency>
   </dependencies>
 </project>
