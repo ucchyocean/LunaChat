@@ -951,7 +951,7 @@ public class LunaChatCommand implements CommandExecutor {
                 boolean permission = sender.hasPermission("lunachat." + c);
                 if ( !permission ) {
                     sendResourceMessage(sender, PREERR,
-                            "cmdmsgReload", "lunachat." + c);
+                            "errmsgPermission", "lunachat." + c);
                 }
                 return permission;
             }
@@ -962,7 +962,7 @@ public class LunaChatCommand implements CommandExecutor {
         boolean permission = sender.hasPermission("lunachat.join");
         if ( !permission ) {
             sendResourceMessage(sender, PREERR,
-                    "cmdmsgReload", "lunachat.join");
+                    "errmsgPermission", "lunachat.join");
         }
         return permission;
     }
