@@ -59,6 +59,7 @@ errmsgInvalidOptions: '有効なオプション指定が1つもありません�
 errmsgPassword1: 'このチャンネルはパスワードが設定されているため入れません。'
 errmsgPassword2: 'パスワードを指定して、チャンネルに入ってください。'
 errmsgPassword3: '/ch (channel) (password)'
+errmsgPermission: 'パーミッション "%s" が無いため、実行できません。'
 
 usageJoin: '&7/%s join (channel) - チャンネルに参加します。'
 usageLeave: '&7/%s leave - 参加しているチャンネルから退出します。'

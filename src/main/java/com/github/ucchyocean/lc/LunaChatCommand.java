@@ -22,6 +22,12 @@ public class LunaChatCommand implements CommandExecutor {
     private static final String PREINFO = Resources.get("infoPrefix");
     private static final String PREERR = Resources.get("errorPrefix");
 
+    private static final String[] COMMANDS = {
+        "Join", "Leave", "List", "Invite", "Accept",
+        "Deny", "Kick", "Ban", "Pardon", "Create",
+        "Remove", "Format", "Moderator", "Option", "Reload",
+    };
+
     private static final String[] USAGE_KEYS = {
         "usageJoin", "usageLeave", "usageList", "usageInvite", "usageAccept",
         "usageDeny", "usageKick", "usageBan", "usagePardon", "usageCreate",
@@ -37,6 +43,10 @@ public class LunaChatCommand implements CommandExecutor {
 
         if (args.length == 0) {
             printUsage(sender, label);
+            return true;
+        }
+
+        if (!hasPermission(sender, args)) {
             return true;
         }
 
@@ -923,6 +933,38 @@ public class LunaChatCommand implements CommandExecutor {
         }
 
         return true;
+    }
+
+    /**
+     * sender がパーミッションを持っているかどうかを確認する。
+     * 持っていなければ、エラーメッセージを表示する。
+     *
+     * @param sender 実行した人
+     * @param args 指定したコマンド
+     * @return パーミッションを持っているかどうか
+     */
+    private boolean hasPermission(CommandSender sender, String[] args) {
+
+        // 第1引数がコマンドに一致するか確認し、一致したらそのパーミッションを確認する
+        for ( String c : COMMANDS ) {
+            if ( c.equalsIgnoreCase(args[0]) ) {
+                boolean permission = sender.hasPermission("lunachat." + c);
+                if ( !permission ) {
+                    sendResourceMessage(sender, PREERR,
+                            "cmdmsgReload", "lunachat." + c);
+                }
+                return permission;
+            }
+        }
+
+        // 第1引数がコマンドでないなら、joinが実行されたとみなして、
+        // lunachat.join のパーミッションを確認する
+        boolean permission = sender.hasPermission("lunachat.join");
+        if ( !permission ) {
+            sendResourceMessage(sender, PREERR,
+                    "cmdmsgReload", "lunachat.join");
+        }
+        return permission;
     }
 
     /**
