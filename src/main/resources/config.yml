@@ -7,8 +7,6 @@ displayJapanize: true
 noJoinAsGlobal: true
 loggingChat: true
 globalMarker: '!'
-# autoLeavingOnMove: false
-# autoLeavingOnQuit: false
 zeroMemberRemove: false
 showListOnJoin: false
 createChannelOnJoinCommand: true

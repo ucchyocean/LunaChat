@@ -27,12 +27,6 @@ public class LunaChatConfig {
     /** グローバルマーカー  これが発言の頭に入っている場合は、強制的にグローバル発言になる */
     protected String globalMarker;
 
-    /** 発言先移動時に、移動元のチャンネルから退出するかどうか */
-    protected boolean autoLeavingOnMove;
-
-    /** サーバーから退出したときに、全ての参加チャンネルから退出するかどうか */
-    protected boolean autoLeavingOnQuit;
-
     /** 全てのメンバーが退出したときに、チャンネルを削除するかどうか */
     protected boolean zeroMemberRemove;
 
@@ -70,8 +64,6 @@ public class LunaChatConfig {
         noJoinAsGlobal = config.getBoolean("noJoinAsGlobal", true);
         loggingChat = config.getBoolean("loggingChat", true);
         globalMarker = config.getString("globalMarker", "!");
-        autoLeavingOnMove = config.getBoolean("autoLeavingOnMove", false);
-        autoLeavingOnQuit = config.getBoolean("autoLeavingOnQuit", false);
         zeroMemberRemove = config.getBoolean("zeroMemberRemove", false);
         showListOnJoin = config.getBoolean("showListOnJoin", false);
         createChannelOnJoinCommand =

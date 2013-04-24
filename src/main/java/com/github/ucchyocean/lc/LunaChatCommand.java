@@ -23,9 +23,9 @@ public class LunaChatCommand implements CommandExecutor {
     private static final String PREERR = Resources.get("errorPrefix");
 
     private static final String[] COMMANDS = {
-        "Join", "Leave", "List", "Invite", "Accept",
-        "Deny", "Kick", "Ban", "Pardon", "Create",
-        "Remove", "Format", "Moderator", "Option", "Reload",
+        "join", "leave", "list", "invite", "accept",
+        "deny", "kick", "ban", "pardon", "create",
+        "remove", "format", "moderator", "option", "reload",
     };
 
     private static final String[] USAGE_KEYS = {
