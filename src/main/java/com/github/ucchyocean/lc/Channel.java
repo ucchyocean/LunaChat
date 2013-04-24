@@ -21,32 +21,32 @@ public class Channel {
     private static final String INFO_PREFIX = Resources.get("channelInfoPrefix");
     private static final String LIST_ENDLINE = Resources.get("listEndLine");
     private static final String LIST_FORMAT = Resources.get("listFormat");
-    
+
     private static final String DEFAULT_FORMAT = Resources.get("defaultFormat");
     private static final String MSG_JOIN = Resources.get("joinMessage");
     private static final String MSG_QUIT = Resources.get("quitMessage");
-    
+
     /** 参加者 */
     protected List<String> members;
-    
+
     /** チャンネルモデレータ */
     protected List<String> moderator;
-    
+
     /** BANされたプレイヤー */
     protected List<String> banned;
-    
+
     /** チャンネルの名称 */
     protected String name;
-    
+
     /** チャンネルの説明文 */
     protected String description;
-    
+
     /** チャンネルのパスワード */
     protected String password;
-    
+
     /** チャンネルリストに表示されるかどうか */
     protected boolean visible;
-    
+
     /** メッセージフォーマット<br>
      * 指定可能なキーワードは下記のとおり<br>
      * %ch - チャンネル名<br>
@@ -54,7 +54,7 @@ public class Channel {
      * %msg - メッセージ
      * */
     protected String format;
-    
+
     /**
      * コンストラクタ
      * @param name チャンネルの名称
@@ -63,7 +63,7 @@ public class Channel {
     protected Channel(String name, String description) {
         this(name, description, new ArrayList<String>());
     }
-    
+
     /**
      * コンストラクタ
      * @param name チャンネルの名称
@@ -80,14 +80,14 @@ public class Channel {
         this.password = "";
         this.visible = true;
     }
-    
+
     /**
      * このチャットに発言をする
      * @param player 発言をするプレイヤー
      * @param message 発言をするメッセージ
      */
     protected void chat(Player player, String message) {
-        
+
         // Japanize変換
         if ( LunaChat.config.displayJapanize ) {
             // 2byteコードを含まない場合にのみ、処理を行う
@@ -96,12 +96,12 @@ public class Channel {
                 message = message + "(" + kana + ")";
             }
         }
-        
+
         String msg = format.replace("%ch", name);
         msg = msg.replace("%username", player.getDisplayName());
         msg = msg.replace("%msg", message);
         msg = Utility.replaceColorCode(msg);
-        
+
         // オンラインのプレイヤーに送信する
         for ( String member : members ) {
             Player p = LunaChat.getPlayerExact(member);
@@ -109,7 +109,7 @@ public class Channel {
                 p.sendMessage(msg);
             }
         }
-        
+
         // ロギング
         if ( LunaChat.config.loggingChat ) {
             LunaChat.log(msg);
@@ -121,7 +121,7 @@ public class Channel {
      * @param name 追加するメンバー名
      */
     protected void addMember(String name) {
-        
+
         if ( members.size() == 0 ) {
             moderator.add(name);
         }
@@ -131,20 +131,20 @@ public class Channel {
             LunaChat.manager.save();
         }
     }
-    
+
     /**
      * メンバーを削除する
      * @param name 削除するメンバー名
      */
     protected void removeMember(String name) {
-        
+
         // デフォルト発言先が退出するチャンネルと一致する場合、
         // デフォルト発言先を削除する
         String def = LunaChat.manager.getDefault(name);
         if ( def != null && def.equals(this.name) ) {
             LunaChat.manager.removeDefault(name);
         }
-        
+
         // 実際にメンバーから削除する
         if ( members.contains(name) ) {
             members.remove(name);
@@ -156,20 +156,20 @@ public class Channel {
                 LunaChat.manager.save();
             }
         }
-        
+
         // モデレーターだった場合は、モデレーターから除去する
         if ( moderator.contains(name) ) {
             moderator.remove(name);
         }
     }
-    
+
     /**
      * 入退室メッセージを流す
      * @param isJoin 入室かどうか（falseなら退室）
      * @param player 入退室したプレイヤー名
      */
     protected void sendJoinQuitMessage(boolean isJoin, String player) {
-        
+
         String msg;
         if ( isJoin ) {
             msg = MSG_JOIN;
@@ -179,16 +179,16 @@ public class Channel {
         msg = msg.replace("%ch", name);
         msg = msg.replace("%username", player);
         msg = Utility.replaceColorCode(msg);
-        
+
         sendInformation(msg);
     }
-    
+
     /**
      * 情報をチャンネルメンバーに流します。
      * @param message メッセージ
      */
     private void sendInformation(String message) {
-        
+
         // オンラインのプレイヤーに送信する
         for ( String member : members ) {
             Player p = LunaChat.getPlayerExact(member);
@@ -196,22 +196,22 @@ public class Channel {
                 p.sendMessage(message);
             }
         }
-        
+
         // ロギング
         if ( LunaChat.config.loggingChat ) {
             LunaChat.log(message);
         }
     }
-    
+
     /**
      * チャンネル情報を返す
      * @return チャンネル情報
      */
     protected ArrayList<String> getInfo() {
-        
+
         ArrayList<String> info = new ArrayList<String>();
         info.add(Utility.replaceColorCode(INFO_FIRSTLINE));
-        
+
         // メンバーの人数を数える
         int onlineNum = 0;
         for ( String pname : members ) {
@@ -220,15 +220,15 @@ public class Channel {
             }
         }
         int memberNum = members.size();
-        
+
         info.add( String.format(
-                Utility.replaceColorCode(LIST_FORMAT), 
+                Utility.replaceColorCode(LIST_FORMAT),
                 name, onlineNum, memberNum, description) );
-        
+
         // メンバーを、5人ごとに表示する
         StringBuffer buf = new StringBuffer();
         for ( int i=0; i<members.size(); i++ ) {
-            
+
             if ( i%5 == 0 ) {
                 if ( i != 0 ) {
                     info.add(buf.toString());
@@ -236,7 +236,7 @@ public class Channel {
                 }
                 buf.append(Utility.replaceColorCode(INFO_PREFIX));
             }
-            
+
             String name = members.get(i);
             String disp;
             if ( moderator.contains(name) ) {
@@ -249,13 +249,13 @@ public class Channel {
             }
             buf.append(disp + ",");
         }
-        
+
         info.add(buf.toString());
         info.add(Utility.replaceColorCode(LIST_ENDLINE));
-        
+
         return info;
     }
-    
+
     /**
      * 指定された名前のプレイヤーがオンラインかどうかを確認する
      * @param name プレイヤー名

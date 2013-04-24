@@ -37,10 +37,10 @@ public class LunaChat extends JavaPlugin {
         manager = new ChannelManager();
         inviteMap = new HashMap<String, String>();
         inviterMap = new HashMap<String, String>();
-        
+
         // リスナーの登録
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
-        
+
         // コマンドの登録
         getCommand("lunachat").setExecutor(new LunaChatCommand());
     }
@@ -52,7 +52,7 @@ public class LunaChat extends JavaPlugin {
     protected static File getPluginJarFile() {
         return instance.getFile();
     }
-    
+
     /**
      * ログにメッセージを出力する
      * @param message メッセージ
@@ -60,7 +60,7 @@ public class LunaChat extends JavaPlugin {
     protected static void log(String message) {
         instance.getLogger().info(ChatColor.stripColor(message));
     }
-    
+
     /**
      * Playerを取得する
      * @param name プレイヤー名
@@ -69,4 +69,4 @@ public class LunaChat extends JavaPlugin {
     protected static Player getPlayerExact(String name) {
         return instance.getServer().getPlayerExact(name);
     }
-} 
+}

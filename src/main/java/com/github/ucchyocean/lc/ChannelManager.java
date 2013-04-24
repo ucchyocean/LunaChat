@@ -26,13 +26,13 @@ public class ChannelManager {
     private static final String LIST_FIRSTLINE = Resources.get("listFirstLine");
     private static final String LIST_ENDLINE = Resources.get("listEndLine");
     private static final String LIST_FORMAT = Resources.get("listFormat");
-    
+
     private static final String MOTD_FIRSTLINE = Resources.get("motdFirstLine");
-    
+
     private static final String DEFAULT_FORMAT = Resources.get("defaultFormat");
-    
+
     private static final String FILE_NAME = "channels.yml";
-    
+
     private static final String KEY_DESC = "desc";
     private static final String KEY_FORMAT = "format";
     private static final String KEY_MEMBERS = "members";
@@ -40,7 +40,7 @@ public class ChannelManager {
     private static final String KEY_MODERATOR = "moderator";
     private static final String KEY_PASSWORD = "password";
     private static final String KEY_VISIBLE = "visible";
-    
+
     private File file;
     private HashMap<String, Channel> channels;
     private HashMap<String, String> defaultChannels;
@@ -56,7 +56,7 @@ public class ChannelManager {
      * 読み込みする
      */
     private void load() {
-        
+
         file = new File(
                 LunaChat.instance.getDataFolder() +
                 File.separator + FILE_NAME);
@@ -70,16 +70,16 @@ public class ChannelManager {
             }
         }
 
-        YamlConfiguration config = 
+        YamlConfiguration config =
                 YamlConfiguration.loadConfiguration(file);
-        
+
         // チャンネル設定のロード
         if ( channels == null ) {
             channels = new HashMap<String, Channel>();
         } else {
             channels.clear();
         }
-        
+
         if ( config.contains("channels") ) {
             ConfigurationSection section = config.getConfigurationSection("channels");
             Set<String> keyset = section.getValues(false).keySet();
@@ -89,14 +89,14 @@ public class ChannelManager {
                 channels.put(key, channel);
             }
         }
-        
+
         // デフォルト設定のロード
         if ( defaultChannels == null ) {
             defaultChannels = new HashMap<String, String>();
         } else {
             defaultChannels.clear();
         }
-        
+
         if ( config.contains("defaults") ) {
             ConfigurationSection section = config.getConfigurationSection("defaults");
             Set<String> keyset = section.getValues(false).keySet();
@@ -105,14 +105,14 @@ public class ChannelManager {
             }
         }
     }
-    
+
     /**
      * セクションからChannelクラスを生成して返す
      * @param section セクション
      * @return Channel
      */
     private Channel getChannelFromSection(ConfigurationSection section) {
-        
+
         String name = section.getName();
         String desc = section.getString(KEY_DESC, "");
         String format = section.getString(KEY_FORMAT, DEFAULT_FORMAT);
@@ -124,7 +124,7 @@ public class ChannelManager {
         if ( members == null ) {
             members = new ArrayList<String>();
         }
-        
+
         Channel channel = new Channel(name, desc, members);
         channel.format = format;
         channel.banned = banned;
@@ -133,16 +133,16 @@ public class ChannelManager {
         channel.visible = visible;
         return channel;
     }
-    
+
     /**
      * 保存する
      */
     protected boolean save() {
-        
+
         try {
-            YamlConfiguration config = 
+            YamlConfiguration config =
                     YamlConfiguration.loadConfiguration(file);
-            
+
             for ( String key : channels.keySet() ) {
                 Channel channel = channels.get(key);
                 config.set("channels." + key + "." + KEY_DESC, channel.description);
@@ -153,11 +153,11 @@ public class ChannelManager {
                 config.set("channels." + key + "." + KEY_PASSWORD, channel.password);
                 config.set("channels." + key + "." + KEY_VISIBLE, channel.visible);
             }
-            
+
             for ( String key : defaultChannels.keySet() ) {
                 config.set("defaults." + key, defaultChannels.get(key));
             }
-            
+
             config.save(file);
             return true;
         } catch (IOException e) {
@@ -165,37 +165,37 @@ public class ChannelManager {
             return false;
         }
     }
-    
+
     /**
      * チャンネルをアップデートする
-     * @param channel 
+     * @param channel
      */
     protected void updateChannel(Channel channel) {
         String key = channel.name;
         channels.put(key, channel);
         save();
     }
-    
+
     /**
      * チャンネルの名前リストを返す
      * @return チャンネルの名前
      */
     protected ArrayList<String> getNames() {
-        
+
         ArrayList<String> names = new ArrayList<String>();
         for ( String k : channels.keySet() ) {
             names.add(k);
         }
         return names;
     }
-    
+
     /**
      * リスト表示用のリストを返す
      * @param player プレイヤー、指定しない場合はnullにする
      * @return リスト
      */
     protected ArrayList<String> getList(Player player) {
-        
+
         ArrayList<String> items = new ArrayList<String>();
         String dchannel = "";
         String playerName = "";
@@ -206,21 +206,21 @@ public class ChannelManager {
                 dchannel = "";
             }
         }
-        
+
         items.add(Utility.replaceColorCode(LIST_FIRSTLINE));
         for ( String key : channels.keySet() ) {
             Channel channel = channels.get(key);
-            
+
             // BANされているチャンネルは表示しない
             if ( channel.banned.contains(playerName) ) {
                 continue;
             }
-            
+
             // visible=false のチャンネルは表示しない
             if ( !channel.visible ) {
                 continue;
             }
-            
+
             String disp = ChatColor.WHITE + key;
             if ( key.equals(dchannel) ) {
                 disp = ChatColor.RED + key;
@@ -238,36 +238,36 @@ public class ChannelManager {
             }
             int memberNum = channel.members.size();
             String item = String.format(
-                    Utility.replaceColorCode(LIST_FORMAT), 
+                    Utility.replaceColorCode(LIST_FORMAT),
                     disp, onlineNum, memberNum, desc);
             items.add(item);
         }
         items.add(Utility.replaceColorCode(LIST_ENDLINE));
-        
+
         return items;
     }
-    
+
     /**
      * プレイヤーのサーバー参加時用の参加チャンネルリストを返す
      * @param player プレイヤー
      * @return リスト
      */
     protected ArrayList<String> getListForMotd(Player player) {
-        
+
         ArrayList<String> items = new ArrayList<String>();
         String playerName = player.getName();
         String dchannel = defaultChannels.get(player.getName());
         if ( dchannel == null ) {
             dchannel = "";
         }
-        
+
         items.add(Utility.replaceColorCode(MOTD_FIRSTLINE));
         for ( String key : channels.keySet() ) {
             Channel channel = channels.get(key);
             if ( !channel.members.contains(playerName) ) {
                 continue;
             }
-            
+
             String disp = ChatColor.WHITE + key;
             if ( key.equals(dchannel) ) {
                 disp = ChatColor.RED + key;
@@ -282,22 +282,22 @@ public class ChannelManager {
             }
             int memberNum = channel.members.size();
             String item = String.format(
-                    Utility.replaceColorCode(LIST_FORMAT), 
+                    Utility.replaceColorCode(LIST_FORMAT),
                     disp, onlineNum, memberNum, desc);
             items.add(item);
         }
         items.add(Utility.replaceColorCode(LIST_ENDLINE));
-        
+
         return items;
     }
-    
+
     /**
      * プレイヤーが参加しているチャンネルを返す
      * @param player プレイヤー
      * @return チャンネル
      */
     protected ArrayList<Channel> getChannelByPlayer(Player player) {
-        
+
         ArrayList<Channel> result = new ArrayList<Channel>();
         String name = player.getName();
         for ( String key : channels.keySet() ) {
@@ -308,21 +308,21 @@ public class ChannelManager {
         }
         return result;
     }
-    
+
     /**
      * プレイヤーが参加しているデフォルトのチャンネルを返す
      * @param player プレイヤー
      * @return チャンネル
      */
     protected Channel getDefaultChannelByPlayer(String name) {
-        
+
         String cname = defaultChannels.get(name);
         if ( cname == null || !channels.containsKey(cname) ) {
             return null;
         }
         return channels.get(cname);
     }
-    
+
     /**
      * 指定した名前のプレイヤーに設定されている、デフォルトチャンネル名を取得する
      * @param name プレイヤー名
@@ -331,7 +331,7 @@ public class ChannelManager {
     protected String getDefault(String name) {
         return defaultChannels.get(name);
     }
-    
+
     /**
      * 指定した名前のプレイヤーに設定されている、デフォルトチャンネルを削除する
      * @param name プレイヤー名
@@ -341,7 +341,7 @@ public class ChannelManager {
             defaultChannels.remove(name);
         }
     }
-    
+
     /**
      * プレイヤーのデフォルトチャンネルを設定する
      * @param player プレイヤー
@@ -351,7 +351,7 @@ public class ChannelManager {
         defaultChannels.put(name, cname);
         save();
     }
-    
+
     /**
      * チャンネルを取得する
      * @param name チャンネル名
@@ -360,7 +360,7 @@ public class ChannelManager {
     protected Channel getChannel(String name) {
         return channels.get(name);
     }
-    
+
     /**
      * 新しいチャンネルを作成する
      * @param name チャンネル名
@@ -373,7 +373,7 @@ public class ChannelManager {
         save();
         return channel;
     }
-    
+
     /**
      * チャンネルを削除する
      * @param name 削除するチャンネル名

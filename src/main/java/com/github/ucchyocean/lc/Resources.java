@@ -20,37 +20,37 @@ import org.bukkit.configuration.file.YamlConfiguration;
  * @author ucchy
  */
 public class Resources {
-    
+
     private static final String FILE_NAME = "messages.yml";
-    
+
     private static YamlConfiguration defaultMessages;
     private static YamlConfiguration resources;
-    
+
     /**
      * 初期化する
      */
     protected static void initialize() {
-        
+
         File file = new File(
                 LunaChat.instance.getDataFolder() +
                 File.separator + FILE_NAME);
 
         if ( !file.exists() ) {
-            Utility.copyFileFromJar(LunaChat.getPluginJarFile(), 
+            Utility.copyFileFromJar(LunaChat.getPluginJarFile(),
                     file, "messages.yml", false);
         }
 
         defaultMessages = loadDefaultMessages();
         resources = YamlConfiguration.loadConfiguration(file);
     }
-    
+
     /**
      * リソースを取得する
      * @param key リソースキー
      * @return リソース
      */
     protected static String get(String key) {
-        
+
         if ( resources == null ) {
             initialize();
         }

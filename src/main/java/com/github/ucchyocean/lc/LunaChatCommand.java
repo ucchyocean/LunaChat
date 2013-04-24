@@ -23,7 +23,7 @@ public class LunaChatCommand implements CommandExecutor {
     private static final String PREERR = Resources.get("errorPrefix");
 
     private static final String[] USAGE_KEYS = {
-        "usageJoin", "usageLeave", "usageList", "usageInvite", "usageAccept", 
+        "usageJoin", "usageLeave", "usageList", "usageInvite", "usageAccept",
         "usageDeny", "usageKick", "usageBan", "usagePardon", "usageCreate",
         "usageRemove", "usageFormat", "usageModerator", "usageOption",
     };
@@ -157,7 +157,7 @@ public class LunaChatCommand implements CommandExecutor {
             sendResourceMessage(sender, PREINFO, "cmdmsgSet", channelName);
 
         } else {
-            
+
             // パスワードが設定されている場合は、パスワードを確認する
             if ( !channel.password.equals("") ) {
                 if ( !channel.password.equals(message.toString().trim()) ) {
@@ -168,7 +168,7 @@ public class LunaChatCommand implements CommandExecutor {
                     return true;
                 }
             }
-            
+
             // チャンネルに参加し、デフォルトの発言先に設定する
             channel.addMember(player.getName());
             sendResourceMessage(sender, PREINFO, "cmdmsgJoin", channelName);
@@ -266,7 +266,7 @@ public class LunaChatCommand implements CommandExecutor {
             sendResourceMessage(sender, PREERR, "errmsgNoJoin");
             return true;
         }
-        
+
         // 実行引数から招待する人を取得する
         String invitedName = "";
         if (args.length >= 2) {
@@ -520,9 +520,9 @@ public class LunaChatCommand implements CommandExecutor {
 
     /**
      * 指定したプレイヤーのBANを解除する
-     * 
-     * @param sender 
-     * @param args 
+     *
+     * @param sender
+     * @param args
      * @return
      */
     private boolean doPardon(CommandSender sender, String[] args) {
@@ -575,12 +575,12 @@ public class LunaChatCommand implements CommandExecutor {
 
         return true;
     }
-    
+
     /**
      * チャンネル情報を表示する
-     * 
-     * @param sender 
-     * @param args 
+     *
+     * @param sender
+     * @param args
      * @return
      */
     private boolean doInfo(CommandSender sender, String[] args) {
@@ -589,7 +589,7 @@ public class LunaChatCommand implements CommandExecutor {
         if (sender instanceof Player) {
             player = (Player) sender;
         }
-        
+
         // 引数チェック
         // このコマンドは、コンソールでも実行できるが、その場合はチャンネル名を指定する必要がある
         String cname;
@@ -601,14 +601,14 @@ public class LunaChatCommand implements CommandExecutor {
             sendResourceMessage(sender, PREERR, "errmsgCommand");
             return true;
         }
-        
+
         // チャンネルが存在するかどうか確認する
         Channel channel = LunaChat.manager.getChannel(cname);
         if ( channel == null ) {
             sendResourceMessage(sender, PREERR, "errmsgNotExist");
             return true;
         }
-        
+
         // BANされていないかどうか確認する
         if ( channel.banned.contains(player.getName()) ) {
             sendResourceMessage(sender, PREERR, "errmsgBanned");
@@ -671,7 +671,7 @@ public class LunaChatCommand implements CommandExecutor {
         if (sender instanceof Player) {
             player = (Player) sender;
         }
-        
+
         // 引数チェック
         // このコマンドは、コンソールでも実行できるが、その場合はチャンネル名を指定する必要がある
         String cname;
@@ -683,7 +683,7 @@ public class LunaChatCommand implements CommandExecutor {
             sendResourceMessage(sender, PREERR, "errmsgCommand");
             return true;
         }
-        
+
         // チャンネルが存在するかどうか確認する
         Channel channel = LunaChat.manager.getChannel(cname);
         if ( channel == null ) {
@@ -698,7 +698,7 @@ public class LunaChatCommand implements CommandExecutor {
                 return true;
             }
         }
-        
+
         // チャンネル削除
         LunaChat.manager.removeChannel(cname);
         sendResourceMessage(sender, PREINFO, "cmdmsgRemove", cname);
@@ -718,7 +718,7 @@ public class LunaChatCommand implements CommandExecutor {
         if (sender instanceof Player) {
             player = (Player) sender;
         }
-        
+
         // 引数チェック
         // このコマンドは、コンソールでも実行できるが、その場合はチャンネル名を指定する必要がある
         String format = "";
@@ -774,7 +774,7 @@ public class LunaChatCommand implements CommandExecutor {
         if (sender instanceof Player) {
             player = (Player) sender;
         }
-        
+
         // 引数チェック
         // このコマンドは、コンソールでも実行できるが、その場合はチャンネル名を指定する必要がある
         String cname = "";
@@ -830,9 +830,9 @@ public class LunaChatCommand implements CommandExecutor {
 
     /**
      * チャンネルのオプションを指定する
-     * 
-     * @param sender 
-     * @param args 
+     *
+     * @param sender
+     * @param args
      * @return
      */
     private boolean doOption(CommandSender sender, String[] args) {
@@ -841,7 +841,7 @@ public class LunaChatCommand implements CommandExecutor {
         if (sender instanceof Player) {
             player = (Player) sender;
         }
-        
+
         // 引数チェック
         // このコマンドは、コンソールでも実行できるが、その場合はチャンネル名を指定する必要がある
         ArrayList<String> optionsTemp = new ArrayList<String>();
@@ -876,7 +876,7 @@ public class LunaChatCommand implements CommandExecutor {
                 return true;
             }
         }
-        
+
         // 指定内容を解析する
         HashMap<String, String> options = new HashMap<String, String>();
         for ( String t : optionsTemp ) {
@@ -886,7 +886,7 @@ public class LunaChatCommand implements CommandExecutor {
             }
             options.put(t.substring(0, index), t.substring(index + 1));
         }
-        
+
         // 設定する
         boolean setOption = false;
         if ( options.containsKey("description") ) {
@@ -921,7 +921,7 @@ public class LunaChatCommand implements CommandExecutor {
         } else {
             LunaChat.manager.save();
         }
-        
+
         return true;
     }
 
@@ -938,7 +938,7 @@ public class LunaChatCommand implements CommandExecutor {
         sendResourceMessage(sender, PREINFO, "cmdmsgReload");
         return true;
     }
-    
+
     /**
      * コマンドの使い方を senderに送る
      *

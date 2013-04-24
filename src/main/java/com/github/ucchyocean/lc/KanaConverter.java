@@ -58,7 +58,7 @@ public class KanaConverter {
         TABLE.put("xt", new String[]{"た","ち","っ","て","と"});
         TABLE.put( "x", new String[]{"ぁ","ぃ","ぅ","ぇ","ぉ"});
     };
-    
+
     private static String getKanaFromTable(String s, int n) {
 
         if ( TABLE.containsKey(s) ) {

@@ -57,14 +57,14 @@ public class PlayerListener implements Listener {
 
                 if ( !LunaChat.config.globalChannel.equals("") &&
                         LunaChat.manager.getChannel(LunaChat.config.globalChannel) != null ) {
-                    
+
                     Channel global = LunaChat.manager.getChannel(LunaChat.config.globalChannel);
 
                     // もしグローバルのメンバーでなければ、まず参加させる
                     if ( global.members.contains(player.getName()) ) {
                         global.addMember(player.getName());
                     }
-                    
+
                     // チャンネルチャット発言
                     global.chat(player, event.getMessage());
 
@@ -72,20 +72,20 @@ public class PlayerListener implements Listener {
                     event.setCancelled(true);
 
                     return;
-                    
+
                 } else {
-                    
+
                     // Japanize変換
                     if ( LunaChat.config.displayJapanize ) {
                         event.setMessage( addJapanize(event.getMessage()) );
                     }
-                    
+
                     // 通常チャット発言（つまり、何もしないで終了）
                     return;
                 }
 
             } else {
-                
+
                 // 発言をキャンセルして終了する
                 event.setCancelled(true);
                 return;
@@ -184,7 +184,7 @@ public class PlayerListener implements Listener {
                 Utility.replaceColorCode(pre + Resources.get(key)), args);
         sender.sendMessage(msg);
     }
-    
+
     /**
      * メッセージに2バイトコードが含まれていない場合に、かな文字を付加する
      * @param message メッセージ

@@ -22,7 +22,7 @@ import java.util.zip.ZipEntry;
  * ユーティリティクラス
  */
 public class Utility {
-    
+
     /**
      * jarファイルの中に格納されているファイルを、jarファイルの外にコピーするメソッド
      * @param jarFile jarファイル
@@ -106,7 +106,7 @@ public class Utility {
             }
         }
     }
-    
+
     /**
      * 文字列内のカラーコードを置き換えする
      * @param source 置き換え元の文字列
