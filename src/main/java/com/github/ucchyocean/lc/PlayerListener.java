@@ -36,14 +36,8 @@ public class PlayerListener implements Listener {
                 event.getMessage().startsWith(LunaChat.config.globalMarker) ) {
 
             int offset = LunaChat.config.globalMarker.length();
-            String message = event.getMessage().substring(offset);
-
-            // Japanize変換
-            if ( LunaChat.config.displayJapanize ) {
-                message = addJapanize(message);
-            }
-
-            event.setMessage(message);
+            event.setMessage( event.getMessage().substring(offset) );
+            chatGlobal(event);
             return;
         }
 
@@ -54,38 +48,10 @@ public class PlayerListener implements Listener {
         if ( channel == null ) {
             if ( LunaChat.config.noJoinAsGlobal ) {
                 // グローバル発言にする
-
-                if ( !LunaChat.config.globalChannel.equals("") &&
-                        LunaChat.manager.getChannel(LunaChat.config.globalChannel) != null ) {
-
-                    Channel global = LunaChat.manager.getChannel(LunaChat.config.globalChannel);
-
-                    // もしグローバルのメンバーでなければ、まず参加させる
-                    if ( global.members.contains(player.getName()) ) {
-                        global.addMember(player.getName());
-                    }
-
-                    // チャンネルチャット発言
-                    global.chat(player, event.getMessage());
-
-                    // もとのイベントをキャンセル
-                    event.setCancelled(true);
-
-                    return;
-
-                } else {
-
-                    // Japanize変換
-                    if ( LunaChat.config.displayJapanize ) {
-                        event.setMessage( addJapanize(event.getMessage()) );
-                    }
-
-                    // 通常チャット発言（つまり、何もしないで終了）
-                    return;
-                }
+                chatGlobal(event);
+                return;
 
             } else {
-
                 // 発言をキャンセルして終了する
                 event.setCancelled(true);
                 return;
@@ -119,6 +85,41 @@ public class PlayerListener implements Listener {
             ArrayList<String> list = LunaChat.manager.getListForMotd(player);
             for ( String msg : list ) {
                 player.sendMessage(msg);
+            }
+        }
+    }
+
+    /**
+     * イベントをグローバルチャット発言として処理する
+     * @param event 処理するイベント
+     */
+    private void chatGlobal(AsyncPlayerChatEvent event) {
+
+        Player player = event.getPlayer();
+
+        if ( !LunaChat.config.globalChannel.equals("") &&
+                LunaChat.manager.getChannel(LunaChat.config.globalChannel) != null ) {
+            // グローバルチャンネルがある場合
+
+            Channel global = LunaChat.manager.getChannel(LunaChat.config.globalChannel);
+
+            // もしグローバルのメンバーでなければ、まず参加させる
+            if ( global.members.contains(player.getName()) ) {
+                global.addMember(player.getName());
+            }
+
+            // チャンネルチャット発言
+            global.chat(player, event.getMessage());
+
+            // もとのイベントをキャンセル
+            event.setCancelled(true);
+
+        } else {
+            // グローバルチャンネルが無い場合
+
+            // Japanize変換
+            if ( LunaChat.config.displayJapanize ) {
+                event.setMessage( addJapanize(event.getMessage()) );
             }
         }
     }
