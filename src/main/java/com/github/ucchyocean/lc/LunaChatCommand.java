@@ -168,11 +168,23 @@ public class LunaChatCommand implements CommandExecutor {
 
         } else {
 
+            // グローバルチャンネルで、何かメッセージがあるなら、そのままチャット送信する
+            if (channel.name.equals(LunaChat.config.globalChannel) && message.length() > 0) {
+                channel.chat(player, message.toString());
+                return true;
+            }
+
             // パスワードが設定されている場合は、パスワードを確認する
             if ( !channel.password.equals("") ) {
-                if ( !channel.password.equals(message.toString().trim()) ) {
-                    // パスワード不一致
+                if ( message.toString().trim().equals("") ) {
+                    // パスワード空欄
                     sendResourceMessage(sender, PREERR, "errmsgPassword1");
+                    sendResourceMessage(sender, PREERR, "errmsgPassword2");
+                    sendResourceMessage(sender, PREERR, "errmsgPassword3");
+                    return true;
+                } else if ( !channel.password.equals(message.toString().trim()) ) {
+                    // パスワード不一致
+                    sendResourceMessage(sender, PREERR, "errmsgPasswordNotmatch");
                     sendResourceMessage(sender, PREERR, "errmsgPassword2");
                     sendResourceMessage(sender, PREERR, "errmsgPassword3");
                     return true;
@@ -180,8 +192,10 @@ public class LunaChatCommand implements CommandExecutor {
             }
 
             // チャンネルに参加し、デフォルトの発言先に設定する
-            channel.addMember(player.getName());
-            sendResourceMessage(sender, PREINFO, "cmdmsgJoin", channelName);
+            if ( !channel.name.equals(LunaChat.config.globalChannel) ) {
+                channel.addMember(player.getName());
+                sendResourceMessage(sender, PREINFO, "cmdmsgJoin", channelName);
+            }
             LunaChat.manager.setDefaultChannel(player.getName(), channelName);
             sendResourceMessage(sender, PREINFO, "cmdmsgSet", channelName);
         }
@@ -210,6 +224,12 @@ public class LunaChatCommand implements CommandExecutor {
         String channelName = LunaChat.manager.getDefault(player.getName());
         if (args.length >= 2) {
             channelName = args[1];
+        }
+
+        // グローバルチャンネルなら退出できない
+        if ( LunaChat.config.globalChannel.equals(channelName) ) {
+            sendResourceMessage(sender, PREERR, "errmsgCannotLeaveGlobal", channelName);
+            return true;
         }
 
         // チャンネルが存在するかどうかをチェックする
@@ -449,6 +469,12 @@ public class LunaChatCommand implements CommandExecutor {
             return true;
         }
 
+        // グローバルチャンネルならキックできない
+        if ( LunaChat.config.globalChannel.equals(channel.name) ) {
+            sendResourceMessage(sender, PREERR, "errmsgCannotKickGlobal", channel.name);
+            return true;
+        }
+
         // キックされるプレイヤーがメンバーかどうかチェックする
         if (!channel.members.contains(kickedName)) {
             sendResourceMessage(sender, PREERR, "errmsgNomemberOther");
@@ -504,6 +530,12 @@ public class LunaChatCommand implements CommandExecutor {
         // モデレーターかどうか確認する
         if (!channel.moderator.contains(kicker.getName()) && !kicker.isOp()) {
             sendResourceMessage(sender, PREERR, "errmsgNotModerator");
+            return true;
+        }
+
+        // グローバルチャンネルならBANできない
+        if ( LunaChat.config.globalChannel.equals(channel.name) ) {
+            sendResourceMessage(sender, PREERR, "errmsgCannotBANGlobal", channel.name);
             return true;
         }
 
@@ -709,6 +741,12 @@ public class LunaChatCommand implements CommandExecutor {
             }
         }
 
+        // グローバルチャンネルなら削除できない
+        if ( LunaChat.config.globalChannel.equals(channel.name) ) {
+            sendResourceMessage(sender, PREERR, "errmsgCannotRemoveGlobal", channel.name);
+            return true;
+        }
+
         // チャンネル削除
         LunaChat.manager.removeChannel(cname);
         sendResourceMessage(sender, PREINFO, "cmdmsgRemove", cname);
@@ -747,6 +785,7 @@ public class LunaChatCommand implements CommandExecutor {
             sendResourceMessage(sender, PREERR, "errmsgCommand");
             return true;
         }
+        format = format.trim();
 
         // チャンネルが存在するかどうかをチェックする
         ArrayList<String> channels = LunaChat.manager.getNames();
@@ -818,6 +857,12 @@ public class LunaChatCommand implements CommandExecutor {
                 sendResourceMessage(sender, PREERR, "errmsgNotModerator");
                 return true;
             }
+        }
+
+        // グローバルチャンネルなら設定できない
+        if ( LunaChat.config.globalChannel.equals(channel.name) ) {
+            sendResourceMessage(sender, PREERR, "errmsgCannotModeratorGlobal", channel.name);
+            return true;
         }
 
         // 設定する
@@ -905,24 +950,26 @@ public class LunaChatCommand implements CommandExecutor {
                     "cmdmsgOption", "description", options.get("description"));
             setOption = true;
         }
-        if ( options.containsKey("password") ) {
-            channel.password = options.get("password");
-            sendResourceMessage(sender, PREINFO,
-                    "cmdmsgOption", "password", options.get("password"));
-            setOption = true;
-        }
-        if ( options.containsKey("visible") ) {
-            String temp = options.get("visible");
-            if ( temp.equalsIgnoreCase("false") ) {
-                channel.visible = false;
+        if ( !LunaChat.config.globalChannel.equals(channel.name) ) {
+            if ( options.containsKey("password") ) {
+                channel.password = options.get("password");
                 sendResourceMessage(sender, PREINFO,
-                        "cmdmsgOption", "visible", "false");
+                        "cmdmsgOption", "password", options.get("password"));
                 setOption = true;
-            } else if ( temp.equalsIgnoreCase("true") ) {
-                channel.visible = true;
-                sendResourceMessage(sender, PREINFO,
-                        "cmdmsgOption", "visible", "true");
-                setOption = true;
+            }
+            if ( options.containsKey("visible") ) {
+                String temp = options.get("visible");
+                if ( temp.equalsIgnoreCase("false") ) {
+                    channel.visible = false;
+                    sendResourceMessage(sender, PREINFO,
+                            "cmdmsgOption", "visible", "false");
+                    setOption = true;
+                } else if ( temp.equalsIgnoreCase("true") ) {
+                    channel.visible = true;
+                    sendResourceMessage(sender, PREINFO,
+                            "cmdmsgOption", "visible", "true");
+                    setOption = true;
+                }
             }
         }
 

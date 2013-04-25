@@ -121,7 +121,9 @@ public class ChannelManager {
         List<String> moderator = section.getStringList(KEY_MODERATOR);
         String password = section.getString(KEY_PASSWORD, "");
         boolean visible = section.getBoolean(KEY_VISIBLE, true);
-        if ( members == null ) {
+
+        // グローバルチャンネルのメンバー情報はクリアする
+        if ( LunaChat.config.globalChannel.equals(name) ) {
             members = new ArrayList<String>();
         }
 
@@ -225,18 +227,13 @@ public class ChannelManager {
             if ( key.equals(dchannel) ) {
                 disp = ChatColor.RED + key;
             }
-            if ( player != null && !channel.members.contains(playerName) ) {
+            if ( player != null && !channel.members.contains(playerName) &&
+                    !key.equals(LunaChat.config.globalChannel) ) {
                 disp = ChatColor.GRAY + key;
             }
             String desc = channel.description;
-            int onlineNum = 0;
-            for ( String pname : channel.members ) {
-                Player p = LunaChat.getPlayerExact(pname);
-                if ( p != null && p.isOnline() ) {
-                    onlineNum++;
-                }
-            }
-            int memberNum = channel.members.size();
+            int onlineNum = channel.getOnlineNum();
+            int memberNum = channel.getTotalNum();
             String item = String.format(
                     Utility.replaceColorCode(LIST_FORMAT),
                     disp, onlineNum, memberNum, desc);
@@ -264,7 +261,8 @@ public class ChannelManager {
         items.add(Utility.replaceColorCode(MOTD_FIRSTLINE));
         for ( String key : channels.keySet() ) {
             Channel channel = channels.get(key);
-            if ( !channel.members.contains(playerName) ) {
+            if ( !channel.members.contains(playerName) &&
+                    !key.equals(LunaChat.config.globalChannel) ) {
                 continue;
             }
 
@@ -273,14 +271,8 @@ public class ChannelManager {
                 disp = ChatColor.RED + key;
             }
             String desc = channel.description;
-            int onlineNum = 0;
-            for ( String pname : channel.members ) {
-                Player p = LunaChat.getPlayerExact(pname);
-                if ( p != null && p.isOnline() ) {
-                    onlineNum++;
-                }
-            }
-            int memberNum = channel.members.size();
+            int onlineNum = channel.getOnlineNum();
+            int memberNum = channel.getTotalNum();
             String item = String.format(
                     Utility.replaceColorCode(LIST_FORMAT),
                     disp, onlineNum, memberNum, desc);
@@ -302,7 +294,8 @@ public class ChannelManager {
         String name = player.getName();
         for ( String key : channels.keySet() ) {
             Channel channel = channels.get(key);
-            if ( channel.members.contains(name) ) {
+            if ( channel.members.contains(name) ||
+                    key.equals(LunaChat.config.globalChannel) ) {
                 result.add(channel);
             }
         }

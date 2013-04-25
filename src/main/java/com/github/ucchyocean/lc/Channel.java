@@ -8,6 +8,7 @@ package com.github.ucchyocean.lc;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -22,6 +23,8 @@ public class Channel {
 
     private static final String INFO_FIRSTLINE = Resources.get("channelInfoFirstLine");
     private static final String INFO_PREFIX = Resources.get("channelInfoPrefix");
+    private static final String INFO_GLOBAL = Resources.get("channelInfoGlobal");
+
     private static final String LIST_ENDLINE = Resources.get("listEndLine");
     private static final String LIST_FORMAT = Resources.get("listFormat");
 
@@ -105,12 +108,17 @@ public class Channel {
         // キーワード置き換え
         String msg = replaceKeywords(format, player, message);
 
-        // オンラインのプレイヤーに送信する
-        for ( String member : members ) {
-            Player p = LunaChat.getPlayerExact(member);
-            if ( p != null ) {
-                p.sendMessage(msg);
+        if ( !name.equals(LunaChat.config.globalChannel) ) {
+            // オンラインのプレイヤーに送信する
+            for ( String member : members ) {
+                Player p = LunaChat.getPlayerExact(member);
+                if ( p != null ) {
+                    p.sendMessage(msg);
+                }
             }
+        } else {
+            // グローバルチャンネルは、そのままブロードキャスト
+            Bukkit.broadcastMessage(msg);
         }
 
         // ロギング
@@ -216,45 +224,43 @@ public class Channel {
         ArrayList<String> info = new ArrayList<String>();
         info.add(Utility.replaceColorCode(INFO_FIRSTLINE));
 
-        // メンバーの人数を数える
-        int onlineNum = 0;
-        for ( String pname : members ) {
-            if ( isOnline(pname) ) {
-                onlineNum++;
-            }
-        }
-        int memberNum = members.size();
-
         info.add( String.format(
                 Utility.replaceColorCode(LIST_FORMAT),
-                name, onlineNum, memberNum, description) );
+                name, getOnlineNum(), getTotalNum(), description) );
 
-        // メンバーを、5人ごとに表示する
-        StringBuffer buf = new StringBuffer();
-        for ( int i=0; i<members.size(); i++ ) {
+        if ( !name.equals(LunaChat.config.globalChannel) ) {
+            // メンバーを、5人ごとに表示する
+            StringBuffer buf = new StringBuffer();
+            for ( int i=0; i<members.size(); i++ ) {
 
-            if ( i%5 == 0 ) {
-                if ( i != 0 ) {
-                    info.add(buf.toString());
-                    buf = new StringBuffer();
+                if ( i%5 == 0 ) {
+                    if ( i != 0 ) {
+                        info.add(buf.toString());
+                        buf = new StringBuffer();
+                    }
+                    buf.append(Utility.replaceColorCode(INFO_PREFIX));
                 }
-                buf.append(Utility.replaceColorCode(INFO_PREFIX));
+
+                String name = members.get(i);
+                String disp;
+                if ( moderator.contains(name) ) {
+                    name = "@" + name;
+                }
+                if ( isOnline(members.get(i)) ) {
+                    disp = ChatColor.WHITE + name;
+                } else {
+                    disp = ChatColor.GRAY + name;
+                }
+                buf.append(disp + ",");
             }
 
-            String name = members.get(i);
-            String disp;
-            if ( moderator.contains(name) ) {
-                name = "@" + name;
-            }
-            if ( isOnline(members.get(i)) ) {
-                disp = ChatColor.WHITE + name;
-            } else {
-                disp = ChatColor.GRAY + name;
-            }
-            buf.append(disp + ",");
+            info.add(buf.toString());
+
+        } else {
+
+            info.add(Utility.replaceColorCode(INFO_GLOBAL));
         }
 
-        info.add(buf.toString());
         info.add(Utility.replaceColorCode(LIST_ENDLINE));
 
         return info;
@@ -300,5 +306,40 @@ public class Channel {
         }
 
         return Utility.replaceColorCode(msg);
+    }
+
+    /**
+     * チャンネルのオンライン人数を返す
+     * @return オンライン人数
+     */
+    protected int getOnlineNum() {
+
+        if ( name.equals(LunaChat.config.globalChannel) ) {
+            // グローバルチャンネルならサーバー接続人数を返す
+            return Bukkit.getOnlinePlayers().length;
+        }
+
+        // メンバーの人数を数える
+        int onlineNum = 0;
+        for ( String pname : members ) {
+            if ( isOnline(pname) ) {
+                onlineNum++;
+            }
+        }
+        return onlineNum;
+    }
+
+    /**
+     * チャンネルの総参加人数を返す
+     * @return 総参加人数
+     */
+    protected int getTotalNum() {
+
+        if ( name.equals(LunaChat.config.globalChannel) ) {
+            // グローバルチャンネルならサーバー接続人数を返す
+            return Bukkit.getOnlinePlayers().length;
+        }
+
+        return members.size();
     }
 }

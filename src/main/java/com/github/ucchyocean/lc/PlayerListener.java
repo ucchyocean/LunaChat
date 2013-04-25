@@ -7,7 +7,6 @@ package com.github.ucchyocean.lc;
 
 import java.util.ArrayList;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,9 +18,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
  * プレイヤーの行動を監視するリスナ
  */
 public class PlayerListener implements Listener {
-
-    private static final String PREINFO = Resources.get("infoPrefix");
-    private static final String PREERR = Resources.get("errorPrefix");
 
     /**
      * プレイヤーのチャットごとに呼び出されるメソッド
@@ -74,10 +70,9 @@ public class PlayerListener implements Listener {
 
         Player player = event.getPlayer();
 
-        // どのチャンネルにも所属していないプレイヤーを、既定のチャンネルへ参加させる
-        if ( LunaChat.manager.getChannelByPlayer(player).size() == 0 &&
-                !LunaChat.config.globalChannel.equals("") ) {
-            tryJoinToDefaultChannel(player);
+        // グローバルチャンネル設定がある場合
+        if ( !LunaChat.config.globalChannel.equals("") ) {
+            tryJoinToGlobalChannel(player);
         }
 
         // チャンネルチャット情報を表示する
@@ -97,15 +92,13 @@ public class PlayerListener implements Listener {
 
         Player player = event.getPlayer();
 
-        if ( !LunaChat.config.globalChannel.equals("") &&
-                LunaChat.manager.getChannel(LunaChat.config.globalChannel) != null ) {
-            // グローバルチャンネルがある場合
+        if ( !LunaChat.config.globalChannel.equals("") ) {
+            // グローバルチャンネル設定がある場合
 
+            // グローバルチャンネルの取得、無ければ作成
             Channel global = LunaChat.manager.getChannel(LunaChat.config.globalChannel);
-
-            // もしグローバルのメンバーでなければ、まず参加させる
-            if ( global.members.contains(player.getName()) ) {
-                global.addMember(player.getName());
+            if ( global == null ) {
+                global = LunaChat.manager.createChannel(LunaChat.config.globalChannel, "");
             }
 
             // チャンネルチャット発言
@@ -115,7 +108,7 @@ public class PlayerListener implements Listener {
             event.setCancelled(true);
 
         } else {
-            // グローバルチャンネルが無い場合
+            // グローバルチャンネル設定が無い場合
 
             // Japanize変換
             if ( LunaChat.config.displayJapanize ) {
@@ -129,61 +122,23 @@ public class PlayerListener implements Listener {
      * @param player プレイヤー
      * @return 参加できたかどうか
      */
-    private boolean tryJoinToDefaultChannel(Player player) {
+    private boolean tryJoinToGlobalChannel(Player player) {
 
-        String channelName = LunaChat.config.globalChannel;
+        String gcName = LunaChat.config.globalChannel;
 
-        // チャンネルが存在するかどうかをチェックする
-        ArrayList<String> channels = LunaChat.manager.getNames();
-        if (!channels.contains(channelName)) {
-            if (LunaChat.config.createChannelOnJoinCommand) {
-                // 存在しないチャットには、チャンネルを作って入る設定の場合
-
-                // チャンネル作成
-                Channel c = LunaChat.manager.createChannel(channelName, "");
-                c.addMember(player.getName());
-                sendResourceMessage(player, PREINFO, "cmdmsgCreate", channelName);
-                return false;
-
-            } else {
-                // 存在しないチャットには入れない設定の場合
-
-                sendResourceMessage(player, PREERR, "errmsgNotExist");
-                return false;
-            }
+        // チャンネルが存在しない場合は作成する
+        Channel global = LunaChat.manager.getChannel(gcName);
+        if ( global == null ) {
+            global = LunaChat.manager.createChannel(gcName, "");
         }
 
-        // デフォルト発言先をチェックする
-        Channel channel = LunaChat.manager.getChannel(channelName);
-
-        // BANされていないか確認する
-        if (channel.banned.contains(player.getName())) {
-            sendResourceMessage(player, PREERR, "errmsgBanned");
-            return false;
+        // デフォルト発言先が無いなら、グローバルチャンネルに設定する
+        Channel dchannel = LunaChat.manager.getDefaultChannelByPlayer(player.getName());
+        if ( dchannel == null ) {
+            LunaChat.manager.setDefaultChannel(player.getName(), gcName);
         }
-
-        // チャンネルに参加し、デフォルトの発言先に設定する
-        channel.addMember(player.getName());
-        sendResourceMessage(player, PREINFO, "cmdmsgJoin", channelName);
-        LunaChat.manager.setDefaultChannel(player.getName(), channelName);
-        sendResourceMessage(player, PREINFO, "cmdmsgSet", channelName);
 
         return true;
-    }
-
-    /**
-     * メッセージリソースのメッセージを、カラーコード置き換えしつつ、senderに送信する
-     *
-     * @param sender メッセージの送り先
-     * @param pre プレフィックス
-     * @param key リソースキー
-     * @param args リソース内の置き換え対象キーワード
-     */
-    private void sendResourceMessage(CommandSender sender, String pre,
-            String key, Object... args) {
-        String msg = String.format(
-                Utility.replaceColorCode(pre + Resources.get(key)), args);
-        sender.sendMessage(msg);
     }
 
     /**

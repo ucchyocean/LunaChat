@@ -5,12 +5,13 @@ quitMessage: '&a[%ch]&7%username さんがチャンネルチャットから退�
 breakupMessage: '&a[%s]&7チャンネルチャットが削除されました。'
 moderatorChangedMessage: '&a[%s]&7モデレータ %s さんが退出するので、%s さんが次のモデレータになりました。'
 
-listFirstLine: '&8---------- &bChannel List &8----------'
+listFirstLine: '&8---------- &bチャンネルリスト &8----------'
 listEndLine: '&8----------------------------------'
 listFormat: '&8| &f%s&8(&c%d&8/&c%d&8) &a%s'
 
-channelInfoFirstLine: '&8---------- &bChannel Info &8----------'
+channelInfoFirstLine: '&8---------- &bチャンネル情報 &8----------'
 channelInfoPrefix: '&8| '
+channelInfoGlobal: '&8|   &cグローバルチャンネル'
 
 motdFirstLine: '&8----- &bあなたが参加中のチャット &8-----'
 
@@ -59,7 +60,13 @@ errmsgInvalidOptions: '有効なオプション指定が1つもありません�
 errmsgPassword1: 'このチャンネルはパスワードが設定されているため入れません。'
 errmsgPassword2: 'パスワードを指定して、チャンネルに入ってください。'
 errmsgPassword3: '/ch (channel) (password)'
+errmsgPasswordNotmatch: 'パスワードが正しくないため、チャンネルに入れません。'
 errmsgPermission: 'パーミッション "%s" が無いため、実行できません。'
+errmsgCannotLeaveGlobal: 'チャンネル %s はグローバルチャンネルなので、退出できません。'
+errmsgCannotKickGlobal: 'チャンネル %s はグローバルチャンネルなので、キックできません。'
+errmsgCannotBANGlobal: 'チャンネル %s はグローバルチャンネルなので、BANできません。'
+errmsgCannotRemoveGlobal: 'チャンネル %s はグローバルチャンネルなので、削除できません。'
+errmsgCannotModeratorGlobal: 'チャンネル %s はグローバルチャンネルなので、モデレーターを設定できません。'
 
 usageJoin: '&7/%s join (channel) - チャンネルに参加します。'
 usageLeave: '&7/%s leave - 参加しているチャンネルから退出します。'
