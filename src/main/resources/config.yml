@@ -11,3 +11,5 @@ zeroMemberRemove: false
 showListOnJoin: false
 createChannelOnJoinCommand: true
 globalChannel: ''
+ngword: []
+ngwordAction: mask

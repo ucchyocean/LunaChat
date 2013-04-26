@@ -3,7 +3,6 @@ defaultFormat: '&a[%ch]%prefix%username%suffix&a: %msg'
 joinMessage: '&a[%ch]&7%username さんがチャンネルチャットに参加しました。'
 quitMessage: '&a[%ch]&7%username さんがチャンネルチャットから退出しました。'
 breakupMessage: '&a[%s]&7チャンネルチャットが削除されました。'
-moderatorChangedMessage: '&a[%s]&7モデレータ %s さんが退出するので、%s さんが次のモデレータになりました。'
 
 listFirstLine: '&8---------- &bチャンネルリスト &8----------'
 listEndLine: '&8----------------------------------'
@@ -67,6 +66,8 @@ errmsgCannotKickGlobal: 'チャンネル %s はグローバルチャンネルな
 errmsgCannotBANGlobal: 'チャンネル %s はグローバルチャンネルなので、BANできません。'
 errmsgCannotRemoveGlobal: 'チャンネル %s はグローバルチャンネルなので、削除できません。'
 errmsgCannotModeratorGlobal: 'チャンネル %s はグローバルチャンネルなので、モデレーターを設定できません。'
+
+ngwordPrefix: 'NGワード発言により、'
 
 usageJoin: '&7/%s join (channel) - チャンネルに参加します。'
 usageLeave: '&7/%s leave - 参加しているチャンネルから退出します。'

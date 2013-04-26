@@ -32,6 +32,13 @@ public class Channel {
     private static final String MSG_JOIN = Resources.get("joinMessage");
     private static final String MSG_QUIT = Resources.get("quitMessage");
 
+    private static final String PREINFO = Resources.get("infoPrefix");
+    private static final String NGWORD_PREFIX = Resources.get("ngwordPrefix");
+    private static final String MSG_KICKED = Resources.get("cmdmsgKicked");
+    private static final String MSG_BANNED = Resources.get("cmdmsgBanned");
+
+    // ngwordPrefix
+
     /** 参加者 */
     protected List<String> members;
 
@@ -96,6 +103,16 @@ public class Channel {
      */
     protected void chat(Player player, String message) {
 
+        // NGワード発言をしたかどうかのチェック
+        boolean isNG = false;
+        for ( String word : LunaChat.config.ngword ) {
+            if ( message.contains(word) ) {
+                message = message.replace(
+                        word, getAstariskString(word.length()));
+                isNG = true;
+            }
+        }
+
         // Japanize変換
         if ( LunaChat.config.displayJapanize ) {
             // 2byteコードを含まない場合にのみ、処理を行う
@@ -124,6 +141,30 @@ public class Channel {
         // ロギング
         if ( LunaChat.config.loggingChat ) {
             LunaChat.log(msg);
+        }
+
+        // NGワード発言者に、NGワードアクションを実行する
+        // ただしグローバルチャンネルの場合は、アクションは実行されない
+        if ( isNG && !LunaChat.config.globalChannel.equals(name) ) {
+            if ( LunaChat.config.ngwordAction == NGWordAction.BAN ) {
+                // BANする
+
+                banned.add(player.getName());
+                removeMember(player.getName());
+                String temp = PREINFO + NGWORD_PREFIX + MSG_BANNED;
+                String m = String.format(
+                        Utility.replaceColorCode(temp), name);
+                player.sendMessage(m);
+
+            } else if ( LunaChat.config.ngwordAction == NGWordAction.KICK ) {
+                // キックする
+
+                removeMember(player.getName());
+                String temp = PREINFO + NGWORD_PREFIX + MSG_KICKED;
+                String m = String.format(
+                        Utility.replaceColorCode(temp), name);
+                player.sendMessage(m);
+            }
         }
     }
 
@@ -341,5 +382,18 @@ public class Channel {
         }
 
         return members.size();
+    }
+
+    /**
+     * 指定された文字数のアスタリスクの文字列を返す
+     * @param length アスタリスクの個数
+     * @return 指定された文字数のアスタリスク
+     */
+    private String getAstariskString(int length) {
+        StringBuilder buf = new StringBuilder();
+        for ( int i=0; i<length; i++ ) {
+            buf.append("*");
+        }
+        return buf.toString();
     }
 }

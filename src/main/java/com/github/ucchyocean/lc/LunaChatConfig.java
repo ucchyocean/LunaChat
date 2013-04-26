@@ -6,6 +6,7 @@
 package com.github.ucchyocean.lc;
 
 import java.io.File;
+import java.util.List;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -40,6 +41,15 @@ public class LunaChatConfig {
      *  参加させない場合は、から文字列 "" を指定すること。 */
     protected String globalChannel;
 
+    /** NGワードの設定 */
+    protected List<String> ngword;
+
+    /** NGワードを発言した人に対して実行するアクション<br>
+     *  mask = マスクするのみ<br>
+     *  kick = マスクしてチャンネルからキックする<br>
+     *  ban = マスクしてチャンネルからBANする */
+    protected NGWordAction ngwordAction;
+
     /**
      * コンストラクタ
      */
@@ -69,6 +79,8 @@ public class LunaChatConfig {
         createChannelOnJoinCommand =
                 config.getBoolean("createChannelOnJoinCommand", true);
         globalChannel = config.getString("globalChannel", "");
+        ngword = config.getStringList("ngword");
+        ngwordAction = NGWordAction.fromID(config.getString("ngwordAction", "mask"));
     }
 
     /**
