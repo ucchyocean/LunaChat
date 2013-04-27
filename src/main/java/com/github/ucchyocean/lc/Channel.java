@@ -37,8 +37,6 @@ public class Channel {
     private static final String MSG_KICKED = Resources.get("cmdmsgKicked");
     private static final String MSG_BANNED = Resources.get("cmdmsgBanned");
 
-    // ngwordPrefix
-
     /** 参加者 */
     protected List<String> members;
 

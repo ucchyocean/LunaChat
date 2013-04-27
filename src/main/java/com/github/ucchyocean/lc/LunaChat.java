@@ -26,6 +26,7 @@ public class LunaChat extends JavaPlugin {
     protected static ChannelManager manager;
     protected static HashMap<String, String> inviteMap;
     protected static HashMap<String, String> inviterMap;
+    protected static HashMap<String, String> privateMessageMap;
 
     protected static PermissionsEx pex;
 
@@ -42,6 +43,7 @@ public class LunaChat extends JavaPlugin {
         manager = new ChannelManager();
         inviteMap = new HashMap<String, String>();
         inviterMap = new HashMap<String, String>();
+        privateMessageMap = new HashMap<String, String>();
 
         // PermissionsExのロード
         Plugin temp = getServer().getPluginManager().getPlugin("PermissionsEx");
@@ -54,6 +56,8 @@ public class LunaChat extends JavaPlugin {
 
         // コマンドの登録
         getCommand("lunachat").setExecutor(new LunaChatCommand());
+        getCommand("message").setExecutor(new LunaChatMessageCommand());
+        getCommand("reply").setExecutor(new LunaChatReplyCommand());
     }
 
     /**

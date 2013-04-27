@@ -169,16 +169,6 @@ public class ChannelManager {
     }
 
     /**
-     * チャンネルをアップデートする
-     * @param channel
-     */
-    protected void updateChannel(Channel channel) {
-        String key = channel.name;
-        channels.put(key, channel);
-        save();
-    }
-
-    /**
      * チャンネルの名前リストを返す
      * @return チャンネルの名前
      */
@@ -218,17 +208,17 @@ public class ChannelManager {
                 continue;
             }
 
-            // visible=false のチャンネルは表示しない
-            if ( !channel.visible ) {
-                continue;
-            }
-
             String disp = ChatColor.WHITE + key;
             if ( key.equals(dchannel) ) {
                 disp = ChatColor.RED + key;
             }
             if ( player != null && !channel.members.contains(playerName) &&
                     !key.equals(LunaChat.config.globalChannel) ) {
+
+                // 未参加で visible=false のチャンネルは表示しない
+                if ( !channel.visible ) {
+                    continue;
+                }
                 disp = ChatColor.GRAY + key;
             }
             String desc = channel.description;

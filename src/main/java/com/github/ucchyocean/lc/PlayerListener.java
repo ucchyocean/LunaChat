@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 /**
  * @author ucchy
@@ -80,6 +81,37 @@ public class PlayerListener implements Listener {
             ArrayList<String> list = LunaChat.manager.getListForMotd(player);
             for ( String msg : list ) {
                 player.sendMessage(msg);
+            }
+        }
+    }
+
+    /**
+     * プレイヤーのサーバー退出ごとに呼び出されるメソッド
+     * @param event プレイヤー退出イベント
+     */
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+
+        Player player = event.getPlayer();
+
+        // お互いがオフラインになるPMチャンネルがある場合は
+        // チャンネルをクリアする
+        ArrayList<String> channels = LunaChat.manager.getNames();
+        for ( String cname : channels ) {
+            if ( cname.contains(">") && cname.contains(player.getName()) ) {
+                Channel channel = LunaChat.manager.getChannel(cname);
+                boolean isAllOffline = true;
+                for ( String pname : channel.members ) {
+                    if ( !pname.equals(player.getName()) ) {
+                        Player p = LunaChat.getPlayerExact(pname);
+                        if ( p != null && p.isOnline() ) {
+                            isAllOffline = false;
+                        }
+                    }
+                }
+                if ( isAllOffline ) {
+                    LunaChat.manager.removeChannel(channel.name);
+                }
             }
         }
     }

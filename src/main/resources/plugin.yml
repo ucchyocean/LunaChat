@@ -1,8 +1,9 @@
 name: LunaChat
 main: com.github.ucchyocean.lc.LunaChat
-version: 1.4.1
+version: 1.4.2
 author: ucchy
 description: チャンネルチャットプラグイン
+softdepend: [PermissionsEx]
 commands:
   lunachat:
     description: lunachatのユーザーコマンド
@@ -22,8 +23,20 @@ commands:
            /<command> remove [channel] - チャンネルを削除します。
            /<command> format [channel] (format) - チャンネルのメッセージフォーマットを設定します。
            /<command> moderator [channel] (player...) - チャンネルのモデレーターを指定したプレイヤーに設定します。
-           /<command> option (key=value) - チャンネルのオプションを設定します。
+           /<command> option (key=value...) - チャンネルのオプションを設定します。
            /<command> reload - config.ymlの再読み込みをします。
+  message:
+    description: 1:1チャット送信コマンド
+    aliases: [msg, tell]
+    usage: /<command> (name) [message] - 指定した人との1:1チャットを開始します。
+    permission: lunachat.message
+    permission-message: パーミッション "<permission>" が無いため、実行できません。
+  reply:
+    description: 1:1チャット返信コマンド
+    aliases: [r]
+    usage: /<command> [message] - 受信した1:1チャットに返信します。
+    permission: lunachat.reply
+    permission-message: パーミッション "<permission>" が無いため、実行できません。
 permissions:
   lunachat.join:
     description: joinコマンドの使用権限
@@ -55,6 +68,10 @@ permissions:
     description: moderatorコマンドの使用権限
   lunachat.option:
     description: optionコマンドの使用権限
+  lunachat.message:
+    description: messageコマンドの使用権限
+  lunachat.reply:
+    description: replyコマンドの使用権限
   lunachat.*:
     children:
       lunachat.join: true
@@ -72,6 +89,8 @@ permissions:
       lunachat.format: true
       lunachat.moderator: true
       lunachat.option: true
+      lunachat.message: true
+      lunachat.reply: true
     description: 全てのコマンドの使用権限
     default: true
   lunachat.reload:

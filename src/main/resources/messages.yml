@@ -66,6 +66,8 @@ errmsgCannotKickGlobal: 'チャンネル %s はグローバルチャンネルな
 errmsgCannotBANGlobal: 'チャンネル %s はグローバルチャンネルなので、BANできません。'
 errmsgCannotRemoveGlobal: 'チャンネル %s はグローバルチャンネルなので、削除できません。'
 errmsgCannotModeratorGlobal: 'チャンネル %s はグローバルチャンネルなので、モデレーターを設定できません。'
+errmsgNotfoundPM: 'あなたが受信したプライベートメッセージがありません。'
+errmsgCannotSendPMSelf: '自分自身にプライベートメッセージを送ることはできません。'
 
 ngwordPrefix: 'NGワード発言により、'
 
@@ -86,3 +88,6 @@ usageFormat: '&7/%s format [channel] (format) - チャンネルのメッセー�
 usageModerator: '&7/%s moderator [channel] (player) - チャンネルのモデレーターを指定したプレイヤーに設定します。'
 usageOption: '&7/%s option [channel] (key=value) - チャンネルのオプションを設定します。'
 usageReload: '&7/%s reload - config.ymlの再読み込みをします。'
+
+usageMessage: '&7/%s (name) [message] - 指定した人との1:1チャットを開始します。'
+usageReply: '&7/%s [message] - 受信した1:1チャットに返信します。'
