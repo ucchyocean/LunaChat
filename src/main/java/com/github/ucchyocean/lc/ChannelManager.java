@@ -142,8 +142,7 @@ public class ChannelManager {
     protected boolean save() {
 
         try {
-            YamlConfiguration config =
-                    YamlConfiguration.loadConfiguration(file);
+            YamlConfiguration config = new YamlConfiguration();
 
             for ( String key : channels.keySet() ) {
                 Channel channel = channels.get(key);
@@ -362,11 +361,10 @@ public class ChannelManager {
      * @param name 削除するチャンネル名
      */
     protected void removeChannel(String name) {
-        if ( channels.containsKey(name) ) {
-            channels.remove(name);
-        }
         Channel channel = getChannel(name);
         if ( channel != null ) {
+            channels.remove(name);
+
             // チャンネルのメンバーを強制解散させる
             String message = String.format(Utility.replaceColorCode(
                     Resources.get("breakupMessage")), name);

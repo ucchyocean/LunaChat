@@ -133,6 +133,12 @@ public class PlayerListener implements Listener {
                 global = LunaChat.manager.createChannel(LunaChat.config.globalChannel, "");
             }
 
+            // デフォルト発言先が無いなら、グローバルチャンネルに設定する
+            Channel dchannel = LunaChat.manager.getDefaultChannelByPlayer(player.getName());
+            if ( dchannel == null ) {
+                LunaChat.manager.setDefaultChannel(player.getName(), global.name);
+            }
+
             // チャンネルチャット発言
             global.chat(player, event.getMessage());
 

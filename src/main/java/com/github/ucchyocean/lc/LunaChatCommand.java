@@ -101,6 +101,7 @@ public class LunaChatCommand implements CommandExecutor {
             sendResourceMessage(sender, PREERR, "errmsgIngame");
             return true;
         }
+        Player player = (Player) sender;
 
         // 実行引数から、参加するチャンネルを取得する
         String channelName = "";
@@ -127,12 +128,24 @@ public class LunaChatCommand implements CommandExecutor {
         // チャンネルが存在するかどうかをチェックする
         ArrayList<String> channels = LunaChat.manager.getNames();
         if (!channels.contains(channelName)) {
+            if (LunaChat.config.globalChannel.equals("") &&
+                    channelName.equals(LunaChat.config.globalMarker) ) {
+                // グローバルチャンネル設定が無くて、指定チャンネルがマーカーの場合、
+                // 発言先をnullに設定して、グローバルチャンネルにする
+
+                LunaChat.manager.setDefaultChannel(player.getName(), null);
+                sendResourceMessage(sender, PREINFO, "cmdmsgSet", "グローバル");
+                if (message.length() > 0) {
+                    player.chat(LunaChat.config.globalMarker + message.toString());
+                }
+                return true;
+            }
             if (LunaChat.config.createChannelOnJoinCommand) {
                 // 存在しないチャットには、チャンネルを作って入る設定の場合
 
                 // チャンネル作成
                 Channel c = LunaChat.manager.createChannel(channelName, "");
-                c.addMember(((Player) sender).getName());
+                c.addMember(player.getName());
                 sendResourceMessage(sender, PREINFO, "cmdmsgCreate", channelName);
                 return true;
 
@@ -145,7 +158,6 @@ public class LunaChatCommand implements CommandExecutor {
         }
 
         // チャンネルを取得する
-        Player player = (Player) sender;
         Channel channel = LunaChat.manager.getChannel(channelName);
 
         // BANされていないか確認する
