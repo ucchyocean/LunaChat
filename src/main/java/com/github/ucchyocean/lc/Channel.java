@@ -101,12 +101,12 @@ public class Channel {
      */
     protected void chat(Player player, String message) {
 
-        // NGワード発言をしたかどうかのチェック
+        // NGワード発言をしたかどうかのチェックとマスク
         boolean isNG = false;
         for ( String word : LunaChat.config.ngword ) {
             if ( message.contains(word) ) {
                 message = message.replace(
-                        word, getAstariskString(word.length()));
+                        word, Utility.getAstariskString(word.length()));
                 isNG = true;
             }
         }
@@ -380,18 +380,5 @@ public class Channel {
         }
 
         return members.size();
-    }
-
-    /**
-     * 指定された文字数のアスタリスクの文字列を返す
-     * @param length アスタリスクの個数
-     * @return 指定された文字数のアスタリスク
-     */
-    private String getAstariskString(int length) {
-        StringBuilder buf = new StringBuilder();
-        for ( int i=0; i<length; i++ ) {
-            buf.append("*");
-        }
-        return buf.toString();
     }
 }

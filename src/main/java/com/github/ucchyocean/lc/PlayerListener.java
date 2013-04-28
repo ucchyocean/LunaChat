@@ -148,10 +148,21 @@ public class PlayerListener implements Listener {
         } else {
             // グローバルチャンネル設定が無い場合
 
+            String message = event.getMessage();
+            // NGワード発言をマスク
+            for ( String word : LunaChat.config.ngword ) {
+                if ( message.contains(word) ) {
+                    message = message.replace(
+                            word, Utility.getAstariskString(word.length()));
+                }
+            }
+
             // Japanize変換
             if ( LunaChat.config.displayJapanize ) {
-                event.setMessage( addJapanize(event.getMessage()) );
+                message = addJapanize(message);
             }
+
+            event.setMessage(message);
         }
     }
 
