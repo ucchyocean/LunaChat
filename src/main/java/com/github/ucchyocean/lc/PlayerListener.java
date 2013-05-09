@@ -101,7 +101,7 @@ public class PlayerListener implements Listener {
             if ( cname.contains(">") && cname.contains(player.getName()) ) {
                 Channel channel = LunaChat.manager.getChannel(cname);
                 boolean isAllOffline = true;
-                for ( String pname : channel.members ) {
+                for ( String pname : channel.getMembers() ) {
                     if ( !pname.equals(player.getName()) ) {
                         Player p = LunaChat.getPlayerExact(pname);
                         if ( p != null && p.isOnline() ) {
@@ -110,7 +110,7 @@ public class PlayerListener implements Listener {
                     }
                 }
                 if ( isAllOffline ) {
-                    LunaChat.manager.removeChannel(channel.name);
+                    LunaChat.manager.removeChannel(channel.getName());
                 }
             }
         }
@@ -130,13 +130,13 @@ public class PlayerListener implements Listener {
             // グローバルチャンネルの取得、無ければ作成
             Channel global = LunaChat.manager.getChannel(LunaChat.config.globalChannel);
             if ( global == null ) {
-                global = LunaChat.manager.createChannel(LunaChat.config.globalChannel, "");
+                global = LunaChat.manager.createChannel(LunaChat.config.globalChannel);
             }
 
             // デフォルト発言先が無いなら、グローバルチャンネルに設定する
             Channel dchannel = LunaChat.manager.getDefaultChannelByPlayer(player.getName());
             if ( dchannel == null ) {
-                LunaChat.manager.setDefaultChannel(player.getName(), global.name);
+                LunaChat.manager.setDefaultChannel(player.getName(), global.getName());
             }
 
             // チャンネルチャット発言
@@ -178,7 +178,7 @@ public class PlayerListener implements Listener {
         // チャンネルが存在しない場合は作成する
         Channel global = LunaChat.manager.getChannel(gcName);
         if ( global == null ) {
-            global = LunaChat.manager.createChannel(gcName, "");
+            global = LunaChat.manager.createChannel(gcName);
         }
 
         // デフォルト発言先が無いなら、グローバルチャンネルに設定する

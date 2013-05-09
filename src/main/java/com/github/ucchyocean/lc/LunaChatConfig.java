@@ -81,6 +81,14 @@ public class LunaChatConfig {
         globalChannel = config.getString("globalChannel", "");
         ngword = config.getStringList("ngword");
         ngwordAction = NGWordAction.fromID(config.getString("ngwordAction", "mask"));
+
+        // globalチャンネルが、使用可能なチャンネル名かどうかを調べる
+        if ( !LunaChat.manager.checkForChannelName(globalChannel) ) {
+            String msg = String.format(Utility.replaceColorCode(
+                    Resources.get("errmsgCannotUseForGlobal")), globalChannel);
+            LunaChat.instance.getLogger().warning(msg);
+            globalChannel = "";
+        }
     }
 
     /**

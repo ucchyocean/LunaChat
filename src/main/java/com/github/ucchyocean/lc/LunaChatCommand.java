@@ -143,8 +143,15 @@ public class LunaChatCommand implements CommandExecutor {
             if (LunaChat.config.createChannelOnJoinCommand) {
                 // 存在しないチャットには、チャンネルを作って入る設定の場合
 
+                // 使用可能なチャンネル名かどうかをチェックする
+                if ( !LunaChat.manager.checkForChannelName(channelName) ) {
+                    sendResourceMessage(sender, PREINFO,
+                            "errmsgCannotUseForChannel", channelName);
+                    return true;
+                }
+
                 // チャンネル作成
-                Channel c = LunaChat.manager.createChannel(channelName, "");
+                Channel c = LunaChat.manager.createChannel(channelName);
                 c.addMember(player.getName());
                 sendResourceMessage(sender, PREINFO, "cmdmsgCreate", channelName);
                 return true;
@@ -161,12 +168,12 @@ public class LunaChatCommand implements CommandExecutor {
         Channel channel = LunaChat.manager.getChannel(channelName);
 
         // BANされていないか確認する
-        if (channel.banned.contains(player.getName())) {
+        if (channel.getBanned().contains(player.getName())) {
             sendResourceMessage(sender, PREERR, "errmsgBanned");
             return true;
         }
 
-        if (channel.members.contains(player.getName())) {
+        if (channel.getMembers().contains(player.getName())) {
 
             // 何かメッセージがあるなら、そのままチャット送信する
             if (message.length() > 0) {
@@ -181,20 +188,20 @@ public class LunaChatCommand implements CommandExecutor {
         } else {
 
             // グローバルチャンネルで、何かメッセージがあるなら、そのままチャット送信する
-            if (channel.name.equals(LunaChat.config.globalChannel) && message.length() > 0) {
+            if (channel.getName().equals(LunaChat.config.globalChannel) && message.length() > 0) {
                 channel.chat(player, message.toString());
                 return true;
             }
 
             // パスワードが設定されている場合は、パスワードを確認する
-            if ( !channel.password.equals("") ) {
+            if ( !channel.getPassword().equals("") ) {
                 if ( message.toString().trim().equals("") ) {
                     // パスワード空欄
                     sendResourceMessage(sender, PREERR, "errmsgPassword1");
                     sendResourceMessage(sender, PREERR, "errmsgPassword2");
                     sendResourceMessage(sender, PREERR, "errmsgPassword3");
                     return true;
-                } else if ( !channel.password.equals(message.toString().trim()) ) {
+                } else if ( !channel.getPassword().equals(message.toString().trim()) ) {
                     // パスワード不一致
                     sendResourceMessage(sender, PREERR, "errmsgPasswordNotmatch");
                     sendResourceMessage(sender, PREERR, "errmsgPassword2");
@@ -204,7 +211,7 @@ public class LunaChatCommand implements CommandExecutor {
             }
 
             // チャンネルに参加し、デフォルトの発言先に設定する
-            if ( !channel.name.equals(LunaChat.config.globalChannel) ) {
+            if ( !channel.getName().equals(LunaChat.config.globalChannel) ) {
                 channel.addMember(player.getName());
                 sendResourceMessage(sender, PREINFO, "cmdmsgJoin", channelName);
             }
@@ -253,7 +260,7 @@ public class LunaChatCommand implements CommandExecutor {
 
         // チャンネルのメンバーかどうかを確認する
         Channel channel = LunaChat.manager.getChannel(channelName);
-        if (!channel.members.contains(player.getName())) {
+        if (!channel.getMembers().contains(player.getName())) {
             sendResourceMessage(sender, PREERR, "errmsgNomember");
             return true;
         }
@@ -328,7 +335,7 @@ public class LunaChatCommand implements CommandExecutor {
 
         // モデレーターかどうか確認する
         Channel channel = LunaChat.manager.getChannel(channelName);
-        if ( !channel.moderator.contains(inviter.getName()) && !inviter.isOp()) {
+        if ( !channel.getModerator().contains(inviter.getName()) && !inviter.isOp()) {
             sendResourceMessage(sender, PREERR, "errmsgNotModerator");
             return true;
         }
@@ -342,7 +349,7 @@ public class LunaChatCommand implements CommandExecutor {
         }
 
         // 招待相手が既にチャンネルに参加しているかどうかを確認する
-        if (channel.members.contains(invitedName)) {
+        if (channel.getMembers().contains(invitedName)) {
             sendResourceMessage(sender, PREERR,
                     "errmsgInvitedAlreadyExist", invitedName);
             return true;
@@ -395,14 +402,14 @@ public class LunaChatCommand implements CommandExecutor {
         }
 
         // 既に参加しているなら、エラーを表示して終了する
-        if (channel.members.contains(player.getName())) {
+        if (channel.getMembers().contains(player.getName())) {
             sendResourceMessage(sender, PREERR, "errmsgInvitedAlreadyJoin");
             return true;
         }
 
         // 参加する
         channel.addMember(player.getName());
-        sendResourceMessage(sender, PREINFO, "cmdmsgJoin", channel.name);
+        sendResourceMessage(sender, PREINFO, "cmdmsgJoin", channel.getName());
 
         return true;
     }
@@ -476,32 +483,33 @@ public class LunaChatCommand implements CommandExecutor {
         }
 
         // モデレーターかどうか確認する
-        if (!channel.moderator.contains(kicker.getName()) && !kicker.isOp()) {
+        if (!channel.getModerator().contains(kicker.getName()) && !kicker.isOp()) {
             sendResourceMessage(sender, PREERR, "errmsgNotModerator");
             return true;
         }
 
         // グローバルチャンネルならキックできない
-        if ( LunaChat.config.globalChannel.equals(channel.name) ) {
-            sendResourceMessage(sender, PREERR, "errmsgCannotKickGlobal", channel.name);
+        if ( LunaChat.config.globalChannel.equals(channel.getName()) ) {
+            sendResourceMessage(sender, PREERR, "errmsgCannotKickGlobal", channel.getName());
             return true;
         }
 
         // キックされるプレイヤーがメンバーかどうかチェックする
-        if (!channel.members.contains(kickedName)) {
+        if (!channel.getMembers().contains(kickedName)) {
             sendResourceMessage(sender, PREERR, "errmsgNomemberOther");
             return true;
         }
 
         // キック実行
         channel.removeMember(kickedName);
+        channel.save();
         sendResourceMessage(sender, PREINFO,
-                "cmdmsgKick", kickedName, channel.name);
+                "cmdmsgKick", kickedName, channel.getName());
 
         Player kicked = LunaChat.getPlayerExact(kickedName);
         if (kicked != null) {
             sendResourceMessage(kicked, PREINFO,
-                    "cmdmsgKicked", channel.name);
+                    "cmdmsgKicked", channel.getName());
         }
 
         return true;
@@ -540,33 +548,33 @@ public class LunaChatCommand implements CommandExecutor {
         }
 
         // モデレーターかどうか確認する
-        if (!channel.moderator.contains(kicker.getName()) && !kicker.isOp()) {
+        if (!channel.getModerator().contains(kicker.getName()) && !kicker.isOp()) {
             sendResourceMessage(sender, PREERR, "errmsgNotModerator");
             return true;
         }
 
         // グローバルチャンネルならBANできない
-        if ( LunaChat.config.globalChannel.equals(channel.name) ) {
-            sendResourceMessage(sender, PREERR, "errmsgCannotBANGlobal", channel.name);
+        if ( LunaChat.config.globalChannel.equals(channel.getName()) ) {
+            sendResourceMessage(sender, PREERR, "errmsgCannotBANGlobal", channel.getName());
             return true;
         }
 
         // BANされるプレイヤーがメンバーかどうかチェックする
-        if (!channel.members.contains(kickedName)) {
+        if (!channel.getMembers().contains(kickedName)) {
             sendResourceMessage(sender, PREERR, "errmsgNomemberOther");
             return true;
         }
 
         // BAN実行
         Player kicked = LunaChat.getPlayerExact(kickedName);
-        channel.banned.add(kickedName);
+        channel.getBanned().add(kickedName);
         channel.removeMember(kickedName);
 
         sendResourceMessage(sender, PREINFO,
-                "cmdmsgBan", kickedName, channel.name);
+                "cmdmsgBan", kickedName, channel.getName());
         if (kicked != null) {
             sendResourceMessage(kicked, PREINFO,
-                    "cmdmsgBanned", channel.name);
+                    "cmdmsgBanned", channel.getName());
         }
 
         return true;
@@ -605,26 +613,27 @@ public class LunaChatCommand implements CommandExecutor {
         }
 
         // モデレーターかどうか確認する
-        if (!channel.moderator.contains(kicker.getName()) && !kicker.isOp()) {
+        if (!channel.getModerator().contains(kicker.getName()) && !kicker.isOp()) {
             sendResourceMessage(sender, PREERR, "errmsgNotModerator");
             return true;
         }
 
         // BAN解除されるプレイヤーがBANされているかどうかチェックする
-        if (!channel.banned.contains(kickedName)) {
+        if (!channel.getBanned().contains(kickedName)) {
             sendResourceMessage(sender, PREERR, "errmsgNotBanned");
             return true;
         }
 
         // BAN解除実行
         Player kicked = LunaChat.getPlayerExact(kickedName);
-        channel.banned.remove(kickedName);
+        channel.getBanned().remove(kickedName);
+        channel.save();
 
         sendResourceMessage(sender, PREINFO,
-                "cmdmsgPardon", kickedName, channel.name);
+                "cmdmsgPardon", kickedName, channel.getName());
         if (kicked != null) {
             sendResourceMessage(kicked, PREINFO,
-                    "cmdmsgPardoned", channel.name);
+                    "cmdmsgPardoned", channel.getName());
         }
 
         return true;
@@ -664,7 +673,7 @@ public class LunaChatCommand implements CommandExecutor {
         }
 
         // BANされていないかどうか確認する
-        if ( channel.banned.contains(player.getName()) ) {
+        if ( channel.getBanned().contains(player.getName()) ) {
             sendResourceMessage(sender, PREERR, "errmsgBanned");
             return true;
         }
@@ -706,8 +715,16 @@ public class LunaChatCommand implements CommandExecutor {
             return true;
         }
 
+        // 使用可能なチャンネル名かどうかをチェックする
+        if ( !LunaChat.manager.checkForChannelName(name) ) {
+            sendResourceMessage(sender, PREINFO, "errmsgCannotUseForChannel", name);
+            return true;
+        }
+
         // チャンネル作成
-        LunaChat.manager.createChannel(name, desc);
+        Channel channel = LunaChat.manager.createChannel(name);
+        channel.setDescription(desc);
+        channel.save();
         sendResourceMessage(sender, PREINFO, "cmdmsgCreate", name);
         return true;
     }
@@ -747,15 +764,15 @@ public class LunaChatCommand implements CommandExecutor {
 
         // モデレーターかどうか確認する
         if ( player != null ) {
-            if ( !channel.moderator.contains(player.getName()) && !player.isOp()) {
+            if ( !channel.getModerator().contains(player.getName()) && !player.isOp()) {
                 sendResourceMessage(sender, PREERR, "errmsgNotModerator");
                 return true;
             }
         }
 
         // グローバルチャンネルなら削除できない
-        if ( LunaChat.config.globalChannel.equals(channel.name) ) {
-            sendResourceMessage(sender, PREERR, "errmsgCannotRemoveGlobal", channel.name);
+        if ( LunaChat.config.globalChannel.equals(channel.getName()) ) {
+            sendResourceMessage(sender, PREERR, "errmsgCannotRemoveGlobal", channel.getName());
             return true;
         }
 
@@ -809,16 +826,16 @@ public class LunaChatCommand implements CommandExecutor {
         // モデレーターかどうか確認する
         Channel channel = LunaChat.manager.getChannel(cname);
         if ( player != null ) {
-            if ( !channel.moderator.contains(player.getName()) && !player.isOp()) {
+            if ( !channel.getModerator().contains(player.getName()) && !player.isOp()) {
                 sendResourceMessage(sender, PREERR, "errmsgNotModerator");
                 return true;
             }
         }
 
         // フォーマットの設定
-        channel.format = format;
+        channel.setFormat(format);
         sendResourceMessage(sender, PREINFO, "cmdmsgFormat", format);
-        LunaChat.manager.save();
+        channel.save();
         return true;
     }
 
@@ -865,15 +882,16 @@ public class LunaChatCommand implements CommandExecutor {
         // モデレーターかどうか確認する
         Channel channel = LunaChat.manager.getChannel(cname);
         if ( player != null ) {
-            if ( !channel.moderator.contains(player.getName()) && !player.isOp()) {
+            if ( !channel.getModerator().contains(player.getName()) && !player.isOp()) {
                 sendResourceMessage(sender, PREERR, "errmsgNotModerator");
                 return true;
             }
         }
 
         // グローバルチャンネルなら設定できない
-        if ( LunaChat.config.globalChannel.equals(channel.name) ) {
-            sendResourceMessage(sender, PREERR, "errmsgCannotModeratorGlobal", channel.name);
+        if ( LunaChat.config.globalChannel.equals(channel.getName()) ) {
+            sendResourceMessage(sender, PREERR,
+                    "errmsgCannotModeratorGlobal", channel.getName());
             return true;
         }
 
@@ -881,17 +899,17 @@ public class LunaChatCommand implements CommandExecutor {
         for ( String mod : moderator ) {
             if ( mod.startsWith("-") ) {
                 String name = mod.substring(1);
-                channel.moderator.remove(name);
+                channel.getModerator().remove(name);
                 sendResourceMessage(sender, PREINFO,
                         "cmdmsgModeratorMinus", name, cname);
             } else {
-                channel.moderator.add(mod);
+                channel.getModerator().add(mod);
                 sendResourceMessage(sender, PREINFO,
                         "cmdmsgModerator", mod, cname);
             }
         }
 
-        LunaChat.manager.save();
+        channel.save();
         return true;
     }
 
@@ -938,7 +956,7 @@ public class LunaChatCommand implements CommandExecutor {
         // モデレーターかどうか確認する
         Channel channel = LunaChat.manager.getChannel(cname);
         if ( player != null ) {
-            if ( !channel.moderator.contains(player.getName()) && !player.isOp()) {
+            if ( !channel.getModerator().contains(player.getName()) && !player.isOp()) {
                 sendResourceMessage(sender, PREERR, "errmsgNotModerator");
                 return true;
             }
@@ -957,14 +975,14 @@ public class LunaChatCommand implements CommandExecutor {
         // 設定する
         boolean setOption = false;
         if ( options.containsKey("description") ) {
-            channel.description = options.get("description");
+            channel.setDescription(options.get("description"));
             sendResourceMessage(sender, PREINFO,
                     "cmdmsgOption", "description", options.get("description"));
             setOption = true;
         }
-        if ( !LunaChat.config.globalChannel.equals(channel.name) ) {
+        if ( !LunaChat.config.globalChannel.equals(channel.getName()) ) {
             if ( options.containsKey("password") ) {
-                channel.password = options.get("password");
+                channel.setPassword(options.get("password"));
                 sendResourceMessage(sender, PREINFO,
                         "cmdmsgOption", "password", options.get("password"));
                 setOption = true;
@@ -972,12 +990,12 @@ public class LunaChatCommand implements CommandExecutor {
             if ( options.containsKey("visible") ) {
                 String temp = options.get("visible");
                 if ( temp.equalsIgnoreCase("false") ) {
-                    channel.visible = false;
+                    channel.setVisible(false);
                     sendResourceMessage(sender, PREINFO,
                             "cmdmsgOption", "visible", "false");
                     setOption = true;
                 } else if ( temp.equalsIgnoreCase("true") ) {
-                    channel.visible = true;
+                    channel.setVisible(true);
                     sendResourceMessage(sender, PREINFO,
                             "cmdmsgOption", "visible", "true");
                     setOption = true;
@@ -988,7 +1006,7 @@ public class LunaChatCommand implements CommandExecutor {
         if ( !setOption ) {
             sendResourceMessage(sender, PREERR, "errmsgInvalidOptions");
         } else {
-            LunaChat.manager.save();
+            channel.save();
         }
 
         return true;
@@ -1036,6 +1054,7 @@ public class LunaChatCommand implements CommandExecutor {
     private boolean doReload(CommandSender sender, String[] args) {
 
         LunaChat.config.reloadConfig();
+        LunaChat.manager.loadAllChannels();
         sendResourceMessage(sender, PREINFO, "cmdmsgReload");
         return true;
     }

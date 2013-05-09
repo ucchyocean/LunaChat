@@ -68,6 +68,8 @@ errmsgCannotRemoveGlobal: 'チャンネル %s はグローバルチャンネル�
 errmsgCannotModeratorGlobal: 'チャンネル %s はグローバルチャンネルなので、モデレーターを設定できません。'
 errmsgNotfoundPM: 'あなたが受信したプライベートメッセージがありません。'
 errmsgCannotSendPMSelf: '自分自身にプライベートメッセージを送ることはできません。'
+errmsgCannotUseForChannel: '%s はチャンネル名に使用できない文字を含んでいます。'
+errmsgCannotUseForGlobal: '%s はグローバルチャンネル名に使用できない文字を含んでいます。'
 
 ngwordPrefix: 'NGワード発言により、'
 

@@ -5,11 +5,19 @@
  */
 package com.github.ucchyocean.lc;
 
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Player;
 
 import ru.tehkode.permissions.PermissionUser;
@@ -19,7 +27,10 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
  * @author ucchy
  * チャンネル
  */
-public class Channel {
+@SerializableAs("Channel")
+public class Channel implements ConfigurationSerializable {
+
+    private static final String FOLDER_NAME_CHANNELS = "channels";
 
     private static final String INFO_FIRSTLINE = Resources.get("channelInfoFirstLine");
     private static final String INFO_PREFIX = Resources.get("channelInfoPrefix");
@@ -37,26 +48,35 @@ public class Channel {
     private static final String MSG_KICKED = Resources.get("cmdmsgKicked");
     private static final String MSG_BANNED = Resources.get("cmdmsgBanned");
 
+    private static final String KEY_NAME = "name";
+    private static final String KEY_DESC = "desc";
+    private static final String KEY_FORMAT = "format";
+    private static final String KEY_MEMBERS = "members";
+    private static final String KEY_BANNED = "banned";
+    private static final String KEY_MODERATOR = "moderator";
+    private static final String KEY_PASSWORD = "password";
+    private static final String KEY_VISIBLE = "visible";
+
     /** 参加者 */
-    protected List<String> members;
+    private List<String> members;
 
     /** チャンネルモデレータ */
-    protected List<String> moderator;
+    private List<String> moderator;
 
     /** BANされたプレイヤー */
-    protected List<String> banned;
+    private List<String> banned;
 
     /** チャンネルの名称 */
-    protected String name;
+    private String name;
 
     /** チャンネルの説明文 */
-    protected String description;
+    private String description;
 
     /** チャンネルのパスワード */
-    protected String password;
+    private String password;
 
     /** チャンネルリストに表示されるかどうか */
-    protected boolean visible;
+    private boolean visible;
 
     /** メッセージフォーマット<br>
      * 指定可能なキーワードは下記のとおり<br>
@@ -66,27 +86,16 @@ public class Channel {
      * %prefix - PermissionsExに設定するprefix<br>
      * %suffix - PermissionsExに設定するsuffix
      * */
-    protected String format;
+    private String format;
 
     /**
      * コンストラクタ
      * @param name チャンネルの名称
-     * @param description チャンネルの説明文
      */
-    protected Channel(String name, String description) {
-        this(name, description, new ArrayList<String>());
-    }
-
-    /**
-     * コンストラクタ
-     * @param name チャンネルの名称
-     * @param description チャンネルの説明文
-     * @param members 参加者
-     */
-    protected Channel(String name, String description, List<String> members) {
+    protected Channel(String name) {
         this.name = name;
-        this.description = description;
-        this.members = members;
+        this.description = "";
+        this.members = new ArrayList<String>();
         this.format = DEFAULT_FORMAT;
         this.banned = new ArrayList<String>();
         this.moderator = new ArrayList<String>();
@@ -178,7 +187,7 @@ public class Channel {
         if ( !members.contains(name) ) {
             members.add(name);
             sendJoinQuitMessage(true, name);
-            LunaChat.manager.save();
+            save();
         }
     }
 
@@ -203,7 +212,7 @@ public class Channel {
                 LunaChat.manager.removeChannel(this.name);
                 return;
             } else {
-                LunaChat.manager.save();
+                save();
             }
         }
 
@@ -380,5 +389,253 @@ public class Channel {
         }
 
         return members.size();
+    }
+
+    /**
+     * シリアライズ<br>
+     * ConfigurationSerializable互換のための実装。
+     * @see org.bukkit.configuration.serialization.ConfigurationSerializable#serialize()
+     */
+    @Override
+    public Map<String, Object> serialize() {
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put(KEY_NAME, name);
+        map.put(KEY_DESC, description);
+        map.put(KEY_FORMAT, format);
+        map.put(KEY_MEMBERS, members);
+        map.put(KEY_BANNED, banned);
+        map.put(KEY_MODERATOR, moderator);
+        map.put(KEY_PASSWORD, password);
+        map.put(KEY_VISIBLE, visible);
+        return map;
+    }
+
+    /**
+     * デシリアライズ<br>
+     * ConfigurationSerializable互換のための実装。
+     * @param data デシリアライズ元のMapデータ。
+     * @return デシリアライズされたクラス
+     */
+    public static Channel deserialize(Map<String, Object> data) {
+
+        String name = castWithDefault(data.get(KEY_NAME), (String)null);
+        List<String> members = castToStringList(data.get(KEY_MEMBERS));
+
+        // グローバルチャンネルのメンバー情報はクリアする
+        if ( LunaChat.config.globalChannel.equals(name) ) {
+            members = new ArrayList<String>();
+        }
+
+        Channel channel = new Channel(name);
+        channel.members = members;
+        channel.description = castWithDefault(data.get(KEY_DESC), "");
+        channel.format =
+            castWithDefault(data.get(KEY_FORMAT), DEFAULT_FORMAT);
+        channel.banned = castToStringList(data.get(KEY_BANNED));
+        channel.moderator = castToStringList(data.get(KEY_MODERATOR));
+        channel.password = castWithDefault(data.get(KEY_PASSWORD), "");
+        channel.visible = castWithDefault(data.get(KEY_VISIBLE), true);
+        return channel;
+    }
+
+    /**
+     * Objectを、クラスTに変換する。nullならデフォルトを返す。
+     * @param obj 変換元
+     * @param def nullだった場合のデフォルト
+     * @return 変換後
+     */
+    @SuppressWarnings("unchecked")
+    private static <T> T castWithDefault(Object obj, T def) {
+
+        if ( obj == null ) {
+            return def;
+        }
+        return (T)obj;
+    }
+
+    /**
+     * Objectを、List&lt;String&gt;に変換する。nullなら空のリストを返す。
+     * @param obj 変換元
+     * @return 変換後
+     */
+    @SuppressWarnings("unchecked")
+    private static List<String> castToStringList(Object obj) {
+
+        if ( obj == null ) {
+            return new ArrayList<String>();
+        }
+        if ( !(obj instanceof List<?>) ) {
+            return new ArrayList<String>();
+        }
+        return (List<String>)obj;
+    }
+
+    /**
+     * @return descriptionを返す
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * @param description descriptionを設定する
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
+     * @return passwordを返す
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * @param password passwordを設定する
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    /**
+     * @return visibleを返す
+     */
+    public boolean isVisible() {
+        return visible;
+    }
+
+    /**
+     * @param visible visibleを設定する
+     */
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    /**
+     * @return formatを返す
+     */
+    public String getFormat() {
+        return format;
+    }
+
+    /**
+     * @param format formatを設定する
+     */
+    public void setFormat(String format) {
+        this.format = format;
+    }
+
+    /**
+     * @return membersを返す
+     */
+    public List<String> getMembers() {
+        return members;
+    }
+
+    /**
+     * @return moderatorを返す
+     */
+    public List<String> getModerator() {
+        return moderator;
+    }
+
+    /**
+     * @return bannedを返す
+     */
+    public List<String> getBanned() {
+        return banned;
+    }
+
+    /**
+     * @return nameを返す
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * チャンネルの情報をファイルに保存する。
+     * @return 保存をしたかどうか。
+     */
+    public boolean save() {
+
+        // フォルダーの取得と、必要に応じて作成
+        File folder = new File(
+                LunaChat.instance.getDataFolder(), FOLDER_NAME_CHANNELS);
+        if ( !folder.exists() ) {
+            folder.mkdirs();
+        }
+
+        // 1:1チャットチャンネルの場合は、何もしない。
+        if ( name.contains(">") ) {
+            return false;
+        }
+
+        File file = new File(folder, name + ".yml");
+
+        // ファイルへ保存する
+        YamlConfiguration conf = new YamlConfiguration();
+        conf.set("", this);
+        try {
+            conf.save(file);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * チャンネルの情報を保存したファイルを、削除する。
+     * @return 削除したかどうか。
+     */
+    public boolean remove() {
+
+        // フォルダーの取得
+        File folder = new File(
+                LunaChat.instance.getDataFolder(), FOLDER_NAME_CHANNELS);
+        if ( !folder.exists() ) {
+            return false;
+        }
+        File file = new File(folder, name + ".yml");
+        if ( !file.exists() ) {
+            return false;
+        }
+
+        // ファイルを削除
+        return file.delete();
+    }
+
+    /**
+     * チャンネルの情報を保存したファイルから全てのチャンネルを復元して返す。
+     * @return 全てのチャンネル
+     */
+    public static HashMap<String, Channel> loadAllChannels() {
+
+        // フォルダーの取得
+        File folder = new File(
+                LunaChat.instance.getDataFolder(), FOLDER_NAME_CHANNELS);
+        if ( !folder.exists() ) {
+            return new HashMap<String, Channel>();
+        }
+
+        File[] files = folder.listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.endsWith(".yml");
+            }
+        });
+
+        HashMap<String, Channel> result = new HashMap<String, Channel>();
+        for ( File file : files ) {
+            YamlConfiguration config =
+                YamlConfiguration.loadConfiguration(file);
+            Channel channel = (Channel)config.get("");
+            result.put(channel.name, channel);
+        }
+
+        return result;
     }
 }

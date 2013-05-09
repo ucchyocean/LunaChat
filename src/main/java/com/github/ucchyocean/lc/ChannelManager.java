@@ -9,11 +9,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
@@ -29,19 +27,9 @@ public class ChannelManager {
 
     private static final String MOTD_FIRSTLINE = Resources.get("motdFirstLine");
 
-    private static final String DEFAULT_FORMAT = Resources.get("defaultFormat");
+    private static final String FILE_NAME_DCHANNELS = "defaults.yml";
 
-    private static final String FILE_NAME = "channels.yml";
-
-    private static final String KEY_DESC = "desc";
-    private static final String KEY_FORMAT = "format";
-    private static final String KEY_MEMBERS = "members";
-    private static final String KEY_BANNED = "banned";
-    private static final String KEY_MODERATOR = "moderator";
-    private static final String KEY_PASSWORD = "password";
-    private static final String KEY_VISIBLE = "visible";
-
-    private File file;
+    private File fileDefaults;
     private HashMap<String, Channel> channels;
     private HashMap<String, String> defaultChannels;
 
@@ -49,117 +37,50 @@ public class ChannelManager {
      * コンストラクタ
      */
     public ChannelManager() {
-        load();
+        loadAllChannels();
     }
 
     /**
      * 読み込みする
      */
-    private void load() {
+    protected void loadAllChannels() {
 
-        file = new File(
+        // デフォルトチャンネル設定のロード
+        fileDefaults = new File(
                 LunaChat.instance.getDataFolder() +
-                File.separator + FILE_NAME);
+                File.separator + FILE_NAME_DCHANNELS);
 
-        if ( !file.exists() ) {
+        if ( !fileDefaults.exists() ) {
             YamlConfiguration conf = new YamlConfiguration();
             try {
-                conf.save(file);
+                conf.save(fileDefaults);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
         YamlConfiguration config =
-                YamlConfiguration.loadConfiguration(file);
+                YamlConfiguration.loadConfiguration(fileDefaults);
+
+        defaultChannels = new HashMap<String, String>();
+        Set<String> keyset = config.getValues(false).keySet();
+        for ( String key : keyset ) {
+            defaultChannels.put(key, config.getString(key));
+        }
 
         // チャンネル設定のロード
-        if ( channels == null ) {
-            channels = new HashMap<String, Channel>();
-        } else {
-            channels.clear();
-        }
-
-        if ( config.contains("channels") ) {
-            ConfigurationSection section = config.getConfigurationSection("channels");
-            Set<String> keyset = section.getValues(false).keySet();
-            for ( String key : keyset ) {
-                ConfigurationSection sec = section.getConfigurationSection(key);
-                Channel channel = getChannelFromSection(sec);
-                channels.put(key, channel);
-            }
-        }
-
-        // デフォルト設定のロード
-        if ( defaultChannels == null ) {
-            defaultChannels = new HashMap<String, String>();
-        } else {
-            defaultChannels.clear();
-        }
-
-        if ( config.contains("defaults") ) {
-            ConfigurationSection section = config.getConfigurationSection("defaults");
-            Set<String> keyset = section.getValues(false).keySet();
-            for ( String key : keyset ) {
-                defaultChannels.put(key, section.getString(key));
-            }
-        }
-    }
-
-    /**
-     * セクションからChannelクラスを生成して返す
-     * @param section セクション
-     * @return Channel
-     */
-    private Channel getChannelFromSection(ConfigurationSection section) {
-
-        String name = section.getName();
-        String desc = section.getString(KEY_DESC, "");
-        String format = section.getString(KEY_FORMAT, DEFAULT_FORMAT);
-        List<String> members = section.getStringList(KEY_MEMBERS);
-        List<String> banned = section.getStringList(KEY_BANNED);
-        List<String> moderator = section.getStringList(KEY_MODERATOR);
-        String password = section.getString(KEY_PASSWORD, "");
-        boolean visible = section.getBoolean(KEY_VISIBLE, true);
-
-        // グローバルチャンネルのメンバー情報はクリアする
-        if ( LunaChat.config.globalChannel.equals(name) ) {
-            members = new ArrayList<String>();
-        }
-
-        Channel channel = new Channel(name, desc, members);
-        channel.format = format;
-        channel.banned = banned;
-        channel.moderator = moderator;
-        channel.password = password;
-        channel.visible = visible;
-        return channel;
+        channels = Channel.loadAllChannels();
     }
 
     /**
      * 保存する
      */
-    protected boolean save() {
+    public boolean saveDefaults() {
 
         try {
             YamlConfiguration config = new YamlConfiguration();
-
-            for ( String key : channels.keySet() ) {
-                Channel channel = channels.get(key);
-                config.set("channels." + key + "." + KEY_DESC, channel.description);
-                config.set("channels." + key + "." + KEY_FORMAT, channel.format);
-                config.set("channels." + key + "." + KEY_MEMBERS, channel.members);
-                config.set("channels." + key + "." + KEY_BANNED, channel.banned);
-                config.set("channels." + key + "." + KEY_MODERATOR, channel.moderator);
-                config.set("channels." + key + "." + KEY_PASSWORD, channel.password);
-                config.set("channels." + key + "." + KEY_VISIBLE, channel.visible);
-            }
-
-            for ( String key : defaultChannels.keySet() ) {
-                config.set("defaults." + key, defaultChannels.get(key));
-            }
-
-            config.save(file);
+            config.set("", defaultChannels);
+            config.save(fileDefaults);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -203,7 +124,7 @@ public class ChannelManager {
             Channel channel = channels.get(key);
 
             // BANされているチャンネルは表示しない
-            if ( channel.banned.contains(playerName) ) {
+            if ( channel.getBanned().contains(playerName) ) {
                 continue;
             }
 
@@ -211,16 +132,16 @@ public class ChannelManager {
             if ( key.equals(dchannel) ) {
                 disp = ChatColor.RED + key;
             }
-            if ( player != null && !channel.members.contains(playerName) &&
+            if ( player != null && !channel.getMembers().contains(playerName) &&
                     !key.equals(LunaChat.config.globalChannel) ) {
 
                 // 未参加で visible=false のチャンネルは表示しない
-                if ( !channel.visible ) {
+                if ( !channel.isVisible() ) {
                     continue;
                 }
                 disp = ChatColor.GRAY + key;
             }
-            String desc = channel.description;
+            String desc = channel.getDescription();
             int onlineNum = channel.getOnlineNum();
             int memberNum = channel.getTotalNum();
             String item = String.format(
@@ -250,7 +171,7 @@ public class ChannelManager {
         items.add(Utility.replaceColorCode(MOTD_FIRSTLINE));
         for ( String key : channels.keySet() ) {
             Channel channel = channels.get(key);
-            if ( !channel.members.contains(playerName) &&
+            if ( !channel.getMembers().contains(playerName) &&
                     !key.equals(LunaChat.config.globalChannel) ) {
                 continue;
             }
@@ -259,7 +180,7 @@ public class ChannelManager {
             if ( key.equals(dchannel) ) {
                 disp = ChatColor.RED + key;
             }
-            String desc = channel.description;
+            String desc = channel.getDescription();
             int onlineNum = channel.getOnlineNum();
             int memberNum = channel.getTotalNum();
             String item = String.format(
@@ -283,7 +204,7 @@ public class ChannelManager {
         String name = player.getName();
         for ( String key : channels.keySet() ) {
             Channel channel = channels.get(key);
-            if ( channel.members.contains(name) ||
+            if ( channel.getMembers().contains(name) ||
                     key.equals(LunaChat.config.globalChannel) ) {
                 result.add(channel);
             }
@@ -331,7 +252,7 @@ public class ChannelManager {
      */
     protected void setDefaultChannel(String name, String cname) {
         defaultChannels.put(name, cname);
-        save();
+        saveDefaults();
     }
 
     /**
@@ -349,10 +270,10 @@ public class ChannelManager {
      * @param desc チャンネルの説明文
      * @return 作成されたチャンネル
      */
-    protected Channel createChannel(String name, String desc) {
-        Channel channel = new Channel(name, desc);
+    protected Channel createChannel(String name) {
+        Channel channel = new Channel(name);
         channels.put(name, channel);
-        save();
+        channel.save();
         return channel;
     }
 
@@ -363,18 +284,27 @@ public class ChannelManager {
     protected void removeChannel(String name) {
         Channel channel = getChannel(name);
         if ( channel != null ) {
+            channel.remove();
             channels.remove(name);
 
             // チャンネルのメンバーを強制解散させる
             String message = String.format(Utility.replaceColorCode(
                     Resources.get("breakupMessage")), name);
-            for ( String pname : channel.members ) {
+            for ( String pname : channel.getMembers() ) {
                 Player player = LunaChat.getPlayerExact(pname);
                 if ( player != null ) {
                     player.sendMessage(message);
                 }
             }
         }
-        save();
+    }
+
+    /**
+     * 指定された名前がチャンネル名として使用可能かどうかを判定する
+     * @param name 名前
+     * @return チャンネル名として使用可能かどうか
+     */
+    protected boolean checkForChannelName(String name) {
+        return name.matches("[0-9a-zA-Z\\-_]{1,20}");
     }
 }
