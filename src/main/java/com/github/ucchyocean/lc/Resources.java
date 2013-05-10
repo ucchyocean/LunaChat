@@ -49,7 +49,7 @@ public class Resources {
      * @param key リソースキー
      * @return リソース
      */
-    protected static String get(String key) {
+    public static String get(String key) {
 
         if ( resources == null ) {
             initialize();

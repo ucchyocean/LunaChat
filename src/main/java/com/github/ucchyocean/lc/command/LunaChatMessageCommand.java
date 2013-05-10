@@ -3,12 +3,18 @@
  * @license    GPLv3
  * @copyright  Copyright ucchy 2013
  */
-package com.github.ucchyocean.lc;
+package com.github.ucchyocean.lc.command;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import com.github.ucchyocean.lc.Channel;
+import com.github.ucchyocean.lc.LunaChat;
+import com.github.ucchyocean.lc.Resources;
+import com.github.ucchyocean.lc.Utility;
+
 
 /**
  * @author ucchy
@@ -82,8 +88,8 @@ public class LunaChatMessageCommand implements CommandExecutor {
         }
 
         // デフォルトの発言先が異なる場合は、デフォルトの発言先にする
-        String dname = LunaChat.manager.getDefault(inviter.getName());
-        if ( !cname.equals(dname) ) {
+        Channel def = LunaChat.manager.getDefaultChannel(inviter.getName());
+        if ( def == null || !cname.equals(def.getName()) ) {
             LunaChat.manager.setDefaultChannel(inviter.getName(), cname);
             sendResourceMessage(sender, PREINFO, "cmdmsgSet", cname);
         }

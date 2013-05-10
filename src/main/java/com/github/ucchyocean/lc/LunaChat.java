@@ -14,6 +14,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.github.ucchyocean.lc.command.LunaChatCommand;
+import com.github.ucchyocean.lc.command.LunaChatMessageCommand;
+import com.github.ucchyocean.lc.command.LunaChatReplyCommand;
+
+
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 /**
@@ -68,7 +73,7 @@ public class LunaChat extends JavaPlugin {
      * このプラグインのJarファイル自身を示すFileクラスを返す。
      * @return
      */
-    protected static File getPluginJarFile() {
+    public static File getPluginJarFile() {
         return instance.getFile();
     }
 
@@ -76,7 +81,7 @@ public class LunaChat extends JavaPlugin {
      * ログにメッセージを出力する
      * @param message メッセージ
      */
-    protected static void log(String message) {
+    public static void log(String message) {
         instance.getLogger().info(ChatColor.stripColor(message));
     }
 
@@ -85,7 +90,7 @@ public class LunaChat extends JavaPlugin {
      * @param name プレイヤー名
      * @return Player
      */
-    protected static Player getPlayerExact(String name) {
+    public static Player getPlayerExact(String name) {
         return instance.getServer().getPlayerExact(name);
     }
 }

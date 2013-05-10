@@ -30,7 +30,7 @@ public class Utility {
      * @param sourceFilePath コピー元
      * @param isBinary バイナリファイルかどうか
      */
-    protected static void copyFileFromJar(
+    public static void copyFileFromJar(
             File jarFile, File targetFile, String sourceFilePath, boolean isBinary) {
 
         InputStream is = null;
@@ -112,7 +112,7 @@ public class Utility {
      * @param source 置き換え元の文字列
      * @return 置き換え後の文字列
      */
-    protected static String replaceColorCode(String source) {
+    public static String replaceColorCode(String source) {
         return source.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
     }
 
@@ -121,7 +121,7 @@ public class Utility {
      * @param length アスタリスクの個数
      * @return 指定された文字数のアスタリスク
      */
-    protected static String getAstariskString(int length) {
+    public static String getAstariskString(int length) {
         StringBuilder buf = new StringBuilder();
         for ( int i=0; i<length; i++ ) {
             buf.append("*");

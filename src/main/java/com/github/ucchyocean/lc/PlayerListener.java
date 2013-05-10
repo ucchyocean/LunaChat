@@ -6,6 +6,7 @@
 package com.github.ucchyocean.lc;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -39,7 +40,7 @@ public class PlayerListener implements Listener {
         }
 
         Player player = event.getPlayer();
-        Channel channel = LunaChat.manager.getDefaultChannelByPlayer(player.getName());
+        Channel channel = LunaChat.manager.getDefaultChannel(player.getName());
 
         // デフォルトの発言先が無い場合
         if ( channel == null ) {
@@ -96,10 +97,10 @@ public class PlayerListener implements Listener {
 
         // お互いがオフラインになるPMチャンネルがある場合は
         // チャンネルをクリアする
-        ArrayList<String> channels = LunaChat.manager.getNames();
-        for ( String cname : channels ) {
+        Collection<Channel> channels = LunaChat.manager.getChannels();
+        for ( Channel channel : channels ) {
+            String cname = channel.getName();
             if ( cname.contains(">") && cname.contains(player.getName()) ) {
-                Channel channel = LunaChat.manager.getChannel(cname);
                 boolean isAllOffline = true;
                 for ( String pname : channel.getMembers() ) {
                     if ( !pname.equals(player.getName()) ) {
@@ -134,7 +135,7 @@ public class PlayerListener implements Listener {
             }
 
             // デフォルト発言先が無いなら、グローバルチャンネルに設定する
-            Channel dchannel = LunaChat.manager.getDefaultChannelByPlayer(player.getName());
+            Channel dchannel = LunaChat.manager.getDefaultChannel(player.getName());
             if ( dchannel == null ) {
                 LunaChat.manager.setDefaultChannel(player.getName(), global.getName());
             }
@@ -182,7 +183,7 @@ public class PlayerListener implements Listener {
         }
 
         // デフォルト発言先が無いなら、グローバルチャンネルに設定する
-        Channel dchannel = LunaChat.manager.getDefaultChannelByPlayer(player.getName());
+        Channel dchannel = LunaChat.manager.getDefaultChannel(player.getName());
         if ( dchannel == null ) {
             LunaChat.manager.setDefaultChannel(player.getName(), gcName);
         }

@@ -108,7 +108,7 @@ public class Channel implements ConfigurationSerializable {
      * @param player 発言をするプレイヤー
      * @param message 発言をするメッセージ
      */
-    protected void chat(Player player, String message) {
+    public void chat(Player player, String message) {
 
         // NGワード発言をしたかどうかのチェックとマスク
         boolean isNG = false;
@@ -132,17 +132,18 @@ public class Channel implements ConfigurationSerializable {
         // キーワード置き換え
         String msg = replaceKeywords(format, player, message);
 
-        if ( !name.equals(LunaChat.config.globalChannel) ) {
-            // オンラインのプレイヤーに送信する
-            for ( String member : members ) {
-                Player p = LunaChat.getPlayerExact(member);
-                if ( p != null ) {
-                    p.sendMessage(msg);
-                }
-            }
-        } else {
-            // グローバルチャンネルは、そのままブロードキャスト
+        // グローバルチャンネルは、そのままブロードキャストして終わり
+        if ( name.equals(LunaChat.config.globalChannel) ) {
             Bukkit.broadcastMessage(msg);
+            return;
+        }
+
+        // オンラインのプレイヤーに送信する
+        for ( String member : members ) {
+            Player p = LunaChat.getPlayerExact(member);
+            if ( p != null ) {
+                p.sendMessage(msg);
+            }
         }
 
         // ロギング
@@ -151,8 +152,7 @@ public class Channel implements ConfigurationSerializable {
         }
 
         // NGワード発言者に、NGワードアクションを実行する
-        // ただしグローバルチャンネルの場合は、アクションは実行されない
-        if ( isNG && !LunaChat.config.globalChannel.equals(name) ) {
+        if ( isNG && player != null ) {
             if ( LunaChat.config.ngwordAction == NGWordAction.BAN ) {
                 // BANする
 
@@ -179,7 +179,7 @@ public class Channel implements ConfigurationSerializable {
      * メンバーを追加する
      * @param name 追加するメンバー名
      */
-    protected void addMember(String name) {
+    public void addMember(String name) {
 
         if ( members.size() == 0 ) {
             moderator.add(name);
@@ -195,13 +195,13 @@ public class Channel implements ConfigurationSerializable {
      * メンバーを削除する
      * @param name 削除するメンバー名
      */
-    protected void removeMember(String name) {
+    public void removeMember(String name) {
 
         // デフォルト発言先が退出するチャンネルと一致する場合、
         // デフォルト発言先を削除する
-        String def = LunaChat.manager.getDefault(name);
-        if ( def != null && def.equals(this.name) ) {
-            LunaChat.manager.removeDefault(name);
+        Channel def = LunaChat.manager.getDefaultChannel(name);
+        if ( def != null && def.name.equals(this.name) ) {
+            LunaChat.manager.removeDefaultChannel(name);
         }
 
         // 実際にメンバーから削除する
@@ -227,7 +227,7 @@ public class Channel implements ConfigurationSerializable {
      * @param isJoin 入室かどうか（falseなら退室）
      * @param player 入退室したプレイヤー名
      */
-    protected void sendJoinQuitMessage(boolean isJoin, String player) {
+    private void sendJoinQuitMessage(boolean isJoin, String player) {
 
         String msg;
         if ( isJoin ) {
@@ -247,7 +247,7 @@ public class Channel implements ConfigurationSerializable {
      * 情報をチャンネルメンバーに流します。
      * @param message メッセージ
      */
-    private void sendInformation(String message) {
+    public void sendInformation(String message) {
 
         // オンラインのプレイヤーに送信する
         for ( String member : members ) {
@@ -294,7 +294,7 @@ public class Channel implements ConfigurationSerializable {
                 if ( moderator.contains(name) ) {
                     name = "@" + name;
                 }
-                if ( isOnline(members.get(i)) ) {
+                if ( isOnlinePlayer(members.get(i)) ) {
                     disp = ChatColor.WHITE + name;
                 } else {
                     disp = ChatColor.GRAY + name;
@@ -316,11 +316,11 @@ public class Channel implements ConfigurationSerializable {
 
     /**
      * 指定された名前のプレイヤーがオンラインかどうかを確認する
-     * @param name プレイヤー名
+     * @param playerName プレイヤー名
      * @return オンラインかどうか
      */
-    private boolean isOnline(String name) {
-        Player p = LunaChat.getPlayerExact(name);
+    private boolean isOnlinePlayer(String playerName) {
+        Player p = LunaChat.getPlayerExact(playerName);
         return ( p != null && p.isOnline() );
     }
 
@@ -360,17 +360,17 @@ public class Channel implements ConfigurationSerializable {
      * チャンネルのオンライン人数を返す
      * @return オンライン人数
      */
-    protected int getOnlineNum() {
+    public int getOnlineNum() {
 
+        // グローバルチャンネルならサーバー接続人数を返す
         if ( name.equals(LunaChat.config.globalChannel) ) {
-            // グローバルチャンネルならサーバー接続人数を返す
             return Bukkit.getOnlinePlayers().length;
         }
 
         // メンバーの人数を数える
         int onlineNum = 0;
         for ( String pname : members ) {
-            if ( isOnline(pname) ) {
+            if ( isOnlinePlayer(pname) ) {
                 onlineNum++;
             }
         }
@@ -381,10 +381,10 @@ public class Channel implements ConfigurationSerializable {
      * チャンネルの総参加人数を返す
      * @return 総参加人数
      */
-    protected int getTotalNum() {
+    public int getTotalNum() {
 
+        // グローバルチャンネルならサーバー接続人数を返す
         if ( name.equals(LunaChat.config.globalChannel) ) {
-            // グローバルチャンネルならサーバー接続人数を返す
             return Bukkit.getOnlinePlayers().length;
         }
 
@@ -472,84 +472,96 @@ public class Channel implements ConfigurationSerializable {
     }
 
     /**
-     * @return descriptionを返す
+     * チャンネルの説明文を返す
+     * @return チャンネルの説明文
      */
     public String getDescription() {
         return description;
     }
 
     /**
-     * @param description descriptionを設定する
+     * チャンネルの説明文を設定する
+     * @param description チャンネルの説明文
      */
     public void setDescription(String description) {
         this.description = description;
     }
 
     /**
-     * @return passwordを返す
+     * チャンネルのパスワードを返す
+     * @return チャンネルのパスワード
      */
     public String getPassword() {
         return password;
     }
 
     /**
-     * @param password passwordを設定する
+     * チャンネルのパスワードを設定する
+     * @param password チャンネルのパスワード
      */
     public void setPassword(String password) {
         this.password = password;
     }
 
     /**
-     * @return visibleを返す
+     * チャンネルの可視性を返す
+     * @return チャンネルの可視性
      */
     public boolean isVisible() {
         return visible;
     }
 
     /**
-     * @param visible visibleを設定する
+     * チャンネルの可視性を設定する
+     * @param visible チャンネルの可視性
      */
     public void setVisible(boolean visible) {
         this.visible = visible;
     }
 
     /**
-     * @return formatを返す
+     * チャンネルのメッセージフォーマットを返す
+     * @return チャンネルのメッセージフォーマット
      */
     public String getFormat() {
         return format;
     }
 
     /**
-     * @param format formatを設定する
+     * チャンネルのメッセージフォーマットを設定する
+     * @param format チャンネルのメッセージフォーマット
      */
     public void setFormat(String format) {
         this.format = format;
     }
 
     /**
-     * @return membersを返す
+     * チャンネルのメンバーを返す
+     * @return チャンネルのメンバー
      */
     public List<String> getMembers() {
         return members;
     }
 
     /**
-     * @return moderatorを返す
+     * チャンネルのモデレーターを返す
+     * @return チャンネルのモデレーター
      */
     public List<String> getModerator() {
         return moderator;
     }
 
     /**
-     * @return bannedを返す
+     * チャンネルのBANリストを返す
+     * @return チャンネルのBANリスト
      */
     public List<String> getBanned() {
         return banned;
     }
 
     /**
-     * @return nameを返す
+     * チャンネル名を返す
+     * @return チャンネル名
      */
     public String getName() {
         return name;
@@ -612,7 +624,7 @@ public class Channel implements ConfigurationSerializable {
      * チャンネルの情報を保存したファイルから全てのチャンネルを復元して返す。
      * @return 全てのチャンネル
      */
-    public static HashMap<String, Channel> loadAllChannels() {
+    protected static HashMap<String, Channel> loadAllChannels() {
 
         // フォルダーの取得
         File folder = new File(

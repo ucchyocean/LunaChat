@@ -8,6 +8,7 @@ package com.github.ucchyocean.lc;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -19,7 +20,7 @@ import org.bukkit.entity.Player;
  * @author ucchy
  * チャンネルマネージャー
  */
-public class ChannelManager {
+public class ChannelManager implements LunaChatAPI {
 
     private static final String LIST_FIRSTLINE = Resources.get("listFirstLine");
     private static final String LIST_ENDLINE = Resources.get("listEndLine");
@@ -41,7 +42,7 @@ public class ChannelManager {
     }
 
     /**
-     * 読み込みする
+     * すべて読み込みする
      */
     protected void loadAllChannels() {
 
@@ -73,7 +74,19 @@ public class ChannelManager {
     }
 
     /**
-     * 保存する
+     * すべて保存する
+     */
+    protected void saveAllChannels() {
+
+        saveDefaults();
+
+        for ( Channel channel : channels.values() ) {
+            channel.save();
+        }
+    }
+
+    /**
+     * デフォルトチャンネル設定を保存する
      */
     public boolean saveDefaults() {
 
@@ -86,19 +99,6 @@ public class ChannelManager {
             e.printStackTrace();
             return false;
         }
-    }
-
-    /**
-     * チャンネルの名前リストを返す
-     * @return チャンネルの名前
-     */
-    protected ArrayList<String> getNames() {
-
-        ArrayList<String> names = new ArrayList<String>();
-        for ( String k : channels.keySet() ) {
-            names.add(k);
-        }
-        return names;
     }
 
     /**
@@ -194,17 +194,39 @@ public class ChannelManager {
     }
 
     /**
-     * プレイヤーが参加しているチャンネルを返す
-     * @param player プレイヤー
-     * @return チャンネル
+     * 指定したチャンネル名が存在するかどうかを返す
+     * @param channelName チャンネル名
+     * @return 存在するかどうか
+     * @see com.github.ucchyocean.lc.LunaChatAPI#isExistChannel(java.lang.String)
      */
-    protected ArrayList<Channel> getChannelByPlayer(Player player) {
+    public boolean isExistChannel(String channelName) {
+        return channels.containsKey(channelName);
+    }
 
-        ArrayList<Channel> result = new ArrayList<Channel>();
-        String name = player.getName();
+    /**
+     * 全てのチャンネルを返す
+     * @return 全てのチャンネル
+     * @see com.github.ucchyocean.lc.LunaChatAPI#getChannels()
+     */
+    @Override
+    public Collection<Channel> getChannels() {
+
+        return channels.values();
+    }
+
+    /**
+     * プレイヤーが参加しているチャンネルを返す
+     * @param playerName プレイヤー名
+     * @return チャンネル
+     * @see com.github.ucchyocean.lc.LunaChatAPI#getChannelsByPlayer(java.lang.String)
+     */
+    @Override
+    public Collection<Channel> getChannelsByPlayer(String playerName) {
+
+        Collection<Channel> result = new ArrayList<Channel>();
         for ( String key : channels.keySet() ) {
             Channel channel = channels.get(key);
-            if ( channel.getMembers().contains(name) ||
+            if ( channel.getMembers().contains(playerName) ||
                     key.equals(LunaChat.config.globalChannel) ) {
                 result.add(channel);
             }
@@ -214,12 +236,14 @@ public class ChannelManager {
 
     /**
      * プレイヤーが参加しているデフォルトのチャンネルを返す
-     * @param player プレイヤー
+     * @param playerName プレイヤー
      * @return チャンネル
+     * @see com.github.ucchyocean.lc.LunaChatAPI#getDefaultChannel(java.lang.String)
      */
-    protected Channel getDefaultChannelByPlayer(String name) {
+    @Override
+    public Channel getDefaultChannel(String playerName) {
 
-        String cname = defaultChannels.get(name);
+        String cname = defaultChannels.get(playerName);
         if ( cname == null || !channels.containsKey(cname) ) {
             return null;
         }
@@ -227,69 +251,69 @@ public class ChannelManager {
     }
 
     /**
-     * 指定した名前のプレイヤーに設定されている、デフォルトチャンネル名を取得する
-     * @param name プレイヤー名
-     * @return デフォルトチャンネル名
-     */
-    protected String getDefault(String name) {
-        return defaultChannels.get(name);
-    }
-
-    /**
-     * 指定した名前のプレイヤーに設定されている、デフォルトチャンネルを削除する
-     * @param name プレイヤー名
-     */
-    protected void removeDefault(String name) {
-        if ( defaultChannels.containsKey(name) ) {
-            defaultChannels.remove(name);
-        }
-    }
-
-    /**
      * プレイヤーのデフォルトチャンネルを設定する
-     * @param player プレイヤー
-     * @param cname チャンネル名
+     * @param playerName プレイヤー
+     * @param channelName チャンネル名
+     * @see com.github.ucchyocean.lc.LunaChatAPI#setDefaultChannel(java.lang.String, java.lang.String)
      */
-    protected void setDefaultChannel(String name, String cname) {
-        defaultChannels.put(name, cname);
+    @Override
+    public void setDefaultChannel(String playerName, String channelName) {
+        defaultChannels.put(playerName, channelName);
         saveDefaults();
     }
 
     /**
-     * チャンネルを取得する
-     * @param name チャンネル名
-     * @return チャンネル
+     * 指定した名前のプレイヤーに設定されている、デフォルトチャンネルを削除する
+     * @param playerName プレイヤー名
+     * @see com.github.ucchyocean.lc.LunaChatAPI#removeDefaultChannel(java.lang.String)
      */
-    protected Channel getChannel(String name) {
-        return channels.get(name);
+    @Override
+    public void removeDefaultChannel(String playerName) {
+        if ( defaultChannels.containsKey(playerName) ) {
+            defaultChannels.remove(playerName);
+        }
+    }
+
+    /**
+     * チャンネルを取得する
+     * @param channelName チャンネル名
+     * @return チャンネル
+     * @see com.github.ucchyocean.lc.LunaChatAPI#getChannel(java.lang.String)
+     */
+    @Override
+    public Channel getChannel(String channelName) {
+        return channels.get(channelName);
     }
 
     /**
      * 新しいチャンネルを作成する
-     * @param name チャンネル名
-     * @param desc チャンネルの説明文
+     * @param channelName チャンネル名
      * @return 作成されたチャンネル
+     * @see com.github.ucchyocean.lc.LunaChatAPI#createChannel(java.lang.String)
      */
-    protected Channel createChannel(String name) {
-        Channel channel = new Channel(name);
-        channels.put(name, channel);
+    @Override
+    public Channel createChannel(String channelName) {
+        Channel channel = new Channel(channelName);
+        channels.put(channelName, channel);
         channel.save();
         return channel;
     }
 
     /**
      * チャンネルを削除する
-     * @param name 削除するチャンネル名
+     * @param channelName 削除するチャンネル名
+     * @see com.github.ucchyocean.lc.LunaChatAPI#removeChannel(java.lang.String)
      */
-    protected void removeChannel(String name) {
-        Channel channel = getChannel(name);
+    @Override
+    public void removeChannel(String channelName) {
+        Channel channel = getChannel(channelName);
         if ( channel != null ) {
             channel.remove();
-            channels.remove(name);
+            channels.remove(channelName);
 
             // チャンネルのメンバーを強制解散させる
             String message = String.format(Utility.replaceColorCode(
-                    Resources.get("breakupMessage")), name);
+                    Resources.get("breakupMessage")), channelName);
             for ( String pname : channel.getMembers() ) {
                 Player player = LunaChat.getPlayerExact(pname);
                 if ( player != null ) {
