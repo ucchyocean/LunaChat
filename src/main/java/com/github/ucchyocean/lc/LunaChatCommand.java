@@ -3,7 +3,7 @@
  * @license    GPLv3
  * @copyright  Copyright ucchy 2013
  */
-package com.github.ucchyocean.lc.command;
+package com.github.ucchyocean.lc;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,10 +13,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.Channel;
-import com.github.ucchyocean.lc.LunaChat;
-import com.github.ucchyocean.lc.Resources;
-import com.github.ucchyocean.lc.Utility;
 
 
 /**

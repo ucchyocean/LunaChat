@@ -60,7 +60,7 @@ public class LunaChatConfig {
     /**
      * config.yml を再読み込みする
      */
-    protected void reloadConfig() {
+    public void reloadConfig() {
 
         File configFile = new File(LunaChat.instance.getDataFolder(), "config.yml");
         if ( !configFile.exists() ) {
@@ -92,14 +92,154 @@ public class LunaChatConfig {
     }
 
     /**
-     * config.yml に、設定値を保存する
-     * @param key 設定値のキー
-     * @param value 設定値の値
+     * @return displayJapanizeを返す
      */
-    public static void setConfigValue(String key, Object value) {
-
-        FileConfiguration config = LunaChat.instance.getConfig();
-        config.set(key, value);
-        LunaChat.instance.saveConfig();
+    public boolean isDisplayJapanize() {
+        return displayJapanize;
     }
+
+    /**
+     * @param displayJapanize displayJapanizeを設定する
+     */
+    public void setDisplayJapanize(boolean displayJapanize) {
+        this.displayJapanize = displayJapanize;
+    }
+
+    /**
+     * @return noJoinAsGlobalを返す
+     */
+    public boolean isNoJoinAsGlobal() {
+        return noJoinAsGlobal;
+    }
+
+    /**
+     * @param noJoinAsGlobal noJoinAsGlobalを設定する
+     */
+    public void setNoJoinAsGlobal(boolean noJoinAsGlobal) {
+        this.noJoinAsGlobal = noJoinAsGlobal;
+    }
+
+    /**
+     * @return loggingChatを返す
+     */
+    public boolean isLoggingChat() {
+        return loggingChat;
+    }
+
+    /**
+     * @param loggingChat loggingChatを設定する
+     */
+    public void setLoggingChat(boolean loggingChat) {
+        this.loggingChat = loggingChat;
+    }
+
+    /**
+     * @return globalMarkerを返す
+     */
+    public String getGlobalMarker() {
+        return globalMarker;
+    }
+
+    /**
+     * @param globalMarker globalMarkerを設定する
+     */
+    public void setGlobalMarker(String globalMarker) {
+        this.globalMarker = globalMarker;
+    }
+
+    /**
+     * @return zeroMemberRemoveを返す
+     */
+    public boolean isZeroMemberRemove() {
+        return zeroMemberRemove;
+    }
+
+    /**
+     * @param zeroMemberRemove zeroMemberRemoveを設定する
+     */
+    public void setZeroMemberRemove(boolean zeroMemberRemove) {
+        this.zeroMemberRemove = zeroMemberRemove;
+    }
+
+    /**
+     * @return showListOnJoinを返す
+     */
+    public boolean isShowListOnJoin() {
+        return showListOnJoin;
+    }
+
+    /**
+     * @param showListOnJoin showListOnJoinを設定する
+     */
+    public void setShowListOnJoin(boolean showListOnJoin) {
+        this.showListOnJoin = showListOnJoin;
+    }
+
+    /**
+     * @return createChannelOnJoinCommandを返す
+     */
+    public boolean isCreateChannelOnJoinCommand() {
+        return createChannelOnJoinCommand;
+    }
+
+    /**
+     * @param createChannelOnJoinCommand createChannelOnJoinCommandを設定する
+     */
+    public void setCreateChannelOnJoinCommand(boolean createChannelOnJoinCommand) {
+        this.createChannelOnJoinCommand = createChannelOnJoinCommand;
+    }
+
+    /**
+     * @return globalChannelを返す
+     */
+    public String getGlobalChannel() {
+        return globalChannel;
+    }
+
+    /**
+     * @param globalChannel globalChannelを設定する
+     */
+    public void setGlobalChannel(String globalChannel) {
+        this.globalChannel = globalChannel;
+    }
+
+    /**
+     * @return ngwordを返す
+     */
+    public List<String> getNgword() {
+        return ngword;
+    }
+
+    /**
+     * @param ngword ngwordを設定する
+     */
+    public void setNgword(List<String> ngword) {
+        this.ngword = ngword;
+    }
+
+    /**
+     * @return ngwordActionを返す
+     */
+    public NGWordAction getNgwordAction() {
+        return ngwordAction;
+    }
+
+    /**
+     * @param ngwordAction ngwordActionを設定する
+     */
+    public void setNgwordAction(NGWordAction ngwordAction) {
+        this.ngwordAction = ngwordAction;
+    }
+
+//    /**
+//     * config.yml に、設定値を保存する
+//     * @param key 設定値のキー
+//     * @param value 設定値の値
+//     */
+//    public static void setConfigValue(String key, Object value) {
+//
+//        FileConfiguration config = LunaChat.instance.getConfig();
+//        config.set(key, value);
+//        LunaChat.instance.saveConfig();
+//    }
 }
