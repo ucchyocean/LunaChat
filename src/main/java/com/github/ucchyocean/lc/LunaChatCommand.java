@@ -30,7 +30,8 @@ public class LunaChatCommand implements CommandExecutor {
     private static final String[] COMMANDS = {
         "join", "leave", "list", "invite", "accept",
         "deny", "kick", "ban", "pardon", "create",
-        "remove", "format", "moderator", "option", "reload",
+        "remove", "format", "moderator", "option",
+        "template", "reload",
     };
 
     private static final String[] USAGE_KEYS = {
@@ -85,6 +86,8 @@ public class LunaChatCommand implements CommandExecutor {
             return doModerator(sender, args);
         } else if (args[0].equalsIgnoreCase("option")) {
             return doOption(sender, args);
+        } else if (args[0].equalsIgnoreCase("template")) {
+            return doTemplate(sender, args);
         } else if (args[0].equalsIgnoreCase("reload")) {
             return doReload(sender, args);
         } else {
@@ -1023,6 +1026,8 @@ public class LunaChatCommand implements CommandExecutor {
         }
         if ( !LunaChat.config.globalChannel.equals(channel.getName()) ) {
             if ( options.containsKey("password") ) {
+                // パスワード
+                // TODO: パスワードは10文字制限をした方がいい。
                 channel.setPassword(options.get("password"));
                 sendResourceMessage(sender, PREINFO,
                         "cmdmsgOption", "password", options.get("password"));
@@ -1048,6 +1053,53 @@ public class LunaChatCommand implements CommandExecutor {
             sendResourceMessage(sender, PREERR, "errmsgInvalidOptions");
         } else {
             channel.save();
+        }
+
+        return true;
+    }
+
+    /**
+     * テンプレートの登録を行う
+     *
+     * @param sender
+     * @param args
+     * @return
+     */
+    private boolean doTemplate(CommandSender sender, String[] args) {
+
+        // 引数チェック
+        // このコマンドは、コンソールでも実行できる
+        if ( args.length <= 1 ) {
+            sendResourceMessage(sender, PREERR, "errmsgCommand");
+            return true;
+        }
+
+        if ( !args[1].matches("[0-9]") ) {
+            sendResourceMessage(sender, PREERR, "errmsgInvalidTemplateNumber");
+            sendResourceMessage(sender, PREERR, "usageTemplate");
+            return true;
+        }
+
+        String id = args[1];
+        StringBuilder buf = new StringBuilder();
+        if ( args.length >= 3 ) {
+            for (int i = 2; i < args.length; i++) {
+                buf.append(args[i] + " ");
+            }
+        }
+        String format = buf.toString().trim();
+
+        // 登録を実行
+        if ( format.equals("") ) {
+            LunaChat.manager.removeTemplate(id);
+            LunaChat.manager.saveTemplates();
+            sendResourceMessage(sender, PREINFO,
+                    "cmdmsgTemplateRemove", id);
+        } else {
+            LunaChat.manager.setTemplate(id, format);
+            LunaChat.manager.saveTemplates();
+            sendResourceMessage(sender, PREINFO,
+                    "cmdmsgTemplate", id, format);
         }
 
         return true;

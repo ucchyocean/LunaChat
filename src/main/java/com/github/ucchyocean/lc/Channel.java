@@ -373,7 +373,20 @@ public class Channel implements ConfigurationSerializable {
      */
     private String replaceKeywords(String format, Player player, String message) {
 
-        String msg = format.replace("%ch", name);
+        String msg = format;
+
+        // テンプレートのキーワードを、まず最初に置き換える
+        for ( int i=0; i<=9; i++ ) {
+            String key = "%" + i;
+            if ( msg.contains(key) ) {
+                if ( LunaChat.manager.getTemplate("" + i) != null ) {
+                    msg = msg.replace(key, LunaChat.manager.getTemplate("" + i));
+                    break;
+                }
+            }
+        }
+
+        msg = msg.replace("%ch", name);
         msg = msg.replace("%msg", message);
         msg = msg.replace("%chcolor", colorCode);
 

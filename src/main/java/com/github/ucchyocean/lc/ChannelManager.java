@@ -33,10 +33,13 @@ public class ChannelManager implements LunaChatAPI {
     private static final String MOTD_FIRSTLINE = Resources.get("motdFirstLine");
 
     private static final String FILE_NAME_DCHANNELS = "defaults.yml";
+    private static final String FILE_NAME_TEMPLATES = "templates.yml";
 
     private File fileDefaults;
+    private File fileTemplates;
     private HashMap<String, Channel> channels;
     private HashMap<String, String> defaultChannels;
+    private HashMap<String, String> templates;
 
     /**
      * コンストラクタ
@@ -73,6 +76,28 @@ public class ChannelManager implements LunaChatAPI {
             defaultChannels.put(key, config.getString(key));
         }
 
+        // テンプレート設定のロード
+        fileTemplates = new File(
+                LunaChat.instance.getDataFolder() +
+                File.separator + FILE_NAME_TEMPLATES);
+
+        if ( !fileTemplates.exists() ) {
+            YamlConfiguration conf = new YamlConfiguration();
+            try {
+                conf.save(fileTemplates);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        YamlConfiguration configTemplates =
+                YamlConfiguration.loadConfiguration(fileTemplates);
+
+        templates = new HashMap<String, String>();
+        for ( String key : configTemplates.getValues(false).keySet() ) {
+            templates.put(key, configTemplates.getString(key));
+        }
+
         // チャンネル設定のロード
         channels = Channel.loadAllChannels();
     }
@@ -91,6 +116,7 @@ public class ChannelManager implements LunaChatAPI {
 
     /**
      * デフォルトチャンネル設定を保存する
+     * @return 保存したかどうか
      */
     public boolean saveDefaults() {
 
@@ -98,6 +124,23 @@ public class ChannelManager implements LunaChatAPI {
             YamlConfiguration config = new YamlConfiguration();
             config.set("", defaultChannels);
             config.save(fileDefaults);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * テンプレート設定を保存する
+     * @return 保存したかどうか
+     */
+    public boolean saveTemplates() {
+
+        try {
+            YamlConfiguration config = new YamlConfiguration();
+            config.set("", templates);
+            config.save(fileTemplates);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -347,6 +390,38 @@ public class ChannelManager implements LunaChatAPI {
         }
 
         return true;
+    }
+
+    /**
+     * テンプレートを取得する
+     * @param id テンプレートID
+     * @return テンプレート
+     * @see com.github.ucchyocean.lc.LunaChatAPI#getTemplate(java.lang.String)
+     */
+    @Override
+    public String getTemplate(String id) {
+        return templates.get(id);
+    }
+
+    /**
+     * テンプレートを登録する
+     * @param id テンプレートID
+     * @param template テンプレート
+     * @see com.github.ucchyocean.lc.LunaChatAPI#setTemplate(java.lang.String, java.lang.String)
+     */
+    @Override
+    public void setTemplate(String id, String template) {
+        templates.put(id, template);
+    }
+
+    /**
+     * テンプレートを削除する
+     * @param id テンプレートID
+     * @see com.github.ucchyocean.lc.LunaChatAPI#removeTemplate(java.lang.String)
+     */
+    @Override
+    public void removeTemplate(String id) {
+        templates.remove(id);
     }
 
     /**

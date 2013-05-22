@@ -73,4 +73,24 @@ public interface LunaChatAPI {
      * @return 削除したかどうか
      */
     public boolean removeChannel(String channelName);
+
+    /**
+     * テンプレートを取得する
+     * @param id テンプレートID
+     * @return テンプレート
+     */
+    public String getTemplate(String id);
+
+    /**
+     * テンプレートを登録する
+     * @param id テンプレートID
+     * @param template テンプレート
+     */
+    public void setTemplate(String id, String template);
+
+    /**
+     * テンプレートを削除する
+     * @param id テンプレートID
+     */
+    public void removeTemplate(String id);
 }

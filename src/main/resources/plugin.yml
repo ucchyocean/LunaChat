@@ -21,9 +21,10 @@ commands:
            /<command> info [channel] - チャンネルの情報を表示します。
            /<command> create (channel) - チャンネルを作成します。
            /<command> remove [channel] - チャンネルを削除します。
-           /<command> format [channel] (format) - チャンネルのメッセージフォーマットを設定します。
+           /<command> format [channel] (format...) - チャンネルのメッセージフォーマットを設定します。
            /<command> moderator [channel] (player...) - チャンネルのモデレーターを指定したプレイヤーに設定します。
            /<command> option (key=value...) - チャンネルのオプションを設定します。
+           /<command> template (number) (template...) - メッセージフォーマットのテンプレートを登録します。
            /<command> reload - config.ymlの再読み込みをします。
   message:
     description: 1:1チャット送信コマンド
@@ -93,6 +94,9 @@ permissions:
       lunachat.reply: true
     description: 全てのコマンドの使用権限
     default: true
+  lunachat.template:
+    description: templateコマンドの使用権限
+    default: op
   lunachat.reload:
     description: reloadコマンドの使用権限
     default: op
