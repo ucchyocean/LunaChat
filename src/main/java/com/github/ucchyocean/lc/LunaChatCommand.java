@@ -8,10 +8,13 @@ package com.github.ucchyocean.lc;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import com.github.ucchyocean.lc.event.LunaChatChannelOptionChangedEvent;
 
 
 
@@ -153,8 +156,10 @@ public class LunaChatCommand implements CommandExecutor {
 
                 // チャンネル作成
                 Channel c = LunaChat.manager.createChannel(channelName);
-                c.addMember(player.getName());
-                sendResourceMessage(sender, PREINFO, "cmdmsgCreate", channelName);
+                if ( c != null ) {
+                    c.addMember(player.getName());
+                    sendResourceMessage(sender, PREINFO, "cmdmsgCreate", channelName);
+                }
                 return true;
 
             } else {
@@ -720,9 +725,11 @@ public class LunaChatCommand implements CommandExecutor {
 
         // チャンネル作成
         Channel channel = LunaChat.manager.createChannel(name);
-        channel.setDescription(desc);
-        channel.save();
-        sendResourceMessage(sender, PREINFO, "cmdmsgCreate", name);
+        if ( channel != null ) {
+            channel.setDescription(desc);
+            channel.save();
+            sendResourceMessage(sender, PREINFO, "cmdmsgCreate", name);
+        }
         return true;
     }
 
@@ -777,8 +784,9 @@ public class LunaChatCommand implements CommandExecutor {
         }
 
         // チャンネル削除
-        LunaChat.manager.removeChannel(cname);
-        sendResourceMessage(sender, PREINFO, "cmdmsgRemove", cname);
+        if ( LunaChat.manager.removeChannel(cname) ) {
+            sendResourceMessage(sender, PREINFO, "cmdmsgRemove", cname);
+        }
         return true;
     }
 
@@ -977,6 +985,15 @@ public class LunaChatCommand implements CommandExecutor {
             }
             options.put(t.substring(0, index), t.substring(index + 1));
         }
+
+        // イベントコール
+        LunaChatChannelOptionChangedEvent event =
+                new LunaChatChannelOptionChangedEvent(cname, options);
+        Bukkit.getServer().getPluginManager().callEvent(event);
+        if ( event.isCancelled() ) {
+            return true;
+        }
+        options = event.getOptions();
 
         // 設定する
         boolean setOption = false;

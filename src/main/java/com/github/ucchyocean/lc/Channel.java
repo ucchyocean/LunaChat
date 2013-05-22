@@ -23,6 +23,9 @@ import org.bukkit.entity.Player;
 import ru.tehkode.permissions.PermissionUser;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
+import com.github.ucchyocean.lc.event.LunaChatChannelChatEvent;
+import com.github.ucchyocean.lc.event.LunaChatChannelMemberChangedEvent;
+
 /**
  * @author ucchy
  * チャンネル
@@ -110,6 +113,8 @@ public class Channel implements ConfigurationSerializable {
      */
     public void chat(Player player, String message) {
 
+        String preReplaceMessage = message;
+
         // NGワード発言をしたかどうかのチェックとマスク
         boolean isNG = false;
         for ( String word : LunaChat.config.ngword ) {
@@ -119,18 +124,30 @@ public class Channel implements ConfigurationSerializable {
                 isNG = true;
             }
         }
+        String maskedMessage = message;
 
         // Japanize変換
+        String kana = null;
         if ( LunaChat.config.displayJapanize ) {
             // 2byteコードを含まない場合にのみ、処理を行う
             if ( message.getBytes().length == message.length() ) {
-                String kana = KanaConverter.conv(message);
+                kana = KanaConverter.conv(message);
                 message = message + "(" + kana + ")";
             }
         }
 
         // キーワード置き換え
         String msg = replaceKeywords(format, player, message);
+
+        // イベントコール
+        LunaChatChannelChatEvent event =
+                new LunaChatChannelChatEvent(this.name,
+                        preReplaceMessage, maskedMessage, kana, msg);
+        Bukkit.getServer().getPluginManager().callEvent(event);
+        if ( event.isCancelled() ) {
+            return;
+        }
+        msg = event.getPostReplaceMessage();
 
         // グローバルチャンネルは、そのままブロードキャストして終わり
         if ( name.equals(LunaChat.config.globalChannel) ) {
@@ -181,6 +198,15 @@ public class Channel implements ConfigurationSerializable {
      */
     public void addMember(String name) {
 
+        // イベントコール
+        LunaChatChannelMemberChangedEvent event =
+                new LunaChatChannelMemberChangedEvent(this.name, this.members);
+        Bukkit.getServer().getPluginManager().callEvent(event);
+        if ( event.isCancelled() ) {
+            return;
+        }
+
+        // メンバー追加
         if ( members.size() == 0 ) {
             moderator.add(name);
         }
@@ -196,6 +222,14 @@ public class Channel implements ConfigurationSerializable {
      * @param name 削除するメンバー名
      */
     public void removeMember(String name) {
+
+        // イベントコール
+        LunaChatChannelMemberChangedEvent event =
+                new LunaChatChannelMemberChangedEvent(this.name, this.members);
+        Bukkit.getServer().getPluginManager().callEvent(event);
+        if ( event.isCancelled() ) {
+            return;
+        }
 
         // デフォルト発言先が退出するチャンネルと一致する場合、
         // デフォルト発言先を削除する

@@ -12,9 +12,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+
+import com.github.ucchyocean.lc.event.LunaChatChannelCreateEvent;
+import com.github.ucchyocean.lc.event.LunaChatChannelRemoveEvent;
 
 /**
  * @author ucchy
@@ -293,8 +297,18 @@ public class ChannelManager implements LunaChatAPI {
      */
     @Override
     public Channel createChannel(String channelName) {
-        Channel channel = new Channel(channelName);
-        channels.put(channelName, channel);
+
+        // イベントコール
+        LunaChatChannelCreateEvent event =
+                new LunaChatChannelCreateEvent(channelName);
+        Bukkit.getServer().getPluginManager().callEvent(event);
+        if ( event.isCancelled() ) {
+            return null;
+        }
+        String name = event.getChannelName();
+
+        Channel channel = new Channel(name);
+        channels.put(name, channel);
         channel.save();
         return channel;
     }
@@ -302,10 +316,20 @@ public class ChannelManager implements LunaChatAPI {
     /**
      * チャンネルを削除する
      * @param channelName 削除するチャンネル名
+     * @return 削除したかどうか
      * @see com.github.ucchyocean.lc.LunaChatAPI#removeChannel(java.lang.String)
      */
     @Override
-    public void removeChannel(String channelName) {
+    public boolean removeChannel(String channelName) {
+
+        // イベントコール
+        LunaChatChannelRemoveEvent event =
+                new LunaChatChannelRemoveEvent(channelName);
+        Bukkit.getServer().getPluginManager().callEvent(event);
+        if ( event.isCancelled() ) {
+            return false;
+        }
+
         Channel channel = getChannel(channelName);
         if ( channel != null ) {
             channel.remove();
@@ -321,6 +345,8 @@ public class ChannelManager implements LunaChatAPI {
                 }
             }
         }
+
+        return true;
     }
 
     /**

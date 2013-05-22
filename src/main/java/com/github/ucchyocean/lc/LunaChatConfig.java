@@ -230,16 +230,4 @@ public class LunaChatConfig {
     public void setNgwordAction(NGWordAction ngwordAction) {
         this.ngwordAction = ngwordAction;
     }
-
-//    /**
-//     * config.yml に、設定値を保存する
-//     * @param key 設定値のキー
-//     * @param value 設定値の値
-//     */
-//    public static void setConfigValue(String key, Object value) {
-//
-//        FileConfiguration config = LunaChat.instance.getConfig();
-//        config.set(key, value);
-//        LunaChat.instance.saveConfig();
-//    }
 }

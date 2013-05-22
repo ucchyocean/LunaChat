@@ -70,6 +70,7 @@ public interface LunaChatAPI {
     /**
      * チャンネルを削除する
      * @param channelName 削除するチャンネル名
+     * @return 削除したかどうか
      */
-    public void removeChannel(String channelName);
+    public boolean removeChannel(String channelName);
 }
