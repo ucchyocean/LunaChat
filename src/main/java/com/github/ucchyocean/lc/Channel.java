@@ -59,6 +59,7 @@ public class Channel implements ConfigurationSerializable {
     private static final String KEY_MODERATOR = "moderator";
     private static final String KEY_PASSWORD = "password";
     private static final String KEY_VISIBLE = "visible";
+    private static final String KEY_COLOR = "color";
 
     /** 参加者 */
     private List<String> members;
@@ -81,13 +82,17 @@ public class Channel implements ConfigurationSerializable {
     /** チャンネルリストに表示されるかどうか */
     private boolean visible;
 
+    /** チャンネルのカラー */
+    private String colorCode;
+
     /** メッセージフォーマット<br>
      * 指定可能なキーワードは下記のとおり<br>
      * %ch - チャンネル名<br>
      * %username - ユーザー名<br>
      * %msg - メッセージ<br>
      * %prefix - PermissionsExに設定するprefix<br>
-     * %suffix - PermissionsExに設定するsuffix
+     * %suffix - PermissionsExに設定するsuffix<br>
+     * %chcolor - チャンネルのカラーコード
      * */
     private String format;
 
@@ -104,6 +109,7 @@ public class Channel implements ConfigurationSerializable {
         this.moderator = new ArrayList<String>();
         this.password = "";
         this.visible = true;
+        this.colorCode = "";
     }
 
     /**
@@ -369,6 +375,7 @@ public class Channel implements ConfigurationSerializable {
 
         String msg = format.replace("%ch", name);
         msg = msg.replace("%msg", message);
+        msg = msg.replace("%chcolor", colorCode);
 
         if ( player != null ) {
             msg = msg.replace("%username", player.getDisplayName());
@@ -442,6 +449,7 @@ public class Channel implements ConfigurationSerializable {
         map.put(KEY_MODERATOR, moderator);
         map.put(KEY_PASSWORD, password);
         map.put(KEY_VISIBLE, visible);
+        map.put(KEY_COLOR, colorCode);
         return map;
     }
 
@@ -470,6 +478,7 @@ public class Channel implements ConfigurationSerializable {
         channel.moderator = castToStringList(data.get(KEY_MODERATOR));
         channel.password = castWithDefault(data.get(KEY_PASSWORD), "");
         channel.visible = castWithDefault(data.get(KEY_VISIBLE), true);
+        channel.colorCode = castWithDefault(data.get(KEY_COLOR), "");
         return channel;
     }
 
@@ -599,6 +608,22 @@ public class Channel implements ConfigurationSerializable {
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * チャンネルのカラーコードを返す
+     * @return チャンネルのカラーコード
+     */
+    public String getColorCode() {
+        return colorCode;
+    }
+
+    /**
+     * チャンネルのカラーコードを設定する
+     * @param colorCode カラーコード
+     */
+    public void setColorCode(String colorCode) {
+        this.colorCode = colorCode;
     }
 
     /**

@@ -998,10 +998,28 @@ public class LunaChatCommand implements CommandExecutor {
         // 設定する
         boolean setOption = false;
         if ( options.containsKey("description") ) {
+            // チャンネル説明文
+            // TODO: チャンネル説明文は30文字制限をした方がいい。
             channel.setDescription(options.get("description"));
             sendResourceMessage(sender, PREINFO,
                     "cmdmsgOption", "description", options.get("description"));
             setOption = true;
+        }
+        if ( options.containsKey("color") ) {
+            // チャンネルカラー
+            String code = options.get("color");
+            if ( Utility.isValidColor(code) ) {
+                code = Utility.changeToColorCode(code);
+            }
+            if ( Utility.isValidColorCode(code) ) {
+                channel.setColorCode(code);
+                sendResourceMessage(sender, PREINFO,
+                        "cmdmsgOption", "color", options.get("color"));
+                setOption = true;
+            } else {
+                sendResourceMessage(sender, PREERR,
+                        "errmsgInvalidColorCode", options.get("color"));
+            }
         }
         if ( !LunaChat.config.globalChannel.equals(channel.getName()) ) {
             if ( options.containsKey("password") ) {

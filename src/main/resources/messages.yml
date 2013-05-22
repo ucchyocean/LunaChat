@@ -1,4 +1,4 @@
-defaultFormat: '&a[%ch]%prefix%username%suffix&a: %msg'
+defaultFormat: '&a[%ch]%prefix%username%suffix&a:&f %chcolor%msg'
 
 joinMessage: '&a[%ch]&7%username さんがチャンネルチャットに参加しました。'
 quitMessage: '&a[%ch]&7%username さんがチャンネルチャットから退出しました。'
@@ -70,6 +70,7 @@ errmsgNotfoundPM: 'あなたが受信したプライベートメッセージが�
 errmsgCannotSendPMSelf: '自分自身にプライベートメッセージを送ることはできません。'
 errmsgCannotUseForChannel: '%s はチャンネル名に使用できない文字を含んでいます。'
 errmsgCannotUseForGlobal: '%s はグローバルチャンネル名に使用できない文字を含んでいます。'
+errmsgInvalidColorCode: '%s はカラーコードとして正しくありません。'
 
 ngwordPrefix: 'NGワード発言により、'
 
