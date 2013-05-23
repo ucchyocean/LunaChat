@@ -3,7 +3,7 @@
  * @license    GPLv3
  * @copyright  Copyright ucchy 2013
  */
-package com.github.ucchyocean.lc;
+package com.github.ucchyocean.lc.japanize;
 
 import java.util.HashMap;
 
@@ -103,16 +103,24 @@ public class KanaConverter {
                         continue;
                     }
                 }
-                if ( java.lang.Character.isLetter(tmp.charAt(0)) ) {
-                    if ( last.equals(tmp) ) {
+                if ( Character.isLetter(tmp.charAt(0)) ) {
+                    if ( Character.isUpperCase(tmp.charAt(0)) ) {
+                        line.append(last + tmp);
+                        last = "";
+                    } else if ( last.equals(tmp) ) {
                         line.append("っ");
                         last = tmp;
                     } else {
                         last = last + tmp;
                     }
                 } else {
-                    line.append(last + tmp);
-                    last = "";
+                    if ( tmp.equals("-") ) {
+                        line.append(last + "ー");
+                        last = "";
+                    } else {
+                        line.append(last + tmp);
+                        last = "";
+                    }
                 }
             }
         }
