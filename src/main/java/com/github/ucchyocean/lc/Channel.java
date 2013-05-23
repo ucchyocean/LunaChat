@@ -25,6 +25,7 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 import com.github.ucchyocean.lc.event.LunaChatChannelChatEvent;
 import com.github.ucchyocean.lc.event.LunaChatChannelMemberChangedEvent;
+import com.github.ucchyocean.lc.japanize.KanaConverter;
 
 /**
  * @author ucchy

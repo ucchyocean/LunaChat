@@ -15,6 +15,8 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import com.github.ucchyocean.lc.japanize.KanaConverter;
+
 /**
  * @author ucchy
  * プレイヤーの行動を監視するリスナ
