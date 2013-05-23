@@ -28,6 +28,11 @@
       <name>Craft Bukkit Maven Repository</name>
       <url>http://repo.bukkit.org/content/groups/public</url>
     </repository>
+    <repository>
+      <id>vault-repo</id>
+      <name>Vault Maven Repository</name>
+      <url>http://ci.herocraftonline.com/plugin/repository/everything</url>
+    </repository>
   </repositories>
 
   <dependencies>
@@ -37,9 +42,9 @@
       <version>1.5.2-R0.2-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>ru.tehkode</groupId>
-      <artifactId>PermissionsEx</artifactId>
-      <version>1.19.5</version>
+      <groupId>net.milkbowl.vault</groupId>
+      <artifactId>Vault</artifactId>
+      <version>1.2.26-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>
