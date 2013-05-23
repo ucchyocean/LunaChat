@@ -22,6 +22,7 @@ import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.event.LunaChatChannelChatEvent;
 import com.github.ucchyocean.lc.event.LunaChatChannelMemberChangedEvent;
+import com.github.ucchyocean.lc.japanize.JapanizeType;
 import com.github.ucchyocean.lc.japanize.KanaConverter;
 
 /**
@@ -132,7 +133,7 @@ public class Channel implements ConfigurationSerializable {
 
         // Japanize変換
         String kana = null;
-        if ( LunaChat.config.displayJapanize ) {
+        if ( LunaChat.config.getJapanizeType() != JapanizeType.NONE ) {
             // 2byteコードを含まない場合にのみ、処理を行う
             if ( message.getBytes().length == message.length() ) {
                 kana = KanaConverter.conv(message);

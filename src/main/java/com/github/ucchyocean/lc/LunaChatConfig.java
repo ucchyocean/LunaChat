@@ -10,14 +10,13 @@ import java.util.List;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
+import com.github.ucchyocean.lc.japanize.JapanizeType;
+
 /**
  * @author ucchy
  * LunaChatのコンフィグクラス
  */
 public class LunaChatConfig {
-
-    /** Japanize変換をおこなうかどうか */
-    protected boolean displayJapanize;
 
     /** チャンネルチャットに入っていない人の発言を、グローバルとして扱うかどうか */
     protected boolean noJoinAsGlobal;
@@ -50,6 +49,24 @@ public class LunaChatConfig {
      *  ban = マスクしてチャンネルからBANする */
     protected NGWordAction ngwordAction;
 
+    /** Japanize変換のタイプ
+     *  none = 日本語変換をしない
+     *  kana = カナ変換のみする
+     *  googleime = カナ変換後、GoogleIMEで漢字変換する
+     *  socialime = カナ変換後、SocialIMEで漢字変換する */
+    protected JapanizeType japanizeType;
+
+    /** Japanize変換の1行表示と2行表示の切り替え
+     *  1 = 1行表示
+     *  2 = 2行表示 */
+    protected int japanizeDisplayLine;
+
+    /** Japanize変換の1行表示時のフォーマット */
+    protected String japanizeLine1Format;
+
+    /** Japanize変換の2行表示時の2行目のフォーマット */
+    protected String japanizeLine2Format;
+
     /**
      * コンストラクタ
      */
@@ -70,7 +87,6 @@ public class LunaChatConfig {
         LunaChat.instance.reloadConfig();
         FileConfiguration config = LunaChat.instance.getConfig();
 
-        displayJapanize = config.getBoolean("displayJapanize", true);
         noJoinAsGlobal = config.getBoolean("noJoinAsGlobal", true);
         loggingChat = config.getBoolean("loggingChat", true);
         globalMarker = config.getString("globalMarker", "!");
@@ -81,6 +97,13 @@ public class LunaChatConfig {
         globalChannel = config.getString("globalChannel", "");
         ngword = config.getStringList("ngword");
         ngwordAction = NGWordAction.fromID(config.getString("ngwordAction", "mask"));
+        japanizeType = JapanizeType.fromID(config.getString("japanizeType", "kana"));
+        japanizeDisplayLine = config.getInt("japanizeDisplayLine", 2);
+        if ( japanizeDisplayLine != 1 && japanizeDisplayLine != 2 ) {
+            japanizeDisplayLine = 2;
+        }
+        japanizeLine1Format = config.getString("japanizeLine1Format", "%msg (%japanize)");
+        japanizeLine2Format = config.getString("japanizeLine2Format", "&6[JP] %japanize");
 
         // globalチャンネルが、使用可能なチャンネル名かどうかを調べる
         if ( !LunaChat.manager.checkForChannelName(globalChannel) ) {
@@ -89,20 +112,6 @@ public class LunaChatConfig {
             LunaChat.instance.getLogger().warning(msg);
             globalChannel = "";
         }
-    }
-
-    /**
-     * @return displayJapanizeを返す
-     */
-    public boolean isDisplayJapanize() {
-        return displayJapanize;
-    }
-
-    /**
-     * @param displayJapanize displayJapanizeを設定する
-     */
-    public void setDisplayJapanize(boolean displayJapanize) {
-        this.displayJapanize = displayJapanize;
     }
 
     /**
@@ -229,5 +238,61 @@ public class LunaChatConfig {
      */
     public void setNgwordAction(NGWordAction ngwordAction) {
         this.ngwordAction = ngwordAction;
+    }
+
+    /**
+     * @return japanizeTypeを返す
+     */
+    public JapanizeType getJapanizeType() {
+        return japanizeType;
+    }
+
+    /**
+     * @param japanizeType japanizeTypeを設定する
+     */
+    public void setJapanizeType(JapanizeType japanizeType) {
+        this.japanizeType = japanizeType;
+    }
+
+    /**
+     * @return japanizeDisplayLineを返す
+     */
+    public int getJapanizeDisplayLine() {
+        return japanizeDisplayLine;
+    }
+
+    /**
+     * @param japanizeDisplayLine japanizeDisplayLineを設定する
+     */
+    public void setJapanizeDisplayLine(int japanizeDisplayLine) {
+        this.japanizeDisplayLine = japanizeDisplayLine;
+    }
+
+    /**
+     * @return japanizeLine1Formatを返す
+     */
+    public String getJapanizeLine1Format() {
+        return japanizeLine1Format;
+    }
+
+    /**
+     * @param japanizeLine1Format japanizeLine1Formatを設定する
+     */
+    public void setJapanizeLine1Format(String japanizeLine1Format) {
+        this.japanizeLine1Format = japanizeLine1Format;
+    }
+
+    /**
+     * @return japanizeLine2Formatを返す
+     */
+    public String getJapanizeLine2Format() {
+        return japanizeLine2Format;
+    }
+
+    /**
+     * @param japanizeLine2Format japanizeLine2Formatを設定する
+     */
+    public void setJapanizeLine2Format(String japanizeLine2Format) {
+        this.japanizeLine2Format = japanizeLine2Format;
     }
 }

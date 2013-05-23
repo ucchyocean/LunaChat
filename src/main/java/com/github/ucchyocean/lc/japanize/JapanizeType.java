@@ -1,12 +1,52 @@
 package com.github.ucchyocean.lc.japanize;
 
+/**
+ * @author ucchy
+ * 日本語変換タイプ
+ */
 public enum JapanizeType {
 
-    NONE,
+    /** 日本語変換をしない */
+    NONE("none"),
 
-    KANA,
+    /** カナ変換のみする */
+    KANA("kana"),
 
-    GOOGLE_IME,
+    /** カナ変換後、GoogleIMEで漢字変換 */
+    GOOGLE_IME("googleime"),
 
-    SOCIAL_IME;
+    /** カナ変換後、SocialIMEで漢字変換 */
+    SOCIAL_IME("socialime");
+
+    private String id;
+
+    /**
+     * コンストラクタ
+     * @param id
+     */
+    JapanizeType(String id) {
+        this.id = id;
+    }
+
+    /**
+     * 文字列表記を返す
+     * @see java.lang.Enum#toString()
+     */
+    public String toString() {
+        return id;
+    }
+
+    /**
+     * 文字列表記からJapanizeTypeを作成して返す
+     * @param id
+     * @return
+     */
+    public static JapanizeType fromID(String id) {
+        for ( JapanizeType type : values() ) {
+            if ( type.id.equalsIgnoreCase(id) ) {
+                return type;
+            }
+        }
+        return NONE;
+    }
 }

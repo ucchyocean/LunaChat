@@ -15,6 +15,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import com.github.ucchyocean.lc.japanize.JapanizeType;
 import com.github.ucchyocean.lc.japanize.KanaConverter;
 
 /**
@@ -161,7 +162,7 @@ public class PlayerListener implements Listener {
             }
 
             // Japanize変換
-            if ( LunaChat.config.displayJapanize ) {
+            if ( LunaChat.config.getJapanizeType() != JapanizeType.NONE ) {
                 message = addJapanize(message);
             }
 
