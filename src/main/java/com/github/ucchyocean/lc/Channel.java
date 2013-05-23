@@ -20,9 +20,6 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Player;
 
-import ru.tehkode.permissions.PermissionUser;
-import ru.tehkode.permissions.bukkit.PermissionsEx;
-
 import com.github.ucchyocean.lc.event.LunaChatChannelChatEvent;
 import com.github.ucchyocean.lc.event.LunaChatChannelMemberChangedEvent;
 import com.github.ucchyocean.lc.japanize.KanaConverter;
@@ -397,11 +394,9 @@ public class Channel implements ConfigurationSerializable {
             if ( msg.contains("%prefix") || msg.contains("%suffix") ) {
                 String prefix = "";
                 String suffix = "";
-                if ( LunaChat.pex != null ) {
-                    String world = player.getWorld().getName();
-                    PermissionUser user = PermissionsEx.getUser(player);
-                    prefix = user.getPrefix(world);
-                    suffix = user.getSuffix(world);
+                if ( LunaChat.chatPlugin != null ) {
+                    prefix = LunaChat.chatPlugin.getPlayerPrefix(player);
+                    suffix = LunaChat.chatPlugin.getPlayerSuffix(player);
                 }
                 msg = msg.replace("%prefix", prefix);
                 msg = msg.replace("%suffix", suffix);
