@@ -6,13 +6,18 @@
 package com.github.ucchyocean.lc;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+
+import com.github.ucchyocean.lc.japanize.ConvertTask;
+import com.github.ucchyocean.lc.japanize.JapanizeType;
 
 /**
  * @author ucchy
@@ -39,7 +44,7 @@ public class PlayerListener implements Listener {
         }
 
         Player player = event.getPlayer();
-        Channel channel = LunaChat.manager.getDefaultChannelByPlayer(player.getName());
+        Channel channel = LunaChat.manager.getDefaultChannel(player.getName());
 
         // デフォルトの発言先が無い場合
         if ( channel == null ) {
@@ -96,12 +101,12 @@ public class PlayerListener implements Listener {
 
         // お互いがオフラインになるPMチャンネルがある場合は
         // チャンネルをクリアする
-        ArrayList<String> channels = LunaChat.manager.getNames();
-        for ( String cname : channels ) {
+        Collection<Channel> channels = LunaChat.manager.getChannels();
+        for ( Channel channel : channels ) {
+            String cname = channel.getName();
             if ( cname.contains(">") && cname.contains(player.getName()) ) {
-                Channel channel = LunaChat.manager.getChannel(cname);
                 boolean isAllOffline = true;
-                for ( String pname : channel.members ) {
+                for ( String pname : channel.getMembers() ) {
                     if ( !pname.equals(player.getName()) ) {
                         Player p = LunaChat.getPlayerExact(pname);
                         if ( p != null && p.isOnline() ) {
@@ -110,7 +115,7 @@ public class PlayerListener implements Listener {
                     }
                 }
                 if ( isAllOffline ) {
-                    LunaChat.manager.removeChannel(channel.name);
+                    LunaChat.manager.removeChannel(channel.getName());
                 }
             }
         }
@@ -130,13 +135,13 @@ public class PlayerListener implements Listener {
             // グローバルチャンネルの取得、無ければ作成
             Channel global = LunaChat.manager.getChannel(LunaChat.config.globalChannel);
             if ( global == null ) {
-                global = LunaChat.manager.createChannel(LunaChat.config.globalChannel, "");
+                global = LunaChat.manager.createChannel(LunaChat.config.globalChannel);
             }
 
             // デフォルト発言先が無いなら、グローバルチャンネルに設定する
-            Channel dchannel = LunaChat.manager.getDefaultChannelByPlayer(player.getName());
+            Channel dchannel = LunaChat.manager.getDefaultChannel(player.getName());
             if ( dchannel == null ) {
-                LunaChat.manager.setDefaultChannel(player.getName(), global.name);
+                LunaChat.manager.setDefaultChannel(player.getName(), global.getName());
             }
 
             // チャンネルチャット発言
@@ -157,9 +162,30 @@ public class PlayerListener implements Listener {
                 }
             }
 
-            // Japanize変換
-            if ( LunaChat.config.displayJapanize ) {
-                message = addJapanize(message);
+            // Japanize変換と、発言処理
+            if ( LunaChat.config.getJapanizeType() != JapanizeType.NONE ) {
+                // 2byteコードを含まない場合にのみ、処理を行う
+                if ( message.getBytes().length == message.length() ) {
+
+                    int lineType = LunaChat.config.japanizeDisplayLine;
+                    String taskFormat;
+                    if ( lineType == 1 )
+                        taskFormat = LunaChat.config.japanizeLine1Format;
+                    else
+                        taskFormat = LunaChat.config.japanizeLine2Format;
+
+                    // メッセージを差し替えする
+                    ConvertTask task = new ConvertTask(message,
+                            LunaChat.config.getJapanizeType(), null, taskFormat);
+
+                    if ( lineType == 1 ) {
+                        if ( task.runSync() ) {
+                            message = task.getResult();
+                        }
+                    } else {
+                        Bukkit.getScheduler().runTask(LunaChat.instance, task);
+                    }
+                }
             }
 
             event.setMessage(message);
@@ -178,29 +204,15 @@ public class PlayerListener implements Listener {
         // チャンネルが存在しない場合は作成する
         Channel global = LunaChat.manager.getChannel(gcName);
         if ( global == null ) {
-            global = LunaChat.manager.createChannel(gcName, "");
+            global = LunaChat.manager.createChannel(gcName);
         }
 
         // デフォルト発言先が無いなら、グローバルチャンネルに設定する
-        Channel dchannel = LunaChat.manager.getDefaultChannelByPlayer(player.getName());
+        Channel dchannel = LunaChat.manager.getDefaultChannel(player.getName());
         if ( dchannel == null ) {
             LunaChat.manager.setDefaultChannel(player.getName(), gcName);
         }
 
         return true;
-    }
-
-    /**
-     * メッセージに2バイトコードが含まれていない場合に、かな文字を付加する
-     * @param message メッセージ
-     * @return かな文字付きのメッセージ
-     */
-    private String addJapanize(String message) {
-        // 2byteコードを含まない場合にのみ、処理を行う
-        if ( message.getBytes().length == message.length() ) {
-            String kana = KanaConverter.conv(message);
-            message = message + "(" + kana + ")";
-        }
-        return message;
     }
 }

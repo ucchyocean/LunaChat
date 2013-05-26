@@ -37,7 +37,7 @@ public class Resources {
 
         if ( !file.exists() ) {
             Utility.copyFileFromJar(LunaChat.getPluginJarFile(),
-                    file, "messages.yml", false);
+                    file, FILE_NAME, false);
         }
 
         defaultMessages = loadDefaultMessages();
@@ -49,7 +49,7 @@ public class Resources {
      * @param key リソースキー
      * @return リソース
      */
-    protected static String get(String key) {
+    public static String get(String key) {
 
         if ( resources == null ) {
             initialize();
@@ -68,7 +68,7 @@ public class Resources {
         JarFile jarFile = null;
         try {
             jarFile = new JarFile(LunaChat.getPluginJarFile());
-            ZipEntry zipEntry = jarFile.getEntry("messages.yml");
+            ZipEntry zipEntry = jarFile.getEntry(FILE_NAME);
             InputStream inputStream = jarFile.getInputStream(zipEntry);
             BufferedReader reader =
                     new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));

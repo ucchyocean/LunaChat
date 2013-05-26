@@ -8,12 +8,15 @@ package com.github.ucchyocean.lc;
 import java.io.File;
 import java.util.HashMap;
 
+import net.milkbowl.vault.Vault;
+import net.milkbowl.vault.chat.Chat;
+
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 /**
  * @author ucchy
@@ -28,7 +31,7 @@ public class LunaChat extends JavaPlugin {
     protected static HashMap<String, String> inviterMap;
     protected static HashMap<String, String> privateMessageMap;
 
-    protected static PermissionsEx pex;
+    protected static Chat chatPlugin;
 
     /**
      * プラグインが有効化されたときに呼び出されるメソッド
@@ -39,16 +42,20 @@ public class LunaChat extends JavaPlugin {
 
         // 変数などの初期化
         instance = this;
-        config = new LunaChatConfig();
         manager = new ChannelManager();
+        config = new LunaChatConfig();
         inviteMap = new HashMap<String, String>();
         inviterMap = new HashMap<String, String>();
         privateMessageMap = new HashMap<String, String>();
 
-        // PermissionsExのロード
-        Plugin temp = getServer().getPluginManager().getPlugin("PermissionsEx");
-        if ( temp != null && temp instanceof PermissionsEx ) {
-            pex = (PermissionsEx)temp;
+        // Chat Plugin のロード
+        Plugin temp = getServer().getPluginManager().getPlugin("Vault");
+        if ( temp != null && temp instanceof Vault ) {
+            RegisteredServiceProvider<Chat> chatProvider =
+                    getServer().getServicesManager().getRegistration(Chat.class);
+            if ( chatProvider != null ) {
+                chatPlugin = chatProvider.getProvider();
+            }
         }
 
         // リスナーの登録
@@ -58,6 +65,9 @@ public class LunaChat extends JavaPlugin {
         getCommand("lunachat").setExecutor(new LunaChatCommand());
         getCommand("message").setExecutor(new LunaChatMessageCommand());
         getCommand("reply").setExecutor(new LunaChatReplyCommand());
+
+        // シリアル化可能オブジェクトの登録
+        ConfigurationSerialization.registerClass(Channel.class, "Channel");
     }
 
     /**
@@ -83,5 +93,21 @@ public class LunaChat extends JavaPlugin {
      */
     protected static Player getPlayerExact(String name) {
         return instance.getServer().getPlayerExact(name);
+    }
+
+    /**
+     * LunaChatAPIを取得する
+     * @return LunaChatAPI
+     */
+    public LunaChatAPI getLunaChatAPI() {
+        return manager;
+    }
+
+    /**
+     * LunaChatConfigを取得する
+     * @return LunaChatConfig
+     */
+    public LunaChatConfig getLunaChatConfig() {
+        return config;
     }
 }

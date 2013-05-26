@@ -1,14 +1,11 @@
 LunaChat
 ========
 
-チャンネルチャットプラグイン for Lunasys
+チャンネルチャットプラグイン for Lunasys<br />
+<br />
+ダウンロードv2.0.0はこちらから<br />
+https://dl.dropboxusercontent.com/u/34781847/LunaChat_v200.zip<br />
 
-ダウンロードv1.5.0はこちらから
-
-https://dl.dropboxusercontent.com/u/34781847/LunaChat_v150.zip
-
-コマンドリファレンスや、設定リファレンスは、こちらから
-
-https://github.com/ucchyocean/LunaChat/wiki/Commands
-
-https://github.com/ucchyocean/LunaChat/wiki/Config
+コマンドリファレンスや、設定リファレンスは、こちらから<br />
+https://github.com/ucchyocean/LunaChat/wiki/Commands<br />
+https://github.com/ucchyocean/LunaChat/wiki/Config<br />

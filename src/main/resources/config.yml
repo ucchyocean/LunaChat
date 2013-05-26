@@ -1,9 +1,8 @@
-# LunaChat v1.5.0
+# LunaChat v2.0.0
 # @author     ucchy
 # @license    GPLv3
 # @copyright  Copyright ucchy 2013
 
-displayJapanize: true
 noJoinAsGlobal: true
 loggingChat: true
 globalMarker: '!'
@@ -13,3 +12,8 @@ createChannelOnJoinCommand: true
 globalChannel: ''
 ngword: []
 ngwordAction: mask
+
+japanizeType: kana
+japanizeDisplayLine: 2
+japanizeLine1Format: '%msg (%japanize)'
+japanizeLine2Format: '&6[JP] %japanize'
