@@ -106,7 +106,7 @@ public class LunaChatConfig {
         japanizeLine2Format = config.getString("japanizeLine2Format", "&6[JP] %japanize");
 
         // globalチャンネルが、使用可能なチャンネル名かどうかを調べる
-        if ( !LunaChat.manager.checkForChannelName(globalChannel) ) {
+        if ( !globalChannel.equals("") && !LunaChat.manager.checkForChannelName(globalChannel) ) {
             String msg = String.format(Utility.replaceColorCode(
                     Resources.get("errmsgCannotUseForGlobal")), globalChannel);
             LunaChat.instance.getLogger().warning(msg);

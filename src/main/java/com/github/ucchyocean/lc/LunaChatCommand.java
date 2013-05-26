@@ -1147,7 +1147,7 @@ public class LunaChatCommand implements CommandExecutor {
     private boolean doReload(CommandSender sender, String[] args) {
 
         LunaChat.config.reloadConfig();
-        LunaChat.manager.loadAllChannels();
+        LunaChat.manager.loadAllData();
         sendResourceMessage(sender, PREINFO, "cmdmsgReload");
         return true;
     }

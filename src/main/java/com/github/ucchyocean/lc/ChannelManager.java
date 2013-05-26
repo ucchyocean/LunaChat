@@ -45,13 +45,13 @@ public class ChannelManager implements LunaChatAPI {
      * コンストラクタ
      */
     public ChannelManager() {
-        loadAllChannels();
+        loadAllData();
     }
 
     /**
      * すべて読み込みする
      */
-    protected void loadAllChannels() {
+    protected void loadAllData() {
 
         // デフォルトチャンネル設定のロード
         fileDefaults = new File(
@@ -122,7 +122,9 @@ public class ChannelManager implements LunaChatAPI {
 
         try {
             YamlConfiguration config = new YamlConfiguration();
-            config.set("", defaultChannels);
+            for ( String key : defaultChannels.keySet() ) {
+                config.set(key, defaultChannels.get(key));
+            }
             config.save(fileDefaults);
             return true;
         } catch (IOException e) {

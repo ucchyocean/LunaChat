@@ -42,8 +42,8 @@ public class LunaChat extends JavaPlugin {
 
         // 変数などの初期化
         instance = this;
-        config = new LunaChatConfig();
         manager = new ChannelManager();
+        config = new LunaChatConfig();
         inviteMap = new HashMap<String, String>();
         inviterMap = new HashMap<String, String>();
         privateMessageMap = new HashMap<String, String>();

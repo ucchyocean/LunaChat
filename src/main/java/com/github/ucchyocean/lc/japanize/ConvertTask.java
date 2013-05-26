@@ -9,54 +9,96 @@ import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.github.ucchyocean.lc.Channel;
+import com.github.ucchyocean.lc.Utility;
+import com.github.ucchyocean.lc.event.LunaChatPostJapanizeEvent;
 
 /**
+ * Japanize変換を実行して、実行後に発言を行うタスク
  * @author ucchy
- *
  */
 public class ConvertTask extends BukkitRunnable {
 
     private String org;
     private JapanizeType type;
     private Channel channel;
+    private String format;
+    private String result;
 
-    public ConvertTask(String org, JapanizeType type, Channel channel) {
+    /**
+     * コンストラクタ
+     * @param org 変換前の文字列
+     * @param type 変換タイプ
+     * @param channel 変換後に発言する、発言先チャンネル
+     * @param format 変換後に発言するときの、発言フォーマット
+     */
+    public ConvertTask(String org, JapanizeType type, Channel channel, String format) {
         this.org = org;
         this.type = type;
         this.channel = channel;
+        this.format = format;
     }
 
+    /**
+     * @see java.lang.Runnable#run()
+     */
     @Override
     public void run() {
 
-//        long startTime = System.currentTimeMillis();
+        if ( runSync() ) {
 
-        if ( type == JapanizeType.NONE ) {
-            return;
+            // チャンネルへ送信
+            if ( channel != null ) {
+                channel.sendInformation(result);
+            } else {
+                Bukkit.broadcastMessage(result);
+            }
         }
+    }
 
-        String msg = KanaConverter.conv(org);
+    public boolean runSync() {
 
-//        System.out.print("kana:" + msg);
-//        System.out.println("(" + (System.currentTimeMillis() - startTime) + " milli sec)");
-//
-//        startTime = System.currentTimeMillis();
+        // カナ変換
+        String japanized = KanaConverter.conv(org);
 
+        // IME変換
         if ( type == JapanizeType.GOOGLE_IME ) {
-            msg = IMEConverter.convByGoogleIME(msg);
+            japanized = IMEConverter.convByGoogleIME(japanized);
         } else if ( type == JapanizeType.SOCIAL_IME ) {
-            msg = IMEConverter.convBySocialIME(msg);
+            japanized = IMEConverter.convBySocialIME(japanized);
         }
 
-//        System.out.print("IME: " + msg);
-//        System.out.println("(" + (System.currentTimeMillis() - startTime) + " milli sec)");
-
-        // TODO: msg をフォーマットする仕組みを作るべき
-        if ( channel != null ) {
-            channel.sendInformation(msg);
-        } else {
-            Bukkit.broadcastMessage(msg);
+        // イベントコール
+        String channelName = (channel == null) ? "" : channel.getName();
+        LunaChatPostJapanizeEvent event =
+                new LunaChatPostJapanizeEvent(channelName, org, japanized);
+        Bukkit.getServer().getPluginManager().callEvent(event);
+        if ( event.isCancelled() ) {
+            return false;
         }
+        japanized = event.getJapanized();
+
+        // フォーマットする
+        result = format.replace("%msg", org);
+        result = result.replace("%japanize", japanized);
+        result = Utility.replaceColorCode(result);
+
+        return true;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    public static void main(String[] args) {
+
+        String org = "aiueo";
+        // カナ変換
+        String japanized = KanaConverter.conv(org);
+
+        // IME変換
+        japanized = IMEConverter.convByGoogleIME(japanized);
+
+        System.out.println(japanized);
     }
 }
 

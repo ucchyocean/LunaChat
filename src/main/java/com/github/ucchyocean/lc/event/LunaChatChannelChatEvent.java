@@ -12,19 +12,16 @@ package com.github.ucchyocean.lc.event;
 public class LunaChatChannelChatEvent extends LunaChatBaseEvent {
 
     private String originalMessage;
-
     private String ngMaskedMessage;
-    private String japanizedMessage;
-    private String postReplaceMessage;
+    private String messageFormat;
 
     public LunaChatChannelChatEvent(String channelName,
             String originalMessage, String ngMaskedMessage,
-            String japanizedMessage, String postReplaceMessage) {
+            String messageFormat) {
         super(channelName);
         this.originalMessage = originalMessage;
         this.ngMaskedMessage = ngMaskedMessage;
-        this.japanizedMessage = japanizedMessage;
-        this.postReplaceMessage = postReplaceMessage;
+        this.messageFormat = messageFormat;
     }
 
     public String getPreReplaceMessage() {
@@ -36,15 +33,11 @@ public class LunaChatChannelChatEvent extends LunaChatBaseEvent {
     }
 
 
-    public String getJapanizedMessage() {
-        return japanizedMessage;
+    public String getMessageFormat() {
+        return messageFormat;
     }
 
-    public String getPostReplaceMessage() {
-        return postReplaceMessage;
-    }
-
-    public void setMessage(String message) {
-        this.postReplaceMessage = message;
+    public String setMessageFormat(String message) {
+        return messageFormat;
     }
 }

@@ -8,8 +8,8 @@ package com.github.ucchyocean.lc.japanize;
 import java.util.HashMap;
 
 /**
- * @author ucchy
  * ローマ字からかな文字へ変換するクラス
+ * @author ucchy
  */
 public class KanaConverter {
 

@@ -8,6 +8,7 @@ package com.github.ucchyocean.lc;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,8 +16,8 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import com.github.ucchyocean.lc.japanize.ConvertTask;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
-import com.github.ucchyocean.lc.japanize.KanaConverter;
 
 /**
  * @author ucchy
@@ -161,9 +162,30 @@ public class PlayerListener implements Listener {
                 }
             }
 
-            // Japanize変換
+            // Japanize変換と、発言処理
             if ( LunaChat.config.getJapanizeType() != JapanizeType.NONE ) {
-                message = addJapanize(message);
+                // 2byteコードを含まない場合にのみ、処理を行う
+                if ( message.getBytes().length == message.length() ) {
+
+                    int lineType = LunaChat.config.japanizeDisplayLine;
+                    String taskFormat;
+                    if ( lineType == 1 )
+                        taskFormat = LunaChat.config.japanizeLine1Format;
+                    else
+                        taskFormat = LunaChat.config.japanizeLine2Format;
+
+                    // メッセージを差し替えする
+                    ConvertTask task = new ConvertTask(message,
+                            LunaChat.config.getJapanizeType(), null, taskFormat);
+
+                    if ( lineType == 1 ) {
+                        if ( task.runSync() ) {
+                            message = task.getResult();
+                        }
+                    } else {
+                        Bukkit.getScheduler().runTask(LunaChat.instance, task);
+                    }
+                }
             }
 
             event.setMessage(message);
@@ -192,19 +214,5 @@ public class PlayerListener implements Listener {
         }
 
         return true;
-    }
-
-    /**
-     * メッセージに2バイトコードが含まれていない場合に、かな文字を付加する
-     * @param message メッセージ
-     * @return かな文字付きのメッセージ
-     */
-    private String addJapanize(String message) {
-        // 2byteコードを含まない場合にのみ、処理を行う
-        if ( message.getBytes().length == message.length() ) {
-            String kana = KanaConverter.conv(message);
-            message = message + "(" + kana + ")";
-        }
-        return message;
     }
 }

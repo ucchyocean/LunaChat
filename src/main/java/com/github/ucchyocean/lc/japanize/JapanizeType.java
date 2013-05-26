@@ -1,8 +1,8 @@
 package com.github.ucchyocean.lc.japanize;
 
 /**
- * @author ucchy
  * 日本語変換タイプ
+ * @author ucchy
  */
 public enum JapanizeType {
 

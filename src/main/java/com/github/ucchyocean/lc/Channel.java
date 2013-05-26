@@ -22,8 +22,8 @@ import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.event.LunaChatChannelChatEvent;
 import com.github.ucchyocean.lc.event.LunaChatChannelMemberChangedEvent;
+import com.github.ucchyocean.lc.japanize.ConvertTask;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
-import com.github.ucchyocean.lc.japanize.KanaConverter;
 
 /**
  * @author ucchy
@@ -91,7 +91,7 @@ public class Channel implements ConfigurationSerializable {
      * %msg - メッセージ<br>
      * %prefix - PermissionsExに設定するprefix<br>
      * %suffix - PermissionsExに設定するsuffix<br>
-     * %chcolor - チャンネルのカラーコード
+     * %color - チャンネルのカラーコード
      * */
     private String format;
 
@@ -122,55 +122,60 @@ public class Channel implements ConfigurationSerializable {
 
         // NGワード発言をしたかどうかのチェックとマスク
         boolean isNG = false;
+        String maskedMessage = message;
         for ( String word : LunaChat.config.ngword ) {
-            if ( message.contains(word) ) {
-                message = message.replace(
+            if ( maskedMessage.contains(word) ) {
+                maskedMessage = maskedMessage.replace(
                         word, Utility.getAstariskString(word.length()));
                 isNG = true;
             }
         }
-        String maskedMessage = message;
-
-        // Japanize変換
-        String kana = null;
-        if ( LunaChat.config.getJapanizeType() != JapanizeType.NONE ) {
-            // 2byteコードを含まない場合にのみ、処理を行う
-            if ( message.getBytes().length == message.length() ) {
-                kana = KanaConverter.conv(message);
-                message = message + "(" + kana + ")";
-            }
-        }
 
         // キーワード置き換え
-        String msg = replaceKeywords(format, player, message);
+        String msgFormat = replaceKeywords(format, player);
 
         // イベントコール
         LunaChatChannelChatEvent event =
                 new LunaChatChannelChatEvent(this.name,
-                        preReplaceMessage, maskedMessage, kana, msg);
+                        preReplaceMessage, maskedMessage, msgFormat);
         Bukkit.getServer().getPluginManager().callEvent(event);
         if ( event.isCancelled() ) {
             return;
         }
-        msg = event.getPostReplaceMessage();
+        msgFormat = event.getMessageFormat();
 
-        // グローバルチャンネルは、そのままブロードキャストして終わり
-        if ( name.equals(LunaChat.config.globalChannel) ) {
-            Bukkit.broadcastMessage(msg);
-            return;
-        }
+        // Japanize変換と、発言処理
+        boolean chated = false;
+        if ( LunaChat.config.getJapanizeType() != JapanizeType.NONE ) {
+            // 2byteコードを含まない場合にのみ、処理を行う
+            if ( message.getBytes().length == message.length() ) {
 
-        // オンラインのプレイヤーに送信する
-        for ( String member : members ) {
-            Player p = LunaChat.getPlayerExact(member);
-            if ( p != null ) {
-                p.sendMessage(msg);
+                int lineType = LunaChat.config.japanizeDisplayLine;
+                String lineFormat;
+                String taskFormat;
+                if ( lineType == 1 ) {
+                    lineFormat = LunaChat.config.japanizeLine1Format;
+                    taskFormat = msgFormat.replace("%msg", lineFormat);
+                    chated = true;
+                } else {
+                    lineFormat = LunaChat.config.japanizeLine2Format;
+                    taskFormat = lineFormat;
+                }
+
+                // タスクを作成して実行する
+                // 発言処理は、タスクが完了しだい非同期で行われる
+                ConvertTask task = new ConvertTask(maskedMessage,
+                        LunaChat.config.getJapanizeType(),
+                        this, taskFormat);
+                Bukkit.getScheduler().runTask(LunaChat.instance, task);
             }
         }
 
-        // ロギング
-        if ( LunaChat.config.loggingChat ) {
-            LunaChat.log(msg);
+        if ( !chated ) {
+
+            // オンラインのプレイヤーに送信する
+            String msg = msgFormat.replace("%msg", maskedMessage);
+            sendInformation(msg);
         }
 
         // NGワード発言者に、NGワードアクションを実行する
@@ -288,6 +293,12 @@ public class Channel implements ConfigurationSerializable {
      */
     public void sendInformation(String message) {
 
+        // グローバルチャンネルは、そのままブロードキャスト
+        if ( name.equals(LunaChat.config.globalChannel) ) {
+            Bukkit.broadcastMessage(message);
+            return;
+        }
+
         // オンラインのプレイヤーに送信する
         for ( String member : members ) {
             Player p = LunaChat.getPlayerExact(member);
@@ -387,7 +398,50 @@ public class Channel implements ConfigurationSerializable {
 
         msg = msg.replace("%ch", name);
         msg = msg.replace("%msg", message);
-        msg = msg.replace("%chcolor", colorCode);
+        msg = msg.replace("%color", colorCode);
+
+        if ( player != null ) {
+            msg = msg.replace("%username", player.getDisplayName());
+
+            if ( msg.contains("%prefix") || msg.contains("%suffix") ) {
+                String prefix = "";
+                String suffix = "";
+                if ( LunaChat.chatPlugin != null ) {
+                    prefix = LunaChat.chatPlugin.getPlayerPrefix(player);
+                    suffix = LunaChat.chatPlugin.getPlayerSuffix(player);
+                }
+                msg = msg.replace("%prefix", prefix);
+                msg = msg.replace("%suffix", suffix);
+            }
+        }
+
+        return Utility.replaceColorCode(msg);
+    }
+
+    /**
+     * チャットフォーマット内のキーワードを置き換えする
+     * @param format チャットフォーマット
+     * @param player プレイヤー
+     * @return 置き換え結果
+     */
+    private String replaceKeywords(String format, Player player) {
+
+        String msg = format;
+
+        // テンプレートのキーワードを、まず最初に置き換える
+        for ( int i=0; i<=9; i++ ) {
+            String key = "%" + i;
+            if ( msg.contains(key) ) {
+                if ( LunaChat.manager.getTemplate("" + i) != null ) {
+                    msg = msg.replace(key, LunaChat.manager.getTemplate("" + i));
+                    break;
+                }
+            }
+        }
+
+        msg = msg.replace("%ch", name);
+        //msg = msg.replace("%msg", message);
+        msg = msg.replace("%color", colorCode);
 
         if ( player != null ) {
             msg = msg.replace("%username", player.getDisplayName());
@@ -473,11 +527,6 @@ public class Channel implements ConfigurationSerializable {
 
         String name = castWithDefault(data.get(KEY_NAME), (String)null);
         List<String> members = castToStringList(data.get(KEY_MEMBERS));
-
-        // グローバルチャンネルのメンバー情報はクリアする
-        if ( LunaChat.config.globalChannel.equals(name) ) {
-            members = new ArrayList<String>();
-        }
 
         Channel channel = new Channel(name);
         channel.members = members;
@@ -658,7 +707,10 @@ public class Channel implements ConfigurationSerializable {
 
         // ファイルへ保存する
         YamlConfiguration conf = new YamlConfiguration();
-        conf.set("", this);
+        Map<String, Object> data = this.serialize();
+        for ( String key : data.keySet() ) {
+            conf.set(key, data.get(key));
+        }
         try {
             conf.save(file);
             return true;
@@ -713,7 +765,11 @@ public class Channel implements ConfigurationSerializable {
         for ( File file : files ) {
             YamlConfiguration config =
                 YamlConfiguration.loadConfiguration(file);
-            Channel channel = (Channel)config.get("");
+            Map<String, Object> data = new HashMap<String, Object>();
+            for ( String key : config.getKeys(false) ) {
+                data.put(key, config.get(key));
+            }
+            Channel channel = deserialize(data);
             result.put(channel.name, channel);
         }
 

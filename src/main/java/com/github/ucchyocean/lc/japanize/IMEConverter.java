@@ -12,6 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.net.URLEncoder;
 
 /**
  * @author ucchy
@@ -39,10 +40,10 @@ public class IMEConverter {
             String baseurl;
             String encode;
             if ( isGoogleIME ) {
-                baseurl = GOOGLE_IME_URL + org;
-                encode = "UTF8";
+                baseurl = GOOGLE_IME_URL + URLEncoder.encode(org , "UTF-8");;
+                encode = "UTF-8";
             } else {
-                baseurl = SOCIAL_IME_URL + org;
+                baseurl = SOCIAL_IME_URL + URLEncoder.encode(org , "UTF-8");;
                 encode = "EUC_JP";
             }
             URL url = new URL(baseurl);
