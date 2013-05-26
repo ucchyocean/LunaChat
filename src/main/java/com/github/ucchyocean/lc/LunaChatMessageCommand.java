@@ -10,6 +10,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+
+
 /**
  * @author ucchy
  * 1:1チャット送信コマンド
@@ -75,15 +77,15 @@ public class LunaChatMessageCommand implements CommandExecutor {
         Channel channel = LunaChat.manager.getChannel(cname);
         if ( channel == null ) {
             // チャンネルを作成して、送信者、受信者をメンバーにする
-            channel = LunaChat.manager.createChannel(cname, "");
-            channel.visible = false;
+            channel = LunaChat.manager.createChannel(cname);
+            channel.setVisible(false);
             channel.addMember(inviter.getName());
             channel.addMember(invitedName);
         }
 
         // デフォルトの発言先が異なる場合は、デフォルトの発言先にする
-        String dname = LunaChat.manager.getDefault(inviter.getName());
-        if ( !cname.equals(dname) ) {
+        Channel def = LunaChat.manager.getDefaultChannel(inviter.getName());
+        if ( def == null || !cname.equals(def.getName()) ) {
             LunaChat.manager.setDefaultChannel(inviter.getName(), cname);
             sendResourceMessage(sender, PREINFO, "cmdmsgSet", cname);
         }

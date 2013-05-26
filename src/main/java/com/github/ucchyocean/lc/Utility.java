@@ -17,6 +17,8 @@ import java.io.OutputStreamWriter;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
+import org.bukkit.ChatColor;
+
 /**
  * @author ucchy
  * ユーティリティクラス
@@ -30,7 +32,7 @@ public class Utility {
      * @param sourceFilePath コピー元
      * @param isBinary バイナリファイルかどうか
      */
-    protected static void copyFileFromJar(
+    public static void copyFileFromJar(
             File jarFile, File targetFile, String sourceFilePath, boolean isBinary) {
 
         InputStream is = null;
@@ -112,7 +114,7 @@ public class Utility {
      * @param source 置き換え元の文字列
      * @return 置き換え後の文字列
      */
-    protected static String replaceColorCode(String source) {
+    public static String replaceColorCode(String source) {
         return source.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
     }
 
@@ -121,11 +123,62 @@ public class Utility {
      * @param length アスタリスクの個数
      * @return 指定された文字数のアスタリスク
      */
-    protected static String getAstariskString(int length) {
+    public static String getAstariskString(int length) {
         StringBuilder buf = new StringBuilder();
         for ( int i=0; i<length; i++ ) {
             buf.append("*");
         }
         return buf.toString();
+    }
+
+    /**
+     * カラー表記の文字列を、ChatColorクラスに変換する
+     * @param color カラー表記の文字列
+     * @return ChatColorクラス
+     */
+    public static ChatColor changeToChatColor(String color) {
+
+        if ( isValidColor(color) ) {
+            return ChatColor.valueOf(color.toUpperCase());
+        }
+        return ChatColor.WHITE;
+    }
+
+    /**
+     * カラー表記の文字列を、カラーコードに変換する
+     * @param color カラー表記の文字列
+     * @return カラーコード
+     */
+    public static String changeToColorCode(String color) {
+
+        return "&" + changeToChatColor(color).getChar();
+    }
+
+    /**
+     * ChatColorで指定可能な色かどうかを判断する
+     * @param color カラー表記の文字列
+     * @return 指定可能かどうか
+     */
+    public static boolean isValidColor(String color) {
+
+        for ( ChatColor c : ChatColor.values() ) {
+            if ( c.name().equals(color.toUpperCase()) ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * カラーコードかどうかを判断する
+     * @param color カラー表記の文字列
+     * @return 指定可能かどうか
+     */
+    public static boolean isValidColorCode(String code) {
+
+        if ( code == null ) {
+            return false;
+        }
+        return code.matches("&[0-9a-f]");
     }
 }

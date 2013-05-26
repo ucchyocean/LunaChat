@@ -1,4 +1,4 @@
-defaultFormat: '&a[%ch]%prefix%username%suffix&a: %msg'
+defaultFormat: '&a[%ch]%prefix%username%suffix&a:&f %color%msg'
 
 joinMessage: '&a[%ch]&7%username さんがチャンネルチャットに参加しました。'
 quitMessage: '&a[%ch]&7%username さんがチャンネルチャットから退出しました。'
@@ -39,6 +39,8 @@ cmdmsgFormat: 'メッセージフォーマットを %s に設定しました。'
 cmdmsgModerator: '%s さんをチャンネル %s のモデレーターに設定しました。'
 cmdmsgModeratorMinus: '%s さんをチャンネル %s のモデレーターから外しました。'
 cmdmsgOption: '%s を %s に設定しました。'
+cmdmsgTemplate: 'テンプレート %s番を、%s に設定しました。'
+cmdmsgTemplateRemove: 'テンプレート %s番を削除しました。'
 
 errmsgIngame: 'このコマンドはゲーム内からしか実行できません。'
 errmsgCommand: 'コマンドの指定が正しくありません。'
@@ -68,6 +70,10 @@ errmsgCannotRemoveGlobal: 'チャンネル %s はグローバルチャンネル�
 errmsgCannotModeratorGlobal: 'チャンネル %s はグローバルチャンネルなので、モデレーターを設定できません。'
 errmsgNotfoundPM: 'あなたが受信したプライベートメッセージがありません。'
 errmsgCannotSendPMSelf: '自分自身にプライベートメッセージを送ることはできません。'
+errmsgCannotUseForChannel: '%s はチャンネル名に使用できない文字を含んでいます。'
+errmsgCannotUseForGlobal: '%s はグローバルチャンネル名に使用できない文字を含んでいます。'
+errmsgInvalidColorCode: '%s はカラーコードとして正しくありません。'
+errmsgInvalidTemplateNumber: 'テンプレート番号は、0から9までの数字を指定してください。'
 
 ngwordPrefix: 'NGワード発言により、'
 
@@ -84,9 +90,10 @@ usageInfo: '&7/%s info [channel] - チャンネルの情報を表示します。
 
 usageCreate: '&7/%s create (channel) [description] - チャンネルを作成します。'
 usageRemove: '&7/%s remove [channel] - チャンネルを削除します。'
-usageFormat: '&7/%s format [channel] (format) - チャンネルのメッセージフォーマットを設定します。'
+usageFormat: '&7/%s format [channel] (format...) - チャンネルのメッセージフォーマットを設定します。'
 usageModerator: '&7/%s moderator [channel] (player) - チャンネルのモデレーターを指定したプレイヤーに設定します。'
-usageOption: '&7/%s option [channel] (key=value) - チャンネルのオプションを設定します。'
+usageOption: '&7/%s option [channel] (key=value...) - チャンネルのオプションを設定します。'
+usageTemplate: '&7/%s template (number) (template...) - メッセージフォーマットのテンプレートを登録します。'
 usageReload: '&7/%s reload - config.ymlの再読み込みをします。'
 
 usageMessage: '&7/%s (name) [message] - 指定した人との1:1チャットを開始します。'
