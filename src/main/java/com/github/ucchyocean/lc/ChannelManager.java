@@ -141,7 +141,9 @@ public class ChannelManager implements LunaChatAPI {
 
         try {
             YamlConfiguration config = new YamlConfiguration();
-            config.set("", templates);
+            for ( String key : templates.keySet() ) {
+                config.set(key, templates.get(key));
+            }
             config.save(fileTemplates);
             return true;
         } catch (IOException e) {
