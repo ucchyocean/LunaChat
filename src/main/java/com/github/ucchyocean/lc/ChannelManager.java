@@ -73,7 +73,7 @@ public class ChannelManager implements LunaChatAPI {
         defaultChannels = new HashMap<String, String>();
         Set<String> keyset = config.getValues(false).keySet();
         for ( String key : keyset ) {
-            defaultChannels.put(key, config.getString(key));
+            defaultChannels.put(key.toLowerCase(), config.getString(key));
         }
 
         // テンプレート設定のロード
@@ -251,7 +251,7 @@ public class ChannelManager implements LunaChatAPI {
      * @see com.github.ucchyocean.lc.LunaChatAPI#isExistChannel(java.lang.String)
      */
     public boolean isExistChannel(String channelName) {
-        return channels.containsKey(channelName);
+        return channels.containsKey(channelName.toLowerCase());
     }
 
     /**
@@ -309,7 +309,7 @@ public class ChannelManager implements LunaChatAPI {
      */
     @Override
     public void setDefaultChannel(String playerName, String channelName) {
-        defaultChannels.put(playerName, channelName);
+        defaultChannels.put(playerName, channelName.toLowerCase());
         saveDefaults();
     }
 
@@ -333,7 +333,7 @@ public class ChannelManager implements LunaChatAPI {
      */
     @Override
     public Channel getChannel(String channelName) {
-        return channels.get(channelName);
+        return channels.get(channelName.toLowerCase());
     }
 
     /**
@@ -344,6 +344,8 @@ public class ChannelManager implements LunaChatAPI {
      */
     @Override
     public Channel createChannel(String channelName) {
+
+        channelName = channelName.toLowerCase();
 
         // イベントコール
         LunaChatChannelCreateEvent event =
@@ -368,6 +370,8 @@ public class ChannelManager implements LunaChatAPI {
      */
     @Override
     public boolean removeChannel(String channelName) {
+
+        channelName = channelName.toLowerCase();
 
         // イベントコール
         LunaChatChannelRemoveEvent event =
