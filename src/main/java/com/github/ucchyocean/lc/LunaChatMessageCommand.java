@@ -18,7 +18,7 @@ import org.bukkit.entity.Player;
  */
 public class LunaChatMessageCommand implements CommandExecutor {
 
-    private static final String PREINFO = Resources.get("infoPrefix");
+//    private static final String PREINFO = Resources.get("infoPrefix");
     private static final String PREERR = Resources.get("errorPrefix");
 
     /**
@@ -57,19 +57,31 @@ public class LunaChatMessageCommand implements CommandExecutor {
             return true;
         }
 
+        sendTellMessage(inviter, invitedName, message.toString());
+        return true;
+    }
+
+    /**
+     * Tellコマンドの実行処理を行う
+     * @param inviter
+     * @param invitedName
+     * @param message
+     */
+    protected void sendTellMessage(Player inviter, String invitedName, String message) {
+
         // 招待相手が自分自身でないか確認する
         if (inviter.getName().equals(invitedName)) {
-            sendResourceMessage(sender, PREERR,
+            sendResourceMessage(inviter, PREERR,
                     "errmsgCannotSendPMSelf");
-            return true;
+            return;
         }
 
         // 招待相手が存在するかどうかを確認する
         Player invited = LunaChat.getPlayerExact(invitedName);
         if (invited == null) {
-            sendResourceMessage(sender, PREERR,
+            sendResourceMessage(inviter, PREERR,
                     "errmsgNotfoundPlayer", invitedName);
-            return true;
+            return;
         }
 
         // チャンネルが存在するかどうかをチェックする
@@ -84,21 +96,21 @@ public class LunaChatMessageCommand implements CommandExecutor {
         }
 
         // デフォルトの発言先が異なる場合は、デフォルトの発言先にする
-        Channel def = LunaChat.manager.getDefaultChannel(inviter.getName());
-        if ( def == null || !cname.equals(def.getName()) ) {
-            LunaChat.manager.setDefaultChannel(inviter.getName(), cname);
-            sendResourceMessage(sender, PREINFO, "cmdmsgSet", cname);
-        }
+//        Channel def = LunaChat.manager.getDefaultChannel(inviter.getName());
+//        if ( def == null || !cname.equals(def.getName()) ) {
+//            LunaChat.manager.setDefaultChannel(inviter.getName(), cname);
+//            sendResourceMessage(sender, PREINFO, "cmdmsgSet", cname);
+//        }
 
         // メッセージがあるなら送信する
-        if ( message.toString().trim().length() > 0 ) {
-            channel.chat(inviter, message.toString());
+        if ( message.trim().length() > 0 ) {
+            channel.chat(inviter, message);
         }
 
         // 送信履歴を残す
         LunaChat.privateMessageMap.put(invitedName, inviter.getName());
 
-        return true;
+        return;
     }
 
     /**
@@ -119,7 +131,7 @@ public class LunaChatMessageCommand implements CommandExecutor {
      * @param key リソースキー
      * @param args リソース内の置き換え対象キーワード
      */
-    private void sendResourceMessage(CommandSender sender, String pre,
+    protected void sendResourceMessage(CommandSender sender, String pre,
             String key, Object... args) {
         String msg = String.format(
                 Utility.replaceColorCode(pre + Resources.get(key)), args);

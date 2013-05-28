@@ -42,6 +42,8 @@ public class Channel implements ConfigurationSerializable {
     private static final String LIST_FORMAT = Resources.get("listFormat");
 
     private static final String DEFAULT_FORMAT = Resources.get("defaultFormat");
+    private static final String DEFAULT_FORMAT_FOR_PERSONAL =
+            Resources.get("defaultFormatForPersonalChat");
     private static final String MSG_JOIN = Resources.get("joinMessage");
     private static final String MSG_QUIT = Resources.get("quitMessage");
 
@@ -103,12 +105,16 @@ public class Channel implements ConfigurationSerializable {
         this.name = name;
         this.description = "";
         this.members = new ArrayList<String>();
-        this.format = DEFAULT_FORMAT;
         this.banned = new ArrayList<String>();
         this.moderator = new ArrayList<String>();
         this.password = "";
         this.visible = true;
         this.colorCode = "";
+
+        if ( name.contains(">") )
+            this.format = DEFAULT_FORMAT_FOR_PERSONAL;
+        else
+            this.format = DEFAULT_FORMAT;
     }
 
     /**
@@ -272,6 +278,11 @@ public class Channel implements ConfigurationSerializable {
      * @param player 入退室したプレイヤー名
      */
     private void sendJoinQuitMessage(boolean isJoin, String player) {
+
+        // 1:1チャットなら、入退室メッセージは表示しない
+        if ( name.contains(">") ) {
+            return;
+        }
 
         String msg;
         if ( isJoin ) {

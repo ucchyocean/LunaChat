@@ -1,4 +1,5 @@
 defaultFormat: '&a[%ch]%prefix%username%suffix&a:&f %color%msg'
+defaultFormatForPersonalChat: '&8[%ch&8] %msg'
 
 joinMessage: '&a[%ch]&7%username さんがチャンネルチャットに参加しました。'
 quitMessage: '&a[%ch]&7%username さんがチャンネルチャットから退出しました。'
