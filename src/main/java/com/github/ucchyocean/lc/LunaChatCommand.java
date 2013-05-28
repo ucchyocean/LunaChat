@@ -715,7 +715,7 @@ public class LunaChatCommand implements CommandExecutor {
         }
 
         // チャンネルが存在するかどうかをチェックする
-        if ( !LunaChat.manager.isExistChannel(name) ) {
+        if ( LunaChat.manager.isExistChannel(name) ) {
             sendResourceMessage(sender, PREERR, "errmsgExist");
             return true;
         }
