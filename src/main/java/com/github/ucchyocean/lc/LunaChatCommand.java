@@ -259,7 +259,7 @@ public class LunaChatCommand implements CommandExecutor {
         }
 
         // グローバルチャンネルなら退出できない
-        if ( LunaChat.config.globalChannel.equals(channelName) ) {
+        if ( channelName == null || LunaChat.config.globalChannel.equals(channelName) ) {
             sendResourceMessage(sender, PREERR, "errmsgCannotLeaveGlobal", channelName);
             return true;
         }
