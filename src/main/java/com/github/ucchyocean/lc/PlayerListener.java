@@ -102,9 +102,11 @@ public class PlayerListener implements Listener {
         // お互いがオフラインになるPMチャンネルがある場合は
         // チャンネルをクリアする
         Collection<Channel> channels = LunaChat.manager.getChannels();
+        ArrayList<Channel> deleteList = new ArrayList<Channel>();
+
         for ( Channel channel : channels ) {
             String cname = channel.getName();
-            if ( cname.contains(">") && cname.contains(player.getName()) ) {
+            if ( cname.contains(">") && cname.contains(player.getName().toLowerCase()) ) {
                 boolean isAllOffline = true;
                 for ( String pname : channel.getMembers() ) {
                     if ( !pname.equals(player.getName()) ) {
@@ -115,9 +117,13 @@ public class PlayerListener implements Listener {
                     }
                 }
                 if ( isAllOffline ) {
-                    LunaChat.manager.removeChannel(channel.getName());
+                    deleteList.add(channel);
                 }
             }
+        }
+
+        for ( Channel channel : deleteList ) {
+            LunaChat.manager.removeChannel(channel.getName());
         }
     }
 
