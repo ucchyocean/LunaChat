@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -71,8 +70,7 @@ public class ChannelManager implements LunaChatAPI {
                 YamlConfiguration.loadConfiguration(fileDefaults);
 
         defaultChannels = new HashMap<String, String>();
-        Set<String> keyset = config.getValues(false).keySet();
-        for ( String key : keyset ) {
+        for ( String key : config.getKeys(false) ) {
             defaultChannels.put(key, config.getString(key));
         }
 
@@ -94,7 +92,7 @@ public class ChannelManager implements LunaChatAPI {
                 YamlConfiguration.loadConfiguration(fileTemplates);
 
         templates = new HashMap<String, String>();
-        for ( String key : configTemplates.getValues(false).keySet() ) {
+        for ( String key : configTemplates.getKeys(false) ) {
             templates.put(key, configTemplates.getString(key));
         }
 
@@ -179,18 +177,18 @@ public class ChannelManager implements LunaChatAPI {
                 continue;
             }
 
-            String disp = ChatColor.WHITE + key;
-            if ( key.equals(dchannel) ) {
-                disp = ChatColor.RED + key;
+            String disp = ChatColor.WHITE + channel.getName();
+            if ( key.equals(dchannel.toLowerCase()) ) {
+                disp = ChatColor.RED + channel.getName();
             }
             if ( player != null && !channel.getMembers().contains(playerName) &&
-                    !key.equals(LunaChat.config.globalChannel) ) {
+                    !channel.getName().equals(LunaChat.config.globalChannel) ) {
 
                 // 未参加で visible=false のチャンネルは表示しない
                 if ( !channel.isVisible() ) {
                     continue;
                 }
-                disp = ChatColor.GRAY + key;
+                disp = ChatColor.GRAY + channel.getName();
             }
             String desc = channel.getDescription();
             int onlineNum = channel.getOnlineNum();
@@ -223,13 +221,13 @@ public class ChannelManager implements LunaChatAPI {
         for ( String key : channels.keySet() ) {
             Channel channel = channels.get(key);
             if ( !channel.getMembers().contains(playerName) &&
-                    !key.equals(LunaChat.config.globalChannel) ) {
+                    !channel.getName().equals(LunaChat.config.globalChannel) ) {
                 continue;
             }
 
-            String disp = ChatColor.WHITE + key;
-            if ( key.equals(dchannel) ) {
-                disp = ChatColor.RED + key;
+            String disp = ChatColor.WHITE + channel.getName();
+            if ( key.equals(dchannel.toLowerCase()) ) {
+                disp = ChatColor.RED + channel.getName();
             }
             String desc = channel.getDescription();
             int onlineNum = channel.getOnlineNum();
@@ -251,7 +249,7 @@ public class ChannelManager implements LunaChatAPI {
      * @see com.github.ucchyocean.lc.LunaChatAPI#isExistChannel(java.lang.String)
      */
     public boolean isExistChannel(String channelName) {
-        return channels.containsKey(channelName);
+        return channels.containsKey(channelName.toLowerCase());
     }
 
     /**
@@ -295,7 +293,7 @@ public class ChannelManager implements LunaChatAPI {
     public Channel getDefaultChannel(String playerName) {
 
         String cname = defaultChannels.get(playerName);
-        if ( cname == null || !channels.containsKey(cname) ) {
+        if ( cname == null || !channels.containsKey(cname.toLowerCase()) ) {
             return null;
         }
         return channels.get(cname);
@@ -333,7 +331,7 @@ public class ChannelManager implements LunaChatAPI {
      */
     @Override
     public Channel getChannel(String channelName) {
-        return channels.get(channelName);
+        return channels.get(channelName.toLowerCase());
     }
 
     /**
@@ -355,7 +353,7 @@ public class ChannelManager implements LunaChatAPI {
         String name = event.getChannelName();
 
         Channel channel = new Channel(name);
-        channels.put(name, channel);
+        channels.put(name.toLowerCase(), channel);
         channel.save();
         return channel;
     }
@@ -368,6 +366,8 @@ public class ChannelManager implements LunaChatAPI {
      */
     @Override
     public boolean removeChannel(String channelName) {
+
+        channelName = channelName.toLowerCase();
 
         // イベントコール
         LunaChatChannelRemoveEvent event =

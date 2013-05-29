@@ -781,7 +781,7 @@ public class Channel implements ConfigurationSerializable {
                 data.put(key, config.get(key));
             }
             Channel channel = deserialize(data);
-            result.put(channel.name, channel);
+            result.put(channel.name.toLowerCase(), channel);
         }
 
         return result;
