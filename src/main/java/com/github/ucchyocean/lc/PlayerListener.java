@@ -106,7 +106,7 @@ public class PlayerListener implements Listener {
 
         for ( Channel channel : channels ) {
             String cname = channel.getName();
-            if ( cname.contains(">") && cname.contains(player.getName().toLowerCase()) ) {
+            if ( cname.contains(">") && cname.contains(player.getName()) ) {
                 boolean isAllOffline = true;
                 for ( String pname : channel.getMembers() ) {
                     if ( !pname.equals(player.getName()) ) {

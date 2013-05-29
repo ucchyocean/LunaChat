@@ -537,7 +537,6 @@ public class Channel implements ConfigurationSerializable {
     public static Channel deserialize(Map<String, Object> data) {
 
         String name = castWithDefault(data.get(KEY_NAME), (String)null);
-        name = name.toLowerCase();
         List<String> members = castToStringList(data.get(KEY_MEMBERS));
 
         Channel channel = new Channel(name);
