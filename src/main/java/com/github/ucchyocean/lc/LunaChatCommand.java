@@ -1092,12 +1092,10 @@ public class LunaChatCommand implements CommandExecutor {
         // 登録を実行
         if ( format.equals("") ) {
             LunaChat.manager.removeTemplate(id);
-            LunaChat.manager.saveTemplates();
             sendResourceMessage(sender, PREINFO,
                     "cmdmsgTemplateRemove", id);
         } else {
             LunaChat.manager.setTemplate(id, format);
-            LunaChat.manager.saveTemplates();
             sendResourceMessage(sender, PREINFO,
                     "cmdmsgTemplate", id, format);
         }

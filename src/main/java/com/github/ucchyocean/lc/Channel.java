@@ -293,7 +293,7 @@ public class Channel implements ConfigurationSerializable {
 
         // キーワード置き換え
         Player p = LunaChat.getPlayerExact(player);
-        msg = replaceKeywords(msg, p, "");
+        msg = replaceKeywords(msg, p);
 
         sendInformation(msg);
     }
@@ -383,50 +383,6 @@ public class Channel implements ConfigurationSerializable {
     private boolean isOnlinePlayer(String playerName) {
         Player p = LunaChat.getPlayerExact(playerName);
         return ( p != null && p.isOnline() );
-    }
-
-    /**
-     * チャットフォーマット内のキーワードを置き換えする
-     * @param format チャットフォーマット
-     * @param player プレイヤー
-     * @param message プレイヤーの発言内容
-     * @return 置き換え結果
-     */
-    private String replaceKeywords(String format, Player player, String message) {
-
-        String msg = format;
-
-        // テンプレートのキーワードを、まず最初に置き換える
-        for ( int i=0; i<=9; i++ ) {
-            String key = "%" + i;
-            if ( msg.contains(key) ) {
-                if ( LunaChat.manager.getTemplate("" + i) != null ) {
-                    msg = msg.replace(key, LunaChat.manager.getTemplate("" + i));
-                    break;
-                }
-            }
-        }
-
-        msg = msg.replace("%ch", name);
-        msg = msg.replace("%msg", message);
-        msg = msg.replace("%color", colorCode);
-
-        if ( player != null ) {
-            msg = msg.replace("%username", player.getDisplayName());
-
-            if ( msg.contains("%prefix") || msg.contains("%suffix") ) {
-                String prefix = "";
-                String suffix = "";
-                if ( LunaChat.chatPlugin != null ) {
-                    prefix = LunaChat.chatPlugin.getPlayerPrefix(player);
-                    suffix = LunaChat.chatPlugin.getPlayerSuffix(player);
-                }
-                msg = msg.replace("%prefix", prefix);
-                msg = msg.replace("%suffix", suffix);
-            }
-        }
-
-        return Utility.replaceColorCode(msg);
     }
 
     /**

@@ -1,4 +1,4 @@
-# LunaChat v2.0.2
+# LunaChat v2.1.0
 # @author     ucchy
 # @license    GPLv3
 # @copyright  Copyright ucchy 2013
@@ -13,7 +13,7 @@ globalChannel: ''
 ngword: []
 ngwordAction: mask
 
-japanizeType: kana
-japanizeDisplayLine: 2
+japanizeType: GoogleIME
+japanizeDisplayLine: 1
 japanizeLine1Format: '%msg (%japanize)'
 japanizeLine2Format: '&6[JP] %japanize'

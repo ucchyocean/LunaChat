@@ -116,7 +116,7 @@ public class ChannelManager implements LunaChatAPI {
      * デフォルトチャンネル設定を保存する
      * @return 保存したかどうか
      */
-    public boolean saveDefaults() {
+    private boolean saveDefaults() {
 
         try {
             YamlConfiguration config = new YamlConfiguration();
@@ -135,7 +135,7 @@ public class ChannelManager implements LunaChatAPI {
      * テンプレート設定を保存する
      * @return 保存したかどうか
      */
-    public boolean saveTemplates() {
+    private boolean saveTemplates() {
 
         try {
             YamlConfiguration config = new YamlConfiguration();
@@ -321,6 +321,7 @@ public class ChannelManager implements LunaChatAPI {
         if ( defaultChannels.containsKey(playerName) ) {
             defaultChannels.remove(playerName);
         }
+        saveDefaults();
     }
 
     /**
@@ -416,6 +417,7 @@ public class ChannelManager implements LunaChatAPI {
     @Override
     public void setTemplate(String id, String template) {
         templates.put(id, template);
+        saveTemplates();
     }
 
     /**
@@ -426,6 +428,7 @@ public class ChannelManager implements LunaChatAPI {
     @Override
     public void removeTemplate(String id) {
         templates.remove(id);
+        saveTemplates();
     }
 
     /**
