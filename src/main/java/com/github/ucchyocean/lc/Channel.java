@@ -8,10 +8,16 @@ package com.github.ucchyocean.lc;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.FileHandler;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -62,6 +68,9 @@ public class Channel implements ConfigurationSerializable {
     private static final String KEY_VISIBLE = "visible";
     private static final String KEY_COLOR = "color";
 
+    private static final SimpleDateFormat dformat =
+            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
     /** 参加者 */
     private List<String> members;
 
@@ -97,6 +106,9 @@ public class Channel implements ConfigurationSerializable {
      * */
     private String format;
 
+    /** ロガー */
+    private Logger logger;
+
     /**
      * コンストラクタ
      * @param name チャンネルの名称
@@ -111,10 +123,26 @@ public class Channel implements ConfigurationSerializable {
         this.visible = true;
         this.colorCode = "";
 
-        if ( name.contains(">") )
+        if ( isPersonalChat() ) {
             this.format = DEFAULT_FORMAT_FOR_PERSONAL;
-        else
+        } else {
             this.format = DEFAULT_FORMAT;
+            logger = makeLoggerForChannelChatLog(name);
+        }
+    }
+
+    /**
+     * @return 1:1チャットかどうか
+     */
+    private boolean isPersonalChat() {
+        return name.contains(">");
+    }
+
+    /**
+     * @return グローバルチャットチャンネルかどうか
+     */
+    private boolean isGlobalChat() {
+        return name.equals(LunaChat.config.globalChannel);
     }
 
     /**
@@ -280,7 +308,7 @@ public class Channel implements ConfigurationSerializable {
     private void sendJoinQuitMessage(boolean isJoin, String player) {
 
         // 1:1チャットなら、入退室メッセージは表示しない
-        if ( name.contains(">") ) {
+        if ( isPersonalChat() ) {
             return;
         }
 
@@ -305,7 +333,7 @@ public class Channel implements ConfigurationSerializable {
     public void sendInformation(String message) {
 
         // グローバルチャンネルは、そのままブロードキャスト
-        if ( name.equals(LunaChat.config.globalChannel) ) {
+        if ( isGlobalChat() ) {
             Bukkit.broadcastMessage(message);
             return;
         }
@@ -319,9 +347,7 @@ public class Channel implements ConfigurationSerializable {
         }
 
         // ロギング
-        if ( LunaChat.config.loggingChat ) {
-            LunaChat.log(message);
-        }
+        log(message);
     }
 
     /**
@@ -337,7 +363,7 @@ public class Channel implements ConfigurationSerializable {
                 Utility.replaceColorCode(LIST_FORMAT),
                 name, getOnlineNum(), getTotalNum(), description) );
 
-        if ( !name.equals(LunaChat.config.globalChannel) ) {
+        if ( !isGlobalChat() ) {
             // メンバーを、5人ごとに表示する
             StringBuffer buf = new StringBuffer();
             for ( int i=0; i<members.size(); i++ ) {
@@ -435,7 +461,7 @@ public class Channel implements ConfigurationSerializable {
     public int getOnlineNum() {
 
         // グローバルチャンネルならサーバー接続人数を返す
-        if ( name.equals(LunaChat.config.globalChannel) ) {
+        if ( isGlobalChat() ) {
             return Bukkit.getOnlinePlayers().length;
         }
 
@@ -456,7 +482,7 @@ public class Channel implements ConfigurationSerializable {
     public int getTotalNum() {
 
         // グローバルチャンネルならサーバー接続人数を返す
-        if ( name.equals(LunaChat.config.globalChannel) ) {
+        if ( isGlobalChat() ) {
             return Bukkit.getOnlinePlayers().length;
         }
 
@@ -666,7 +692,7 @@ public class Channel implements ConfigurationSerializable {
         }
 
         // 1:1チャットチャンネルの場合は、何もしない。
-        if ( name.contains(">") ) {
+        if ( isPersonalChat() ) {
             return false;
         }
 
@@ -741,5 +767,63 @@ public class Channel implements ConfigurationSerializable {
         }
 
         return result;
+    }
+
+    /**
+     * ログを記録する
+     * @param message 記録するメッセージ
+     */
+    private void log(String message) {
+
+        if ( LunaChat.config.displayChatOnConsole ) {
+            LunaChat.log(ChatColor.stripColor(message));
+        }
+        if ( LunaChat.config.loggingChat && !isPersonalChat() ) {
+            if ( logger != null ) {
+                logger.info(ChatColor.stripColor(message));
+            }
+        }
+    }
+
+    /**
+     * チャンネルチャットロギングのためのロガーを作成して取得する。
+     * @param name チャンネル名
+     * @return ロガー
+     */
+    private static Logger makeLoggerForChannelChatLog(final String name) {
+
+        Logger logger = Logger.getLogger("LunaChatChannelLogger" + name);
+
+        FileHandler handler;
+        try {
+            File dir = new File(LunaChat.instance.getDataFolder(), "logs");
+            if ( !dir.exists() ) {
+                dir.mkdirs();
+            }
+
+            handler = new FileHandler(
+                    dir.getAbsolutePath() + "\\" + name + ".%g.log",
+                    1048576, 1000, true);
+            handler.setFormatter(new SimpleFormatter() {
+                @Override
+                public String format(LogRecord record) {
+                    String date = dformat.format(new Date());
+                    return String.format("%1$s,%2$s\r\n",
+                            date, record.getMessage());
+                }
+            });
+
+            logger.addHandler(handler);
+            logger.setUseParentHandlers(false);
+
+            return logger;
+
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

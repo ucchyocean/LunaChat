@@ -5,6 +5,7 @@
 
 noJoinAsGlobal: true
 loggingChat: true
+displayChatOnConsole: false
 globalMarker: '!'
 zeroMemberRemove: false
 showListOnJoin: false

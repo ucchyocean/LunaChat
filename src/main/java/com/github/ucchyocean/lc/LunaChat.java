@@ -11,7 +11,6 @@ import java.util.HashMap;
 import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.chat.Chat;
 
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -83,7 +82,7 @@ public class LunaChat extends JavaPlugin {
      * @param message メッセージ
      */
     protected static void log(String message) {
-        instance.getLogger().info(ChatColor.stripColor(message));
+        instance.getLogger().info(message);
     }
 
     /**

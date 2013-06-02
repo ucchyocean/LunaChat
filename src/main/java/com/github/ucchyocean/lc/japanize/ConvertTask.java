@@ -88,17 +88,5 @@ public class ConvertTask extends BukkitRunnable {
     public String getResult() {
         return result;
     }
-
-    public static void main(String[] args) {
-
-        String org = "aiueo";
-        // カナ変換
-        String japanized = KanaConverter.conv(org);
-
-        // IME変換
-        japanized = IMEConverter.convByGoogleIME(japanized);
-
-        System.out.println(japanized);
-    }
 }
 

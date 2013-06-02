@@ -24,6 +24,9 @@ public class LunaChatConfig {
     /** チャンネルチャットの発言内容を、ログに残すかどうか */
     protected boolean loggingChat;
 
+    /** チャンネルチャットの発言内容を、コンソールに表示するかどうか */
+    protected boolean displayChatOnConsole;
+
     /** グローバルマーカー  これが発言の頭に入っている場合は、強制的にグローバル発言になる */
     protected String globalMarker;
 
@@ -89,6 +92,7 @@ public class LunaChatConfig {
 
         noJoinAsGlobal = config.getBoolean("noJoinAsGlobal", true);
         loggingChat = config.getBoolean("loggingChat", true);
+        displayChatOnConsole = config.getBoolean("displayChatOnConsole", false);
         globalMarker = config.getString("globalMarker", "!");
         zeroMemberRemove = config.getBoolean("zeroMemberRemove", false);
         showListOnJoin = config.getBoolean("showListOnJoin", false);
@@ -140,6 +144,20 @@ public class LunaChatConfig {
      */
     public void setLoggingChat(boolean loggingChat) {
         this.loggingChat = loggingChat;
+    }
+
+    /**
+     * @return displayChatOnConsoleを返す
+     */
+    public boolean isDisplayChatOnConsole() {
+        return displayChatOnConsole;
+    }
+
+    /**
+     * @param displayChatOnConsole displayChatOnConsoleを設定する
+     */
+    public void setDisplayChatOnConsole(boolean displayChatOnConsole) {
+        this.displayChatOnConsole = displayChatOnConsole;
     }
 
     /**
