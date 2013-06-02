@@ -332,17 +332,19 @@ public class Channel implements ConfigurationSerializable {
      */
     public void sendInformation(String message) {
 
-        // グローバルチャンネルは、そのままブロードキャスト
         if ( isGlobalChat() ) {
-            Bukkit.broadcastMessage(message);
-            return;
-        }
 
-        // オンラインのプレイヤーに送信する
-        for ( String member : members ) {
-            Player p = LunaChat.getPlayerExact(member);
-            if ( p != null ) {
-                p.sendMessage(message);
+            // グローバルチャンネルは、そのままブロードキャスト
+            Bukkit.broadcastMessage(message);
+
+        } else {
+
+            // オンラインのプレイヤーに送信する
+            for ( String member : members ) {
+                Player p = LunaChat.getPlayerExact(member);
+                if ( p != null ) {
+                    p.sendMessage(message);
+                }
             }
         }
 
@@ -778,10 +780,8 @@ public class Channel implements ConfigurationSerializable {
         if ( LunaChat.config.displayChatOnConsole ) {
             LunaChat.log(ChatColor.stripColor(message));
         }
-        if ( LunaChat.config.loggingChat && !isPersonalChat() ) {
-            if ( logger != null ) {
-                logger.info(ChatColor.stripColor(message));
-            }
+        if ( LunaChat.config.loggingChat && logger != null ) {
+            logger.info(ChatColor.stripColor(message));
         }
     }
 
@@ -794,7 +794,7 @@ public class Channel implements ConfigurationSerializable {
 
         Logger logger = Logger.getLogger("LunaChatChannelLogger" + name);
 
-        FileHandler handler;
+        FileHandler handler = null;
         try {
             File dir = new File(LunaChat.instance.getDataFolder(), "logs");
             if ( !dir.exists() ) {
@@ -822,6 +822,11 @@ public class Channel implements ConfigurationSerializable {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+//            if ( handler != null ) {
+//                handler.flush();
+//                handler.close();
+//            }
         }
 
         return null;

@@ -71,7 +71,7 @@ public class ChannelManager implements LunaChatAPI {
 
         defaultChannels = new HashMap<String, String>();
         for ( String key : config.getKeys(false) ) {
-            defaultChannels.put(key, config.getString(key));
+            defaultChannels.put(key, config.getString(key).toLowerCase());
         }
 
         // テンプレート設定のロード
@@ -293,7 +293,8 @@ public class ChannelManager implements LunaChatAPI {
     public Channel getDefaultChannel(String playerName) {
 
         String cname = defaultChannels.get(playerName);
-        if ( cname == null || !channels.containsKey(cname.toLowerCase()) ) {
+
+        if ( cname == null || !isExistChannel(cname) ) {
             return null;
         }
         return channels.get(cname);
@@ -307,7 +308,7 @@ public class ChannelManager implements LunaChatAPI {
      */
     @Override
     public void setDefaultChannel(String playerName, String channelName) {
-        defaultChannels.put(playerName, channelName);
+        defaultChannels.put(playerName, channelName.toLowerCase());
         saveDefaults();
     }
 

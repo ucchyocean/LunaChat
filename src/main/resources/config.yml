@@ -16,5 +16,5 @@ ngwordAction: mask
 
 japanizeType: GoogleIME
 japanizeDisplayLine: 1
-japanizeLine1Format: '%msg (%japanize)'
+japanizeLine1Format: '%msg &7(%japanize)'
 japanizeLine2Format: '&6[JP] %japanize'
