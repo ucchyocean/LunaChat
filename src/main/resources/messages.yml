@@ -75,6 +75,10 @@ errmsgCannotUseForChannel: '%s はチャンネル名に使用できない文字�
 errmsgCannotUseForGlobal: '%s はグローバルチャンネル名に使用できない文字を含んでいます。'
 errmsgInvalidColorCode: '%s はカラーコードとして正しくありません。'
 errmsgInvalidTemplateNumber: 'テンプレート番号は、0から9までの数字を指定してください。'
+errmsgToolongDescription: '説明文は %d 文字以下にしてください。'
+errmsgToolongPassword: 'パスワードは %d 文字以下にしてください。'
+errmsgInvalidBooleanOption: '%s は true/false で指定してください。'
+errmsgInvalidRangeOption: 'range に正しくない値が指定されました。'
 
 ngwordPrefix: 'NGワード発言により、'
 

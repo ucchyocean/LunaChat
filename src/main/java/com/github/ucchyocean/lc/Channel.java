@@ -67,6 +67,9 @@ public class Channel implements ConfigurationSerializable {
     private static final String KEY_PASSWORD = "password";
     private static final String KEY_VISIBLE = "visible";
     private static final String KEY_COLOR = "color";
+    private static final String KEY_BROADCAST = "broadcast";
+    private static final String KEY_WORLD = "world";
+    private static final String KEY_RANGE = "range";
 
     private static final SimpleDateFormat dformat =
             new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -106,6 +109,15 @@ public class Channel implements ConfigurationSerializable {
      * */
     private String format;
 
+    /** ブロードキャストチャンネルかどうか */
+    private boolean broadcastChannel;
+
+    /** ワールドチャットかどうか */
+    private boolean isWorldRange;
+
+    /** チャットの可聴範囲 0は無制限 */
+    private int chatRange;
+
     /** ロガー */
     private Logger logger;
 
@@ -122,6 +134,9 @@ public class Channel implements ConfigurationSerializable {
         this.password = "";
         this.visible = true;
         this.colorCode = "";
+        this.broadcastChannel = false;
+        this.isWorldRange = false;
+        this.chatRange = 0;
 
         if ( isPersonalChat() ) {
             this.format = DEFAULT_FORMAT_FOR_PERSONAL;
@@ -138,11 +153,18 @@ public class Channel implements ConfigurationSerializable {
         return name.contains(">");
     }
 
+//    /**
+//     * @return グローバルチャットチャンネルかどうか
+//     */
+//    private boolean isGlobalChat() {
+//        return name.equals(LunaChat.config.globalChannel);
+//    }
+
     /**
-     * @return グローバルチャットチャンネルかどうか
+     * @return ブロードキャストチャンネルかどうか
      */
-    private boolean isGlobalChat() {
-        return name.equals(LunaChat.config.globalChannel);
+    private boolean isBroadcastChannel() {
+        return (name.equals(LunaChat.config.globalChannel) || broadcastChannel);
     }
 
     /**
@@ -332,12 +354,13 @@ public class Channel implements ConfigurationSerializable {
      */
     public void sendInformation(String message) {
 
-        if ( isGlobalChat() ) {
+        if ( isBroadcastChannel() ) {
+            // ブロードキャストチャンネル
 
-            // グローバルチャンネルは、そのままブロードキャスト
             Bukkit.broadcastMessage(message);
 
         } else {
+            // 通常チャンネル
 
             // オンラインのプレイヤーに送信する
             for ( String member : members ) {
@@ -365,7 +388,7 @@ public class Channel implements ConfigurationSerializable {
                 Utility.replaceColorCode(LIST_FORMAT),
                 name, getOnlineNum(), getTotalNum(), description) );
 
-        if ( !isGlobalChat() ) {
+        if ( !isBroadcastChannel() ) {
             // メンバーを、5人ごとに表示する
             StringBuffer buf = new StringBuffer();
             for ( int i=0; i<members.size(); i++ ) {
@@ -463,7 +486,7 @@ public class Channel implements ConfigurationSerializable {
     public int getOnlineNum() {
 
         // グローバルチャンネルならサーバー接続人数を返す
-        if ( isGlobalChat() ) {
+        if ( isBroadcastChannel() ) {
             return Bukkit.getOnlinePlayers().length;
         }
 
@@ -484,7 +507,7 @@ public class Channel implements ConfigurationSerializable {
     public int getTotalNum() {
 
         // グローバルチャンネルならサーバー接続人数を返す
-        if ( isGlobalChat() ) {
+        if ( isBroadcastChannel() ) {
             return Bukkit.getOnlinePlayers().length;
         }
 
@@ -509,6 +532,9 @@ public class Channel implements ConfigurationSerializable {
         map.put(KEY_PASSWORD, password);
         map.put(KEY_VISIBLE, visible);
         map.put(KEY_COLOR, colorCode);
+        map.put(KEY_BROADCAST, broadcastChannel);
+        map.put(KEY_WORLD, isWorldRange);
+        map.put(KEY_RANGE, chatRange);
         return map;
     }
 
@@ -533,6 +559,9 @@ public class Channel implements ConfigurationSerializable {
         channel.password = castWithDefault(data.get(KEY_PASSWORD), "");
         channel.visible = castWithDefault(data.get(KEY_VISIBLE), true);
         channel.colorCode = castWithDefault(data.get(KEY_COLOR), "");
+        channel.broadcastChannel = castWithDefault(data.get(KEY_BROADCAST), false);
+        channel.isWorldRange = castWithDefault(data.get(KEY_WORLD), false);
+        channel.chatRange = castWithDefault(data.get(KEY_RANGE), 0);
         return channel;
     }
 
@@ -678,6 +707,30 @@ public class Channel implements ConfigurationSerializable {
      */
     public void setColorCode(String colorCode) {
         this.colorCode = colorCode;
+    }
+
+    /**
+     * ブロードキャストチャンネルを設定する
+     * @param broadcast ブロードキャストチャンネルにするかどうか
+     */
+    public void setBroadcast(boolean broadcast) {
+        this.broadcastChannel = broadcast;
+    }
+
+    /**
+     * チャットを同ワールド内に制限するかどうかを設定する
+     * @param isWorldRange 同ワールド制限するかどうか
+     */
+    public void setWorldRange(boolean isWorldRange) {
+        this.isWorldRange = isWorldRange;
+    }
+
+    /**
+     * チャットの可聴範囲を設定する
+     * @param range 可聴範囲
+     */
+    public void setRange(int range) {
+        this.chatRange = range;
     }
 
     /**

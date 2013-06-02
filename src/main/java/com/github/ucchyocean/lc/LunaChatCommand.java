@@ -24,6 +24,9 @@ import com.github.ucchyocean.lc.event.LunaChatChannelOptionChangedEvent;
  */
 public class LunaChatCommand implements CommandExecutor {
 
+    private static final int MAX_LENGTH_DESCRIPTION = 30;
+    private static final int MAX_LENGTH_PASSWORD = 15;
+
     private static final String PREINFO = Resources.get("infoPrefix");
     private static final String PREERR = Resources.get("errorPrefix");
 
@@ -1000,14 +1003,22 @@ public class LunaChatCommand implements CommandExecutor {
 
         // 設定する
         boolean setOption = false;
+
         if ( options.containsKey("description") ) {
             // チャンネル説明文
-            // TODO: チャンネル説明文は30文字制限をした方がいい。
-            channel.setDescription(options.get("description"));
-            sendResourceMessage(sender, PREINFO,
-                    "cmdmsgOption", "description", options.get("description"));
-            setOption = true;
+            String desc = options.get("description");
+            // チャンネル説明文は最大文字長を超えていないか確認
+            if ( desc.length() > MAX_LENGTH_DESCRIPTION ) {
+                sendResourceMessage(sender, PREERR,
+                        "errmsgToolongDescription", MAX_LENGTH_DESCRIPTION);
+            } else {
+                channel.setDescription(desc);
+                sendResourceMessage(sender, PREINFO,
+                        "cmdmsgOption", "description", desc);
+                setOption = true;
+            }
         }
+
         if ( options.containsKey("color") ) {
             // チャンネルカラー
             String code = options.get("color");
@@ -1024,15 +1035,72 @@ public class LunaChatCommand implements CommandExecutor {
                         "errmsgInvalidColorCode", options.get("color"));
             }
         }
+
+        if ( options.containsKey("broadcast") ) {
+            // ブロードキャストチャンネル
+            String value = options.get("broadcast");
+
+            if ( value.equals("") || value.equalsIgnoreCase("false") ) {
+                channel.setBroadcast(false);
+                sendResourceMessage(sender, PREINFO,
+                        "cmdmsgOption", "broadcast", "false");
+                setOption = true;
+            } else if ( value.equalsIgnoreCase("true") ) {
+                channel.setBroadcast(true);
+                sendResourceMessage(sender, PREINFO,
+                        "cmdmsgOption", "broadcast", "true");
+                setOption = true;
+            } else {
+                sendResourceMessage(sender, PREERR,
+                        "errmsgInvalidBooleanOption", "broadcast");
+            }
+        }
+
+        if ( options.containsKey("range") ) {
+            // レンジ
+            String value = options.get("range");
+
+            if ( value.equals("") ) {
+                channel.setWorldRange(false);
+                channel.setRange(0);
+                sendResourceMessage(sender, PREINFO,
+                        "cmdmsgOption", "range", "無効");
+                setOption = true;
+            } else if ( value.equalsIgnoreCase("world") ) {
+                channel.setWorldRange(true);
+                channel.setRange(0);
+                sendResourceMessage(sender, PREINFO,
+                        "cmdmsgOption", "range", "world");
+                setOption = true;
+            } else if ( value.matches("[0-9]+") ) {
+                channel.setWorldRange(true);
+                channel.setRange(Integer.parseInt(value));
+                sendResourceMessage(sender, PREINFO,
+                        "cmdmsgOption", "range", value);
+                setOption = true;
+            } else {
+                sendResourceMessage(sender, PREERR,
+                        "errmsgInvalidRangeOption");
+            }
+        }
+
         if ( !LunaChat.config.globalChannel.equals(channel.getName()) ) {
+
             if ( options.containsKey("password") ) {
                 // パスワード
-                // TODO: パスワードは10文字制限をした方がいい。
-                channel.setPassword(options.get("password"));
-                sendResourceMessage(sender, PREINFO,
-                        "cmdmsgOption", "password", options.get("password"));
-                setOption = true;
+                String password = options.get("password");
+                // パスワードは10文字制限をした方がいい。
+                if ( password.length() > MAX_LENGTH_PASSWORD ) {
+                    sendResourceMessage(sender, PREERR,
+                            "errmsgToolongPassword", MAX_LENGTH_PASSWORD);
+                } else {
+                    channel.setPassword(password);
+                    sendResourceMessage(sender, PREINFO,
+                            "cmdmsgOption", "password", password);
+                    setOption = true;
+                }
             }
+
             if ( options.containsKey("visible") ) {
                 String temp = options.get("visible");
                 if ( temp.equalsIgnoreCase("false") ) {
