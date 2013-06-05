@@ -190,6 +190,9 @@ public class Channel implements ConfigurationSerializable {
         // キーワード置き換え
         String msgFormat = replaceKeywords(format, player);
 
+        // カラーコード置き換え
+        maskedMessage = Utility.replaceColorCode(maskedMessage);
+
         // イベントコール
         LunaChatChannelChatEvent event =
                 new LunaChatChannelChatEvent(this.name,
