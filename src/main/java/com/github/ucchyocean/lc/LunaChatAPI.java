@@ -7,6 +7,8 @@ package com.github.ucchyocean.lc;
 
 import java.util.Collection;
 
+import com.github.ucchyocean.lc.japanize.JapanizeType;
+
 /**
  * @author ucchy
  * LunaChat APIクラス
@@ -93,4 +95,12 @@ public interface LunaChatAPI {
      * @param id テンプレートID
      */
     public void removeTemplate(String id);
+    
+    /**
+     * Japanize変換を行う
+     * @param message 変換するメッセージ
+     * @param type 変換タイプ
+     * @return 変換後のメッセージ
+     */
+    public String japanize(String message, JapanizeType type);
 }

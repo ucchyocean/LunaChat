@@ -21,6 +21,7 @@ import java.util.logging.SimpleFormatter;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
@@ -153,13 +154,6 @@ public class Channel implements ConfigurationSerializable {
         return name.contains(">");
     }
 
-//    /**
-//     * @return グローバルチャットチャンネルかどうか
-//     */
-//    private boolean isGlobalChat() {
-//        return name.equals(LunaChat.config.globalChannel);
-//    }
-
     /**
      * @return ブロードキャストチャンネルかどうか
      */
@@ -225,16 +219,16 @@ public class Channel implements ConfigurationSerializable {
                 // 発言処理は、タスクが完了しだい非同期で行われる
                 ConvertTask task = new ConvertTask(maskedMessage,
                         LunaChat.config.getJapanizeType(),
-                        this, taskFormat);
+                        this, player, taskFormat);
                 Bukkit.getScheduler().runTask(LunaChat.instance, task);
             }
         }
 
         if ( !chated ) {
-
-            // オンラインのプレイヤーに送信する
+            // メッセージの送信
+            
             String msg = msgFormat.replace("%msg", maskedMessage);
-            sendInformation(msg);
+            sendMessage(player, msg);
         }
 
         // NGワード発言者に、NGワードアクションを実行する
@@ -372,6 +366,70 @@ public class Channel implements ConfigurationSerializable {
                     p.sendMessage(message);
                 }
             }
+        }
+
+        // ロギング
+        log(message);
+    }
+    
+    /**
+     * メッセージを表示します。指定したプレイヤーの発言として処理されます。
+     * @param player プレイヤー（ワールドチャット、範囲チャットの場合は必須です）
+     * @param message メッセージ
+     */
+    public void sendMessage(Player player, String message) {
+        
+        // 受信者を設定する
+        ArrayList<Player> recipients = new ArrayList<Player>();
+        if ( isBroadcastChannel() ) {
+            // ブロードキャストチャンネル
+
+            if ( isWorldRange ) {
+                World w = player.getWorld();
+                
+                if ( chatRange > 0 ) {
+                    // 範囲チャット
+                    
+                    for ( Player p : Bukkit.getOnlinePlayers() ) {
+                        if ( p.getWorld().equals(w) && 
+                                player.getLocation().distance(p.getLocation()) <= chatRange ) {
+                            recipients.add(p);
+                        }
+                    }
+                    
+                } else {
+                    // ワールドチャット
+                    
+                    for ( Player p : Bukkit.getOnlinePlayers() ) {
+                        if ( p.getWorld().equals(w) ) {
+                            recipients.add(p);
+                        }
+                    }
+                }
+                
+            } else {
+                // 通常ブロードキャスト（全員へ送信）
+                
+                for ( Player p : Bukkit.getOnlinePlayers() ) {
+                    recipients.add(p);
+                }
+            }
+
+        } else {
+            // 通常チャンネル
+        
+            for ( String name : members ) {
+                Player p = Bukkit.getPlayerExact(name);
+                if ( p != null ) {
+                    recipients.add(p);
+                }
+            }
+        }
+
+        // 送信する
+        // TODO: 受信者が自分以外いない場合は、メッセージを表示する
+        for ( Player p : recipients ) {
+            p.sendMessage(message);
         }
 
         // ロギング

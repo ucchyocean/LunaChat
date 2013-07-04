@@ -187,7 +187,7 @@ public class PlayerListener implements Listener {
 
                     // メッセージを差し替えする
                     ConvertTask task = new ConvertTask(message,
-                            LunaChat.config.getJapanizeType(), null, taskFormat);
+                            LunaChat.config.getJapanizeType(), null, player, taskFormat);
 
                     if ( lineType == 1 ) {
                         if ( task.runSync() ) {

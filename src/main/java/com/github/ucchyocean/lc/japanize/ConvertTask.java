@@ -6,6 +6,7 @@
 package com.github.ucchyocean.lc.japanize;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.github.ucchyocean.lc.Channel;
@@ -21,6 +22,7 @@ public class ConvertTask extends BukkitRunnable {
     private String org;
     private JapanizeType type;
     private Channel channel;
+    private Player player;
     private String format;
     private String result;
 
@@ -29,12 +31,15 @@ public class ConvertTask extends BukkitRunnable {
      * @param org 変換前の文字列
      * @param type 変換タイプ
      * @param channel 変換後に発言する、発言先チャンネル
+     * @param player 発言したプレイヤー
      * @param format 変換後に発言するときの、発言フォーマット
      */
-    public ConvertTask(String org, JapanizeType type, Channel channel, String format) {
+    public ConvertTask(String org, JapanizeType type, Channel channel, 
+            Player player, String format) {
         this.org = org;
         this.type = type;
         this.channel = channel;
+        this.player = player;
         this.format = format;
     }
 
@@ -48,13 +53,17 @@ public class ConvertTask extends BukkitRunnable {
 
             // チャンネルへ送信
             if ( channel != null ) {
-                channel.sendInformation(result);
+                channel.sendMessage(player, result);
             } else {
                 Bukkit.broadcastMessage(result);
             }
         }
     }
 
+    /**
+     * 同期処理で変換を行います。結果は getResult() で取得してください。
+     * @return 同期処理を実行したかどうか（イベントでキャンセルされた場合はfalseになります）
+     */
     public boolean runSync() {
 
         // カナ変換
@@ -85,6 +94,10 @@ public class ConvertTask extends BukkitRunnable {
         return true;
     }
 
+    /**
+     * 変換結果を取得します。
+     * @return 変換結果
+     */
     public String getResult() {
         return result;
     }

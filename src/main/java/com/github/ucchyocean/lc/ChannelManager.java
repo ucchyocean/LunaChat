@@ -18,6 +18,8 @@ import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.event.LunaChatChannelCreateEvent;
 import com.github.ucchyocean.lc.event.LunaChatChannelRemoveEvent;
+import com.github.ucchyocean.lc.japanize.ConvertTask;
+import com.github.ucchyocean.lc.japanize.JapanizeType;
 
 /**
  * @author ucchy
@@ -430,6 +432,22 @@ public class ChannelManager implements LunaChatAPI {
     public void removeTemplate(String id) {
         templates.remove(id);
         saveTemplates();
+    }
+
+    /**
+     * Japanize変換を行う
+     * @param message 変換するメッセージ
+     * @param type 変換タイプ
+     * @return 変換後のメッセージ
+     */
+    @Override
+    public String japanize(String message, JapanizeType type) {
+        ConvertTask task = new ConvertTask(message, type, null, null, "%japanize");
+        if ( task.runSync() ) {
+            return task.getResult();
+        } else {
+            return message;
+        }
     }
 
     /**
