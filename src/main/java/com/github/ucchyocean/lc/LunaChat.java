@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.dynmap.bukkit.DynmapPlugin;
 
 /**
  * @author ucchy
@@ -31,6 +32,7 @@ public class LunaChat extends JavaPlugin {
     protected static HashMap<String, String> privateMessageMap;
 
     protected static Chat chatPlugin;
+    protected static DynmapPlugin dynmap;
 
     /**
      * プラグインが有効化されたときに呼び出されるメソッド
@@ -55,6 +57,12 @@ public class LunaChat extends JavaPlugin {
             if ( chatProvider != null ) {
                 chatPlugin = chatProvider.getProvider();
             }
+        }
+        
+        // Dynmap のロード
+        temp = getServer().getPluginManager().getPlugin("dynmap");
+        if ( temp != null && temp instanceof DynmapPlugin ) {
+            dynmap = (DynmapPlugin)temp;
         }
 
         // リスナーの登録

@@ -3,7 +3,7 @@ main: com.github.ucchyocean.lc.LunaChat
 version: 2.1.0
 author: ucchy
 description: チャンネルチャットプラグイン
-softdepend: [Vault]
+softdepend: [Vault, dynmap]
 commands:
   lunachat:
     description: lunachatのユーザーコマンド
