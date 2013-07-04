@@ -32,6 +32,7 @@ public class ChannelManager implements LunaChatAPI {
     private static final String LIST_FORMAT = Resources.get("listFormat");
 
     private static final String MOTD_FIRSTLINE = Resources.get("motdFirstLine");
+    private static final String MSG_BREAKUP = Resources.get("breakupMessage");
 
     private static final String FILE_NAME_DCHANNELS = "defaults.yml";
     private static final String FILE_NAME_TEMPLATES = "templates.yml";
@@ -170,7 +171,7 @@ public class ChannelManager implements LunaChatAPI {
             }
         }
 
-        items.add(Utility.replaceColorCode(LIST_FIRSTLINE));
+        items.add(LIST_FIRSTLINE);
         for ( String key : channels.keySet() ) {
             Channel channel = channels.get(key);
 
@@ -196,11 +197,10 @@ public class ChannelManager implements LunaChatAPI {
             int onlineNum = channel.getOnlineNum();
             int memberNum = channel.getTotalNum();
             String item = String.format(
-                    Utility.replaceColorCode(LIST_FORMAT),
-                    disp, onlineNum, memberNum, desc);
+                    LIST_FORMAT, disp, onlineNum, memberNum, desc);
             items.add(item);
         }
-        items.add(Utility.replaceColorCode(LIST_ENDLINE));
+        items.add(LIST_ENDLINE);
 
         return items;
     }
@@ -219,7 +219,7 @@ public class ChannelManager implements LunaChatAPI {
             dchannel = "";
         }
 
-        items.add(Utility.replaceColorCode(MOTD_FIRSTLINE));
+        items.add(MOTD_FIRSTLINE);
         for ( String key : channels.keySet() ) {
             Channel channel = channels.get(key);
             if ( !channel.getMembers().contains(playerName) &&
@@ -235,11 +235,10 @@ public class ChannelManager implements LunaChatAPI {
             int onlineNum = channel.getOnlineNum();
             int memberNum = channel.getTotalNum();
             String item = String.format(
-                    Utility.replaceColorCode(LIST_FORMAT),
-                    disp, onlineNum, memberNum, desc);
+                    LIST_FORMAT, disp, onlineNum, memberNum, desc);
             items.add(item);
         }
-        items.add(Utility.replaceColorCode(LIST_ENDLINE));
+        items.add(LIST_ENDLINE);
 
         return items;
     }
@@ -387,8 +386,7 @@ public class ChannelManager implements LunaChatAPI {
             channels.remove(channelName);
 
             // チャンネルのメンバーを強制解散させる
-            String message = String.format(Utility.replaceColorCode(
-                    Resources.get("breakupMessage")), channelName);
+            String message = String.format(MSG_BREAKUP, channelName);
             for ( String pname : channel.getMembers() ) {
                 Player player = LunaChat.getPlayerExact(pname);
                 if ( player != null ) {

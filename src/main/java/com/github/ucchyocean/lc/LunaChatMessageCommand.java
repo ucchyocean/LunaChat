@@ -95,13 +95,6 @@ public class LunaChatMessageCommand implements CommandExecutor {
             channel.addMember(invitedName);
         }
 
-        // デフォルトの発言先が異なる場合は、デフォルトの発言先にする
-//        Channel def = LunaChat.manager.getDefaultChannel(inviter.getName());
-//        if ( def == null || !cname.equals(def.getName()) ) {
-//            LunaChat.manager.setDefaultChannel(inviter.getName(), cname);
-//            sendResourceMessage(sender, PREINFO, "cmdmsgSet", cname);
-//        }
-
         // メッセージがあるなら送信する
         if ( message.trim().length() > 0 ) {
             channel.chat(inviter, message);
@@ -133,8 +126,7 @@ public class LunaChatMessageCommand implements CommandExecutor {
      */
     protected void sendResourceMessage(CommandSender sender, String pre,
             String key, Object... args) {
-        String msg = String.format(
-                Utility.replaceColorCode(pre + Resources.get(key)), args);
+        String msg = String.format(pre + Resources.get(key), args);
         sender.sendMessage(msg);
     }
 }

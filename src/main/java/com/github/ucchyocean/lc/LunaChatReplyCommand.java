@@ -48,22 +48,6 @@ public class LunaChatReplyCommand extends LunaChatMessageCommand {
 
         sendTellMessage(inviter, invitedName, message.toString());
 
-//        LunaChat.privateMessageMap.remove(inviter.getName());
-
-//        // デフォルトの発言先が異なる場合は、デフォルトの発言先にする
-//        Channel def = LunaChat.manager.getDefaultChannel(invited.getName());
-//        String cname = inviterName + ">" + invited.getName();
-//        if ( def == null || !cname.equals(def.getName()) ) {
-//            LunaChat.manager.setDefaultChannel(invited.getName(), cname);
-//            sendResourceMessage(sender, PREINFO, "cmdmsgSet", cname);
-//        }
-//
-//        // メッセージがあるなら送信する
-//        if ( message.toString().trim().length() > 0 ) {
-//            Channel channel = LunaChat.manager.getChannel(cname);
-//            channel.chat(invited, message.toString());
-//        }
-
         return true;
     }
 }

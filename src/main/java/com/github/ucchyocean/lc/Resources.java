@@ -55,7 +55,7 @@ public class Resources {
             initialize();
         }
         String def = defaultMessages.getString(key, "");
-        return resources.getString(key, def);
+        return Utility.replaceColorCode(resources.getString(key, def));
     }
 
     /**

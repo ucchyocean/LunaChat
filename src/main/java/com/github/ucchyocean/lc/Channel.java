@@ -59,6 +59,8 @@ public class Channel implements ConfigurationSerializable {
     private static final String MSG_KICKED = Resources.get("cmdmsgKicked");
     private static final String MSG_BANNED = Resources.get("cmdmsgBanned");
 
+    private static final String MSG_NO_RECIPIENT = Resources.get("messageNoRecipient");
+    
     private static final String KEY_NAME = "name";
     private static final String KEY_DESC = "desc";
     private static final String KEY_FORMAT = "format";
@@ -239,8 +241,7 @@ public class Channel implements ConfigurationSerializable {
                 banned.add(player.getName());
                 removeMember(player.getName());
                 String temp = PREINFO + NGWORD_PREFIX + MSG_BANNED;
-                String m = String.format(
-                        Utility.replaceColorCode(temp), name);
+                String m = String.format(temp, name);
                 player.sendMessage(m);
 
             } else if ( LunaChat.config.ngwordAction == NGWordAction.KICK ) {
@@ -248,8 +249,7 @@ public class Channel implements ConfigurationSerializable {
 
                 removeMember(player.getName());
                 String temp = PREINFO + NGWORD_PREFIX + MSG_KICKED;
-                String m = String.format(
-                        Utility.replaceColorCode(temp), name);
+                String m = String.format(temp, name);
                 player.sendMessage(m);
             }
         }
@@ -427,9 +427,14 @@ public class Channel implements ConfigurationSerializable {
         }
 
         // 送信する
-        // TODO: 受信者が自分以外いない場合は、メッセージを表示する
         for ( Player p : recipients ) {
             p.sendMessage(message);
+        }
+        // 受信者が自分以外いない場合は、メッセージを表示する
+        if ( recipients.size() == 0 || 
+                (recipients.size() == 1 && 
+                 recipients.get(0).getName().equals(player.getName()) ) ) {
+            player.sendMessage(MSG_NO_RECIPIENT);
         }
 
         // ロギング
@@ -443,11 +448,10 @@ public class Channel implements ConfigurationSerializable {
     protected ArrayList<String> getInfo() {
 
         ArrayList<String> info = new ArrayList<String>();
-        info.add(Utility.replaceColorCode(INFO_FIRSTLINE));
+        info.add(INFO_FIRSTLINE);
 
         info.add( String.format(
-                Utility.replaceColorCode(LIST_FORMAT),
-                name, getOnlineNum(), getTotalNum(), description) );
+                LIST_FORMAT, name, getOnlineNum(), getTotalNum(), description) );
 
         if ( !isBroadcastChannel() ) {
             // メンバーを、5人ごとに表示する
@@ -459,7 +463,7 @@ public class Channel implements ConfigurationSerializable {
                         info.add(buf.toString());
                         buf = new StringBuffer();
                     }
-                    buf.append(Utility.replaceColorCode(INFO_PREFIX));
+                    buf.append(INFO_PREFIX);
                 }
 
                 String name = members.get(i);
@@ -479,10 +483,10 @@ public class Channel implements ConfigurationSerializable {
 
         } else {
 
-            info.add(Utility.replaceColorCode(INFO_GLOBAL));
+            info.add(INFO_GLOBAL);
         }
 
-        info.add(Utility.replaceColorCode(LIST_ENDLINE));
+        info.add(LIST_ENDLINE);
 
         return info;
     }

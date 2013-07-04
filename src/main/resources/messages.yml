@@ -18,6 +18,8 @@ motdFirstLine: '&8----- &bあなたが参加中のチャット &8-----'
 infoPrefix: '&7[LC]'
 errorPrefix: '&4[LC]'
 
+messageNoRecipient: 'メッセージは誰にも届きませんでした。'
+
 cmdmsgJoin: 'チャンネル %s に参加しました。'
 cmdmsgSet: 'デフォルトの発言先を %s に設定しました。'
 cmdmsgLeave: 'チャンネル %s から退出しました。'
