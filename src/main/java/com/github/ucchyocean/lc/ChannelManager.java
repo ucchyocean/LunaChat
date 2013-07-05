@@ -22,8 +22,8 @@ import com.github.ucchyocean.lc.japanize.ConvertTask;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 
 /**
- * @author ucchy
  * チャンネルマネージャー
+ * @author ucchy
  */
 public class ChannelManager implements LunaChatAPI {
 

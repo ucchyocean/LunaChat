@@ -33,8 +33,8 @@ import com.github.ucchyocean.lc.japanize.ConvertTask;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 
 /**
- * @author ucchy
  * チャンネル
+ * @author ucchy
  */
 @SerializableAs("Channel")
 public class Channel implements ConfigurationSerializable {
@@ -60,7 +60,7 @@ public class Channel implements ConfigurationSerializable {
     private static final String MSG_BANNED = Resources.get("cmdmsgBanned");
 
     private static final String MSG_NO_RECIPIENT = Resources.get("messageNoRecipient");
-    
+
     private static final String KEY_NAME = "name";
     private static final String KEY_DESC = "desc";
     private static final String KEY_FORMAT = "format";
@@ -228,7 +228,7 @@ public class Channel implements ConfigurationSerializable {
 
         if ( !chated ) {
             // メッセージの送信
-            
+
             String msg = msgFormat.replace("%msg", maskedMessage);
             sendMessage(player, msg);
         }
@@ -346,6 +346,9 @@ public class Channel implements ConfigurationSerializable {
     }
 
     /**
+     * TODO: このメソッドはprivateに変更したい
+     * ※本メソッドはLunaChat内部での呼び出し用です。
+     * ※イベントが発生しないため、APIからは呼び出ししないでください。
      * 情報をチャンネルメンバーに流します。
      * @param message メッセージ
      */
@@ -371,14 +374,17 @@ public class Channel implements ConfigurationSerializable {
         // ロギング
         log(message);
     }
-    
+
     /**
+     * TODO: このメソッドはprivateに変更したい
+     * ※本メソッドはLunaChat内部での呼び出し用です。
+     * ※イベントが発生しないため、APIからは呼び出ししないでください。
      * メッセージを表示します。指定したプレイヤーの発言として処理されます。
      * @param player プレイヤー（ワールドチャット、範囲チャットの場合は必須です）
      * @param message メッセージ
      */
     public void sendMessage(Player player, String message) {
-        
+
         // 受信者を設定する
         ArrayList<Player> recipients = new ArrayList<Player>();
         if ( isBroadcastChannel() ) {
@@ -386,38 +392,44 @@ public class Channel implements ConfigurationSerializable {
 
             if ( isWorldRange ) {
                 World w = player.getWorld();
-                
+
                 if ( chatRange > 0 ) {
                     // 範囲チャット
-                    
+
                     for ( Player p : Bukkit.getOnlinePlayers() ) {
-                        if ( p.getWorld().equals(w) && 
+                        if ( p.getWorld().equals(w) &&
                                 player.getLocation().distance(p.getLocation()) <= chatRange ) {
                             recipients.add(p);
                         }
                     }
-                    
+
                 } else {
                     // ワールドチャット
-                    
+
                     for ( Player p : Bukkit.getOnlinePlayers() ) {
                         if ( p.getWorld().equals(w) ) {
                             recipients.add(p);
                         }
                     }
                 }
-                
+
             } else {
                 // 通常ブロードキャスト（全員へ送信）
-                
+
                 for ( Player p : Bukkit.getOnlinePlayers() ) {
                     recipients.add(p);
+                }
+
+                // 通常ブロードキャストなら、設定に応じてdynmapへ送信する
+                if ( LunaChat.config.sendBroadcastChannelChatToDynmap &&
+                        LunaChat.dynmap != null ) {
+                    LunaChat.dynmap.chat(player, message);
                 }
             }
 
         } else {
             // 通常チャンネル
-        
+
             for ( String name : members ) {
                 Player p = Bukkit.getPlayerExact(name);
                 if ( p != null ) {
@@ -431,8 +443,8 @@ public class Channel implements ConfigurationSerializable {
             p.sendMessage(message);
         }
         // 受信者が自分以外いない場合は、メッセージを表示する
-        if ( recipients.size() == 0 || 
-                (recipients.size() == 1 && 
+        if ( recipients.size() == 0 ||
+                (recipients.size() == 1 &&
                  recipients.get(0).getName().equals(player.getName()) ) ) {
             player.sendMessage(MSG_NO_RECIPIENT);
         }
@@ -532,9 +544,9 @@ public class Channel implements ConfigurationSerializable {
             if ( msg.contains("%prefix") || msg.contains("%suffix") ) {
                 String prefix = "";
                 String suffix = "";
-                if ( LunaChat.chatPlugin != null ) {
-                    prefix = LunaChat.chatPlugin.getPlayerPrefix(player);
-                    suffix = LunaChat.chatPlugin.getPlayerSuffix(player);
+                if ( LunaChat.vaultchat != null ) {
+                    prefix = LunaChat.vaultchat.getPlayerPrefix(player);
+                    suffix = LunaChat.vaultchat.getPlayerSuffix(player);
                 }
                 msg = msg.replace("%prefix", prefix);
                 msg = msg.replace("%suffix", suffix);

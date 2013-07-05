@@ -13,8 +13,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 
 /**
- * @author ucchy
  * LunaChatのコンフィグクラス
+ * @author ucchy
  */
 public class LunaChatConfig {
 
@@ -42,6 +42,10 @@ public class LunaChatConfig {
     /** サーバーに初参加したユーザーを参加させる、既定のチャンネル。
      *  参加させない場合は、から文字列 "" を指定すること。 */
     protected String globalChannel;
+
+    /** ブロードキャストチャンネルの発言内容を、dynmapに送信するかどうか。
+     *  dynmapがロードされていない場合は、この設定は無視されます（false扱い）。 */
+    protected boolean sendBroadcastChannelChatToDynmap;
 
     /** NGワードの設定 */
     protected List<String> ngword;
@@ -97,8 +101,10 @@ public class LunaChatConfig {
         zeroMemberRemove = config.getBoolean("zeroMemberRemove", false);
         showListOnJoin = config.getBoolean("showListOnJoin", false);
         createChannelOnJoinCommand =
-                config.getBoolean("createChannelOnJoinCommand", true);
+            config.getBoolean("createChannelOnJoinCommand", true);
         globalChannel = config.getString("globalChannel", "");
+        sendBroadcastChannelChatToDynmap =
+            config.getBoolean("sendBroadcastChannelChatToDynmap", true);
         ngword = config.getStringList("ngword");
         ngwordAction = NGWordAction.fromID(config.getString("ngwordAction", "mask"));
         japanizeType = JapanizeType.fromID(config.getString("japanizeType", "kana"));
@@ -312,5 +318,20 @@ public class LunaChatConfig {
      */
     public void setJapanizeLine2Format(String japanizeLine2Format) {
         this.japanizeLine2Format = japanizeLine2Format;
+    }
+
+    /**
+     * @return sendBroadcastChannelChatToDynmapを返す
+     */
+    public boolean isSendBroadcastChannelChatToDynmap() {
+        return sendBroadcastChannelChatToDynmap;
+    }
+
+    /**
+     * @param sendBroadcastChannelChatToDynmap sendBroadcastChannelChatToDynmapを設定する
+     */
+    public void setSendBroadcastChannelChatToDynmap(
+            boolean sendBroadcastChannelChatToDynmap) {
+        this.sendBroadcastChannelChatToDynmap = sendBroadcastChannelChatToDynmap;
     }
 }

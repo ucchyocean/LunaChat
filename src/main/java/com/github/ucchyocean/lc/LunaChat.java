@@ -8,19 +8,17 @@ package com.github.ucchyocean.lc;
 import java.io.File;
 import java.util.HashMap;
 
-import net.milkbowl.vault.Vault;
-import net.milkbowl.vault.chat.Chat;
-
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.dynmap.bukkit.DynmapPlugin;
+
+import com.github.ucchyocean.lc.bridge.DynmapBridge;
+import com.github.ucchyocean.lc.bridge.VaultChatBridge;
 
 /**
- * @author ucchy
  * LunaChat プラグイン
+ * @author ucchy
  */
 public class LunaChat extends JavaPlugin {
 
@@ -31,8 +29,8 @@ public class LunaChat extends JavaPlugin {
     protected static HashMap<String, String> inviterMap;
     protected static HashMap<String, String> privateMessageMap;
 
-    protected static Chat chatPlugin;
-    protected static DynmapPlugin dynmap;
+    protected static VaultChatBridge vaultchat;
+    protected static DynmapBridge dynmap;
 
     /**
      * プラグインが有効化されたときに呼び出されるメソッド
@@ -51,18 +49,14 @@ public class LunaChat extends JavaPlugin {
 
         // Chat Plugin のロード
         Plugin temp = getServer().getPluginManager().getPlugin("Vault");
-        if ( temp != null && temp instanceof Vault ) {
-            RegisteredServiceProvider<Chat> chatProvider =
-                    getServer().getServicesManager().getRegistration(Chat.class);
-            if ( chatProvider != null ) {
-                chatPlugin = chatProvider.getProvider();
-            }
+        if ( temp != null ) {
+            vaultchat = VaultChatBridge.load(temp);
         }
-        
+
         // Dynmap のロード
         temp = getServer().getPluginManager().getPlugin("dynmap");
-        if ( temp != null && temp instanceof DynmapPlugin ) {
-            dynmap = (DynmapPlugin)temp;
+        if ( temp != null ) {
+            dynmap = DynmapBridge.load(temp);
         }
 
         // リスナーの登録
