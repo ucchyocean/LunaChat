@@ -1,11 +1,11 @@
 LunaChat
 ========
 
-チャンネルチャットプラグイン for Lunasys<br />
+チャンネルチャットプラグイン for ShiroumiServer<br />
 <br />
-ダウンロードv2.0.2はこちらから<br />
-https://dl.dropboxusercontent.com/u/34781847/LunaChat_v202.zip
-
+ダウンロードv2.1.0はこちらから<br />
+https://github.com/ucchyocean/LunaChat/releases/v2.1.0<br />
+<br />
 コマンドリファレンスや、設定リファレンスは、こちらから<br />
 https://github.com/ucchyocean/LunaChat/wiki/Commands<br />
 https://github.com/ucchyocean/LunaChat/wiki/Config<br />
