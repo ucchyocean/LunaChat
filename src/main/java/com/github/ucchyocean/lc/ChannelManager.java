@@ -179,6 +179,11 @@ public class ChannelManager implements LunaChatAPI {
             if ( channel.getBanned().contains(playerName) ) {
                 continue;
             }
+            
+            // 個人チャットはリストに表示しない
+            if ( channel.isPersonalChat() ) {
+                continue;
+            }
 
             String disp = ChatColor.WHITE + channel.getName();
             if ( key.equals(dchannel.toLowerCase()) ) {
@@ -222,6 +227,18 @@ public class ChannelManager implements LunaChatAPI {
         items.add(MOTD_FIRSTLINE);
         for ( String key : channels.keySet() ) {
             Channel channel = channels.get(key);
+
+            // BANされているチャンネルは表示しない
+            if ( channel.getBanned().contains(playerName) ) {
+                continue;
+            }
+            
+            // 個人チャットはリストに表示しない
+            if ( channel.isPersonalChat() ) {
+                continue;
+            }
+            
+            // 参加していないチャンネルは、グローバルチャンネルを除き表示しない
             if ( !channel.getMembers().contains(playerName) &&
                     !channel.getName().equals(LunaChat.config.globalChannel) ) {
                 continue;

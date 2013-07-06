@@ -152,14 +152,14 @@ public class Channel implements ConfigurationSerializable {
     /**
      * @return 1:1チャットかどうか
      */
-    private boolean isPersonalChat() {
+    public boolean isPersonalChat() {
         return name.contains(">");
     }
 
     /**
      * @return ブロードキャストチャンネルかどうか
      */
-    private boolean isBroadcastChannel() {
+    public boolean isBroadcastChannel() {
         return (name.equals(LunaChat.config.globalChannel) || broadcastChannel);
     }
 
