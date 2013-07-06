@@ -4,6 +4,7 @@ defaultFormatForPersonalChat: '&7[%ch] %msg'
 joinMessage: '&a[%ch]&7%username さんがチャンネルチャットに参加しました。'
 quitMessage: '&a[%ch]&7%username さんがチャンネルチャットから退出しました。'
 breakupMessage: '&a[%s]&7チャンネルチャットが削除されました。'
+noRecipientMessage: '&a[%ch]&7あなたの発言は、誰にも届きませんでした。'
 
 listFirstLine: '&8---------- &bチャンネルリスト &8----------'
 listEndLine: '&8----------------------------------'
@@ -17,8 +18,6 @@ motdFirstLine: '&8----- &bあなたが参加中のチャット &8-----'
 
 infoPrefix: '&7[LC]'
 errorPrefix: '&4[LC]'
-
-messageNoRecipient: 'メッセージは誰にも届きませんでした。'
 
 cmdmsgJoin: 'チャンネル %s に参加しました。'
 cmdmsgSet: 'デフォルトの発言先を %s に設定しました。'
@@ -81,6 +80,7 @@ errmsgToolongDescription: '説明文は %d 文字以下にしてください。'
 errmsgToolongPassword: 'パスワードは %d 文字以下にしてください。'
 errmsgInvalidBooleanOption: '%s は true/false で指定してください。'
 errmsgInvalidRangeOption: 'range に正しくない値が指定されました。'
+errmsgCannotOffGlobalBroadcast: 'このチャンネルはグローバルチャンネルのため、ブロードキャストをオフにできません。'
 
 ngwordPrefix: 'NGワード発言により、'
 

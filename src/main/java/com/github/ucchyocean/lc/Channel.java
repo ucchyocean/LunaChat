@@ -59,7 +59,7 @@ public class Channel implements ConfigurationSerializable {
     private static final String MSG_KICKED = Resources.get("cmdmsgKicked");
     private static final String MSG_BANNED = Resources.get("cmdmsgBanned");
 
-    private static final String MSG_NO_RECIPIENT = Resources.get("messageNoRecipient");
+    private static final String MSG_NO_RECIPIENT = Resources.get("noRecipientMessage");
 
     private static final String KEY_NAME = "name";
     private static final String KEY_DESC = "desc";
@@ -160,7 +160,14 @@ public class Channel implements ConfigurationSerializable {
      * @return ブロードキャストチャンネルかどうか
      */
     public boolean isBroadcastChannel() {
-        return (name.equals(LunaChat.config.globalChannel) || broadcastChannel);
+        return (isGlobalChannel() || broadcastChannel);
+    }
+    
+    /**
+     * @return グローバルチャンネルかどうか
+     */
+    public boolean isGlobalChannel() {
+        return name.equals(LunaChat.config.globalChannel);
     }
 
     /**
@@ -448,7 +455,8 @@ public class Channel implements ConfigurationSerializable {
         if ( recipients.size() == 0 ||
                 (recipients.size() == 1 &&
                  recipients.get(0).getName().equals(player.getName()) ) ) {
-            player.sendMessage(MSG_NO_RECIPIENT);
+            String msg = replaceKeywords(MSG_NO_RECIPIENT, null);
+            player.sendMessage(msg);
         }
 
         // ロギング

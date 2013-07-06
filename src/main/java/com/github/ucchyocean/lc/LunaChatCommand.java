@@ -1041,10 +1041,15 @@ public class LunaChatCommand implements CommandExecutor {
             String value = options.get("broadcast");
 
             if ( value.equals("") || value.equalsIgnoreCase("false") ) {
-                channel.setBroadcast(false);
-                sendResourceMessage(sender, PREINFO,
-                        "cmdmsgOption", "broadcast", "false");
-                setOption = true;
+                if ( channel.isGlobalChannel() ) {
+                    sendResourceMessage(sender, PREERR,
+                            "errmsgCannotOffGlobalBroadcast");
+                } else {
+                    channel.setBroadcast(false);
+                    sendResourceMessage(sender, PREINFO,
+                            "cmdmsgOption", "broadcast", "false");
+                    setOption = true;
+                }
             } else if ( value.equalsIgnoreCase("true") ) {
                 channel.setBroadcast(true);
                 sendResourceMessage(sender, PREINFO,
