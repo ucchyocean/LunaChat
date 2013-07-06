@@ -198,7 +198,15 @@ public class Channel implements ConfigurationSerializable {
             return;
         }
         msgFormat = event.getMessageFormat();
+        maskedMessage = event.getNgMaskedMessage();
 
+        // 通常ブロードキャストなら、設定に応じてdynmapへ送信する
+        if ( LunaChat.config.sendBroadcastChannelChatToDynmap &&
+                LunaChat.dynmap != null &&
+                isBroadcastChannel() && !isWorldRange ) {
+            LunaChat.dynmap.chat(player, maskedMessage);
+        }
+        
         // Japanize変換と、発言処理
         boolean chated = false;
         if ( LunaChat.config.getJapanizeType() != JapanizeType.NONE ) {
@@ -418,12 +426,6 @@ public class Channel implements ConfigurationSerializable {
 
                 for ( Player p : Bukkit.getOnlinePlayers() ) {
                     recipients.add(p);
-                }
-
-                // 通常ブロードキャストなら、設定に応じてdynmapへ送信する
-                if ( LunaChat.config.sendBroadcastChannelChatToDynmap &&
-                        LunaChat.dynmap != null ) {
-                    LunaChat.dynmap.chat(player, message);
                 }
             }
 

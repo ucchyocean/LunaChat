@@ -36,8 +36,12 @@ public class LunaChatChannelChatEvent extends LunaChatBaseEvent {
     public String getMessageFormat() {
         return messageFormat;
     }
+    
+    public void setNgMaskedMessage(String ngMaskedMessage) {
+        this.ngMaskedMessage = ngMaskedMessage;
+    }
 
-    public String setMessageFormat(String message) {
-        return messageFormat;
+    public void setMessageFormat(String messageFormat) {
+        this.messageFormat = messageFormat;
     }
 }
