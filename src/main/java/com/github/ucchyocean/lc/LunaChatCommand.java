@@ -135,7 +135,7 @@ public class LunaChatCommand implements CommandExecutor {
             sendResourceMessage(sender, PREERR, "errmsgCommand");
             return true;
         }
-
+        
         // チャンネルが存在するかどうかをチェックする
         if ( !LunaChat.manager.isExistChannel(channelName) ) {
             if (LunaChat.config.globalChannel.equals("") &&
@@ -182,6 +182,12 @@ public class LunaChatCommand implements CommandExecutor {
         // BANされていないか確認する
         if (channel.getBanned().contains(player.getName())) {
             sendResourceMessage(sender, PREERR, "errmsgBanned");
+            return true;
+        }
+        
+        // 個人チャットの場合はエラーにする
+        if (channel.isPersonalChat()) {
+            sendResourceMessage(sender, PREERR, "errmsgCannotJoinPersonal");
             return true;
         }
 

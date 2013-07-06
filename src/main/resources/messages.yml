@@ -57,6 +57,7 @@ errmsgInvitedAlreadyExist: '招待された %s さんは、既にチャンネル
 errmsgInvitedAlreadyJoin: 'あなたは既にチャンネルに参加しています。'
 errmsgNoJoin: 'あなたは現在チャンネルに参加していません。'
 errmsgBanned: 'あなたはこのチャンネルからBANされています。'
+errmsgCannotJoinPersonal: '個人チャットチャンネルには参加できません。'
 errmsgNotModerator: 'あなたはモデレーターではないため、そのコマンドを実行できません。'
 errmsgNotBanned: '指定されたプレイヤーはBANリストに含まれていません。'
 errmsgInvalidOptions: '有効なオプション指定が1つもありませんでした。'
