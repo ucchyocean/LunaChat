@@ -100,7 +100,20 @@ public interface LunaChatAPI {
      * Japanize変換を行う
      * @param message 変換するメッセージ
      * @param type 変換タイプ
-     * @return 変換後のメッセージ
+     * @return 変換後のメッセージ、ただしイベントでキャンセルされた場合はnullが返されるので注意
      */
     public String japanize(String message, JapanizeType type);
+    
+    /**
+     * 指定された名前がチャンネル名として使用可能かどうかを判定する<br/>
+     * （あくまで、規約上として使用できるかどうかである。）
+     * @param name 名前
+     * @return チャンネル名として使用可能かどうか
+     */
+    public boolean checkForChannelName(String name);
+
+    /**
+     * LunaChatの全データを再読み込みする
+     */
+    public void reloadAllData();
 }

@@ -15,6 +15,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 /**
+ * ひらがなのみの文章を、IMEを使用して変換します。
+ * 使用される変換候補は全て第1候補のため、正しくない結果が含まれることもよくあります。
  * @author ucchy
  */
 public class IMEConverter {
@@ -24,14 +26,25 @@ public class IMEConverter {
     private static final String GOOGLE_IME_URL =
         "http://www.google.com/transliterate?langpair=ja-Hira|ja&text=";
 
-    protected static String convByGoogleIME(String org) {
+    /**
+     * GoogleIMEを使って変換する
+     * @param org 変換元
+     * @return 変換後
+     */
+    public static String convByGoogleIME(String org) {
         return conv(org, true);
     }
 
-    protected static String convBySocialIME(String org) {
+    /**
+     * SocialIMEを使って変換する
+     * @param org 変換元
+     * @return 変換後
+     */
+    public static String convBySocialIME(String org) {
         return conv(org, false);
     }
 
+    // 変換の実行
     private static String conv(String org, boolean isGoogleIME) {
 
         HttpURLConnection urlconn = null;

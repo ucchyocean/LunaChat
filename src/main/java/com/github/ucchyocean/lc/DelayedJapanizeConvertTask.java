@@ -3,21 +3,22 @@
  * @license    GPLv3
  * @copyright  Copyright ucchy 2013
  */
-package com.github.ucchyocean.lc.japanize;
+package com.github.ucchyocean.lc;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.github.ucchyocean.lc.Channel;
-import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.event.LunaChatPostJapanizeEvent;
+import com.github.ucchyocean.lc.japanize.IMEConverter;
+import com.github.ucchyocean.lc.japanize.JapanizeType;
+import com.github.ucchyocean.lc.japanize.KanaConverter;
 
 /**
  * Japanize変換を実行して、実行後に発言を行うタスク
  * @author ucchy
  */
-public class ConvertTask extends BukkitRunnable {
+public class DelayedJapanizeConvertTask extends BukkitRunnable {
 
     private String org;
     private JapanizeType type;
@@ -34,7 +35,7 @@ public class ConvertTask extends BukkitRunnable {
      * @param player 発言したプレイヤー
      * @param format 変換後に発言するときの、発言フォーマット
      */
-    public ConvertTask(String org, JapanizeType type, Channel channel, 
+    public DelayedJapanizeConvertTask(String org, JapanizeType type, Channel channel, 
             Player player, String format) {
         this.org = org;
         this.type = type;
@@ -64,7 +65,7 @@ public class ConvertTask extends BukkitRunnable {
      * 同期処理で変換を行います。結果は getResult() で取得してください。
      * @return 同期処理を実行したかどうか（イベントでキャンセルされた場合はfalseになります）
      */
-    public boolean runSync() {
+    private boolean runSync() {
 
         // カナ変換
         String japanized = KanaConverter.conv(org);
@@ -92,14 +93,6 @@ public class ConvertTask extends BukkitRunnable {
         result = Utility.replaceColorCode(result);
 
         return true;
-    }
-
-    /**
-     * 変換結果を取得します。
-     * @return 変換結果
-     */
-    public String getResult() {
-        return result;
     }
 }
 

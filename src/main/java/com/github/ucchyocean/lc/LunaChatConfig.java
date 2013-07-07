@@ -19,60 +19,60 @@ import com.github.ucchyocean.lc.japanize.JapanizeType;
 public class LunaChatConfig {
 
     /** チャンネルチャットに入っていない人の発言を、グローバルとして扱うかどうか */
-    protected boolean noJoinAsGlobal;
+    private boolean noJoinAsGlobal;
 
     /** チャンネルチャットの発言内容を、ログに残すかどうか */
-    protected boolean loggingChat;
+    private boolean loggingChat;
 
     /** チャンネルチャットの発言内容を、コンソールに表示するかどうか */
-    protected boolean displayChatOnConsole;
+    private boolean displayChatOnConsole;
 
     /** グローバルマーカー  これが発言の頭に入っている場合は、強制的にグローバル発言になる */
-    protected String globalMarker;
+    private String globalMarker;
 
     /** 全てのメンバーが退出したときに、チャンネルを削除するかどうか */
-    protected boolean zeroMemberRemove;
+    private boolean zeroMemberRemove;
 
     /** ログイン時に、参加中チャンネルを表示するかどうか */
-    protected boolean showListOnJoin;
+    private boolean showListOnJoin;
 
     /** /ch join コマンドで存在しないチャンネルを指定したときに、チャンネルを新規作成して入室するかどうか */
-    protected boolean createChannelOnJoinCommand;
+    private boolean createChannelOnJoinCommand;
 
     /** サーバーに初参加したユーザーを参加させる、既定のチャンネル。
      *  参加させない場合は、から文字列 "" を指定すること。 */
-    protected String globalChannel;
+    private String globalChannel;
 
     /** ブロードキャストチャンネルの発言内容を、dynmapに送信するかどうか。
      *  dynmapがロードされていない場合は、この設定は無視されます（false扱い）。 */
-    protected boolean sendBroadcastChannelChatToDynmap;
+    private boolean sendBroadcastChannelChatToDynmap;
 
     /** NGワードの設定 */
-    protected List<String> ngword;
+    private List<String> ngword;
 
     /** NGワードを発言した人に対して実行するアクション<br>
      *  mask = マスクするのみ<br>
      *  kick = マスクしてチャンネルからキックする<br>
      *  ban = マスクしてチャンネルからBANする */
-    protected NGWordAction ngwordAction;
+    private NGWordAction ngwordAction;
 
     /** Japanize変換のタイプ
      *  none = 日本語変換をしない
      *  kana = カナ変換のみする
      *  googleime = カナ変換後、GoogleIMEで漢字変換する
      *  socialime = カナ変換後、SocialIMEで漢字変換する */
-    protected JapanizeType japanizeType;
+    private JapanizeType japanizeType;
 
     /** Japanize変換の1行表示と2行表示の切り替え
      *  1 = 1行表示
      *  2 = 2行表示 */
-    protected int japanizeDisplayLine;
+    private int japanizeDisplayLine;
 
     /** Japanize変換の1行表示時のフォーマット */
-    protected String japanizeLine1Format;
+    private String japanizeLine1Format;
 
     /** Japanize変換の2行表示時の2行目のフォーマット */
-    protected String japanizeLine2Format;
+    private String japanizeLine2Format;
 
     /**
      * コンストラクタ

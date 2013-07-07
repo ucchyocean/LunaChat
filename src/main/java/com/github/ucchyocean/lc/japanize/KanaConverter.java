@@ -72,7 +72,7 @@ public class KanaConverter {
      * @param org 変換元文字列
      * @return 変換後の文字列
      */
-    protected static String conv(String org) {
+    public static String conv(String org) {
 
         String last = "";
         StringBuilder line = new StringBuilder();

@@ -3,11 +3,13 @@
  * @license    GPLv3
  * @copyright  Copyright ucchy 2013
  */
-package com.github.ucchyocean.lc;
+package com.github.ucchyocean.lc.command;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import com.github.ucchyocean.lc.Resources;
 
 /**
  * @author ucchy
@@ -40,7 +42,7 @@ public class LunaChatReplyCommand extends LunaChatMessageCommand {
         }
 
         // 招待した人を履歴から取得する
-        String invitedName = LunaChat.privateMessageMap.get(inviter.getName());
+        String invitedName = DataMaps.privateMessageMap.get(inviter.getName());
         if ( invitedName == null ) {
             sendResourceMessage(sender, PREERR, "errmsgNotfoundPM");
             return true;

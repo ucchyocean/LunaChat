@@ -6,15 +6,16 @@
 package com.github.ucchyocean.lc;
 
 import java.io.File;
-import java.util.HashMap;
 
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.ucchyocean.lc.bridge.DynmapBridge;
 import com.github.ucchyocean.lc.bridge.VaultChatBridge;
+import com.github.ucchyocean.lc.command.LunaChatCommand;
+import com.github.ucchyocean.lc.command.LunaChatMessageCommand;
+import com.github.ucchyocean.lc.command.LunaChatReplyCommand;
 
 /**
  * LunaChat プラグイン
@@ -22,12 +23,9 @@ import com.github.ucchyocean.lc.bridge.VaultChatBridge;
  */
 public class LunaChat extends JavaPlugin {
 
-    protected static LunaChat instance;
+    public static LunaChat instance;
     protected static LunaChatConfig config;
     protected static ChannelManager manager;
-    protected static HashMap<String, String> inviteMap;
-    protected static HashMap<String, String> inviterMap;
-    protected static HashMap<String, String> privateMessageMap;
 
     protected static VaultChatBridge vaultchat;
     protected static DynmapBridge dynmap;
@@ -43,9 +41,6 @@ public class LunaChat extends JavaPlugin {
         instance = this;
         manager = new ChannelManager();
         config = new LunaChatConfig();
-        inviteMap = new HashMap<String, String>();
-        inviterMap = new HashMap<String, String>();
-        privateMessageMap = new HashMap<String, String>();
 
         // Chat Plugin のロード
         Plugin temp = getServer().getPluginManager().getPlugin("Vault");
@@ -77,23 +72,6 @@ public class LunaChat extends JavaPlugin {
      */
     protected static File getPluginJarFile() {
         return instance.getFile();
-    }
-
-    /**
-     * ログにメッセージを出力する
-     * @param message メッセージ
-     */
-    protected static void log(String message) {
-        instance.getLogger().info(message);
-    }
-
-    /**
-     * Playerを取得する
-     * @param name プレイヤー名
-     * @return Player
-     */
-    protected static Player getPlayerExact(String name) {
-        return instance.getServer().getPlayerExact(name);
     }
 
     /**

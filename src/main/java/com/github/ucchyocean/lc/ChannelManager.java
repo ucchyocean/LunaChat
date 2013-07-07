@@ -18,8 +18,10 @@ import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.event.LunaChatChannelCreateEvent;
 import com.github.ucchyocean.lc.event.LunaChatChannelRemoveEvent;
-import com.github.ucchyocean.lc.japanize.ConvertTask;
+import com.github.ucchyocean.lc.event.LunaChatPostJapanizeEvent;
+import com.github.ucchyocean.lc.japanize.IMEConverter;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
+import com.github.ucchyocean.lc.japanize.KanaConverter;
 
 /**
  * チャンネルマネージャー
@@ -47,13 +49,14 @@ public class ChannelManager implements LunaChatAPI {
      * コンストラクタ
      */
     public ChannelManager() {
-        loadAllData();
+        reloadAllData();
     }
 
     /**
      * すべて読み込みする
      */
-    protected void loadAllData() {
+    @Override
+    public void reloadAllData() {
 
         // デフォルトチャンネル設定のロード
         fileDefaults = new File(
@@ -101,6 +104,11 @@ public class ChannelManager implements LunaChatAPI {
 
         // チャンネル設定のロード
         channels = Channel.loadAllChannels();
+        
+        // コンフィグのリロード
+        if ( LunaChat.config != null ) {
+            LunaChat.config.reloadConfig();
+        }
     }
 
     /**
@@ -190,7 +198,7 @@ public class ChannelManager implements LunaChatAPI {
                 disp = ChatColor.RED + channel.getName();
             }
             if ( player != null && !channel.getMembers().contains(playerName) &&
-                    !channel.getName().equals(LunaChat.config.globalChannel) ) {
+                    !channel.isGlobalChannel() ) {
 
                 // 未参加で visible=false のチャンネルは表示しない
                 if ( !channel.isVisible() ) {
@@ -240,7 +248,7 @@ public class ChannelManager implements LunaChatAPI {
             
             // 参加していないチャンネルは、グローバルチャンネルを除き表示しない
             if ( !channel.getMembers().contains(playerName) &&
-                    !channel.getName().equals(LunaChat.config.globalChannel) ) {
+                    !channel.isGlobalChannel() ) {
                 continue;
             }
 
@@ -294,7 +302,7 @@ public class ChannelManager implements LunaChatAPI {
         for ( String key : channels.keySet() ) {
             Channel channel = channels.get(key);
             if ( channel.getMembers().contains(playerName) ||
-                    key.equals(LunaChat.config.globalChannel) ) {
+                    channel.isGlobalChannel() ) {
                 result.add(channel);
             }
         }
@@ -405,7 +413,7 @@ public class ChannelManager implements LunaChatAPI {
             // チャンネルのメンバーを強制解散させる
             String message = String.format(MSG_BREAKUP, channelName);
             for ( String pname : channel.getMembers() ) {
-                Player player = LunaChat.getPlayerExact(pname);
+                Player player = Bukkit.getPlayerExact(pname);
                 if ( player != null ) {
                     player.sendMessage(message);
                 }
@@ -453,16 +461,35 @@ public class ChannelManager implements LunaChatAPI {
      * Japanize変換を行う
      * @param message 変換するメッセージ
      * @param type 変換タイプ
-     * @return 変換後のメッセージ
+     * @return 変換後のメッセージ、ただしイベントでキャンセルされた場合はnullが返されるので注意
      */
     @Override
     public String japanize(String message, JapanizeType type) {
-        ConvertTask task = new ConvertTask(message, type, null, null, "%japanize");
-        if ( task.runSync() ) {
-            return task.getResult();
-        } else {
+
+        if ( type == JapanizeType.NONE ) {
             return message;
         }
+        
+        // カナ変換
+        String japanized = KanaConverter.conv(message);
+
+        // IME変換
+        if ( type == JapanizeType.GOOGLE_IME ) {
+            japanized = IMEConverter.convByGoogleIME(japanized);
+        } else if ( type == JapanizeType.SOCIAL_IME ) {
+            japanized = IMEConverter.convBySocialIME(japanized);
+        }
+
+        // イベントコール
+        LunaChatPostJapanizeEvent event =
+                new LunaChatPostJapanizeEvent("", message, japanized);
+        Bukkit.getServer().getPluginManager().callEvent(event);
+        if ( event.isCancelled() ) {
+            return null;
+        }
+        japanized = event.getJapanized();
+
+        return japanized;
     }
 
     /**
@@ -470,7 +497,8 @@ public class ChannelManager implements LunaChatAPI {
      * @param name 名前
      * @return チャンネル名として使用可能かどうか
      */
-    protected boolean checkForChannelName(String name) {
+    @Override
+    public boolean checkForChannelName(String name) {
         return name.matches("[0-9a-zA-Z\\-_]{1,20}");
     }
 }

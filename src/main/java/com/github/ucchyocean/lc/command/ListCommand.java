@@ -1,0 +1,148 @@
+/*
+ * @author     ucchy
+ * @license    LGPLv3
+ * @copyright  Copyright ucchy 2013
+ */
+package com.github.ucchyocean.lc.command;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import com.github.ucchyocean.lc.Channel;
+import com.github.ucchyocean.lc.Resources;
+
+/**
+ * listコマンドの実行クラス
+ * @author ucchy
+ */
+public class ListCommand extends SubCommandAbst {
+
+    private static final String LIST_FIRSTLINE = Resources.get("listFirstLine");
+    private static final String LIST_ENDLINE = Resources.get("listEndLine");
+    private static final String LIST_FORMAT = Resources.get("listFormat");
+
+    private static final String COMMAND_NAME = "list";
+    private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
+    private static final String USAGE_KEY = "usageList";
+    
+    /**
+     * コマンドを取得します。
+     * @return コマンド
+     * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandName()
+     */
+    @Override
+    public String getCommandName() {
+        return COMMAND_NAME;
+    }
+
+    /**
+     * パーミッションノードを取得します。
+     * @return パーミッションノード
+     * @see com.github.ucchyocean.lc.command.SubCommandAbst#getPermissionNode()
+     */
+    @Override
+    public String getPermissionNode() {
+        return PERMISSION_NODE;
+    }
+
+    /**
+     * 使用方法に関するメッセージをsenderに送信します。
+     * @param sender コマンド実行者
+     * @param label 実行ラベル
+     * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage()
+     */
+    @Override
+    public void sendUsageMessage(
+            CommandSender sender, String label) {
+        sendResourceMessage(sender, "", USAGE_KEY, label);
+    }
+
+    /**
+     * コマンドを実行します。
+     * @param sender コマンド実行者
+     * @param label 実行ラベル
+     * @param args 実行時の引数
+     * @return コマンドが実行されたかどうか
+     * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(java.lang.String[])
+     */
+    @Override
+    public boolean runCommand(
+            CommandSender sender, String label, String[] args) {
+
+        Player player = null;
+        if (sender instanceof Player) {
+            player = (Player) sender;
+        }
+
+        // リストを取得して表示する
+        ArrayList<String> list = getList(player);
+        for (String msg : list) {
+            sender.sendMessage(msg);
+        }
+        return true;
+    }
+    
+
+    /**
+     * リスト表示用のリストを返す
+     * @param player プレイヤー、指定しない場合はnullにする
+     * @return リスト
+     */
+    private ArrayList<String> getList(Player player) {
+
+        ArrayList<String> items = new ArrayList<String>();
+        String dchannel = "";
+        String playerName = "";
+        if ( player != null ) {
+            playerName = player.getName();
+            Channel def = api.getDefaultChannel(playerName);
+            if ( def == null ) {
+                dchannel = "";
+            } else {
+                dchannel = def.getName();
+            }
+        }
+        Collection<Channel> channels = api.getChannels();
+
+         items.add(LIST_FIRSTLINE);
+        for ( Channel channel : channels ) {
+
+            // BANされているチャンネルは表示しない
+            if ( channel.getBanned().contains(playerName) ) {
+                continue;
+            }
+            
+            // 個人チャットはリストに表示しない
+            if ( channel.isPersonalChat() ) {
+                continue;
+            }
+
+            String disp = ChatColor.WHITE + channel.getName();
+            if ( channel.getName().equalsIgnoreCase(dchannel) ) {
+                disp = ChatColor.RED + channel.getName();
+            }
+            if ( player != null && !channel.getMembers().contains(playerName) &&
+                    !channel.isGlobalChannel() ) {
+
+                // 未参加で visible=false のチャンネルは表示しない
+                if ( !channel.isVisible() ) {
+                    continue;
+                }
+                disp = ChatColor.GRAY + channel.getName();
+            }
+            String desc = channel.getDescription();
+            int onlineNum = channel.getOnlineNum();
+            int memberNum = channel.getTotalNum();
+            String item = String.format(
+                    LIST_FORMAT, disp, onlineNum, memberNum, desc);
+            items.add(item);
+        }
+        items.add(LIST_ENDLINE);
+
+        return items;
+    }
+}

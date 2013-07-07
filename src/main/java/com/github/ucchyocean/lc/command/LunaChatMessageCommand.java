@@ -3,12 +3,18 @@
  * @license    GPLv3
  * @copyright  Copyright ucchy 2013
  */
-package com.github.ucchyocean.lc;
+package com.github.ucchyocean.lc.command;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import com.github.ucchyocean.lc.Channel;
+import com.github.ucchyocean.lc.LunaChat;
+import com.github.ucchyocean.lc.LunaChatAPI;
+import com.github.ucchyocean.lc.Resources;
 
 
 
@@ -77,7 +83,7 @@ public class LunaChatMessageCommand implements CommandExecutor {
         }
 
         // 招待相手が存在するかどうかを確認する
-        Player invited = LunaChat.getPlayerExact(invitedName);
+        Player invited = Bukkit.getPlayerExact(invitedName);
         if (invited == null) {
             sendResourceMessage(inviter, PREERR,
                     "errmsgNotfoundPlayer", invitedName);
@@ -85,11 +91,12 @@ public class LunaChatMessageCommand implements CommandExecutor {
         }
 
         // チャンネルが存在するかどうかをチェックする
+        LunaChatAPI api = LunaChat.instance.getLunaChatAPI();
         String cname = inviter.getName() + ">" + invitedName;
-        Channel channel = LunaChat.manager.getChannel(cname);
+        Channel channel = api.getChannel(cname);
         if ( channel == null ) {
             // チャンネルを作成して、送信者、受信者をメンバーにする
-            channel = LunaChat.manager.createChannel(cname);
+            channel = api.createChannel(cname);
             channel.setVisible(false);
             channel.addMember(inviter.getName());
             channel.addMember(invitedName);
@@ -101,7 +108,7 @@ public class LunaChatMessageCommand implements CommandExecutor {
         }
 
         // 送信履歴を残す
-        LunaChat.privateMessageMap.put(invitedName, inviter.getName());
+        DataMaps.privateMessageMap.put(invitedName, inviter.getName());
 
         return;
     }

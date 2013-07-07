@@ -29,7 +29,6 @@ import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.event.LunaChatChannelChatEvent;
 import com.github.ucchyocean.lc.event.LunaChatChannelMemberChangedEvent;
-import com.github.ucchyocean.lc.japanize.ConvertTask;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 
 /**
@@ -167,7 +166,7 @@ public class Channel implements ConfigurationSerializable {
      * @return グローバルチャンネルかどうか
      */
     public boolean isGlobalChannel() {
-        return name.equals(LunaChat.config.globalChannel);
+        return name.equals(LunaChat.config.getGlobalChannel());
     }
 
     /**
@@ -182,7 +181,7 @@ public class Channel implements ConfigurationSerializable {
         // NGワード発言をしたかどうかのチェックとマスク
         boolean isNG = false;
         String maskedMessage = message;
-        for ( String word : LunaChat.config.ngword ) {
+        for ( String word : LunaChat.config.getNgword() ) {
             if ( maskedMessage.contains(word) ) {
                 maskedMessage = maskedMessage.replace(
                         word, Utility.getAstariskString(word.length()));
@@ -208,7 +207,7 @@ public class Channel implements ConfigurationSerializable {
         maskedMessage = event.getNgMaskedMessage();
 
         // 通常ブロードキャストなら、設定に応じてdynmapへ送信する
-        if ( LunaChat.config.sendBroadcastChannelChatToDynmap &&
+        if ( LunaChat.config.isSendBroadcastChannelChatToDynmap() &&
                 LunaChat.dynmap != null &&
                 isBroadcastChannel() && !isWorldRange ) {
             LunaChat.dynmap.chat(player, maskedMessage);
@@ -220,21 +219,21 @@ public class Channel implements ConfigurationSerializable {
             // 2byteコードを含まない場合にのみ、処理を行う
             if ( message.getBytes().length == message.length() ) {
 
-                int lineType = LunaChat.config.japanizeDisplayLine;
+                int lineType = LunaChat.config.getJapanizeDisplayLine();
                 String lineFormat;
                 String taskFormat;
                 if ( lineType == 1 ) {
-                    lineFormat = LunaChat.config.japanizeLine1Format;
+                    lineFormat = LunaChat.config.getJapanizeLine1Format();
                     taskFormat = msgFormat.replace("%msg", lineFormat);
                     chated = true;
                 } else {
-                    lineFormat = LunaChat.config.japanizeLine2Format;
+                    lineFormat = LunaChat.config.getJapanizeLine2Format();
                     taskFormat = lineFormat;
                 }
 
                 // タスクを作成して実行する
                 // 発言処理は、タスクが完了しだい非同期で行われる
-                ConvertTask task = new ConvertTask(maskedMessage,
+                DelayedJapanizeConvertTask task = new DelayedJapanizeConvertTask(maskedMessage,
                         LunaChat.config.getJapanizeType(),
                         this, player, taskFormat);
                 Bukkit.getScheduler().runTask(LunaChat.instance, task);
@@ -250,7 +249,7 @@ public class Channel implements ConfigurationSerializable {
 
         // NGワード発言者に、NGワードアクションを実行する
         if ( isNG && player != null ) {
-            if ( LunaChat.config.ngwordAction == NGWordAction.BAN ) {
+            if ( LunaChat.config.getNgwordAction() == NGWordAction.BAN ) {
                 // BANする
 
                 banned.add(player.getName());
@@ -259,7 +258,7 @@ public class Channel implements ConfigurationSerializable {
                 String m = String.format(temp, name);
                 player.sendMessage(m);
 
-            } else if ( LunaChat.config.ngwordAction == NGWordAction.KICK ) {
+            } else if ( LunaChat.config.getNgwordAction() == NGWordAction.KICK ) {
                 // キックする
 
                 removeMember(player.getName());
@@ -320,7 +319,7 @@ public class Channel implements ConfigurationSerializable {
         if ( members.contains(name) ) {
             members.remove(name);
             sendJoinQuitMessage(false, name);
-            if ( LunaChat.config.zeroMemberRemove && members.size() <= 0 ) {
+            if ( LunaChat.config.isZeroMemberRemove() && members.size() <= 0 ) {
                 LunaChat.manager.removeChannel(this.name);
                 return;
             } else {
@@ -354,20 +353,17 @@ public class Channel implements ConfigurationSerializable {
         }
 
         // キーワード置き換え
-        Player p = LunaChat.getPlayerExact(player);
+        Player p = Bukkit.getPlayerExact(player);
         msg = replaceKeywords(msg, p);
 
         sendInformation(msg);
     }
 
     /**
-     * TODO: このメソッドはprivateに変更したい
-     * ※本メソッドはLunaChat内部での呼び出し用です。
-     * ※イベントが発生しないため、APIからは呼び出ししないでください。
      * 情報をチャンネルメンバーに流します。
      * @param message メッセージ
      */
-    public void sendInformation(String message) {
+    protected void sendInformation(String message) {
 
         if ( isBroadcastChannel() ) {
             // ブロードキャストチャンネル
@@ -379,7 +375,7 @@ public class Channel implements ConfigurationSerializable {
 
             // オンラインのプレイヤーに送信する
             for ( String member : members ) {
-                Player p = LunaChat.getPlayerExact(member);
+                Player p = Bukkit.getPlayerExact(member);
                 if ( p != null ) {
                     p.sendMessage(message);
                 }
@@ -391,14 +387,11 @@ public class Channel implements ConfigurationSerializable {
     }
 
     /**
-     * TODO: このメソッドはprivateに変更したい
-     * ※本メソッドはLunaChat内部での呼び出し用です。
-     * ※イベントが発生しないため、APIからは呼び出ししないでください。
      * メッセージを表示します。指定したプレイヤーの発言として処理されます。
      * @param player プレイヤー（ワールドチャット、範囲チャットの場合は必須です）
      * @param message メッセージ
      */
-    public void sendMessage(Player player, String message) {
+    protected void sendMessage(Player player, String message) {
 
         // 受信者を設定する
         ArrayList<Player> recipients = new ArrayList<Player>();
@@ -467,7 +460,7 @@ public class Channel implements ConfigurationSerializable {
      * チャンネル情報を返す
      * @return チャンネル情報
      */
-    protected ArrayList<String> getInfo() {
+    public ArrayList<String> getInfo() {
 
         ArrayList<String> info = new ArrayList<String>();
         info.add(INFO_FIRSTLINE);
@@ -519,7 +512,7 @@ public class Channel implements ConfigurationSerializable {
      * @return オンラインかどうか
      */
     private boolean isOnlinePlayer(String playerName) {
-        Player p = LunaChat.getPlayerExact(playerName);
+        Player p = Bukkit.getPlayerExact(playerName);
         return ( p != null && p.isOnline() );
     }
 
@@ -917,10 +910,10 @@ public class Channel implements ConfigurationSerializable {
      */
     private void log(String message) {
 
-        if ( LunaChat.config.displayChatOnConsole ) {
-            LunaChat.log(ChatColor.stripColor(message));
+        if ( LunaChat.config.isDisplayChatOnConsole() ) {
+            Bukkit.getLogger().info(ChatColor.stripColor(message));
         }
-        if ( LunaChat.config.loggingChat && logger != null ) {
+        if ( LunaChat.config.isLoggingChat() && logger != null ) {
             logger.info(ChatColor.stripColor(message));
         }
     }
