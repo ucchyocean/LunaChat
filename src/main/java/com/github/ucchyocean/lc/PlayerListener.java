@@ -1,6 +1,6 @@
 /*
  * @author     ucchy
- * @license    GPLv3
+ * @license    LGPLv3
  * @copyright  Copyright ucchy 2013
  */
 package com.github.ucchyocean.lc;
@@ -19,8 +19,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 
 /**
- * @author ucchy
  * プレイヤーの行動を監視するリスナ
+ * @author ucchy
  */
 public class PlayerListener implements Listener {
 

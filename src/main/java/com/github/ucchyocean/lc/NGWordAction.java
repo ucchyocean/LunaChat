@@ -1,14 +1,14 @@
 /*
  * @author     ucchy
- * @license    GPLv3
+ * @license    LGPLv3
  * @copyright  Copyright ucchy 2013
  */
 package com.github.ucchyocean.lc;
 
 
 /**
- * @author ucchy
  * NGワードを発言した人に与えるアクションの設定の種類
+ * @author ucchy
  */
 public enum NGWordAction {
 

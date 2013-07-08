@@ -1,6 +1,6 @@
 /*
  * @author     ucchy
- * @license    GPLv3
+ * @license    LGPLv3
  * @copyright  Copyright ucchy 2013
  */
 package com.github.ucchyocean.lc.event;
@@ -10,8 +10,8 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 /**
- * @author ucchy
  * 基底イベントクラス
+ * @author ucchy
  */
 public abstract class LunaChatBaseEvent extends Event implements Cancellable {
 

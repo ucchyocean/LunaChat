@@ -1,6 +1,6 @@
 /*
  * @author     ucchy
- * @license    GPLv3
+ * @license    LGPLv3
  * @copyright  Copyright ucchy 2013
  */
 package com.github.ucchyocean.lc;
@@ -10,8 +10,8 @@ import java.util.Collection;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 
 /**
- * @author ucchy
  * LunaChat APIクラス
+ * @author ucchy
  */
 public interface LunaChatAPI {
 

@@ -1,13 +1,13 @@
 /*
  * @author     ucchy
- * @license    GPLv3
+ * @license    LGPLv3
  * @copyright  Copyright ucchy 2013
  */
 package com.github.ucchyocean.lc.event;
 
 /**
- * @author ucchy
  * Japanize変換が行われた後に呼び出されるイベント
+ * @author ucchy
  */
 public class LunaChatPostJapanizeEvent extends LunaChatBaseEvent {
 

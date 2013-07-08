@@ -1,6 +1,6 @@
 /*
  * @author     ucchy
- * @license    GPLv3
+ * @license    LGPLv3
  * @copyright  Copyright ucchy 2013
  */
 package com.github.ucchyocean.lc.command;
@@ -13,11 +13,9 @@ import org.bukkit.command.CommandSender;
 
 import com.github.ucchyocean.lc.Resources;
 
-
-
 /**
- * @author ucchy
  * Lunachatコマンドの処理クラス
+ * @author ucchy
  */
 public class LunaChatCommand implements CommandExecutor {
 

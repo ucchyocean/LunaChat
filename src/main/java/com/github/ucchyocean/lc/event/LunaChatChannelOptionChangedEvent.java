@@ -1,6 +1,6 @@
 /*
  * @author     ucchy
- * @license    GPLv3
+ * @license    LGPLv3
  * @copyright  Copyright ucchy 2013
  */
 package com.github.ucchyocean.lc.event;
@@ -8,8 +8,8 @@ package com.github.ucchyocean.lc.event;
 import java.util.HashMap;
 
 /**
- * @author ucchy
  * オプション変更イベント
+ * @author ucchy
  */
 public class LunaChatChannelOptionChangedEvent extends LunaChatBaseEvent {
 
