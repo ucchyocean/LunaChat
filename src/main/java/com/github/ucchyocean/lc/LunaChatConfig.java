@@ -73,6 +73,9 @@ public class LunaChatConfig {
 
     /** Japanize変換の2行表示時の2行目のフォーマット */
     private String japanizeLine2Format;
+    
+    /** ノンジャパナイズマーカー これが発言の頭に入っている場合は、一時的にjapanizeを実行しない */
+    private String noneJapanizeMarker;
 
     /**
      * コンストラクタ
@@ -114,6 +117,7 @@ public class LunaChatConfig {
         }
         japanizeLine1Format = config.getString("japanizeLine1Format", "%msg (%japanize)");
         japanizeLine2Format = config.getString("japanizeLine2Format", "&6[JP] %japanize");
+        noneJapanizeMarker = config.getString("noneJapanizeMarker", "#");
 
         // globalチャンネルが、使用可能なチャンネル名かどうかを調べる
         if ( !globalChannel.equals("") && !LunaChat.manager.checkForChannelName(globalChannel) ) {
@@ -253,5 +257,13 @@ public class LunaChatConfig {
      */
     public String getJapanizeLine2Format() {
         return japanizeLine2Format;
+    }
+
+    /**
+     * ノンジャパナイズマーカー これが発言の頭に入っている場合は、一時的にjapanizeを実行しない
+     * @return noneJapanizeMarkerを返す
+     */
+    public String getNoneJapanizeMarker() {
+        return noneJapanizeMarker;
     }
 }

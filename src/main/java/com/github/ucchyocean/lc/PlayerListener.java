@@ -171,9 +171,18 @@ public class PlayerListener implements Listener {
 
             // カラーコード置き換え
             message = Utility.replaceColorCode(message);
+            
+            // 一時的にJapanizeスキップ設定かどうかを確認する
+            boolean skipJapanize = false;
+            String marker = LunaChat.config.getNoneJapanizeMarker();
+            if ( !marker.equals("") && message.startsWith(marker) ) {
+                skipJapanize = true;
+                message = message.substring(marker.length());
+            }
 
             // Japanize変換と、発言処理
-            if ( LunaChat.manager.isPlayerJapanize(player.getName()) &&
+            if ( !skipJapanize &&
+                    LunaChat.manager.isPlayerJapanize(player.getName()) &&
                     LunaChat.config.getJapanizeType() != JapanizeType.NONE ) {
                 // 2byteコードを含まない場合にのみ、処理を行う
                 if ( message.getBytes().length == message.length() ) {

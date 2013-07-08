@@ -177,6 +177,14 @@ public class Channel implements ConfigurationSerializable {
     public void chat(Player player, String message) {
 
         String preReplaceMessage = message;
+        
+        // 一時的にJapanizeスキップ設定かどうかを確認する
+        boolean skipJapanize = false;
+        String marker = LunaChat.config.getNoneJapanizeMarker();
+        if ( !marker.equals("") && message.startsWith(marker) ) {
+            skipJapanize = true;
+            message = message.substring(marker.length());
+        }
 
         // NGワード発言をしたかどうかのチェックとマスク
         boolean isNG = false;
@@ -215,7 +223,8 @@ public class Channel implements ConfigurationSerializable {
 
         // Japanize変換と、発言処理
         boolean chated = false;
-        if ( LunaChat.manager.isPlayerJapanize(player.getName()) &&
+        if ( !skipJapanize &&
+                LunaChat.manager.isPlayerJapanize(player.getName()) &&
                 LunaChat.config.getJapanizeType() != JapanizeType.NONE ) {
             // 2byteコードを含まない場合にのみ、処理を行う
             if ( message.getBytes().length == message.length() ) {
