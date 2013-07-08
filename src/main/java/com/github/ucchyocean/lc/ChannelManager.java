@@ -355,6 +355,7 @@ public class ChannelManager implements LunaChatAPI {
      */
     @Override
     public Channel getChannel(String channelName) {
+        if ( channelName == null ) return null;
         return channels.get(channelName.toLowerCase());
     }
 

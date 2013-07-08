@@ -455,9 +455,8 @@ public class Channel implements ConfigurationSerializable {
             p.sendMessage(message);
         }
         // 受信者が自分以外いない場合は、メッセージを表示する
-        if ( recipients.size() == 0 ||
-                (recipients.size() == 1 &&
-                 recipients.get(0).getName().equals(player.getName()) ) ) {
+        if ( isWorldRange && ( recipients.size() == 0 ||
+                (recipients.size() == 1 && recipients.get(0).getName().equals(player.getName()) ) ) ) {
             String msg = replaceKeywords(MSG_NO_RECIPIENT, null);
             player.sendMessage(msg);
         }

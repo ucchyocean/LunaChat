@@ -44,6 +44,9 @@ cmdmsgOption: '%s を %s に設定しました。'
 cmdmsgTemplate: 'テンプレート %s番を、%s に設定しました。'
 cmdmsgTemplateRemove: 'テンプレート %s番を削除しました。'
 
+cmdmsgPlayerJapanize: 'Your chat''s Japanize conversion was turned %s.'
+cmdmsgPlayerJapanizeOther: '%s さんのJapanize変換を %s にしました。'
+
 errmsgIngame: 'このコマンドはゲーム内からしか実行できません。'
 errmsgCommand: 'コマンドの指定が正しくありません。'
 errmsgNotExist: '指定されたチャンネルが存在しません。'

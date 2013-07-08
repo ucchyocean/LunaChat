@@ -14,6 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.github.ucchyocean.lc.bridge.DynmapBridge;
 import com.github.ucchyocean.lc.bridge.VaultChatBridge;
 import com.github.ucchyocean.lc.command.LunaChatCommand;
+import com.github.ucchyocean.lc.command.LunaChatJapanizeCommand;
 import com.github.ucchyocean.lc.command.LunaChatMessageCommand;
 import com.github.ucchyocean.lc.command.LunaChatReplyCommand;
 
@@ -61,6 +62,7 @@ public class LunaChat extends JavaPlugin {
         getCommand("lunachat").setExecutor(new LunaChatCommand());
         getCommand("message").setExecutor(new LunaChatMessageCommand());
         getCommand("reply").setExecutor(new LunaChatReplyCommand());
+        getCommand("lcjapanize").setExecutor(new LunaChatJapanizeCommand());
 
         // シリアル化可能オブジェクトの登録
         ConfigurationSerialization.registerClass(Channel.class, "Channel");

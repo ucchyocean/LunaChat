@@ -22,6 +22,8 @@ import com.github.ucchyocean.lc.Resources;
 public class LunaChatJapanizeCommand implements CommandExecutor {
 
     private static final String PERM_JAPANIZE_OTHER = "lunachat.japanize-other";
+    
+    private static final String PREINFO = Resources.get("infoPrefix");
     private static final String PREERR = Resources.get("errorPrefix");
 
     /**
@@ -47,6 +49,8 @@ public class LunaChatJapanizeCommand implements CommandExecutor {
             LunaChatAPI api = LunaChat.instance.getLunaChatAPI();
             api.setPlayersJapanize(player.getName(), value);
 
+            sendResourceMessage(sender, PREINFO,
+                    "cmdmsgPlayerJapanize", args[0]);
             return true;
 
         } else if ( args.length == 2 &&
@@ -69,10 +73,14 @@ public class LunaChatJapanizeCommand implements CommandExecutor {
             }
 
             // Japanize設定をon/offにする
-            boolean value = args[0].equalsIgnoreCase("on");
+            boolean value = args[1].equalsIgnoreCase("on");
             LunaChatAPI api = LunaChat.instance.getLunaChatAPI();
             api.setPlayersJapanize(target.getName(), value);
 
+            sendResourceMessage(target, PREINFO,
+                    "cmdmsgPlayerJapanize", args[1]);
+            sendResourceMessage(sender, PREINFO,
+                    "cmdmsgPlayerJapanizeOther", args[0], args[1]);
             return true;
         }
 
