@@ -8,16 +8,10 @@ package com.github.ucchyocean.lc;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.FileHandler;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -73,9 +67,6 @@ public class Channel implements ConfigurationSerializable {
     private static final String KEY_WORLD = "world";
     private static final String KEY_RANGE = "range";
 
-    private static final SimpleDateFormat dformat =
-            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
     /** 参加者 */
     private List<String> members;
 
@@ -121,7 +112,7 @@ public class Channel implements ConfigurationSerializable {
     private int chatRange;
 
     /** ロガー */
-    private Logger logger;
+    private LunaChatLogger logger;
 
     /**
      * コンストラクタ
@@ -144,7 +135,7 @@ public class Channel implements ConfigurationSerializable {
             this.format = DEFAULT_FORMAT_FOR_PERSONAL;
         } else {
             this.format = DEFAULT_FORMAT;
-            logger = makeLoggerForChannelChatLog(name);
+            logger = new LunaChatLogger(name);
         }
     }
 
@@ -923,54 +914,7 @@ public class Channel implements ConfigurationSerializable {
             Bukkit.getLogger().info(ChatColor.stripColor(message));
         }
         if ( LunaChat.config.isLoggingChat() && logger != null ) {
-            logger.info(ChatColor.stripColor(message));
+            logger.log(ChatColor.stripColor(message));
         }
-    }
-
-    /**
-     * チャンネルチャットロギングのためのロガーを作成して取得する。
-     * @param name チャンネル名
-     * @return ロガー
-     */
-    private static Logger makeLoggerForChannelChatLog(final String name) {
-
-        Logger logger = Logger.getLogger("LunaChatChannelLogger" + name);
-
-        FileHandler handler = null;
-        try {
-            File dir = new File(LunaChat.instance.getDataFolder(), "logs");
-            if ( !dir.exists() ) {
-                dir.mkdirs();
-            }
-
-            handler = new FileHandler(
-                    dir.getAbsolutePath() + "\\" + name + ".%g.log",
-                    1048576, 1000, true);
-            handler.setFormatter(new SimpleFormatter() {
-                @Override
-                public String format(LogRecord record) {
-                    String date = dformat.format(new Date());
-                    return String.format("%1$s,%2$s\r\n",
-                            date, record.getMessage());
-                }
-            });
-
-            logger.addHandler(handler);
-            logger.setUseParentHandlers(false);
-
-            return logger;
-
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-//            if ( handler != null ) {
-//                handler.flush();
-//                handler.close();
-//            }
-        }
-
-        return null;
     }
 }
