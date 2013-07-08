@@ -18,7 +18,7 @@ public class DenyCommand extends SubCommandAbst {
     private static final String COMMAND_NAME = "deny";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
     private static final String USAGE_KEY = "usageDeny";
-    
+
     /**
      * コマンドを取得します。
      * @return コマンド

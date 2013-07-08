@@ -35,7 +35,7 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
      * @param player 発言したプレイヤー
      * @param format 変換後に発言するときの、発言フォーマット
      */
-    public DelayedJapanizeConvertTask(String org, JapanizeType type, Channel channel, 
+    public DelayedJapanizeConvertTask(String org, JapanizeType type, Channel channel,
             Player player, String format) {
         this.org = org;
         this.type = type;

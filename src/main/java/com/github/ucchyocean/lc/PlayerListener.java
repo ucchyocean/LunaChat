@@ -180,9 +180,9 @@ public class PlayerListener implements Listener {
                     int lineType = LunaChat.config.getJapanizeDisplayLine();
                     String taskFormat;
                     if ( lineType == 1 ) {
-                        
+
                         taskFormat = LunaChat.config.getJapanizeLine1Format();
-                        
+
                         String japanized = LunaChat.manager.japanize(
                                 message, LunaChat.config.getJapanizeType());
                         if ( japanized != null ) {
@@ -190,11 +190,11 @@ public class PlayerListener implements Listener {
                             temp = temp.replace("%japanize", japanized);
                             message = Utility.replaceColorCode(temp);
                         }
-                        
+
                     } else {
-                        
+
                         taskFormat = LunaChat.config.getJapanizeLine2Format();
-                        
+
                         DelayedJapanizeConvertTask task = new DelayedJapanizeConvertTask(message,
                                 LunaChat.config.getJapanizeType(), null, player, taskFormat);
                         Bukkit.getScheduler().runTask(LunaChat.instance, task);

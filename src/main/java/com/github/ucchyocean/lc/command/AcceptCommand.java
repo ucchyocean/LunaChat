@@ -19,7 +19,7 @@ public class AcceptCommand extends SubCommandAbst {
     private static final String COMMAND_NAME = "accept";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
     private static final String USAGE_KEY = "usageAccept";
-    
+
     /**
      * コマンドを取得します。
      * @return コマンド

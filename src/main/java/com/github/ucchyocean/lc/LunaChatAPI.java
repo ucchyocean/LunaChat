@@ -95,7 +95,7 @@ public interface LunaChatAPI {
      * @param id テンプレートID
      */
     public void removeTemplate(String id);
-    
+
     /**
      * Japanize変換を行う
      * @param message 変換するメッセージ
@@ -103,10 +103,12 @@ public interface LunaChatAPI {
      * @return 変換後のメッセージ、ただしイベントでキャンセルされた場合はnullが返されるので注意
      */
     public String japanize(String message, JapanizeType type);
-    
+
     /**
      * 指定された名前がチャンネル名として使用可能かどうかを判定する<br/>
-     * （あくまで、規約上として使用できるかどうかである。）
+     * 具体的には、英数字・ハイフン・アンダーバー のいずれかから構成される、
+     * 1文字から20文字の文字列、の場合に、trueを返す。<br/>
+     * （既に存在するチャンネル名をチェックするわけではない。）
      * @param name 名前
      * @return チャンネル名として使用可能かどうか
      */

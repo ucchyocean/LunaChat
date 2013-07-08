@@ -104,7 +104,7 @@ public class ChannelManager implements LunaChatAPI {
 
         // チャンネル設定のロード
         channels = Channel.loadAllChannels();
-        
+
         // コンフィグのリロード
         if ( LunaChat.config != null ) {
             LunaChat.config.reloadConfig();
@@ -187,7 +187,7 @@ public class ChannelManager implements LunaChatAPI {
             if ( channel.getBanned().contains(playerName) ) {
                 continue;
             }
-            
+
             // 個人チャットはリストに表示しない
             if ( channel.isPersonalChat() ) {
                 continue;
@@ -240,12 +240,12 @@ public class ChannelManager implements LunaChatAPI {
             if ( channel.getBanned().contains(playerName) ) {
                 continue;
             }
-            
+
             // 個人チャットはリストに表示しない
             if ( channel.isPersonalChat() ) {
                 continue;
             }
-            
+
             // 参加していないチャンネルは、グローバルチャンネルを除き表示しない
             if ( !channel.getMembers().contains(playerName) &&
                     !channel.isGlobalChannel() ) {
@@ -469,7 +469,7 @@ public class ChannelManager implements LunaChatAPI {
         if ( type == JapanizeType.NONE ) {
             return message;
         }
-        
+
         // カナ変換
         String japanized = KanaConverter.conv(message);
 
@@ -493,7 +493,10 @@ public class ChannelManager implements LunaChatAPI {
     }
 
     /**
-     * 指定された名前がチャンネル名として使用可能かどうかを判定する
+     * 指定された名前がチャンネル名として使用可能かどうかを判定する<br/>
+     * 具体的には、英数字・ハイフン・アンダーバー のいずれかから構成される、
+     * 1文字から20文字の文字列、の場合に、trueを返す。<br/>
+     * （既に存在するチャンネル名をチェックするわけではない。）
      * @param name 名前
      * @return チャンネル名として使用可能かどうか
      */

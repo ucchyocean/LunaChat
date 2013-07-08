@@ -161,7 +161,7 @@ public class Channel implements ConfigurationSerializable {
     public boolean isBroadcastChannel() {
         return (isGlobalChannel() || broadcastChannel);
     }
-    
+
     /**
      * @return グローバルチャンネルかどうか
      */
@@ -212,7 +212,7 @@ public class Channel implements ConfigurationSerializable {
                 isBroadcastChannel() && !isWorldRange ) {
             LunaChat.dynmap.chat(player, maskedMessage);
         }
-        
+
         // Japanize変換と、発言処理
         boolean chated = false;
         if ( LunaChat.config.getJapanizeType() != JapanizeType.NONE ) {

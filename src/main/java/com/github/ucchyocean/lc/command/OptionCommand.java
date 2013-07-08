@@ -28,7 +28,7 @@ public class OptionCommand extends SubCommandAbst {
     private static final String COMMAND_NAME = "option";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
     private static final String USAGE_KEY = "usageOption";
-    
+
     /**
      * コマンドを取得します。
      * @return コマンド

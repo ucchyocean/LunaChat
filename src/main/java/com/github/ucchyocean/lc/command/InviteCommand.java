@@ -20,7 +20,7 @@ public class InviteCommand extends SubCommandAbst {
     private static final String COMMAND_NAME = "invite";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
     private static final String USAGE_KEY = "usageInvite";
-    
+
     /**
      * コマンドを取得します。
      * @return コマンド
