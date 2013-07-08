@@ -47,4 +47,13 @@ public class DynmapBridge {
 
         dynmap.postPlayerMessageToWeb(player, message);
     }
+    
+    /**
+     * dynmapにブロードキャストメッセージを流す
+     * @param message メッセージ
+     */
+    public void broadcast(String message) {
+        
+        dynmap.sendBroadcastToWeb("@", message);
+    }
 }

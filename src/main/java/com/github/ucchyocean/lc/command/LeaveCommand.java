@@ -16,12 +16,9 @@ import com.github.ucchyocean.lc.Channel;
  */
 public class LeaveCommand extends SubCommandAbst {
 
-    private static final String COMMAND_NAME = 
-            "leave";
-    private static final String PERMISSION_NODE = 
-            "lunachat." + COMMAND_NAME;
-    private static final String USAGE_KEY = 
-            "usageLeave";
+    private static final String COMMAND_NAME = "leave";
+    private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
+    private static final String USAGE_KEY = "usageLeave";
     
     /**
      * コマンドを取得します。

@@ -16,12 +16,9 @@ import com.github.ucchyocean.lc.Channel;
  */
 public class JoinCommand extends SubCommandAbst {
 
-    private static final String COMMAND_NAME = 
-            "join";
-    private static final String PERMISSION_NODE = 
-            "lunachat." + COMMAND_NAME;
-    private static final String USAGE_KEY = 
-            "usageJoin";
+    private static final String COMMAND_NAME = "join";
+    private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
+    private static final String USAGE_KEY = "usageJoin";
     
     /**
      * コマンドを取得します。

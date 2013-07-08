@@ -59,7 +59,7 @@ ngwordAction: mask
 # none      : 変換なし。
 # kana      : かな変換のみ。
 # GoogleIME : かな変換したのち、GoogleIMEを使ってIME変換する。(少し発言が重くなります。)
-# SocailIME : かな変換したのち、SocailIMEを使ってIME変換する。(少し発言が重くなります。)
+# SocialIME : かな変換したのち、SocialIMEを使ってIME変換する。(少し発言が重くなります。)
 japanizeType: GoogleIME
 
 # かな変換や漢字変換時に、

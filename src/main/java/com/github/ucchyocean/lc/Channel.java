@@ -37,6 +37,11 @@ public class Channel implements ConfigurationSerializable {
     private static final String INFO_FIRSTLINE = Resources.get("channelInfoFirstLine");
     private static final String INFO_PREFIX = Resources.get("channelInfoPrefix");
     private static final String INFO_GLOBAL = Resources.get("channelInfoGlobal");
+    private static final String INFO_BROADCAST = Resources.get("channelInfoBroadcast");
+    private static final String INFO_SECRET = Resources.get("channelInfoSecret");
+    private static final String INFO_PASSWORD = Resources.get("channelInfoPassword");
+    private static final String INFO_WORLDCHAT = Resources.get("channelInfoWorldChat");
+    private static final String INFO_RANGECHAT = Resources.get("channelInfoRangeChat");
 
     private static final String LIST_ENDLINE = Resources.get("listEndLine");
     private static final String LIST_FORMAT = Resources.get("listFormat");
@@ -445,6 +450,7 @@ public class Channel implements ConfigurationSerializable {
         for ( Player p : recipients ) {
             p.sendMessage(message);
         }
+        
         // 受信者が自分以外いない場合は、メッセージを表示する
         if ( isWorldRange && ( recipients.size() == 0 ||
                 (recipients.size() == 1 && recipients.get(0).getName().equals(player.getName()) ) ) ) {
@@ -468,7 +474,11 @@ public class Channel implements ConfigurationSerializable {
         info.add( String.format(
                 LIST_FORMAT, name, getOnlineNum(), getTotalNum(), description) );
 
-        if ( !isBroadcastChannel() ) {
+        if ( isGlobalChannel() ) {
+            info.add(INFO_GLOBAL);
+        } else if ( isBroadcastChannel() ) {
+            info.add(INFO_BROADCAST);
+        } else {
             // メンバーを、5人ごとに表示する
             StringBuffer buf = new StringBuffer();
             for ( int i=0; i<members.size(); i++ ) {
@@ -495,12 +505,22 @@ public class Channel implements ConfigurationSerializable {
             }
 
             info.add(buf.toString());
-
-        } else {
-
-            info.add(INFO_GLOBAL);
         }
-
+        
+        if ( !visible ) {
+            info.add(INFO_SECRET);
+        }
+        
+        if ( password.length() > 0 ) {
+            info.add(INFO_PASSWORD);
+        }
+        
+        if ( isWorldRange && chatRange > 0 ) {
+            info.add(String.format(INFO_RANGECHAT, chatRange));
+        } else if ( isWorldRange ) {
+            info.add(INFO_WORLDCHAT);
+        }
+        
         info.add(LIST_ENDLINE);
 
         return info;

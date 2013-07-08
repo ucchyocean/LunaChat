@@ -13,9 +13,9 @@ import org.bukkit.command.CommandSender;
  */
 public class TemplateCommand extends SubCommandAbst {
 
-    private static final String COMMAND_NAME = "moderator";
+    private static final String COMMAND_NAME = "template";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
-    private static final String USAGE_KEY = "usageModerator";
+    private static final String USAGE_KEY = "usageTemplate";
     
     /**
      * コマンドを取得します。

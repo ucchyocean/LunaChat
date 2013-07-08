@@ -15,9 +15,9 @@ import com.github.ucchyocean.lc.Channel;
  */
 public class CreateCommand extends SubCommandAbst {
 
-    private static final String COMMAND_NAME = "moderator";
+    private static final String COMMAND_NAME = "create";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
-    private static final String USAGE_KEY = "usageModerator";
+    private static final String USAGE_KEY = "usageCreate";
     
     /**
      * コマンドを取得します。
