@@ -1,0 +1,78 @@
+# LunaChat v2.2.0
+# @author     ucchy
+# @license    GPLv3
+# @copyright  Copyright ucchy 2013
+
+
+# -------------------- 一般設定 --------------------
+
+# チャンネルチャットに入っていない人の発言を、グローバルとして扱うかどうか
+noJoinAsGlobal: true
+
+# チャンネルチャットの発言内容を、ログに残すかどうか
+loggingChat: true
+
+# チャンネルチャットの発言内容を、サーバーコンソールに表示するかどうか
+displayChatOnConsole: false
+
+# グローバルマーカー。
+# これが発言の頭に入っている場合は、一時的にグローバル発言になる。
+globalMarker: '!'
+
+# 全てのメンバーが退出したときに、チャンネルを削除するかどうか
+zeroMemberRemove: false
+
+# ログイン時に、参加中チャンネルを表示するかどうか
+showListOnJoin: false
+
+# /ch join コマンドで存在しないチャンネルを指定したときに、チャンネルを新規作成して入室するかどうか
+createChannelOnJoinCommand: true
+
+# 通常のチャットの代わりに、既定として使用するグローバルチャンネル。
+# グローバルチャンネルを作らず通常のチャットを使用する場合は、から文字列 「''」 を指定すること。
+globalChannel: ''
+
+# ブロードキャストチャンネルの発言内容を、dynmapに送信するかどうか。
+# dynmapがロードされていない場合は、この設定は無視される（false扱い）。
+sendBroadcastChannelChatToDynmap: true
+
+
+
+# -------------------- NGワード設定 --------------------
+
+# NGワード設定。
+# ここに設定されたワードを発言したプレイヤーは、NGワード部分がマスクされる。
+ngword: []
+
+# NGワード発言時の動作設定。mask、kick、ban の3つのいずれかが設定可能。
+# mask : NGワードを発言したプレイヤーを、マスクのみ
+# kick : NGワードを発言したプレイヤーを、マスクしたのちチャンネルからキックする
+# ban  : NGワードを発言したプレイヤーを、マスクしたのちチャンネルBANする
+ngwordAction: mask
+
+
+
+# -------------------- Japanize変換設定 --------------------
+
+# ローマ字をかな文字や漢字に変換する設定。
+# none/kana/GoogleIME/SocialIME の4つのいずれかが設定可能。
+# none      : 変換なし。
+# kana      : かな変換のみ。
+# GoogleIME : かな変換したのち、GoogleIMEを使ってIME変換する。(少し発言が重くなります。)
+# SocailIME : かな変換したのち、SocailIMEを使ってIME変換する。(少し発言が重くなります。)
+japanizeType: GoogleIME
+
+# かな変換や漢字変換時に、
+# 変換結果を元の発言内容と合わせて1行で表示するか、
+# 変換結果のみを2行目に表示するかを、設定する。
+japanizeDisplayLine: 1
+
+# japanizeDisplayLine が 1 のときの、表示フォーマットを設定する。
+japanizeLine1Format: '%msg &7(%japanize)'
+
+# japanizeDisplayLine が 2 のときの、2行目の表示フォーマットを設定する。
+japanizeLine2Format: '&6[JP] %japanize'
+
+# ノンジャパナイズマーカー。
+# これが発言の頭に入っている場合は、一時的にjapanizeを実行しない
+noneJapanizeMarker: '#'
