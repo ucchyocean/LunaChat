@@ -83,6 +83,8 @@ errmsgInvalidBooleanOption: '%s は true/false で指定してください。'
 errmsgInvalidRangeOption: 'range に正しくない値が指定されました。'
 errmsgCannotOffGlobalBroadcast: 'このチャンネルはグローバルチャンネルのため、ブロードキャストをオフにできません。'
 
+errmsgNotPermission: 'パーミッション "%s" が無いため、実行できません。'
+
 ngwordPrefix: 'NGワード発言により、'
 
 usageJoin: '&7/%s join (channel) - チャンネルに参加します。'
@@ -106,3 +108,6 @@ usageReload: '&7/%s reload - config.ymlの再読み込みをします。'
 
 usageMessage: '&7/%s (name) [message] - 指定した人との1:1チャットを開始します。'
 usageReply: '&7/%s [message] - 受信した1:1チャットに返信します。'
+
+usageJapanize: '&7/%s on|off - Turn on/off the Japanize conversion of your chat.'
+usageJapanizeOther: '&7/%s (player) on|off - Turn on/off the Japanize conversion of other player''s chat.'

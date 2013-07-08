@@ -16,11 +16,9 @@ import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.Resources;
 
-
-
 /**
- * @author ucchy
  * 1:1チャット送信コマンド
+ * @author ucchy
  */
 public class LunaChatMessageCommand implements CommandExecutor {
 

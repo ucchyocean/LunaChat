@@ -29,21 +29,23 @@ import com.github.ucchyocean.lc.japanize.KanaConverter;
  */
 public class ChannelManager implements LunaChatAPI {
 
-    private static final String LIST_FIRSTLINE = Resources.get("listFirstLine");
+    private static final String MOTD_FIRSTLINE = Resources.get("motdFirstLine");
     private static final String LIST_ENDLINE = Resources.get("listEndLine");
     private static final String LIST_FORMAT = Resources.get("listFormat");
 
-    private static final String MOTD_FIRSTLINE = Resources.get("motdFirstLine");
     private static final String MSG_BREAKUP = Resources.get("breakupMessage");
 
     private static final String FILE_NAME_DCHANNELS = "defaults.yml";
     private static final String FILE_NAME_TEMPLATES = "templates.yml";
+    private static final String FILE_NAME_JAPANIZE = "japanize.yml";
 
     private File fileDefaults;
     private File fileTemplates;
+    private File fileJapanize;
     private HashMap<String, Channel> channels;
     private HashMap<String, String> defaultChannels;
     private HashMap<String, String> templates;
+    private HashMap<String, Boolean> japanize;
 
     /**
      * コンストラクタ
@@ -60,8 +62,7 @@ public class ChannelManager implements LunaChatAPI {
 
         // デフォルトチャンネル設定のロード
         fileDefaults = new File(
-                LunaChat.instance.getDataFolder() +
-                File.separator + FILE_NAME_DCHANNELS);
+                LunaChat.instance.getDataFolder(), FILE_NAME_DCHANNELS);
 
         if ( !fileDefaults.exists() ) {
             YamlConfiguration conf = new YamlConfiguration();
@@ -82,8 +83,7 @@ public class ChannelManager implements LunaChatAPI {
 
         // テンプレート設定のロード
         fileTemplates = new File(
-                LunaChat.instance.getDataFolder() +
-                File.separator + FILE_NAME_TEMPLATES);
+                LunaChat.instance.getDataFolder(), FILE_NAME_TEMPLATES);
 
         if ( !fileTemplates.exists() ) {
             YamlConfiguration conf = new YamlConfiguration();
@@ -100,6 +100,27 @@ public class ChannelManager implements LunaChatAPI {
         templates = new HashMap<String, String>();
         for ( String key : configTemplates.getKeys(false) ) {
             templates.put(key, configTemplates.getString(key));
+        }
+
+        // Japanize設定のロード
+        fileJapanize = new File(
+                LunaChat.instance.getDataFolder(), FILE_NAME_JAPANIZE);
+
+        if ( !fileJapanize.exists() ) {
+            YamlConfiguration conf = new YamlConfiguration();
+            try {
+                conf.save(fileJapanize);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        YamlConfiguration configJapanize =
+                YamlConfiguration.loadConfiguration(fileJapanize);
+
+        japanize = new HashMap<String, Boolean>();
+        for ( String key : configJapanize.getKeys(false) ) {
+            japanize.put(key, configJapanize.getBoolean(key));
         }
 
         // チャンネル設定のロード
@@ -162,60 +183,22 @@ public class ChannelManager implements LunaChatAPI {
     }
 
     /**
-     * リスト表示用のリストを返す
-     * @param player プレイヤー、指定しない場合はnullにする
-     * @return リスト
+     * Japanize設定を保存する
+     * @return 保存したかどうか
      */
-    protected ArrayList<String> getList(Player player) {
+    private boolean saveJapanize() {
 
-        ArrayList<String> items = new ArrayList<String>();
-        String dchannel = "";
-        String playerName = "";
-        if ( player != null ) {
-            playerName = player.getName();
-            dchannel = defaultChannels.get(player.getName());
-            if ( dchannel == null ) {
-                dchannel = "";
+        try {
+            YamlConfiguration config = new YamlConfiguration();
+            for ( String key : japanize.keySet() ) {
+                config.set(key, japanize.get(key));
             }
+            config.save(fileJapanize);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
         }
-
-        items.add(LIST_FIRSTLINE);
-        for ( String key : channels.keySet() ) {
-            Channel channel = channels.get(key);
-
-            // BANされているチャンネルは表示しない
-            if ( channel.getBanned().contains(playerName) ) {
-                continue;
-            }
-
-            // 個人チャットはリストに表示しない
-            if ( channel.isPersonalChat() ) {
-                continue;
-            }
-
-            String disp = ChatColor.WHITE + channel.getName();
-            if ( key.equals(dchannel.toLowerCase()) ) {
-                disp = ChatColor.RED + channel.getName();
-            }
-            if ( player != null && !channel.getMembers().contains(playerName) &&
-                    !channel.isGlobalChannel() ) {
-
-                // 未参加で visible=false のチャンネルは表示しない
-                if ( !channel.isVisible() ) {
-                    continue;
-                }
-                disp = ChatColor.GRAY + channel.getName();
-            }
-            String desc = channel.getDescription();
-            int onlineNum = channel.getOnlineNum();
-            int memberNum = channel.getTotalNum();
-            String item = String.format(
-                    LIST_FORMAT, disp, onlineNum, memberNum, desc);
-            items.add(item);
-        }
-        items.add(LIST_ENDLINE);
-
-        return items;
     }
 
     /**
@@ -269,11 +252,24 @@ public class ChannelManager implements LunaChatAPI {
     }
 
     /**
+     * プレイヤーのJapanize設定を返す
+     * @param playerName プレイヤー名
+     * @return Japanize設定
+     */
+    protected boolean isPlayerJapanize(String playerName) {
+        if ( !japanize.containsKey(playerName) ) {
+            return true;
+        }
+        return japanize.get(playerName);
+    }
+
+    /**
      * 指定したチャンネル名が存在するかどうかを返す
      * @param channelName チャンネル名
      * @return 存在するかどうか
      * @see com.github.ucchyocean.lc.LunaChatAPI#isExistChannel(java.lang.String)
      */
+    @Override
     public boolean isExistChannel(String channelName) {
         return channels.containsKey(channelName.toLowerCase());
     }
@@ -490,6 +486,16 @@ public class ChannelManager implements LunaChatAPI {
         japanized = event.getJapanized();
 
         return japanized;
+    }
+
+    /**
+     * 該当プレイヤーのJapanize変換をオン/オフする
+     * @param playerName 設定するプレイヤー名
+     * @param doJapanize Japanize変換するかどうか
+     */
+    public void setPlayersJapanize(String playerName, boolean doJapanize) {
+        japanize.put(playerName, doJapanize);
+        saveJapanize();
     }
 
     /**

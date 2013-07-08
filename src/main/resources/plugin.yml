@@ -38,6 +38,14 @@ commands:
     usage: /<command> [message] - 受信した1:1チャットに返信します。
     permission: lunachat.reply
     permission-message: パーミッション "<permission>" が無いため、実行できません。
+  lcjapanize:
+    description: lunachatのjapanizeオンオフ設定コマンド
+    aliases: [japanize, jp]
+    usage: |
+           /<command> on|off - Turn on/off the Japanize conversion of your chat.
+           /<command> (player) (on|off) - Turn on/off the Japanize conversion of other player's chat.
+    permission: lunachat.japanize
+    permission-message: You don't have the permission "<permission>".
 permissions:
   lunachat.join:
     description: joinコマンドの使用権限
@@ -73,6 +81,8 @@ permissions:
     description: messageコマンドの使用権限
   lunachat.reply:
     description: replyコマンドの使用権限
+  lunachat.japanize:
+    description: lunachatのjapanizeオンオフ設定コマンドの使用権限
   lunachat.*:
     children:
       lunachat.join: true
@@ -92,11 +102,15 @@ permissions:
       lunachat.option: true
       lunachat.message: true
       lunachat.reply: true
-    description: 全てのコマンドの使用権限
+      lunachat.japanize: true
+    description: 一般ユーザー向けの全コマンドの使用権限
     default: true
   lunachat.template:
     description: templateコマンドの使用権限
     default: op
   lunachat.reload:
     description: reloadコマンドの使用権限
+    default: op
+  lunachat.japanize-other:
+    description: 他者のjapanizeオンオフ設定コマンドの使用権限
     default: op

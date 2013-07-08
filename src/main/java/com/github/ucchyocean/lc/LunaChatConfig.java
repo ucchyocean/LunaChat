@@ -39,32 +39,32 @@ public class LunaChatConfig {
     /** /ch join コマンドで存在しないチャンネルを指定したときに、チャンネルを新規作成して入室するかどうか */
     private boolean createChannelOnJoinCommand;
 
-    /** サーバーに初参加したユーザーを参加させる、既定のチャンネル。
+    /** サーバーに初参加したユーザーを参加させる、既定のチャンネル。<br/>
      *  参加させない場合は、から文字列 "" を指定すること。 */
     private String globalChannel;
 
-    /** ブロードキャストチャンネルの発言内容を、dynmapに送信するかどうか。
-     *  dynmapがロードされていない場合は、この設定は無視されます（false扱い）。 */
+    /** ブロードキャストチャンネルの発言内容を、dynmapに送信するかどうか。<br/>
+     *  dynmapがロードされていない場合は、この設定は無視される（false扱い）。 */
     private boolean sendBroadcastChannelChatToDynmap;
 
     /** NGワードの設定 */
     private List<String> ngword;
 
-    /** NGワードを発言した人に対して実行するアクション<br>
-     *  mask = マスクするのみ<br>
-     *  kick = マスクしてチャンネルからキックする<br>
+    /** NGワードを発言した人に対して実行するアクション<br/>
+     *  mask = マスクするのみ<br/>
+     *  kick = マスクしてチャンネルからキックする<br/>
      *  ban = マスクしてチャンネルからBANする */
     private NGWordAction ngwordAction;
 
-    /** Japanize変換のタイプ
-     *  none = 日本語変換をしない
-     *  kana = カナ変換のみする
-     *  googleime = カナ変換後、GoogleIMEで漢字変換する
+    /** Japanize変換のタイプ<br/>
+     *  none = 日本語変換をしない<br/>
+     *  kana = カナ変換のみする<br/>
+     *  googleime = カナ変換後、GoogleIMEで漢字変換する<br/>
      *  socialime = カナ変換後、SocialIMEで漢字変換する */
     private JapanizeType japanizeType;
 
-    /** Japanize変換の1行表示と2行表示の切り替え
-     *  1 = 1行表示
+    /** Japanize変換の1行表示と2行表示の切り替え<br/>
+     *  1 = 1行表示<br/>
      *  2 = 2行表示 */
     private int japanizeDisplayLine;
 
@@ -125,6 +125,7 @@ public class LunaChatConfig {
     }
 
     /**
+     * チャンネルチャットに入っていない人の発言を、グローバルとして扱うかどうか
      * @return noJoinAsGlobalを返す
      */
     public boolean isNoJoinAsGlobal() {
@@ -132,13 +133,7 @@ public class LunaChatConfig {
     }
 
     /**
-     * @param noJoinAsGlobal noJoinAsGlobalを設定する
-     */
-    public void setNoJoinAsGlobal(boolean noJoinAsGlobal) {
-        this.noJoinAsGlobal = noJoinAsGlobal;
-    }
-
-    /**
+     * チャンネルチャットの発言内容を、ログに残すかどうか
      * @return loggingChatを返す
      */
     public boolean isLoggingChat() {
@@ -146,13 +141,7 @@ public class LunaChatConfig {
     }
 
     /**
-     * @param loggingChat loggingChatを設定する
-     */
-    public void setLoggingChat(boolean loggingChat) {
-        this.loggingChat = loggingChat;
-    }
-
-    /**
+     * チャンネルチャットの発言内容を、コンソールに表示するかどうか
      * @return displayChatOnConsoleを返す
      */
     public boolean isDisplayChatOnConsole() {
@@ -160,13 +149,7 @@ public class LunaChatConfig {
     }
 
     /**
-     * @param displayChatOnConsole displayChatOnConsoleを設定する
-     */
-    public void setDisplayChatOnConsole(boolean displayChatOnConsole) {
-        this.displayChatOnConsole = displayChatOnConsole;
-    }
-
-    /**
+     * グローバルマーカー  これが発言の頭に入っている場合は、強制的にグローバル発言になる
      * @return globalMarkerを返す
      */
     public String getGlobalMarker() {
@@ -174,13 +157,7 @@ public class LunaChatConfig {
     }
 
     /**
-     * @param globalMarker globalMarkerを設定する
-     */
-    public void setGlobalMarker(String globalMarker) {
-        this.globalMarker = globalMarker;
-    }
-
-    /**
+     * 全てのメンバーが退出したときに、チャンネルを削除するかどうか
      * @return zeroMemberRemoveを返す
      */
     public boolean isZeroMemberRemove() {
@@ -188,13 +165,7 @@ public class LunaChatConfig {
     }
 
     /**
-     * @param zeroMemberRemove zeroMemberRemoveを設定する
-     */
-    public void setZeroMemberRemove(boolean zeroMemberRemove) {
-        this.zeroMemberRemove = zeroMemberRemove;
-    }
-
-    /**
+     * ログイン時に、参加中チャンネルを表示するかどうか
      * @return showListOnJoinを返す
      */
     public boolean isShowListOnJoin() {
@@ -202,13 +173,7 @@ public class LunaChatConfig {
     }
 
     /**
-     * @param showListOnJoin showListOnJoinを設定する
-     */
-    public void setShowListOnJoin(boolean showListOnJoin) {
-        this.showListOnJoin = showListOnJoin;
-    }
-
-    /**
+     * /ch join コマンドで存在しないチャンネルを指定したときに、チャンネルを新規作成して入室するかどうか
      * @return createChannelOnJoinCommandを返す
      */
     public boolean isCreateChannelOnJoinCommand() {
@@ -216,13 +181,8 @@ public class LunaChatConfig {
     }
 
     /**
-     * @param createChannelOnJoinCommand createChannelOnJoinCommandを設定する
-     */
-    public void setCreateChannelOnJoinCommand(boolean createChannelOnJoinCommand) {
-        this.createChannelOnJoinCommand = createChannelOnJoinCommand;
-    }
-
-    /**
+     * サーバーに初参加したユーザーを参加させる、既定のチャンネル。<br/>
+     * 参加させない場合は、から文字列 "" を指定すること。
      * @return globalChannelを返す
      */
     public String getGlobalChannel() {
@@ -230,13 +190,7 @@ public class LunaChatConfig {
     }
 
     /**
-     * @param globalChannel globalChannelを設定する
-     */
-    public void setGlobalChannel(String globalChannel) {
-        this.globalChannel = globalChannel;
-    }
-
-    /**
+     * NGワード
      * @return ngwordを返す
      */
     public List<String> getNgword() {
@@ -244,83 +198,8 @@ public class LunaChatConfig {
     }
 
     /**
-     * @param ngword ngwordを設定する
-     */
-    public void setNgword(List<String> ngword) {
-        this.ngword = ngword;
-    }
-
-    /**
-     * @return ngwordActionを返す
-     */
-    public NGWordAction getNgwordAction() {
-        return ngwordAction;
-    }
-
-    /**
-     * @param ngwordAction ngwordActionを設定する
-     */
-    public void setNgwordAction(NGWordAction ngwordAction) {
-        this.ngwordAction = ngwordAction;
-    }
-
-    /**
-     * @return japanizeTypeを返す
-     */
-    public JapanizeType getJapanizeType() {
-        return japanizeType;
-    }
-
-    /**
-     * @param japanizeType japanizeTypeを設定する
-     */
-    public void setJapanizeType(JapanizeType japanizeType) {
-        this.japanizeType = japanizeType;
-    }
-
-    /**
-     * @return japanizeDisplayLineを返す
-     */
-    public int getJapanizeDisplayLine() {
-        return japanizeDisplayLine;
-    }
-
-    /**
-     * @param japanizeDisplayLine japanizeDisplayLineを設定する
-     */
-    public void setJapanizeDisplayLine(int japanizeDisplayLine) {
-        this.japanizeDisplayLine = japanizeDisplayLine;
-    }
-
-    /**
-     * @return japanizeLine1Formatを返す
-     */
-    public String getJapanizeLine1Format() {
-        return japanizeLine1Format;
-    }
-
-    /**
-     * @param japanizeLine1Format japanizeLine1Formatを設定する
-     */
-    public void setJapanizeLine1Format(String japanizeLine1Format) {
-        this.japanizeLine1Format = japanizeLine1Format;
-    }
-
-    /**
-     * @return japanizeLine2Formatを返す
-     */
-    public String getJapanizeLine2Format() {
-        return japanizeLine2Format;
-    }
-
-    /**
-     * @param japanizeLine2Format japanizeLine2Formatを設定する
-     */
-    public void setJapanizeLine2Format(String japanizeLine2Format) {
-        this.japanizeLine2Format = japanizeLine2Format;
-    }
-
-    /**
+     * ブロードキャストチャンネルの発言内容を、dynmapに送信するかどうか。<br/>
+     * dynmapがロードされていない場合は、この設定は無視される（false扱い）。
      * @return sendBroadcastChannelChatToDynmapを返す
      */
     public boolean isSendBroadcastChannelChatToDynmap() {
@@ -328,10 +207,51 @@ public class LunaChatConfig {
     }
 
     /**
-     * @param sendBroadcastChannelChatToDynmap sendBroadcastChannelChatToDynmapを設定する
+     * NGワードを発言した人に対して実行するアクション<br/>
+     *  mask = マスクするのみ<br/>
+     *  kick = マスクしてチャンネルからキックする<br/>
+     *  ban = マスクしてチャンネルからBANする
+     * @return ngwordActionを返す
      */
-    public void setSendBroadcastChannelChatToDynmap(
-            boolean sendBroadcastChannelChatToDynmap) {
-        this.sendBroadcastChannelChatToDynmap = sendBroadcastChannelChatToDynmap;
+    public NGWordAction getNgwordAction() {
+        return ngwordAction;
+    }
+
+    /**
+     * Japanize変換のタイプ<br/>
+     *  none = 日本語変換をしない<br/>
+     *  kana = カナ変換のみする<br/>
+     *  googleime = カナ変換後、GoogleIMEで漢字変換する<br/>
+     *  socialime = カナ変換後、SocialIMEで漢字変換する
+     * @return japanizeTypeを返す
+     */
+    public JapanizeType getJapanizeType() {
+        return japanizeType;
+    }
+
+    /**
+     * Japanize変換の1行表示と2行表示の切り替え<br/>
+     *  1 = 1行表示<br/>
+     *  2 = 2行表示<br/>
+     * @return japanizeDisplayLineを返す
+     */
+    public int getJapanizeDisplayLine() {
+        return japanizeDisplayLine;
+    }
+
+    /**
+     * Japanize変換の1行表示時のフォーマット
+     * @return japanizeLine1Formatを返す
+     */
+    public String getJapanizeLine1Format() {
+        return japanizeLine1Format;
+    }
+
+    /**
+     * Japanize変換の2行表示時の2行目のフォーマット
+     * @return japanizeLine2Formatを返す
+     */
+    public String getJapanizeLine2Format() {
+        return japanizeLine2Format;
     }
 }

@@ -215,7 +215,8 @@ public class Channel implements ConfigurationSerializable {
 
         // Japanize変換と、発言処理
         boolean chated = false;
-        if ( LunaChat.config.getJapanizeType() != JapanizeType.NONE ) {
+        if ( LunaChat.manager.isPlayerJapanize(player.getName()) &&
+                LunaChat.config.getJapanizeType() != JapanizeType.NONE ) {
             // 2byteコードを含まない場合にのみ、処理を行う
             if ( message.getBytes().length == message.length() ) {
 

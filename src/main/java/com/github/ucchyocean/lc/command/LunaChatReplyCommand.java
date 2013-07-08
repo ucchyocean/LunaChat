@@ -12,8 +12,8 @@ import org.bukkit.entity.Player;
 import com.github.ucchyocean.lc.Resources;
 
 /**
- * @author ucchy
  * 1:1チャット受信コマンド
+ * @author ucchy
  */
 public class LunaChatReplyCommand extends LunaChatMessageCommand {
 
@@ -33,12 +33,16 @@ public class LunaChatReplyCommand extends LunaChatMessageCommand {
         }
         Player inviter = (Player)sender;
 
+        // 引数が無ければ、usageを表示して終了する
+        if (args.length == 0) {
+            printUsage(sender, label);
+            return true;
+        }
+
         // メッセージを取得する
         StringBuilder message = new StringBuilder();
-        if ( args.length >= 1 ) {
-            for ( int i=0; i<args.length; i++ ) {
-                message.append(args[i]);
-            }
+        for ( int i=0; i<args.length; i++ ) {
+            message.append(args[i]);
         }
 
         // 招待した人を履歴から取得する
@@ -51,5 +55,15 @@ public class LunaChatReplyCommand extends LunaChatMessageCommand {
         sendTellMessage(inviter, invitedName, message.toString());
 
         return true;
+    }
+
+    /**
+     * コマンドの使い方を senderに送る
+     *
+     * @param sender
+     * @param label
+     */
+    private void printUsage(CommandSender sender, String label) {
+        sendResourceMessage(sender, "", "usageReply", label);
     }
 }

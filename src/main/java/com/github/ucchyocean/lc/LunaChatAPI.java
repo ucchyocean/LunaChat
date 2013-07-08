@@ -105,6 +105,13 @@ public interface LunaChatAPI {
     public String japanize(String message, JapanizeType type);
 
     /**
+     * 該当プレイヤーのJapanize変換をオン/オフする
+     * @param playerName 設定するプレイヤー名
+     * @param doJapanize Japanize変換するかどうか
+     */
+    public void setPlayersJapanize(String playerName, boolean doJapanize);
+
+    /**
      * 指定された名前がチャンネル名として使用可能かどうかを判定する<br/>
      * 具体的には、英数字・ハイフン・アンダーバー のいずれかから構成される、
      * 1文字から20文字の文字列、の場合に、trueを返す。<br/>
