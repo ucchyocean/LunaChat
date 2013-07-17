@@ -281,7 +281,7 @@ public class Channel implements ConfigurationSerializable {
         }
 
         // メンバー追加
-        if ( members.size() == 0 ) {
+        if ( members.size() == 0 && moderator.size() == 0 ) {
             moderator.add(name);
         }
         if ( !members.contains(name) ) {

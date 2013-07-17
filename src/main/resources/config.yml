@@ -11,6 +11,7 @@ zeroMemberRemove: false
 showListOnJoin: false
 createChannelOnJoinCommand: true
 globalChannel: ''
+forceJoinChannels: []
 sendBroadcastChannelChatToDynmap: true
 
 ngword: []

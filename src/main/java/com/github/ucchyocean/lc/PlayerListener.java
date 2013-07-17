@@ -7,6 +7,7 @@ package com.github.ucchyocean.lc;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -75,6 +76,9 @@ public class PlayerListener implements Listener {
 
         Player player = event.getPlayer();
 
+        // 強制参加チャンネル設定を確認し、参加させる
+        forceJoinToForceJoinChannels(player);
+        
         // グローバルチャンネル設定がある場合
         if ( !LunaChat.config.getGlobalChannel().equals("") ) {
             tryJoinToGlobalChannel(player);
@@ -240,5 +244,35 @@ public class PlayerListener implements Listener {
         }
 
         return true;
+    }
+    
+    /**
+     * 強制参加チャンネルへ参加させる
+     * @param player プレイヤー
+     */
+    private void forceJoinToForceJoinChannels(Player player) {
+        
+        List<String> forceJoinChannels = LunaChat.config.getForceJoinChannels();
+        String playerName = player.getName();
+        
+        for ( String cname : forceJoinChannels ) {
+            
+            // チャンネルが存在しない場合は作成する
+            Channel channel = LunaChat.manager.getChannel(cname);
+            if ( channel == null ) {
+                channel = LunaChat.manager.createChannel(cname);
+            }
+            
+            // チャンネルのメンバーでないなら、参加する
+            if ( !channel.getMembers().contains(playerName) ) {
+                channel.addMember(playerName);
+            }
+            
+            // デフォルト発言先が無いなら、グローバルチャンネルに設定する
+            Channel dchannel = LunaChat.manager.getDefaultChannel(playerName);
+            if ( dchannel == null ) {
+                LunaChat.manager.setDefaultChannel(playerName, cname);
+            }
+        }
     }
 }

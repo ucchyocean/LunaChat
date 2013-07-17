@@ -32,6 +32,10 @@ createChannelOnJoinCommand: true
 # グローバルチャンネルを作らず通常のチャットを使用する場合は、から文字列 「''」 を指定すること。
 globalChannel: ''
 
+# サーバーに参加したユーザーに必ず参加させるチャンネル。
+# グローバルチャンネルとは別で指定できる。
+forceJoinChannels: []
+
 # ブロードキャストチャンネルの発言内容を、dynmapに送信するかどうか。
 # dynmapがロードされていない場合は、この設定は無視される（false扱い）。
 sendBroadcastChannelChatToDynmap: true

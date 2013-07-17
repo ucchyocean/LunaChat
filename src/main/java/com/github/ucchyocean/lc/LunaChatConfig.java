@@ -6,6 +6,7 @@
 package com.github.ucchyocean.lc;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.configuration.file.FileConfiguration;
@@ -42,6 +43,10 @@ public class LunaChatConfig {
     /** サーバーに初参加したユーザーを参加させる、既定のチャンネル。<br/>
      *  参加させない場合は、から文字列 "" を指定すること。 */
     private String globalChannel;
+
+    /** サーバーに参加したユーザーに必ず参加させるチャンネル。<br/>
+     *  グローバルチャンネルとは別で指定できる。 */
+    private List<String> forceJoinChannels;
 
     /** ブロードキャストチャンネルの発言内容を、dynmapに送信するかどうか。<br/>
      *  dynmapがロードされていない場合は、この設定は無視される（false扱い）。 */
@@ -108,6 +113,10 @@ public class LunaChatConfig {
         createChannelOnJoinCommand =
             config.getBoolean("createChannelOnJoinCommand", true);
         globalChannel = config.getString("globalChannel", "");
+        forceJoinChannels = config.getStringList("forceJoinChannels");
+        if ( forceJoinChannels == null ) {
+            forceJoinChannels = new ArrayList<String>();
+        }
         sendBroadcastChannelChatToDynmap =
             config.getBoolean("sendBroadcastChannelChatToDynmap", true);
         ngword = config.getStringList("ngword");
@@ -193,6 +202,15 @@ public class LunaChatConfig {
      */
     public String getGlobalChannel() {
         return globalChannel;
+    }
+
+    /**
+     * サーバーに参加したユーザーに必ず参加させるチャンネル。<br/>
+     * グローバルチャンネルとは別で指定できる。
+     * @return globalChannelを返す
+     */
+    public List<String> getForceJoinChannels() {
+        return forceJoinChannels;
     }
 
     /**
