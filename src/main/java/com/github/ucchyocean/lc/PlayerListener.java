@@ -206,7 +206,7 @@ public class PlayerListener implements Listener {
                         taskFormat = LunaChat.config.getJapanizeLine2Format();
 
                         DelayedJapanizeConvertTask task = new DelayedJapanizeConvertTask(message,
-                                LunaChat.config.getJapanizeType(), null, player, taskFormat);
+                                LunaChat.config.getJapanizeType(), null, player, taskFormat, null);
                         Bukkit.getScheduler().runTask(LunaChat.instance, task);
                     }
                 }

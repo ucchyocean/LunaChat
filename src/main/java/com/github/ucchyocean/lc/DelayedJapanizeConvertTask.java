@@ -25,6 +25,7 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
     private Channel channel;
     private Player player;
     private String format;
+    private String lineFormat;
     private String result;
 
     /**
@@ -33,15 +34,16 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
      * @param type 変換タイプ
      * @param channel 変換後に発言する、発言先チャンネル
      * @param player 発言したプレイヤー
-     * @param format 変換後に発言するときの、発言フォーマット
+     * @param japanizeFormat 変換後に発言するときの、発言フォーマット
      */
     public DelayedJapanizeConvertTask(String org, JapanizeType type, Channel channel,
-            Player player, String format) {
+            Player player, String japanizeFormat, String lineFormat) {
         this.org = org;
         this.type = type;
         this.channel = channel;
         this.player = player;
-        this.format = format;
+        this.format = japanizeFormat;
+        this.lineFormat = lineFormat;
     }
 
     /**
@@ -54,7 +56,7 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
 
             // チャンネルへ送信
             if ( channel != null ) {
-                channel.sendMessage(player, result);
+                channel.sendMessage(player, result, lineFormat);
             } else {
                 Bukkit.broadcastMessage(result);
             }

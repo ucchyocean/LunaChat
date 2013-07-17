@@ -210,13 +210,6 @@ public class Channel implements ConfigurationSerializable {
         msgFormat = event.getMessageFormat();
         maskedMessage = event.getNgMaskedMessage();
 
-        // 通常ブロードキャストなら、設定に応じてdynmapへ送信する
-        if ( LunaChat.config.isSendBroadcastChannelChatToDynmap() &&
-                LunaChat.dynmap != null &&
-                isBroadcastChannel() && !isWorldRange ) {
-            LunaChat.dynmap.chat(player, maskedMessage);
-        }
-
         // Japanize変換と、発言処理
         boolean chated = false;
         if ( !skipJapanize &&
@@ -226,31 +219,29 @@ public class Channel implements ConfigurationSerializable {
             if ( message.getBytes().length == message.length() ) {
 
                 int lineType = LunaChat.config.getJapanizeDisplayLine();
-                String lineFormat;
-                String taskFormat;
+                String jpFormat;
+                String messageFormat = null;
                 if ( lineType == 1 ) {
-                    lineFormat = LunaChat.config.getJapanizeLine1Format();
-                    taskFormat = msgFormat.replace("%msg", lineFormat);
+                    jpFormat = LunaChat.config.getJapanizeLine1Format();
+                    messageFormat = msgFormat;
                     chated = true;
                 } else {
-                    lineFormat = LunaChat.config.getJapanizeLine2Format();
-                    taskFormat = lineFormat;
+                    jpFormat = LunaChat.config.getJapanizeLine2Format();
                 }
 
                 // タスクを作成して実行する
                 // 発言処理は、タスクが完了しだい非同期で行われる
-                DelayedJapanizeConvertTask task = new DelayedJapanizeConvertTask(maskedMessage,
-                        LunaChat.config.getJapanizeType(),
-                        this, player, taskFormat);
+                DelayedJapanizeConvertTask task = 
+                        new DelayedJapanizeConvertTask(maskedMessage,
+                                LunaChat.config.getJapanizeType(),
+                                this, player, jpFormat, messageFormat);
                 Bukkit.getScheduler().runTask(LunaChat.instance, task);
             }
         }
 
         if ( !chated ) {
             // メッセージの送信
-
-            String msg = msgFormat.replace("%msg", maskedMessage);
-            sendMessage(player, msg);
+            sendMessage(player, maskedMessage, msgFormat);
         }
 
         // NGワード発言者に、NGワードアクションを実行する
@@ -362,49 +353,26 @@ public class Channel implements ConfigurationSerializable {
         Player p = Bukkit.getPlayerExact(player);
         msg = replaceKeywords(msg, p);
 
-        sendInformation(msg);
-    }
-
-    /**
-     * 情報をチャンネルメンバーに流します。
-     * @param message メッセージ
-     */
-    protected void sendInformation(String message) {
-
-        if ( isBroadcastChannel() ) {
-            // ブロードキャストチャンネル
-
-            Bukkit.broadcastMessage(message);
-
-        } else {
-            // 通常チャンネル
-
-            // オンラインのプレイヤーに送信する
-            for ( String member : members ) {
-                Player p = Bukkit.getPlayerExact(member);
-                if ( p != null ) {
-                    p.sendMessage(message);
-                }
-            }
-        }
-
-        // ロギング
-        log(message);
+        sendMessage(null, msg, null);
     }
 
     /**
      * メッセージを表示します。指定したプレイヤーの発言として処理されます。
      * @param player プレイヤー（ワールドチャット、範囲チャットの場合は必須です）
      * @param message メッセージ
+     * @param format フォーマット
      */
-    protected void sendMessage(Player player, String message) {
+    protected void sendMessage(Player player, String message, String format) {
 
         // 受信者を設定する
         ArrayList<Player> recipients = new ArrayList<Player>();
+        boolean isRangeChat = false;
+        
         if ( isBroadcastChannel() ) {
             // ブロードキャストチャンネル
 
-            if ( isWorldRange ) {
+            if ( isWorldRange && player != null ) {
+                isRangeChat = true;
                 World w = player.getWorld();
 
                 if ( chatRange > 0 ) {
@@ -446,13 +414,28 @@ public class Channel implements ConfigurationSerializable {
             }
         }
 
+        // 通常ブロードキャストなら、設定に応じてdynmapへ送信する
+        if ( LunaChat.config.isSendBroadcastChannelChatToDynmap() &&
+                LunaChat.dynmap != null &&
+                isBroadcastChannel() && !isWorldRange ) {
+            if ( player != null ) 
+                LunaChat.dynmap.chat(player, message);
+            else 
+                LunaChat.dynmap.broadcast(message);
+        }
+
+        // フォーマットがある場合は置き換える
+        if ( format != null ) {
+            message = format.replace("%msg", message);
+        }
+        
         // 送信する
         for ( Player p : recipients ) {
             p.sendMessage(message);
         }
         
         // 受信者が自分以外いない場合は、メッセージを表示する
-        if ( isWorldRange && ( recipients.size() == 0 ||
+        if ( isRangeChat && ( recipients.size() == 0 ||
                 (recipients.size() == 1 && recipients.get(0).getName().equals(player.getName()) ) ) ) {
             String msg = replaceKeywords(MSG_NO_RECIPIENT, null);
             player.sendMessage(msg);

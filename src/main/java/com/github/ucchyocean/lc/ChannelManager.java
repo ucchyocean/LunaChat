@@ -494,6 +494,7 @@ public class ChannelManager implements LunaChatAPI {
      * @param playerName 設定するプレイヤー名
      * @param doJapanize Japanize変換するかどうか
      */
+    @Override
     public void setPlayersJapanize(String playerName, boolean doJapanize) {
         japanize.put(playerName, doJapanize);
         saveJapanize();

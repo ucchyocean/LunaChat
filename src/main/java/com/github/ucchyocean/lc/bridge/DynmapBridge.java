@@ -54,6 +54,6 @@ public class DynmapBridge {
      */
     public void broadcast(String message) {
         
-        dynmap.sendBroadcastToWeb("@", message);
+        dynmap.sendBroadcastToWeb(null, message);
     }
 }
