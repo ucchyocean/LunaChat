@@ -166,6 +166,13 @@ public class Channel implements ConfigurationSerializable {
     }
 
     /**
+     * @return 強制参加チャンネルかどうか
+     */
+    public boolean isForceJoinChannel() {
+        return LunaChat.config.getForceJoinChannels().contains(name);
+    }
+
+    /**
      * このチャットに発言をする
      * @param player 発言をするプレイヤー
      * @param message 発言をするメッセージ

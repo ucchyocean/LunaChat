@@ -82,20 +82,26 @@ public class LeaveCommand extends SubCommandAbst {
             channelName = args[1];
         }
 
-        // グローバルチャンネルなら退出できない
-        if ( channelName == null || config.getGlobalChannel().equals(channelName) ) {
-            sendResourceMessage(sender, PREERR, "errmsgCannotLeaveGlobal", channelName);
-            return true;
-        }
-
         // チャンネルが存在するかどうかをチェックする
         if ( !api.isExistChannel(channelName) ) {
             sendResourceMessage(sender, PREERR, "errmsgNotExist");
             return true;
         }
+        Channel channel = api.getChannel(channelName);
+
+        // グローバルチャンネルなら退出できない
+        if ( channel.isGlobalChannel() ) {
+            sendResourceMessage(sender, PREERR, "errmsgCannotLeaveGlobal", channelName);
+            return true;
+        }
+
+        // 強制参加チャンネルなら退出できない
+        if ( channel.isForceJoinChannel() ) {
+            sendResourceMessage(sender, PREERR, "errmsgCannotLeaveForceJoin", channelName);
+            return true;
+        }
 
         // チャンネルのメンバーかどうかを確認する
-        Channel channel = api.getChannel(channelName);
         if (!channel.getMembers().contains(player.getName())) {
             sendResourceMessage(sender, PREERR, "errmsgNomember");
             return true;

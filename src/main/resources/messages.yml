@@ -79,6 +79,7 @@ errmsgCannotKickGlobal: 'チャンネル %s はグローバルチャンネルな
 errmsgCannotBANGlobal: 'チャンネル %s はグローバルチャンネルなので、BANできません。'
 errmsgCannotRemoveGlobal: 'チャンネル %s はグローバルチャンネルなので、削除できません。'
 errmsgCannotModeratorGlobal: 'チャンネル %s はグローバルチャンネルなので、モデレーターを設定できません。'
+errmsgCannotLeaveForceJoin: 'チャンネル %s は強制参加チャンネルなので、退出できません。'
 errmsgNotfoundPM: 'あなたが受信したプライベートメッセージがありません。'
 errmsgCannotSendPMSelf: '自分自身にプライベートメッセージを送ることはできません。'
 errmsgCannotUseForChannel: '%s はチャンネル名に使用できない文字を含んでいます。'
