@@ -14,7 +14,7 @@ import org.bukkit.command.CommandSender;
 public class ReloadCommand extends SubCommandAbst {
 
     private static final String COMMAND_NAME = "reload";
-    private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
+    private static final String PERMISSION_NODE = "lunachat-admin." + COMMAND_NAME;
     private static final String USAGE_KEY = "usageReload";
     
     /**

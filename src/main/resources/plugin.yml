@@ -1,6 +1,6 @@
 name: LunaChat
 main: com.github.ucchyocean.lc.LunaChat
-version: 2.3.0
+version: 2.3.1
 author: ucchy
 description: チャンネルチャットプラグイン
 softdepend: [Vault, dynmap]
@@ -105,12 +105,17 @@ permissions:
       lunachat.japanize: true
     description: 一般ユーザー向けの全コマンドの使用権限
     default: true
-  lunachat.template:
+  lunachat-admin.template:
     description: templateコマンドの使用権限
-    default: op
-  lunachat.reload:
+  lunachat-admin.reload:
     description: reloadコマンドの使用権限
-    default: op
-  lunachat.japanize-other:
+  lunachat-admin.japanize-other:
     description: 他者のjapanizeオンオフ設定コマンドの使用権限
+  lunachat-admin.*:
+    children:
+      lunachat-admin.template: true
+      lunachat-admin.reload: true
+      lunachat-admin.japanize-other: true
+    description: 管理者向けの全コマンドの使用権限
     default: op
+    

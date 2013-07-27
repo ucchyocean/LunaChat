@@ -21,7 +21,7 @@ import com.github.ucchyocean.lc.Resources;
  */
 public class LunaChatJapanizeCommand implements CommandExecutor {
 
-    private static final String PERM_JAPANIZE_OTHER = "lunachat.japanize-other";
+    private static final String PERM_JAPANIZE_OTHER = "lunachat-admin.japanize-other";
     
     private static final String PREINFO = Resources.get("infoPrefix");
     private static final String PREERR = Resources.get("errorPrefix");
