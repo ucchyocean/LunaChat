@@ -3,8 +3,8 @@ LunaChat
 
 チャンネルチャットプラグイン for ShiroumiServer<br />
 <br />
-ダウンロードv2.3.0はこちらから<br />
-https://github.com/ucchyocean/LunaChat/releases/tag/v2.3.0<br />
+ダウンロードv2.3.1はこちらから<br />
+https://github.com/ucchyocean/LunaChat/releases/tag/v2.3.1<br />
 <br />
 コマンドリファレンスや、設定リファレンスは、こちらから<br />
 https://github.com/ucchyocean/LunaChat/wiki/Commands<br />
