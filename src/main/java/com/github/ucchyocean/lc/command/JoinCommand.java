@@ -100,7 +100,7 @@ public class JoinCommand extends SubCommandAbst {
                 // グローバルチャンネル設定が無くて、指定チャンネルがマーカーの場合、
                 // 発言先をnullに設定して、グローバルチャンネルにする
 
-                api.setDefaultChannel(player.getName(), null);
+                api.removeDefaultChannel(player.getName());
                 sendResourceMessage(sender, PREINFO, "cmdmsgSet", "グローバル");
                 if (message.length() > 0) {
                     player.chat(config.getGlobalMarker() + message.toString());
