@@ -42,7 +42,7 @@ public class LunaChatLogger {
      * ログを出力する
      * @param message ログ内容
      */
-    public void log(final String message) {
+    public synchronized void log(final String message) {
         
         checkDir();
         
