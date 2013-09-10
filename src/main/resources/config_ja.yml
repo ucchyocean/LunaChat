@@ -1,4 +1,4 @@
-# LunaChat v2.3.2
+# LunaChat v2.4.0
 # @author     ucchy
 # @license    LGPLv3
 # @copyright  Copyright ucchy 2013
@@ -34,6 +34,7 @@ globalChannel: ''
 
 # サーバーに参加したユーザーに必ず参加させるチャンネル。
 # グローバルチャンネルとは別で指定できる。
+# 複数のチャンネルを設定可能。例）forceJoinChannels: ['L', 'M', 'N']
 forceJoinChannels: []
 
 # ブロードキャストチャンネルの発言内容を、dynmapに送信するかどうか。
