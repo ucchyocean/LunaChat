@@ -94,7 +94,7 @@ public class InfoCommand extends SubCommandAbst {
         }
 
         // BANされていないかどうか確認する
-        if ( channel.getBanned().contains(player.getName()) ) {
+        if ( player != null && channel.getBanned().contains(player.getName()) ) {
             sendResourceMessage(sender, PREERR, "errmsgBanned");
             return true;
         }
