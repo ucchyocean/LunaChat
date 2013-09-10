@@ -217,38 +217,43 @@ public class Channel implements ConfigurationSerializable {
         msgFormat = event.getMessageFormat();
         maskedMessage = event.getNgMaskedMessage();
 
-        // Japanize変換と、発言処理
-        boolean chated = false;
+        // 2byteコードを含むなら、Japanize変換は行わない
+        if ( !skipJapanize && ( message.getBytes().length > message.length() ) ) {
+            skipJapanize = true;
+        }
+
+        // Japanize変換タスクを作成する
+        boolean isIncludeSyncChat = true;
+        DelayedJapanizeConvertTask delayedTask = null;
         if ( !skipJapanize &&
                 LunaChat.manager.isPlayerJapanize(player.getName()) &&
                 LunaChat.config.getJapanizeType() != JapanizeType.NONE ) {
-            // 2byteコードを含まない場合にのみ、処理を行う
-            if ( message.getBytes().length == message.length() ) {
 
-                int lineType = LunaChat.config.getJapanizeDisplayLine();
-                String jpFormat;
-                String messageFormat = null;
-                if ( lineType == 1 ) {
-                    jpFormat = LunaChat.config.getJapanizeLine1Format();
-                    messageFormat = msgFormat;
-                    chated = true;
-                } else {
-                    jpFormat = LunaChat.config.getJapanizeLine2Format();
-                }
-
-                // タスクを作成して実行する
-                // 発言処理は、タスクが完了しだい非同期で行われる
-                DelayedJapanizeConvertTask task = 
-                        new DelayedJapanizeConvertTask(maskedMessage,
-                                LunaChat.config.getJapanizeType(),
-                                this, player, jpFormat, messageFormat);
-                Bukkit.getScheduler().runTask(LunaChat.instance, task);
+            int lineType = LunaChat.config.getJapanizeDisplayLine();
+            String jpFormat;
+            String messageFormat = null;
+            if ( lineType == 1 ) {
+                jpFormat = LunaChat.config.getJapanizeLine1Format();
+                messageFormat = msgFormat;
+                isIncludeSyncChat = false;
+            } else {
+                jpFormat = LunaChat.config.getJapanizeLine2Format();
             }
+
+            // タスクを作成しておく
+            delayedTask = new DelayedJapanizeConvertTask(maskedMessage,
+                            LunaChat.config.getJapanizeType(),
+                            this, player, jpFormat, messageFormat);
         }
 
-        if ( !chated ) {
+        if ( isIncludeSyncChat ) {
             // メッセージの送信
             sendMessage(player, maskedMessage, msgFormat);
+        }
+        
+        // 非同期実行タスクがある場合、追加で実行する
+        if ( delayedTask != null ) {
+            Bukkit.getScheduler().runTask(LunaChat.instance, delayedTask);
         }
 
         // NGワード発言者に、NGワードアクションを実行する

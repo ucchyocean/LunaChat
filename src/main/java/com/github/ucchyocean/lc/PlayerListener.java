@@ -184,35 +184,39 @@ public class PlayerListener implements Listener {
                 message = message.substring(marker.length());
             }
 
+            // 2byteコードを含むなら、Japanize変換は行わない
+            if ( !skipJapanize && ( message.getBytes().length > message.length() ) ) {
+                skipJapanize = true;
+            }
+
             // Japanize変換と、発言処理
             if ( !skipJapanize &&
                     LunaChat.manager.isPlayerJapanize(player.getName()) &&
                     LunaChat.config.getJapanizeType() != JapanizeType.NONE ) {
-                // 2byteコードを含まない場合にのみ、処理を行う
-                if ( message.getBytes().length == message.length() ) {
 
-                    int lineType = LunaChat.config.getJapanizeDisplayLine();
-                    String taskFormat;
-                    if ( lineType == 1 ) {
+                int lineType = LunaChat.config.getJapanizeDisplayLine();
+                String taskFormat;
+                if ( lineType == 1 ) {
 
-                        taskFormat = LunaChat.config.getJapanizeLine1Format();
+                    taskFormat = LunaChat.config.getJapanizeLine1Format();
 
-                        String japanized = LunaChat.manager.japanize(
-                                message, LunaChat.config.getJapanizeType());
-                        if ( japanized != null ) {
-                            String temp = taskFormat.replace("%msg", message);
-                            temp = temp.replace("%japanize", japanized);
-                            message = Utility.replaceColorCode(temp);
-                        }
-
-                    } else {
-
-                        taskFormat = LunaChat.config.getJapanizeLine2Format();
-
-                        DelayedJapanizeConvertTask task = new DelayedJapanizeConvertTask(message,
-                                LunaChat.config.getJapanizeType(), null, player, taskFormat, null);
-                        Bukkit.getScheduler().runTask(LunaChat.instance, task);
+                    String japanized = LunaChat.manager.japanize(
+                            message, LunaChat.config.getJapanizeType());
+                    if ( japanized != null ) {
+                        String temp = taskFormat.replace("%msg", message);
+                        temp = temp.replace("%japanize", japanized);
+                        message = Utility.replaceColorCode(temp);
                     }
+
+                } else {
+
+                    taskFormat = LunaChat.config.getJapanizeLine2Format();
+
+                    DelayedJapanizeConvertTask task = new DelayedJapanizeConvertTask(message,
+                            LunaChat.config.getJapanizeType(), null, player, taskFormat, null);
+                    
+                    // 発言処理を必ず先に実施させるため、遅延を入れてタスクを実行する。
+                    Bukkit.getScheduler().runTaskLater(LunaChat.instance, task, 3);
                 }
             }
 
