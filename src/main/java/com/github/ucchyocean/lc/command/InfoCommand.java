@@ -98,9 +98,13 @@ public class InfoCommand extends SubCommandAbst {
             sendResourceMessage(sender, PREERR, "errmsgBanned");
             return true;
         }
+        
+        // チャンネルモデレーターかどうか確認する
+        boolean isModerator = sender.isOp() || 
+                (player != null && channel.getModerator().contains(player.getName()));
 
         // 情報を取得して表示する
-        ArrayList<String> list = channel.getInfo();
+        ArrayList<String> list = channel.getInfo(isModerator);
         for (String msg : list) {
             sender.sendMessage(msg);
         }

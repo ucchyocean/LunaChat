@@ -12,14 +12,14 @@ import org.bukkit.entity.Player;
 import com.github.ucchyocean.lc.Channel;
 
 /**
- * banコマンドの実行クラス
+ * muteコマンドの実行クラス
  * @author ucchy
  */
-public class BanCommand extends SubCommandAbst {
+public class MuteCommand extends SubCommandAbst {
 
-    private static final String COMMAND_NAME = "ban";
+    private static final String COMMAND_NAME = "mute";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
-    private static final String USAGE_KEY = "usageBan";
+    private static final String USAGE_KEY = "usageMute";
     
     /**
      * コマンドを取得します。
@@ -71,7 +71,7 @@ public class BanCommand extends SubCommandAbst {
             return true;
         }
 
-        // 実行引数から、BANするユーザーを取得する
+        // 実行引数から、Muteするユーザーを取得する
         String kickedName = "";
         if (args.length >= 2) {
             kickedName = args[1];
@@ -94,34 +94,27 @@ public class BanCommand extends SubCommandAbst {
             return true;
         }
 
-        // グローバルチャンネルならBANできない
-        if ( channel.isGlobalChannel() ) {
-            sendResourceMessage(sender, PREERR, "errmsgCannotBANGlobal", channel.getName());
-            return true;
-        }
-
-        // BANされるプレイヤーがメンバーかどうかチェックする
+        // Muteされるプレイヤーがメンバーかどうかチェックする
         if (!channel.getMembers().contains(kickedName)) {
             sendResourceMessage(sender, PREERR, "errmsgNomemberOther");
             return true;
         }
         
-        // 既にBANされているかどうかチェックする
-        if (!channel.getBanned().contains(kickedName)) {
-            sendResourceMessage(sender, PREERR, "errmsgAlreadyBanned");
+        // 既にMuteされているかどうかチェックする
+        if (!channel.getMuted().contains(kickedName)) {
+            sendResourceMessage(sender, PREERR, "errmsgAlreadyMuted");
             return true;
         }
 
-        // BAN実行
+        // Mute実行
         Player kicked = Bukkit.getPlayerExact(kickedName);
-        channel.getBanned().add(kickedName);
-        channel.removeMember(kickedName);
+        channel.getMuted().add(kickedName);
 
         sendResourceMessage(sender, PREINFO,
-                "cmdmsgBan", kickedName, channel.getName());
+                "cmdmsgMute", kickedName, channel.getName());
         if (kicked != null) {
             sendResourceMessage(kicked, PREINFO,
-                    "cmdmsgBanned", channel.getName());
+                    "cmdmsgMuted", channel.getName());
         }
 
         return true;

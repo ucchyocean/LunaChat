@@ -42,6 +42,9 @@ public class Channel implements ConfigurationSerializable {
     private static final String INFO_PASSWORD = Resources.get("channelInfoPassword");
     private static final String INFO_WORLDCHAT = Resources.get("channelInfoWorldChat");
     private static final String INFO_RANGECHAT = Resources.get("channelInfoRangeChat");
+    private static final String INFO_FORMAT = Resources.get("channelInfoFormat");
+    private static final String INFO_BANNED = Resources.get("channelInfoBanned");
+    private static final String INFO_MUTED = Resources.get("channelInfoMuted");
 
     private static final String LIST_ENDLINE = Resources.get("listEndLine");
     private static final String LIST_FORMAT = Resources.get("listFormat");
@@ -53,17 +56,23 @@ public class Channel implements ConfigurationSerializable {
     private static final String MSG_QUIT = Resources.get("quitMessage");
 
     private static final String PREINFO = Resources.get("infoPrefix");
+    private static final String PREERR = Resources.get("errorPrefix");
+
     private static final String NGWORD_PREFIX = Resources.get("ngwordPrefix");
     private static final String MSG_KICKED = Resources.get("cmdmsgKicked");
     private static final String MSG_BANNED = Resources.get("cmdmsgBanned");
+    private static final String MSG_MUTED = Resources.get("cmdmsgMuted");
 
     private static final String MSG_NO_RECIPIENT = Resources.get("noRecipientMessage");
+
+    private static final String ERRMSG_MUTED = Resources.get("errmsgMuted");
 
     private static final String KEY_NAME = "name";
     private static final String KEY_DESC = "desc";
     private static final String KEY_FORMAT = "format";
     private static final String KEY_MEMBERS = "members";
     private static final String KEY_BANNED = "banned";
+    private static final String KEY_MUTED = "muted";
     private static final String KEY_MODERATOR = "moderator";
     private static final String KEY_PASSWORD = "password";
     private static final String KEY_VISIBLE = "visible";
@@ -80,6 +89,9 @@ public class Channel implements ConfigurationSerializable {
 
     /** BANされたプレイヤー */
     private List<String> banned;
+    
+    /** Muteされたプレイヤー */
+    private List<String> muted;
 
     /** チャンネルの名称 */
     private String name;
@@ -128,6 +140,7 @@ public class Channel implements ConfigurationSerializable {
         this.description = "";
         this.members = new ArrayList<String>();
         this.banned = new ArrayList<String>();
+        this.muted = new ArrayList<String>();
         this.moderator = new ArrayList<String>();
         this.password = "";
         this.visible = true;
@@ -179,6 +192,13 @@ public class Channel implements ConfigurationSerializable {
      */
     public void chat(Player player, String message) {
 
+        // Muteされているかどうかを確認する
+        if ( player != null && muted.contains(player.getName()) ) {
+            player.sendMessage( PREERR + ERRMSG_MUTED );
+            return;
+        }
+        
+        
         String preReplaceMessage = message;
         
         // 一時的にJapanizeスキップ設定かどうかを確認する
@@ -261,17 +281,29 @@ public class Channel implements ConfigurationSerializable {
             if ( LunaChat.config.getNgwordAction() == NGWordAction.BAN ) {
                 // BANする
 
-                banned.add(player.getName());
-                removeMember(player.getName());
-                String temp = PREINFO + NGWORD_PREFIX + MSG_BANNED;
-                String m = String.format(temp, name);
-                player.sendMessage(m);
+                if ( !isBroadcastChannel() ) {
+                    banned.add(player.getName());
+                    removeMember(player.getName());
+                    String temp = PREINFO + NGWORD_PREFIX + MSG_BANNED;
+                    String m = String.format(temp, name);
+                    player.sendMessage(m);
+                }
 
             } else if ( LunaChat.config.getNgwordAction() == NGWordAction.KICK ) {
                 // キックする
 
-                removeMember(player.getName());
-                String temp = PREINFO + NGWORD_PREFIX + MSG_KICKED;
+                if ( !isBroadcastChannel() ) {
+                    removeMember(player.getName());
+                    String temp = PREINFO + NGWORD_PREFIX + MSG_KICKED;
+                    String m = String.format(temp, name);
+                    player.sendMessage(m);
+                }
+                
+            } else if ( LunaChat.config.getNgwordAction() == NGWordAction.MUTE ) {
+                // Muteする
+
+                muted.add(player.getName());
+                String temp = PREINFO + NGWORD_PREFIX + MSG_MUTED;
                 String m = String.format(temp, name);
                 player.sendMessage(m);
             }
@@ -459,16 +491,19 @@ public class Channel implements ConfigurationSerializable {
 
     /**
      * チャンネル情報を返す
+     * @param forModerator モデレータ向けの情報を含めるかどうか
      * @return チャンネル情報
      */
-    public ArrayList<String> getInfo() {
+    public ArrayList<String> getInfo(boolean forModerator) {
 
         ArrayList<String> info = new ArrayList<String>();
         info.add(INFO_FIRSTLINE);
 
+        // チャンネル名、参加人数、総人数、チャンネル説明文
         info.add( String.format(
                 LIST_FORMAT, name, getOnlineNum(), getTotalNum(), description) );
 
+        // 参加メンバー一覧
         if ( isGlobalChannel() ) {
             info.add(INFO_GLOBAL);
         } else if ( isBroadcastChannel() ) {
@@ -502,18 +537,65 @@ public class Channel implements ConfigurationSerializable {
             info.add(buf.toString());
         }
         
+        // シークレットチャンネルかどうか
         if ( !visible ) {
             info.add(INFO_SECRET);
         }
         
+        // パスワード設定があるかどうか
         if ( password.length() > 0 ) {
-            info.add(INFO_PASSWORD);
+            if ( !forModerator ) {
+                info.add(INFO_PASSWORD);
+            } else {
+                info.add(INFO_PASSWORD + " " + password);
+            }
         }
         
+        // 範囲チャット、ワールドチャット
         if ( isWorldRange && chatRange > 0 ) {
             info.add(String.format(INFO_RANGECHAT, chatRange));
         } else if ( isWorldRange ) {
             info.add(INFO_WORLDCHAT);
+        }
+        
+        if ( forModerator ) {
+            
+            // フォーマット情報
+            info.add(INFO_FORMAT + format);
+            
+            // Muteリスト情報、5人ごとに表示する
+            info.add(INFO_MUTED);
+
+            StringBuffer buf = new StringBuffer();
+            for ( int i=0; i<muted.size(); i++ ) {
+                if ( i%5 == 0 ) {
+                    if ( i != 0 ) {
+                        info.add(buf.toString());
+                        buf = new StringBuffer();
+                    }
+                    buf.append(INFO_PREFIX + ChatColor.WHITE);
+                }
+                buf.append(muted.get(i) + ",");
+            }
+
+            info.add(buf.toString());
+
+            // BANリスト情報、5人ごとに表示する
+            info.add(INFO_BANNED);
+
+            buf = new StringBuffer();
+            for ( int i=0; i<banned.size(); i++ ) {
+                if ( i%5 == 0 ) {
+                    if ( i != 0 ) {
+                        info.add(buf.toString());
+                        buf = new StringBuffer();
+                    }
+                    buf.append(INFO_PREFIX + ChatColor.WHITE);
+                }
+                buf.append(banned.get(i) + ",");
+            }
+
+            info.add(buf.toString());
         }
         
         info.add(LIST_ENDLINE);
@@ -580,7 +662,7 @@ public class Channel implements ConfigurationSerializable {
      */
     public int getOnlineNum() {
 
-        // グローバルチャンネルならサーバー接続人数を返す
+        // ブロードキャストチャンネルならサーバー接続人数を返す
         if ( isBroadcastChannel() ) {
             return Bukkit.getOnlinePlayers().length;
         }
@@ -601,7 +683,7 @@ public class Channel implements ConfigurationSerializable {
      */
     public int getTotalNum() {
 
-        // グローバルチャンネルならサーバー接続人数を返す
+        // ブロードキャストチャンネルならサーバー接続人数を返す
         if ( isBroadcastChannel() ) {
             return Bukkit.getOnlinePlayers().length;
         }
@@ -623,6 +705,7 @@ public class Channel implements ConfigurationSerializable {
         map.put(KEY_FORMAT, format);
         map.put(KEY_MEMBERS, members);
         map.put(KEY_BANNED, banned);
+        map.put(KEY_MUTED, muted);
         map.put(KEY_MODERATOR, moderator);
         map.put(KEY_PASSWORD, password);
         map.put(KEY_VISIBLE, visible);
@@ -650,6 +733,7 @@ public class Channel implements ConfigurationSerializable {
         channel.format =
             castWithDefault(data.get(KEY_FORMAT), DEFAULT_FORMAT);
         channel.banned = castToStringList(data.get(KEY_BANNED));
+        channel.muted = castToStringList(data.get(KEY_MUTED));
         channel.moderator = castToStringList(data.get(KEY_MODERATOR));
         channel.password = castWithDefault(data.get(KEY_PASSWORD), "");
         channel.visible = castWithDefault(data.get(KEY_VISIBLE), true);
@@ -761,6 +845,18 @@ public class Channel implements ConfigurationSerializable {
      * @return チャンネルのメンバー
      */
     public List<String> getMembers() {
+        
+        // ブロードキャストチャンネルなら、
+        // 現在サーバーに接続している全プレイヤーをメンバーとして返す
+        if ( isBroadcastChannel() ) {
+            Player[] players = Bukkit.getOnlinePlayers();
+            List<String> mem = new ArrayList<String>();
+            for ( Player p : players ) {
+                mem.add(p.getName());
+            }
+            return mem;
+        }
+        
         return members;
     }
 
@@ -778,6 +874,14 @@ public class Channel implements ConfigurationSerializable {
      */
     public List<String> getBanned() {
         return banned;
+    }
+
+    /**
+     * チャンネルのMuteリストを返す
+     * @return チャンネルのMuteリスト
+     */
+    public List<String> getMuted() {
+        return muted;
     }
 
     /**

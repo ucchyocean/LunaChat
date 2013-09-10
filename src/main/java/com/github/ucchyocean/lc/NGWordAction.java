@@ -14,6 +14,9 @@ public enum NGWordAction {
 
     /** マスクするのみ */
     MASK("mask"),
+    
+    /** マスクしつつ、チャンネルからMuteする */
+    MUTE("mute"),
 
     /** マスクしつつ、チャンネルからキックする */
     KICK("kick"),

@@ -18,6 +18,8 @@ commands:
            /<command> kick (name) - 指定した人をチャンネルチャットからキックします。
            /<command> ban (name) - 指定した人をチャンネルチャットからBANします。
            /<command> pardon (name) - 指定した人のBANを解除します。
+           /<command> mute (name) - 指定した人をチャンネルチャットからMuteします。
+           /<command> unmute (name) - 指定した人のMuteを解除します。
            /<command> info [channel] - チャンネルの情報を表示します。
            /<command> create (channel) - チャンネルを作成します。
            /<command> remove [channel] - チャンネルを削除します。
@@ -49,40 +51,64 @@ commands:
 permissions:
   lunachat.join:
     description: joinコマンドの使用権限
+    default: true
   lunachat.leave:
     description: leaveコマンドの使用権限
+    default: true
   lunachat.list:
     description: listコマンドの使用権限
+    default: true
   lunachat.invite:
     description: inviteコマンドの使用権限
+    default: true
   lunachat.accept:
     description: acceptコマンドの使用権限
+    default: true
   lunachat.deny:
     description: denyコマンドの使用権限
+    default: true
   lunachat.kick:
     description: kickコマンドの使用権限
+    default: true
   lunachat.ban:
     description: banコマンドの使用権限
+    default: true
   lunachat.pardon:
     description: pardonコマンドの使用権限
+    default: true
+  lunachat.mute:
+    description: muteコマンドの使用権限
+    default: true
+  lunachat.unmute:
+    description: unmuteコマンドの使用権限
+    default: true
   lunachat.info:
     description: infoコマンドの使用権限
+    default: true
   lunachat.create:
     description: createコマンドの使用権限
+    default: true
   lunachat.remove:
     description: removeコマンドの使用権限
+    default: true
   lunachat.format:
     description: formatコマンドの使用権限
+    default: true
   lunachat.moderator:
     description: moderatorコマンドの使用権限
+    default: true
   lunachat.option:
     description: optionコマンドの使用権限
+    default: true
   lunachat.message:
     description: messageコマンドの使用権限
+    default: true
   lunachat.reply:
     description: replyコマンドの使用権限
+    default: true
   lunachat.japanize:
     description: lunachatのjapanizeオンオフ設定コマンドの使用権限
+    default: true
   lunachat.*:
     children:
       lunachat.join: true
@@ -94,6 +120,8 @@ permissions:
       lunachat.kick: true
       lunachat.ban: true
       lunachat.pardon: true
+      lunachat.mute: true
+      lunachat.unmute: true
       lunachat.info: true
       lunachat.create: true
       lunachat.remove: true
@@ -104,18 +132,19 @@ permissions:
       lunachat.reply: true
       lunachat.japanize: true
     description: 一般ユーザー向けの全コマンドの使用権限
-    default: true
   lunachat-admin.template:
     description: templateコマンドの使用権限
+    default: op
   lunachat-admin.reload:
     description: reloadコマンドの使用権限
+    default: op
   lunachat-admin.japanize-other:
     description: 他者のjapanizeオンオフ設定コマンドの使用権限
+    default: op
   lunachat-admin.*:
     children:
       lunachat-admin.template: true
       lunachat-admin.reload: true
       lunachat-admin.japanize-other: true
     description: 管理者向けの全コマンドの使用権限
-    default: op
     

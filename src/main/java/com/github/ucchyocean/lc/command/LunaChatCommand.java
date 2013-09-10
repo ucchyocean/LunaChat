@@ -40,11 +40,14 @@ public class LunaChatCommand implements CommandExecutor {
         commands.add(new KickCommand());
         commands.add(new BanCommand());
         commands.add(new PardonCommand());
+        commands.add(new MuteCommand());
+        commands.add(new UnmuteCommand());
         commands.add(new InfoCommand());
         commands.add(new CreateCommand());
         commands.add(new RemoveCommand());
         commands.add(new FormatCommand());
         commands.add(new ModeratorCommand());
+        commands.add(new ModCommand());
         commands.add(new OptionCommand());
         commands.add(new TemplateCommand());
         commands.add(new ReloadCommand());
