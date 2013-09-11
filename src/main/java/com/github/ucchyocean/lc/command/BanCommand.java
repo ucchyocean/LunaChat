@@ -107,7 +107,7 @@ public class BanCommand extends SubCommandAbst {
         }
         
         // 既にBANされているかどうかチェックする
-        if (!channel.getBanned().contains(kickedName)) {
+        if (channel.getBanned().contains(kickedName)) {
             sendResourceMessage(sender, PREERR, "errmsgAlreadyBanned");
             return true;
         }

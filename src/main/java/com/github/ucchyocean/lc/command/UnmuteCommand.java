@@ -100,7 +100,7 @@ public class UnmuteCommand extends SubCommandAbst {
             return true;
         }
 
-        // BAN解除実行
+        // Mute解除実行
         Player kicked = Bukkit.getPlayerExact(kickedName);
         channel.getMuted().remove(kickedName);
         channel.save();

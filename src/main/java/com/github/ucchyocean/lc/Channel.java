@@ -303,6 +303,7 @@ public class Channel implements ConfigurationSerializable {
                 // Muteする
 
                 muted.add(player.getName());
+                save();
                 String temp = PREINFO + NGWORD_PREFIX + MSG_MUTED;
                 String m = String.format(temp, name);
                 player.sendMessage(m);
@@ -511,13 +512,13 @@ public class Channel implements ConfigurationSerializable {
         } else {
             // メンバーを、5人ごとに表示する
             StringBuffer buf = new StringBuffer();
+            buf.append(INFO_PREFIX);
+            
             for ( int i=0; i<members.size(); i++ ) {
 
-                if ( i%5 == 0 ) {
-                    if ( i != 0 ) {
-                        info.add(buf.toString());
-                        buf = new StringBuffer();
-                    }
+                if ( i%5 == 0 && i != 0 ) {
+                    info.add(buf.toString());
+                    buf = new StringBuffer();
                     buf.append(INFO_PREFIX);
                 }
 
@@ -564,38 +565,40 @@ public class Channel implements ConfigurationSerializable {
             info.add(INFO_FORMAT + format);
             
             // Muteリスト情報、5人ごとに表示する
-            info.add(INFO_MUTED);
-
-            StringBuffer buf = new StringBuffer();
-            for ( int i=0; i<muted.size(); i++ ) {
-                if ( i%5 == 0 ) {
-                    if ( i != 0 ) {
+            if ( muted.size() > 0 ) {
+                info.add(INFO_MUTED);
+    
+                StringBuffer buf = new StringBuffer();
+                buf.append(INFO_PREFIX + ChatColor.WHITE);
+                for ( int i=0; i<muted.size(); i++ ) {
+                    if ( i%5 == 0 && i != 0 ) {
                         info.add(buf.toString());
                         buf = new StringBuffer();
+                        buf.append(INFO_PREFIX + ChatColor.WHITE);
                     }
-                    buf.append(INFO_PREFIX + ChatColor.WHITE);
+                    buf.append(muted.get(i) + ",");
                 }
-                buf.append(muted.get(i) + ",");
+    
+                info.add(buf.toString());
             }
-
-            info.add(buf.toString());
 
             // BANリスト情報、5人ごとに表示する
-            info.add(INFO_BANNED);
+            if ( banned.size() > 0 ) {
+                info.add(INFO_BANNED);
 
-            buf = new StringBuffer();
-            for ( int i=0; i<banned.size(); i++ ) {
-                if ( i%5 == 0 ) {
-                    if ( i != 0 ) {
+                StringBuffer buf = new StringBuffer();
+                buf.append(INFO_PREFIX + ChatColor.WHITE);
+                for ( int i=0; i<banned.size(); i++ ) {
+                    if ( i%5 == 0 && i != 0 ) {
                         info.add(buf.toString());
                         buf = new StringBuffer();
+                        buf.append(INFO_PREFIX + ChatColor.WHITE);
                     }
-                    buf.append(INFO_PREFIX + ChatColor.WHITE);
+                    buf.append(banned.get(i) + ",");
                 }
-                buf.append(banned.get(i) + ",");
+    
+                info.add(buf.toString());
             }
-
-            info.add(buf.toString());
         }
         
         info.add(LIST_ENDLINE);

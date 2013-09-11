@@ -101,7 +101,7 @@ public class MuteCommand extends SubCommandAbst {
         }
         
         // 既にMuteされているかどうかチェックする
-        if (!channel.getMuted().contains(kickedName)) {
+        if (channel.getMuted().contains(kickedName)) {
             sendResourceMessage(sender, PREERR, "errmsgAlreadyMuted");
             return true;
         }
@@ -109,6 +109,7 @@ public class MuteCommand extends SubCommandAbst {
         // Mute実行
         Player kicked = Bukkit.getPlayerExact(kickedName);
         channel.getMuted().add(kickedName);
+        channel.save();
 
         sendResourceMessage(sender, PREINFO,
                 "cmdmsgMute", kickedName, channel.getName());

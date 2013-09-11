@@ -216,7 +216,8 @@ public class PlayerListener implements Listener {
                             LunaChat.config.getJapanizeType(), null, player, taskFormat, null);
                     
                     // 発言処理を必ず先に実施させるため、遅延を入れてタスクを実行する。
-                    Bukkit.getScheduler().runTaskLater(LunaChat.instance, task, 3);
+                    int wait = LunaChat.config.getJapanizeWait();
+                    Bukkit.getScheduler().runTaskLater(LunaChat.instance, task, wait);
                 }
             }
 
