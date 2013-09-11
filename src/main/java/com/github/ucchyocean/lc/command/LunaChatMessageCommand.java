@@ -52,7 +52,7 @@ public class LunaChatMessageCommand implements CommandExecutor {
             invitedName = args[0];
             if ( args.length >= 2 ) {
                 for ( int i=1; i<args.length; i++ ) {
-                    message.append(args[i]);
+                    message.append(args[i] + " ");
                 }
             }
         } else {
@@ -61,7 +61,7 @@ public class LunaChatMessageCommand implements CommandExecutor {
             return true;
         }
 
-        sendTellMessage(inviter, invitedName, message.toString());
+        sendTellMessage(inviter, invitedName, message.toString().trim());
         return true;
     }
 
