@@ -101,7 +101,7 @@ public class UnhideCommand extends SubCommandAbst {
         // 設定する
         channel.getHided().remove(player.getName());
         channel.save();
-        sendResourceMessage(sender, PREINFO, "cmdmsgUnhided");
+        sendResourceMessage(sender, PREINFO, "cmdmsgUnhided", channel.getName());
 
         return true;
     }

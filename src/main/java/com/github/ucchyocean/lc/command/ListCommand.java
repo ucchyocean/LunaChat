@@ -108,7 +108,7 @@ public class ListCommand extends SubCommandAbst {
         }
         Collection<Channel> channels = api.getChannels();
 
-         items.add(LIST_FIRSTLINE);
+        items.add(LIST_FIRSTLINE);
         for ( Channel channel : channels ) {
 
             // BANされているチャンネルは表示しない
@@ -121,11 +121,16 @@ public class ListCommand extends SubCommandAbst {
                 continue;
             }
 
+            // デフォルト発言先なら赤に、非表示中なら暗青にする。
             String disp = ChatColor.WHITE + channel.getName();
             if ( channel.getName().equalsIgnoreCase(dchannel) ) {
                 disp = ChatColor.RED + channel.getName();
+            } else if ( channel.getHided().contains(playerName) ) {
+                disp = ChatColor.DARK_AQUA + channel.getName();
             }
-            if ( player != null && !channel.getMembers().contains(playerName) &&
+            
+            if ( player != null && 
+                    !channel.getMembers().contains(playerName) &&
                     !channel.isGlobalChannel() ) {
 
                 // 未参加で visible=false のチャンネルは表示しない

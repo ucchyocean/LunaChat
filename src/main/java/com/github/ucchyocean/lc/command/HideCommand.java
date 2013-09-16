@@ -97,11 +97,17 @@ public class HideCommand extends SubCommandAbst {
             sendResourceMessage(sender, PREERR, "errmsgAlreadyHided");
             return true;
         }
+
+        // メンバーかどうかをチェックする
+        if ( !channel.getMembers().contains(player.getName()) ) {
+            sendResourceMessage(sender, PREERR, "errmsgNomember");
+            return true;
+        }
         
         // 設定する
         channel.getHided().add(player.getName());
         channel.save();
-        sendResourceMessage(sender, PREINFO, "cmdmsgHided");
+        sendResourceMessage(sender, PREINFO, "cmdmsgHided", channel.getName());
 
         return true;
     }

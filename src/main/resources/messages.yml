@@ -29,6 +29,7 @@ errorPrefix: '&4[LC]'
 
 cmdmsgJoin: 'チャンネル %s に参加しました。'
 cmdmsgSet: 'デフォルトの発言先を %s に設定しました。'
+cmdmsgSetHide: '<注意> あなたは現在このチャンネルを非表示に設定しています。'
 cmdmsgLeave: 'チャンネル %s から退出しました。'
 cmdmsgInvite: '%s さんを、チャンネル %s に招待しました。'
 cmdmsgInvited1: '%s さんから、チャンネル %s に招待されました。'

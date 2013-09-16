@@ -194,6 +194,11 @@ public class JoinCommand extends SubCommandAbst {
             api.setDefaultChannel(player.getName(), channelName);
             sendResourceMessage(sender, PREINFO, "cmdmsgSet", channelName);
         }
+        
+        // 非表示に設定しているなら、注意を流す
+        if ( channel.getHided().contains(player.getName()) ) {
+            sendResourceMessage(sender, PREINFO, "cmdmsgSetHide");
+        }
 
         return true;
     }
