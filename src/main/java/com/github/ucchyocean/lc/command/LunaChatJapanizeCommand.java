@@ -96,7 +96,7 @@ public class LunaChatJapanizeCommand implements CommandExecutor {
      * @param label
      */
     private void printUsage(CommandSender sender, String label) {
-        sendResourceMessage(sender, "", "usageMessage", label);
+        sendResourceMessage(sender, "", "usageJapanize", label);
         if ( sender.hasPermission(PERM_JAPANIZE_OTHER) ) {
             sendResourceMessage(sender, "", "usageJapanizeOther", label);
         }
