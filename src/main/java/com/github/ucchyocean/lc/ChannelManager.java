@@ -271,6 +271,9 @@ public class ChannelManager implements LunaChatAPI {
      */
     @Override
     public boolean isExistChannel(String channelName) {
+        if ( channelName == null ) {
+            return false;
+        }
         return channels.containsKey(channelName.toLowerCase());
     }
 

@@ -73,6 +73,7 @@ public class Channel implements ConfigurationSerializable {
     private static final String KEY_MEMBERS = "members";
     private static final String KEY_BANNED = "banned";
     private static final String KEY_MUTED = "muted";
+    private static final String KEY_HIDED = "hided";
     private static final String KEY_MODERATOR = "moderator";
     private static final String KEY_PASSWORD = "password";
     private static final String KEY_VISIBLE = "visible";
@@ -92,6 +93,9 @@ public class Channel implements ConfigurationSerializable {
     
     /** Muteされたプレイヤー */
     private List<String> muted;
+    
+    /** Hideしているプレイヤー */
+    private List<String> hided;
 
     /** チャンネルの名称 */
     private String name;
@@ -141,6 +145,7 @@ public class Channel implements ConfigurationSerializable {
         this.members = new ArrayList<String>();
         this.banned = new ArrayList<String>();
         this.muted = new ArrayList<String>();
+        this.hided = new ArrayList<String>();
         this.moderator = new ArrayList<String>();
         this.password = "";
         this.visible = true;
@@ -197,7 +202,6 @@ public class Channel implements ConfigurationSerializable {
             player.sendMessage( PREERR + ERRMSG_MUTED );
             return;
         }
-        
         
         String preReplaceMessage = message;
         
@@ -281,7 +285,7 @@ public class Channel implements ConfigurationSerializable {
             if ( LunaChat.config.getNgwordAction() == NGWordAction.BAN ) {
                 // BANする
 
-                if ( !isBroadcastChannel() ) {
+                if ( !isGlobalChannel() ) {
                     banned.add(player.getName());
                     removeMember(player.getName());
                     String temp = PREINFO + NGWORD_PREFIX + MSG_BANNED;
@@ -292,7 +296,7 @@ public class Channel implements ConfigurationSerializable {
             } else if ( LunaChat.config.getNgwordAction() == NGWordAction.KICK ) {
                 // キックする
 
-                if ( !isBroadcastChannel() ) {
+                if ( !isGlobalChannel() ) {
                     removeMember(player.getName());
                     String temp = PREINFO + NGWORD_PREFIX + MSG_KICKED;
                     String m = String.format(temp, name);
@@ -368,6 +372,11 @@ public class Channel implements ConfigurationSerializable {
                 save();
             }
         }
+        
+        // 非表示設定プレイヤーだったら、リストから削除する
+        if ( hided.contains(name) ) {
+            hided.remove(name);
+        }
 
         // モデレーターだった場合は、モデレーターから除去する
         if ( moderator.contains(name) ) {
@@ -425,7 +434,8 @@ public class Channel implements ConfigurationSerializable {
 
                     for ( Player p : Bukkit.getOnlinePlayers() ) {
                         if ( p.getWorld().equals(w) &&
-                                player.getLocation().distance(p.getLocation()) <= chatRange ) {
+                                player.getLocation().distance(p.getLocation()) <= chatRange &&
+                                !hided.contains(p.getName()) ) {
                             recipients.add(p);
                         }
                     }
@@ -434,7 +444,7 @@ public class Channel implements ConfigurationSerializable {
                     // ワールドチャット
 
                     for ( Player p : Bukkit.getOnlinePlayers() ) {
-                        if ( p.getWorld().equals(w) ) {
+                        if ( p.getWorld().equals(w) && !hided.contains(p.getName()) ) {
                             recipients.add(p);
                         }
                     }
@@ -444,7 +454,9 @@ public class Channel implements ConfigurationSerializable {
                 // 通常ブロードキャスト（全員へ送信）
 
                 for ( Player p : Bukkit.getOnlinePlayers() ) {
-                    recipients.add(p);
+                    if ( !hided.contains(p.getName()) ) {
+                        recipients.add(p);
+                    }
                 }
             }
 
@@ -453,7 +465,7 @@ public class Channel implements ConfigurationSerializable {
 
             for ( String name : members ) {
                 Player p = Bukkit.getPlayerExact(name);
-                if ( p != null ) {
+                if ( p != null && !hided.contains(p.getName()) ) {
                     recipients.add(p);
                 }
             }
@@ -528,7 +540,10 @@ public class Channel implements ConfigurationSerializable {
                     name = "@" + name;
                 }
                 if ( isOnlinePlayer(members.get(i)) ) {
-                    disp = ChatColor.WHITE + name;
+                    if ( hided.contains(members.get(i)) )
+                        disp = ChatColor.DARK_AQUA + name;
+                    else
+                        disp = ChatColor.WHITE + name;
                 } else {
                     disp = ChatColor.GRAY + name;
                 }
@@ -709,6 +724,7 @@ public class Channel implements ConfigurationSerializable {
         map.put(KEY_MEMBERS, members);
         map.put(KEY_BANNED, banned);
         map.put(KEY_MUTED, muted);
+        map.put(KEY_HIDED, hided);
         map.put(KEY_MODERATOR, moderator);
         map.put(KEY_PASSWORD, password);
         map.put(KEY_VISIBLE, visible);
@@ -737,6 +753,7 @@ public class Channel implements ConfigurationSerializable {
             castWithDefault(data.get(KEY_FORMAT), DEFAULT_FORMAT);
         channel.banned = castToStringList(data.get(KEY_BANNED));
         channel.muted = castToStringList(data.get(KEY_MUTED));
+        channel.hided = castToStringList(data.get(KEY_HIDED));
         channel.moderator = castToStringList(data.get(KEY_MODERATOR));
         channel.password = castWithDefault(data.get(KEY_PASSWORD), "");
         channel.visible = castWithDefault(data.get(KEY_VISIBLE), true);
@@ -885,6 +902,14 @@ public class Channel implements ConfigurationSerializable {
      */
     public List<String> getMuted() {
         return muted;
+    }
+
+    /**
+     * 非表示プレイヤーの一覧を返す
+     * @return チャンネルの非表示プレイヤーの一覧
+     */
+    public List<String> getHided() {
+        return hided;
     }
 
     /**

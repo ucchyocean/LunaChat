@@ -20,6 +20,8 @@ commands:
            /<command> pardon (name) - 指定した人のBANを解除します。
            /<command> mute (name) - 指定した人をチャンネルチャットからMuteします。
            /<command> unmute (name) - 指定した人のMuteを解除します。
+           /<command> hide [channel] - 指定したチャンネルの発言内容を非表示にします。指定を省略すると、現在自分が居るチャンネルが非表示になります。
+           /<command> unhide [channel] - 指定したチャンネルの発言内容を表示に戻します。
            /<command> info [channel] - チャンネルの情報を表示します。
            /<command> create (channel) - チャンネルを作成します。
            /<command> remove [channel] - チャンネルを削除します。
@@ -82,6 +84,12 @@ permissions:
   lunachat.unmute:
     description: unmuteコマンドの使用権限
     default: true
+  lunachat.hide:
+    description: hideコマンドの使用権限
+    default: true
+  lunachat.unhide:
+    description: unhideコマンドの使用権限
+    default: true
   lunachat.info:
     description: infoコマンドの使用権限
     default: true
@@ -122,6 +130,8 @@ permissions:
       lunachat.pardon: true
       lunachat.mute: true
       lunachat.unmute: true
+      lunachat.hide: true
+      lunachat.unhide: true
       lunachat.info: true
       lunachat.create: true
       lunachat.remove: true
