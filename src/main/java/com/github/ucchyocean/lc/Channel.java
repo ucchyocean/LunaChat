@@ -241,8 +241,10 @@ public class Channel implements ConfigurationSerializable {
         msgFormat = event.getMessageFormat();
         maskedMessage = event.getNgMaskedMessage();
 
-        // 2byteコードを含むなら、Japanize変換は行わない
-        if ( !skipJapanize && ( message.getBytes().length > message.length() ) ) {
+        // 2byteコードを含むか、半角カタカナのみなら、Japanize変換は行わない
+        if ( !skipJapanize && 
+                ( message.getBytes().length > message.length() ||
+                  message.matches("[ \\uFF61-\\uFF9F]+") ) ) {
             skipJapanize = true;
         }
 

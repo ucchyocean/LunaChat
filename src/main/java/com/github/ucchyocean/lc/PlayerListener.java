@@ -185,7 +185,9 @@ public class PlayerListener implements Listener {
             }
 
             // 2byteコードを含むなら、Japanize変換は行わない
-            if ( !skipJapanize && ( message.getBytes().length > message.length() ) ) {
+            if ( !skipJapanize && 
+                    ( message.getBytes().length > message.length() ||
+                      message.matches("[ \\uFF61-\\uFF9F]+") ) ) {
                 skipJapanize = true;
             }
 
