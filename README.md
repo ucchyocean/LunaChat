@@ -3,7 +3,7 @@ LunaChat
 
 チャンネルチャットプラグイン for ShiroumiServer<br />
 <br />
-ダウンロードv2.4.0はこちらから<br />
+ダウンロードはこちらから<br />
 http://forum.minecraftuser.jp/viewtopic.php?f=38&t=13739<br />
 <br />
 コマンドリファレンスや、設定リファレンスは、こちらから<br />
