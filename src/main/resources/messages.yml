@@ -124,7 +124,7 @@ usagePardon: '&7/%s pardon (name) - 指定した人のBANを解除します。'
 usageMute: '&7/%s mute (name) - 指定した人のチャンネルでの発言権を剥奪します。'
 usageUnmute: '&7/%s unmute (name) - 指定した人のチャンネルでの発言権剥奪を解除します。'
 usageHide: '&7/%s hide [channel] - 指定したチャンネルの発言内容を非表示にします。指定を省略すると、現在自分が居るチャンネルが非表示になります。'
-usageUnhide: '&7/%s unhide [channel] - 指定したチャンネルの発言内容を表示に戻します。'
+usageUnhide: '&7/%s unhide [channel] - 指定したチャンネルの発言内容を非表示から表示に戻します。'
 usageInfo: '&7/%s info [channel] - チャンネルの情報を表示します。'
 
 usageCreate: '&7/%s create (channel) [description] - チャンネルを作成します。'
