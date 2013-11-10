@@ -317,6 +317,35 @@ public class Channel implements ConfigurationSerializable {
             }
         }
     }
+    
+    /**
+     * dynmapからこのチャットに発言する
+     * @param player プレイヤー名
+     * @param message メッセージ
+     */
+    public void chatFromDynmap(String player, String message) {
+        
+        // NGワード発言のマスク
+        String maskedMessage = message;
+        for ( String word : LunaChat.config.getNgword() ) {
+            if ( maskedMessage.contains(word) ) {
+                maskedMessage = maskedMessage.replace(
+                        word, Utility.getAstariskString(word.length()));
+            }
+        }
+
+        // キーワード置き換え
+        String msgFormat = replaceKeywords(format, null);
+        msgFormat = msgFormat.replace("%username", player);
+        msgFormat = msgFormat.replace("%prefix", "");
+        msgFormat = msgFormat.replace("%suffix", "");
+
+        // カラーコード置き換え
+        maskedMessage = Utility.replaceColorCode(maskedMessage);
+
+        // メッセージの送信
+        sendMessage(null, maskedMessage, msgFormat);
+    }
 
     /**
      * メンバーを追加する

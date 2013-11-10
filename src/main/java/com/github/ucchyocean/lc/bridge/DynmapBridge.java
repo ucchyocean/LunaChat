@@ -6,14 +6,22 @@
 package com.github.ucchyocean.lc.bridge;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.dynmap.DynmapAPI;
+import org.dynmap.DynmapWebChatEvent;
+
+import com.github.ucchyocean.lc.Channel;
+import com.github.ucchyocean.lc.LunaChat;
+import com.github.ucchyocean.lc.LunaChatAPI;
+import com.github.ucchyocean.lc.LunaChatConfig;
 
 /**
  * dynmap連携クラス
  * @author ucchy
  */
-public class DynmapBridge {
+public class DynmapBridge implements Listener {
 
     /** dynmap-apiクラス */
     private DynmapAPI dynmap;
@@ -55,5 +63,39 @@ public class DynmapBridge {
     public void broadcast(String message) {
         
         dynmap.sendBroadcastToWeb(null, message);
+    }
+    
+    /**
+     * DynmapのWebUIからチャット発言されたときのイベント
+     * @param event 
+     */
+    @EventHandler
+    public void onDynmapWebChat(DynmapWebChatEvent event) {
+        
+        LunaChatAPI api = LunaChat.instance.getLunaChatAPI();
+        LunaChatConfig config = LunaChat.instance.getLunaChatConfig();
+        String dchannel = config.getDynmapChannel();
+        Channel channel = null;
+        
+        if ( !dchannel.equals("") ) {
+            // dynmapChannelが設定されている場合
+            channel = api.getChannel(dchannel);
+            
+        } else {
+            String gchannel = config.getGlobalChannel();
+            if ( !gchannel.equals("") ) {
+                // dynmapChannelが設定されていなくて、
+                // globalChannelが設定されている場合
+                channel = api.getChannel(gchannel);
+                
+            }
+        }
+        
+        if ( channel != null ) {
+            // チャンネルへ送信
+            String name = event.getName() + "@web";
+            channel.chatFromDynmap(name, event.getMessage());
+            event.setProcessed(); 
+        }
     }
 }

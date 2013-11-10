@@ -51,6 +51,9 @@ public class LunaChatConfig {
     /** ブロードキャストチャンネルの発言内容を、dynmapに送信するかどうか。<br/>
      *  dynmapがロードされていない場合は、この設定は無視される（false扱い）。 */
     private boolean sendBroadcastChannelChatToDynmap;
+    
+    /** dynmapのWebUIから発言された発言内容を表示するチャンネル。 */
+    private String dynmapChannel;
 
     /** NGワードの設定 */
     private List<String> ngword;
@@ -123,6 +126,7 @@ public class LunaChatConfig {
         }
         sendBroadcastChannelChatToDynmap =
             config.getBoolean("sendBroadcastChannelChatToDynmap", true);
+        dynmapChannel = config.getString("dynmapChannel", "");
         ngword = config.getStringList("ngword");
         ngwordAction = NGWordAction.fromID(config.getString("ngwordAction", "mask"));
         japanizeType = JapanizeType.fromID(config.getString("japanizeType", "kana"));
@@ -233,6 +237,14 @@ public class LunaChatConfig {
      */
     public boolean isSendBroadcastChannelChatToDynmap() {
         return sendBroadcastChannelChatToDynmap;
+    }
+
+    /**
+     * dynmapのWebUIから発言された発言内容を表示するチャンネル。
+     * @return dynmapChannel dynmapの発言を表示するチャンネル名を返す
+     */
+    public String getDynmapChannel() {
+        return dynmapChannel;
     }
 
     /**

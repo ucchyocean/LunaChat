@@ -53,6 +53,9 @@ public class LunaChat extends JavaPlugin {
         temp = getServer().getPluginManager().getPlugin("dynmap");
         if ( temp != null ) {
             dynmap = DynmapBridge.load(temp);
+            if ( dynmap != null ) {
+                getServer().getPluginManager().registerEvents(dynmap, this);
+            }
         }
 
         // リスナーの登録

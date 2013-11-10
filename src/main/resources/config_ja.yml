@@ -37,9 +37,18 @@ globalChannel: ''
 # 複数のチャンネルを設定可能。例）forceJoinChannels: ['L', 'M', 'N']
 forceJoinChannels: []
 
+
+
+# -------------------- dynmap連携設定 --------------------
+
 # ブロードキャストチャンネルの発言内容を、dynmapに送信するかどうか。
 # dynmapがロードされていない場合は、この設定は無視される（false扱い）。
 sendBroadcastChannelChatToDynmap: true
+
+# dynmapのWebUIから発言された発言内容を表示するチャンネル。
+# dynmapChannelが無指定で、globalChannelが指定されているなら、グローバルチャンネルに、
+# dynmapChannelが無指定で、globalChannelも無指定なら、通常チャットに発言される。
+dynmapChannel: ''
 
 
 
