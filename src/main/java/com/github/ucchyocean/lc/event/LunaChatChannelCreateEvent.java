@@ -9,13 +9,14 @@ package com.github.ucchyocean.lc.event;
  * チャンネル作成イベント
  * @author ucchy
  */
-public class LunaChatChannelCreateEvent extends LunaChatBaseEvent {
+public class LunaChatChannelCreateEvent extends LunaChatBaseCancellableEvent {
 
     public LunaChatChannelCreateEvent(String channelName) {
         super(channelName);
     }
 
     /**
+     * 作成するチャンネルのチャンネル名を上書き設定する
      * @param channelName 設定するチャンネル名
      */
     protected void setChannelName(String channelName) {

@@ -11,7 +11,7 @@ import java.util.List;
  * メンバー変更イベント
  * @author ucchy
  */
-public class LunaChatChannelMemberChangedEvent extends LunaChatBaseEvent {
+public class LunaChatChannelMemberChangedEvent extends LunaChatBaseCancellableEvent {
 
     private List<String> members;
 
@@ -20,6 +20,10 @@ public class LunaChatChannelMemberChangedEvent extends LunaChatBaseEvent {
         this.members = members;
     }
 
+    /**
+     * 変更後のメンバーリストをかえす
+     * @return
+     */
     public List<String> getMembers() {
         return members;
     }

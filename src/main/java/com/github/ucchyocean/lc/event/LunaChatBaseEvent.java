@@ -5,7 +5,6 @@
  */
 package com.github.ucchyocean.lc.event;
 
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
@@ -13,32 +12,26 @@ import org.bukkit.event.HandlerList;
  * 基底イベントクラス
  * @author ucchy
  */
-public abstract class LunaChatBaseEvent extends Event implements Cancellable {
+public abstract class LunaChatBaseEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
-    private boolean isCancelled;
     protected String channelName;
 
+    /**
+     * コンストラクタ
+     * @param channelName チャンネル名
+     */
     public LunaChatBaseEvent(String channelName) {
         this.channelName = channelName;
     }
 
+    @Override
     public HandlerList getHandlers() {
         return handlers;
     }
 
     public static HandlerList getHandlerList() {
         return handlers;
-    }
-
-    @Override
-    public boolean isCancelled() {
-        return isCancelled;
-    }
-
-    @Override
-    public void setCancelled(boolean cancelled) {
-        isCancelled = cancelled;
     }
 
     /**

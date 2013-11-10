@@ -11,7 +11,7 @@ import java.util.HashMap;
  * オプション変更イベント
  * @author ucchy
  */
-public class LunaChatChannelOptionChangedEvent extends LunaChatBaseEvent {
+public class LunaChatChannelOptionChangedEvent extends LunaChatBaseCancellableEvent {
 
     private HashMap<String, String> options;
 
@@ -21,10 +21,18 @@ public class LunaChatChannelOptionChangedEvent extends LunaChatBaseEvent {
         this.options = options;
     }
 
+    /**
+     * 変更後のオプションリストをかえす
+     * @return オプションリスト
+     */
     public HashMap<String, String> getOptions() {
         return options;
     }
 
+    /**
+     * オプションリストを上書き設定する
+     * @param options オプションリスト
+     */
     public void setOptions(HashMap<String, String> options) {
         this.options = options;
     }

@@ -9,7 +9,7 @@ package com.github.ucchyocean.lc.event;
  * Japanize変換が行われた後に呼び出されるイベント
  * @author ucchy
  */
-public class LunaChatPostJapanizeEvent extends LunaChatBaseEvent {
+public class LunaChatPostJapanizeEvent extends LunaChatBaseCancellableEvent {
 
     private String original;
     private String japanized;

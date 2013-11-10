@@ -23,6 +23,7 @@ import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.event.LunaChatChannelChatEvent;
 import com.github.ucchyocean.lc.event.LunaChatChannelMemberChangedEvent;
+import com.github.ucchyocean.lc.event.LunaChatChannelMessageEvent;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 
 /**
@@ -473,6 +474,19 @@ public class Channel implements ConfigurationSerializable {
             }
         }
 
+        // フォーマットがある場合は置き換える
+        if ( format != null ) {
+            message = format.replace("%msg", message);
+        }
+        
+        // イベントコール
+        LunaChatChannelMessageEvent event =
+                new LunaChatChannelMessageEvent(
+                        name, player, message, recipients);
+        Bukkit.getPluginManager().callEvent(event);
+        message = event.getMessage();
+        recipients = event.getRecipients();
+
         // 通常ブロードキャストなら、設定に応じてdynmapへ送信する
         if ( LunaChat.config.isSendBroadcastChannelChatToDynmap() &&
                 LunaChat.dynmap != null &&
@@ -481,11 +495,6 @@ public class Channel implements ConfigurationSerializable {
                 LunaChat.dynmap.chat(player, message);
             else 
                 LunaChat.dynmap.broadcast(message);
-        }
-
-        // フォーマットがある場合は置き換える
-        if ( format != null ) {
-            message = format.replace("%msg", message);
         }
         
         // 送信する

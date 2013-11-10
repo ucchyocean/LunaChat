@@ -9,7 +9,7 @@ package com.github.ucchyocean.lc.event;
  * チャンネル削除イベント
  * @author ucchy
  */
-public class LunaChatChannelRemoveEvent extends LunaChatBaseEvent {
+public class LunaChatChannelRemoveEvent extends LunaChatBaseCancellableEvent {
 
     public LunaChatChannelRemoveEvent(String channelName) {
         super(channelName);
