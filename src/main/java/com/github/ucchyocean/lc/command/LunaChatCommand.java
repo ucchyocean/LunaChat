@@ -24,6 +24,7 @@ public class LunaChatCommand implements CommandExecutor {
     
     private ArrayList<SubCommandAbst> commands;
     private JoinCommand joinCommand;
+    private HelpCommand helpCommand;
     
     /**
      * コンストラクタ
@@ -54,6 +55,8 @@ public class LunaChatCommand implements CommandExecutor {
         commands.add(new OptionCommand());
         commands.add(new TemplateCommand());
         commands.add(new ReloadCommand());
+        helpCommand = new HelpCommand(commands);
+        commands.add(helpCommand);
     }
 
     /**
@@ -72,7 +75,7 @@ public class LunaChatCommand implements CommandExecutor {
         
         // 引数なしは、ヘルプを表示
         if (args.length == 0) {
-            printUsage(sender, label);
+            helpCommand.runCommand(sender, label, args);
             return true;
         }
 
@@ -100,20 +103,6 @@ public class LunaChatCommand implements CommandExecutor {
         }
         
         return joinCommand.runCommand(sender, label, args);
-    }
-
-    /**
-     * コマンドの使い方を senderに送る
-     *
-     * @param sender
-     * @param label
-     */
-    private void printUsage(CommandSender sender, String label) {
-        for ( SubCommandAbst c : commands ) {
-            if ( sender.hasPermission(c.getPermissionNode()) ) {
-                c.sendUsageMessage(sender, label);
-            }
-        }
     }
 
     /**

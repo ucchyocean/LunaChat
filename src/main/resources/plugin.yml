@@ -30,6 +30,7 @@ commands:
            /<command> option (key=value...) - チャンネルのオプションを設定します。
            /<command> template (number) (template...) - メッセージフォーマットのテンプレートを登録します。
            /<command> reload - config.ymlの再読み込みをします。
+           /<command> help [user|mod|admin] [page] - ヘルプを表示します。
   message:
     description: 1:1チャット送信コマンド
     aliases: [msg, tell, m, t]
@@ -114,6 +115,9 @@ permissions:
   lunachat.reply:
     description: replyコマンドの使用権限
     default: true
+  lunachat.help:
+    description: helpコマンドの使用権限
+    default: true
   lunachat.japanize:
     description: lunachatのjapanizeオンオフ設定コマンドの使用権限
     default: true
@@ -140,6 +144,7 @@ permissions:
       lunachat.option: true
       lunachat.message: true
       lunachat.reply: true
+      lunachat.help: true
       lunachat.japanize: true
     description: 一般ユーザー向けの全コマンドの使用権限
   lunachat-admin.template:

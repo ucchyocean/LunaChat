@@ -42,6 +42,16 @@ public class UnmuteCommand extends SubCommandAbst {
     }
 
     /**
+     * コマンドの種別を取得します。
+     * @return コマンド種別
+     * @see com.github.ucchyocean.lc.command.SubCommandAbst#getCommandType()
+     */
+    @Override
+    public CommandType getCommandType() {
+        return CommandType.MODERATOR;
+    }
+
+    /**
      * 使用方法に関するメッセージをsenderに送信します。
      * @param sender コマンド実行者
      * @param label 実行ラベル

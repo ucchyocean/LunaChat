@@ -18,6 +18,22 @@ import com.github.ucchyocean.lc.Resources;
  */
 public abstract class SubCommandAbst {
 
+    /**
+     * コマンドの種別
+     * @author ucchy
+     */
+    protected enum CommandType {
+        
+        /** 一般ユーザー向けコマンド */
+        USER,
+        
+        /** チャンネルモデレーター向けコマンド */
+        MODERATOR,
+        
+        /** サーバー管理者向けコマンド */
+        ADMIN
+    }
+    
     protected static final String PREINFO = Resources.get("infoPrefix");
     protected static final String PREERR = Resources.get("errorPrefix");
 
@@ -59,6 +75,11 @@ public abstract class SubCommandAbst {
      */
     public abstract String getPermissionNode();
     
+    /**
+     * コマンドの種別を取得します。
+     * @return コマンド種別
+     */
+    public abstract CommandType getCommandType();
 
     /**
      * 使用方法に関するメッセージをsenderに送信します。
