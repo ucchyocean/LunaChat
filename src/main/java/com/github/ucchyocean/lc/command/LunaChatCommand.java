@@ -11,6 +11,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.Resources;
 
 /**
@@ -62,6 +63,13 @@ public class LunaChatCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command,
             String label, String[] args) {
 
+        // チャンネルチャット機能が無効になっている場合は、メッセージを表示して終了
+        if ( !LunaChat.instance.getLunaChatConfig().isEnableChannelChat() 
+                && !sender.isOp() ) {
+            sendResourceMessage(sender, PREERR, "errmsgChannelChatDisabled");
+            return true;
+        }
+        
         // 引数なしは、ヘルプを表示
         if (args.length == 0) {
             printUsage(sender, label);

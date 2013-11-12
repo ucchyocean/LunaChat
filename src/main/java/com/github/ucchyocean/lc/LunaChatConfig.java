@@ -19,6 +19,9 @@ import com.github.ucchyocean.lc.japanize.JapanizeType;
  */
 public class LunaChatConfig {
 
+    /** チャンネルチャット機能を利用可能にするかどうか */
+    private boolean enableChannelChat;
+    
     /** チャンネルチャットに入っていない人の発言を、グローバルとして扱うかどうか */
     private boolean noJoinAsGlobal;
 
@@ -111,6 +114,7 @@ public class LunaChatConfig {
         LunaChat.instance.reloadConfig();
         FileConfiguration config = LunaChat.instance.getConfig();
 
+        enableChannelChat = config.getBoolean("enableChannelChat", true);
         noJoinAsGlobal = config.getBoolean("noJoinAsGlobal", true);
         loggingChat = config.getBoolean("loggingChat", true);
         displayChatOnConsole = config.getBoolean("displayChatOnConsole", false);
@@ -119,11 +123,22 @@ public class LunaChatConfig {
         showListOnJoin = config.getBoolean("showListOnJoin", false);
         createChannelOnJoinCommand =
             config.getBoolean("createChannelOnJoinCommand", true);
-        globalChannel = config.getString("globalChannel", "");
-        forceJoinChannels = config.getStringList("forceJoinChannels");
-        if ( forceJoinChannels == null ) {
+        
+        // チャンネルチャット有効のときだけ、globalChannel設定を読み込む
+        // (see issue #58)
+        if ( enableChannelChat ) {
+            globalChannel = config.getString("globalChannel", "");
+        } else {
+            globalChannel = "";
+        }
+        // チャンネルチャット有効のときだけ、enableChannelChat設定を読み込む
+        // (see issue #58)
+        if ( enableChannelChat ) {
+            forceJoinChannels = config.getStringList("forceJoinChannels");
+        } else {
             forceJoinChannels = new ArrayList<String>();
         }
+
         sendBroadcastChannelChatToDynmap =
             config.getBoolean("sendBroadcastChannelChatToDynmap", true);
         dynmapChannel = config.getString("dynmapChannel", "");
@@ -148,6 +163,14 @@ public class LunaChatConfig {
         }
     }
 
+    /** 
+     * チャンネルチャット機能を利用可能にするかどうか
+     * @return enableChannelChatを返す
+     */
+    public boolean isEnableChannelChat() {
+        return enableChannelChat;
+    }
+    
     /**
      * チャンネルチャットに入っていない人の発言を、グローバルとして扱うかどうか
      * @return noJoinAsGlobalを返す

@@ -109,6 +109,7 @@ errmsgInvalidRangeOption: 'range に正しくない値が指定されました�
 errmsgCannotOffGlobalBroadcast: 'このチャンネルはグローバルチャンネルのため、ブロードキャストをオフにできません。'
 
 errmsgNotPermission: 'パーミッション "%s" が無いため、実行できません。'
+errmsgChannelChatDisabled: 'このサーバーでは、チャンネルチャットは動作しません。'
 
 ngwordPrefix: 'NGワード発言により、'
 
