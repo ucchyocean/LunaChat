@@ -93,8 +93,8 @@ public class DynmapBridge implements Listener {
         
         if ( channel != null ) {
             // チャンネルへ送信
-            String name = event.getName() + "@web";
-            channel.chatFromDynmap(name, event.getMessage());
+            channel.chatFromOtherSource(
+                    event.getName(), event.getSource(), event.getMessage());
             event.setProcessed(); 
         }
     }

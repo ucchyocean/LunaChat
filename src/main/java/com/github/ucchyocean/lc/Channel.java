@@ -319,11 +319,15 @@ public class Channel implements ConfigurationSerializable {
     }
     
     /**
-     * dynmapからこのチャットに発言する
+     * ほかの連携先などから、このチャットに発言する
      * @param player プレイヤー名
+     * @param source 連携元を判別する文字列
      * @param message メッセージ
      */
-    public void chatFromDynmap(String player, String message) {
+    public void chatFromOtherSource(String player, String source, String message) {
+        
+        // 表示名
+        String name = player + "@" + source;
         
         // NGワード発言のマスク
         String maskedMessage = message;
@@ -336,7 +340,7 @@ public class Channel implements ConfigurationSerializable {
 
         // キーワード置き換え
         String msgFormat = replaceKeywords(format, null);
-        msgFormat = msgFormat.replace("%username", player);
+        msgFormat = msgFormat.replace("%username", name);
         msgFormat = msgFormat.replace("%prefix", "");
         msgFormat = msgFormat.replace("%suffix", "");
 
