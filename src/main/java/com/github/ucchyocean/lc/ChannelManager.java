@@ -262,6 +262,14 @@ public class ChannelManager implements LunaChatAPI {
         }
         return japanize.get(playerName);
     }
+    
+    /**
+     * デフォルトチャンネル設定を全て削除する
+     */
+    protected void removeAllDefaultChannels() {
+        defaultChannels.clear();
+        saveDefaults();
+    }
 
     /**
      * 指定したチャンネル名が存在するかどうかを返す
