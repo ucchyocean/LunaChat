@@ -42,11 +42,6 @@ public class LunaChat extends JavaPlugin {
         instance = this;
         manager = new ChannelManager();
         config = new LunaChatConfig();
-        
-        // チャンネルチャット無効なら、デフォルト発言先をクリアする(see issue #59)
-        if ( !config.isEnableChannelChat() ) {
-            manager.removeAllDefaultChannels();
-        }
 
         // Chat Plugin のロード
         Plugin temp = getServer().getPluginManager().getPlugin("Vault");

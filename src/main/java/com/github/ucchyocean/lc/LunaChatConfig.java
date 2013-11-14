@@ -161,6 +161,11 @@ public class LunaChatConfig {
             LunaChat.instance.getLogger().warning(msg);
             globalChannel = "";
         }
+
+        // チャンネルチャット無効なら、デフォルト発言先をクリアする(see issue #59)
+        if ( !enableChannelChat ) {
+            LunaChat.manager.removeAllDefaultChannels();
+        }
     }
 
     /** 
