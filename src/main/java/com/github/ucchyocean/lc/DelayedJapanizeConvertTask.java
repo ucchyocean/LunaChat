@@ -59,6 +59,15 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
                 channel.sendMessage(player, result, lineFormat);
             } else {
                 Bukkit.broadcastMessage(result);
+
+                // 設定に応じてdynmapへ送信する
+                if ( LunaChat.config.isSendBroadcastChannelChatToDynmap() &&
+                        LunaChat.dynmap != null ) {
+                    if ( player != null ) 
+                        LunaChat.dynmap.chat(player, result);
+                    else 
+                        LunaChat.dynmap.broadcast(result);
+                }
             }
         }
     }
