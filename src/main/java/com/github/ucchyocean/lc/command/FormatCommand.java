@@ -5,6 +5,8 @@
  */
 package com.github.ucchyocean.lc.command;
 
+import java.util.List;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -113,6 +115,23 @@ public class FormatCommand extends SubCommandAbst {
         if ( player != null ) {
             if ( !channel.getModerator().contains(player.getName()) && !player.isOp()) {
                 sendResourceMessage(sender, PREERR, "errmsgNotModerator");
+                return true;
+            }
+        }
+        
+        // 制約キーワードを確認する
+        List<String> constraints = config.getFormatConstraint();
+        String tempFormat = new String(format);
+        for ( int i=0; i<=9; i++ ) {
+            String key = "%" + i;
+            if ( tempFormat.contains(key) && api.getTemplate(i + "") != null ) {
+                tempFormat = tempFormat.replace(key, api.getTemplate("" + i));
+                break;
+            }
+        }
+        for ( String constraint : constraints ) {
+            if ( !tempFormat.contains(constraint) ) {
+                sendResourceMessage(sender, PREERR, "errmsgFormatConstraint", constraint);
                 return true;
             }
         }

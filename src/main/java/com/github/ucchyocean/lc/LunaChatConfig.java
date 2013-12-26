@@ -50,6 +50,9 @@ public class LunaChatConfig {
     /** サーバーに参加したユーザーに必ず参加させるチャンネル。<br/>
      *  グローバルチャンネルとは別で指定できる。 */
     private List<String> forceJoinChannels;
+    
+    /** formatコマンド実行時に、必ず含まれる必要があるキーワード。 */
+    private List<String> formatConstraint;
 
     /** ブロードキャストチャンネルの発言内容を、dynmapに送信するかどうか。<br/>
      *  dynmapがロードされていない場合は、この設定は無視される（false扱い）。 */
@@ -137,6 +140,14 @@ public class LunaChatConfig {
             forceJoinChannels = config.getStringList("forceJoinChannels");
         } else {
             forceJoinChannels = new ArrayList<String>();
+        }
+        
+        if ( config.contains("formatConstraint") ) {
+            formatConstraint = config.getStringList("formatConstraint");
+        } else {
+            formatConstraint = new ArrayList<String>();
+            formatConstraint.add("%username");
+            formatConstraint.add("%msg");
         }
 
         sendBroadcastChannelChatToDynmap =
@@ -248,6 +259,14 @@ public class LunaChatConfig {
      */
     public List<String> getForceJoinChannels() {
         return forceJoinChannels;
+    }
+    
+    /**
+     * formatコマンド実行時に、必ず含まれる必要があるキーワード。
+     * @return formatConstraintを返す
+     */
+    public List<String> getFormatConstraint() {
+        return formatConstraint;
     }
 
     /**

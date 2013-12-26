@@ -41,6 +41,9 @@ globalChannel: ''
 # 複数のチャンネルを設定可能。例）forceJoinChannels: ['L', 'M', 'N']
 forceJoinChannels: []
 
+# formatコマンド実行時に、必ず含まれる必要があるキーワード。
+formatConstraint: ['%username', '%msg']
+
 
 
 # -------------------- dynmap連携設定 --------------------

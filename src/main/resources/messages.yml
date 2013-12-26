@@ -107,6 +107,7 @@ errmsgToolongPassword: 'パスワードは %d 文字以下にしてください�
 errmsgInvalidBooleanOption: '%s は true/false で指定してください。'
 errmsgInvalidRangeOption: 'range に正しくない値が指定されました。'
 errmsgCannotOffGlobalBroadcast: 'このチャンネルはグローバルチャンネルのため、ブロードキャストをオフにできません。'
+errmsgFormatConstraint: '必須キーワード %s が指定されていません。'
 
 errmsgNotPermission: 'パーミッション "%s" が無いため、実行できません。'
 errmsgChannelChatDisabled: 'このサーバーでは、チャンネルチャットは動作しません。'
