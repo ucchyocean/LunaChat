@@ -149,86 +149,118 @@ public class OptionCommand extends SubCommandAbst {
 
         if ( options.containsKey("description") ) {
             // チャンネル説明文
-            String desc = options.get("description");
-            // チャンネル説明文は最大文字長を超えていないか確認
-            if ( desc.length() > MAX_LENGTH_DESCRIPTION ) {
+            
+            String pnode = PERMISSION_NODE + ".description";
+            if ( !sender.hasPermission(pnode) ) {
                 sendResourceMessage(sender, PREERR,
-                        "errmsgToolongDescription", MAX_LENGTH_DESCRIPTION);
+                        "errmsgNotPermission", pnode);
             } else {
-                channel.setDescription(desc);
-                sendResourceMessage(sender, PREINFO,
-                        "cmdmsgOption", "description", desc);
-                setOption = true;
+                
+                String desc = options.get("description");
+                // チャンネル説明文は最大文字長を超えていないか確認
+                if ( desc.length() > MAX_LENGTH_DESCRIPTION ) {
+                    sendResourceMessage(sender, PREERR,
+                            "errmsgToolongDescription", MAX_LENGTH_DESCRIPTION);
+                } else {
+                    channel.setDescription(desc);
+                    sendResourceMessage(sender, PREINFO,
+                            "cmdmsgOption", "description", desc);
+                    setOption = true;
+                }
             }
         }
 
         if ( options.containsKey("color") ) {
             // チャンネルカラー
-            String code = options.get("color");
-            if ( Utility.isValidColor(code) ) {
-                code = Utility.changeToColorCode(code);
-            }
-            if ( Utility.isValidColorCode(code) ) {
-                channel.setColorCode(code);
-                sendResourceMessage(sender, PREINFO,
-                        "cmdmsgOption", "color", options.get("color"));
-                setOption = true;
-            } else {
+            
+            String pnode = PERMISSION_NODE + ".color";
+            if ( !sender.hasPermission(pnode) ) {
                 sendResourceMessage(sender, PREERR,
-                        "errmsgInvalidColorCode", options.get("color"));
+                        "errmsgNotPermission", pnode);
+            } else {
+                
+                String code = options.get("color");
+                if ( Utility.isValidColor(code) ) {
+                    code = Utility.changeToColorCode(code);
+                }
+                if ( Utility.isValidColorCode(code) ) {
+                    channel.setColorCode(code);
+                    sendResourceMessage(sender, PREINFO,
+                            "cmdmsgOption", "color", options.get("color"));
+                    setOption = true;
+                } else {
+                    sendResourceMessage(sender, PREERR,
+                            "errmsgInvalidColorCode", options.get("color"));
+                }
             }
         }
 
         if ( options.containsKey("broadcast") ) {
             // ブロードキャストチャンネル
-            String value = options.get("broadcast");
-
-            if ( value.equals("") || value.equalsIgnoreCase("false") ) {
-                if ( channel.isGlobalChannel() ) {
-                    sendResourceMessage(sender, PREERR,
-                            "errmsgCannotOffGlobalBroadcast");
-                } else {
-                    channel.setBroadcast(false);
-                    sendResourceMessage(sender, PREINFO,
-                            "cmdmsgOption", "broadcast", "false");
-                    setOption = true;
-                }
-            } else if ( value.equalsIgnoreCase("true") ) {
-                channel.setBroadcast(true);
-                sendResourceMessage(sender, PREINFO,
-                        "cmdmsgOption", "broadcast", "true");
-                setOption = true;
-            } else {
+            
+            String pnode = PERMISSION_NODE + ".broadcast";
+            if ( !sender.hasPermission(pnode) ) {
                 sendResourceMessage(sender, PREERR,
-                        "errmsgInvalidBooleanOption", "broadcast");
+                        "errmsgNotPermission", pnode);
+            } else {
+                
+                String value = options.get("broadcast");
+                
+                if ( value.equals("") || value.equalsIgnoreCase("false") ) {
+                    if ( channel.isGlobalChannel() ) {
+                        sendResourceMessage(sender, PREERR,
+                                "errmsgCannotOffGlobalBroadcast");
+                    } else {
+                        channel.setBroadcast(false);
+                        sendResourceMessage(sender, PREINFO,
+                                "cmdmsgOption", "broadcast", "false");
+                        setOption = true;
+                    }
+                } else if ( value.equalsIgnoreCase("true") ) {
+                    channel.setBroadcast(true);
+                    sendResourceMessage(sender, PREINFO,
+                            "cmdmsgOption", "broadcast", "true");
+                    setOption = true;
+                } else {
+                    sendResourceMessage(sender, PREERR,
+                            "errmsgInvalidBooleanOption", "broadcast");
+                }
             }
         }
 
         if ( options.containsKey("range") ) {
             // レンジ
-            String value = options.get("range");
-
-            if ( value.equals("") ) {
-                channel.setWorldRange(false);
-                channel.setRange(0);
-                sendResourceMessage(sender, PREINFO,
-                        "cmdmsgOption", "range", "無効");
-                setOption = true;
-            } else if ( value.equalsIgnoreCase("world") ) {
-                channel.setWorldRange(true);
-                channel.setRange(0);
-                sendResourceMessage(sender, PREINFO,
-                        "cmdmsgOption", "range", "world");
-                setOption = true;
-            } else if ( value.matches("[0-9]+") ) {
-                channel.setWorldRange(true);
-                channel.setRange(Integer.parseInt(value));
-                sendResourceMessage(sender, PREINFO,
-                        "cmdmsgOption", "range", value);
-                setOption = true;
-            } else {
+            
+            String pnode = PERMISSION_NODE + ".range";
+            if ( !sender.hasPermission(pnode) ) {
                 sendResourceMessage(sender, PREERR,
-                        "errmsgInvalidRangeOption");
+                        "errmsgNotPermission", pnode);
+            } else {
+                
+                String value = options.get("range");
+                
+                if ( value.equals("") ) {
+                    channel.setWorldRange(false);
+                    channel.setRange(0);
+                    sendResourceMessage(sender, PREINFO,
+                            "cmdmsgOption", "range", "無効");
+                    setOption = true;
+                } else if ( value.equalsIgnoreCase("world") ) {
+                    channel.setWorldRange(true);
+                    channel.setRange(0);
+                    sendResourceMessage(sender, PREINFO,
+                            "cmdmsgOption", "range", "world");
+                    setOption = true;
+                } else if ( value.matches("[0-9]+") ) {
+                    channel.setWorldRange(true);
+                    channel.setRange(Integer.parseInt(value));
+                    sendResourceMessage(sender, PREINFO,
+                            "cmdmsgOption", "range", value);
+                    setOption = true;
+                } else {
+                    sendResourceMessage(sender, PREERR,
+                            "errmsgInvalidRangeOption");
+                }
             }
         }
 
@@ -236,32 +268,48 @@ public class OptionCommand extends SubCommandAbst {
 
             if ( options.containsKey("password") ) {
                 // パスワード
-                String password = options.get("password");
-                // パスワードが文字制限を超える場合はエラー
-                if ( password.length() > MAX_LENGTH_PASSWORD ) {
+                
+                String pnode = PERMISSION_NODE + ".password";
+                if ( !sender.hasPermission(pnode) ) {
                     sendResourceMessage(sender, PREERR,
-                            "errmsgToolongPassword", MAX_LENGTH_PASSWORD);
+                            "errmsgNotPermission", pnode);
                 } else {
-                    channel.setPassword(password);
-                    sendResourceMessage(sender, PREINFO,
-                            "cmdmsgOption", "password", password);
-                    setOption = true;
+                    
+                    String password = options.get("password");
+                    // パスワードが文字制限を超える場合はエラー
+                    if ( password.length() > MAX_LENGTH_PASSWORD ) {
+                        sendResourceMessage(sender, PREERR,
+                                "errmsgToolongPassword", MAX_LENGTH_PASSWORD);
+                    } else {
+                        channel.setPassword(password);
+                        sendResourceMessage(sender, PREINFO,
+                                "cmdmsgOption", "password", password);
+                        setOption = true;
+                    }
                 }
             }
 
             if ( options.containsKey("visible") ) {
                 // ビジブル
-                String temp = options.get("visible");
-                if ( temp.equalsIgnoreCase("false") ) {
-                    channel.setVisible(false);
-                    sendResourceMessage(sender, PREINFO,
-                            "cmdmsgOption", "visible", "false");
-                    setOption = true;
-                } else if ( temp.equalsIgnoreCase("true") ) {
-                    channel.setVisible(true);
-                    sendResourceMessage(sender, PREINFO,
-                            "cmdmsgOption", "visible", "true");
-                    setOption = true;
+                
+                String pnode = PERMISSION_NODE + ".visible";
+                if ( !sender.hasPermission(pnode) ) {
+                    sendResourceMessage(sender, PREERR,
+                            "errmsgNotPermission", pnode);
+                } else {
+                    
+                    String temp = options.get("visible");
+                    if ( temp.equalsIgnoreCase("false") ) {
+                        channel.setVisible(false);
+                        sendResourceMessage(sender, PREINFO,
+                                "cmdmsgOption", "visible", "false");
+                        setOption = true;
+                    } else if ( temp.equalsIgnoreCase("true") ) {
+                        channel.setVisible(true);
+                        sendResourceMessage(sender, PREINFO,
+                                "cmdmsgOption", "visible", "true");
+                        setOption = true;
+                    }
                 }
             }
         }

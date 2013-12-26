@@ -4,6 +4,7 @@ version: 2.5.5
 author: ucchy
 description: チャンネルチャットプラグイン
 softdepend: [Vault, dynmap]
+
 commands:
   lunachat:
     description: lunachatのユーザーコマンド
@@ -51,6 +52,7 @@ commands:
            /<command> (player) (on|off) - Turn on/off the Japanize conversion of other player's chat.
     permission: lunachat.japanize
     permission-message: You don't have the permission "<permission>".
+
 permissions:
   lunachat.join:
     description: joinコマンドの使用権限
@@ -147,6 +149,35 @@ permissions:
       lunachat.help: true
       lunachat.japanize: true
     description: 一般ユーザー向けの全コマンドの使用権限
+
+  lunachat.option.description:
+    description: descriptionオプション設定コマンドの使用権限
+    default: true
+  lunachat.option.color:
+    description: colorオプション設定コマンドの使用権限
+    default: true
+  lunachat.option.broadcast:
+    description: broadcastオプション設定コマンドの使用権限
+    default: op
+  lunachat.option.range:
+    description: rangeオプション設定コマンドの使用権限
+    default: op
+  lunachat.option.password:
+    description: passwordオプション設定コマンドの使用権限
+    default: true
+  lunachat.option.visible:
+    description: visibleオプション設定コマンドの使用権限
+    default: true
+  lunachat.option.*:
+    children:
+      lunachat.option.description: true
+      lunachat.option.color: true
+      lunachat.option.broadcast: true
+      lunachat.option.range: true
+      lunachat.option.password: true
+      lunachat.option.visible: true
+    description: オプション設定の全コマンドの使用権限
+
   lunachat-admin.template:
     description: templateコマンドの使用権限
     default: op
@@ -162,4 +193,3 @@ permissions:
       lunachat-admin.reload: true
       lunachat-admin.japanize-other: true
     description: 管理者向けの全コマンドの使用権限
-    
