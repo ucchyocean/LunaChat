@@ -92,9 +92,10 @@ public class HelpCommand extends SubCommandAbst {
                 (args[1].equalsIgnoreCase("mod") 
                         || args[1].equalsIgnoreCase("moderator") ) ) {
             type = CommandType.MODERATOR;
-        } else if ( args.length >= 2 
-                && args[1].equalsIgnoreCase("admin") ) {
+        } else if ( args.length >= 2 && args[1].equalsIgnoreCase("admin") ) {
             type = CommandType.ADMIN;
+        } else if ( args.length >= 2 && args[1].matches("[1-9]") ) {
+            page = Integer.parseInt(args[1]);
         }
         
         if ( args.length >= 3 && args[2].matches("[1-9]") ) {
@@ -150,7 +151,11 @@ public class HelpCommand extends SubCommandAbst {
         }
         sendResourceMessage(sender, "", "usageFoot");
         if ( page < lastPage ) {
-            sendResourceMessage(sender, "", "usageNoticeNextPage", typeDesc, (page + 1));
+            if ( type != CommandType.USER ) {
+                sendResourceMessage(sender, "", "usageNoticeNextPage", typeDesc, (page + 1));
+            } else {
+                sendResourceMessage(sender, "", "usageNoticeNextPage", "", (page + 1));
+            }
         }
     }
 
