@@ -107,6 +107,7 @@ public class LunaChatMessageCommand implements CommandExecutor {
 
         // 送信履歴を残す
         DataMaps.privateMessageMap.put(invitedName, inviter.getName());
+        DataMaps.privateMessageMap.put(inviter.getName(), invitedName);
 
         return;
     }
