@@ -17,6 +17,7 @@ import com.github.ucchyocean.lc.Resources;
  */
 public class LunaChatReplyCommand extends LunaChatMessageCommand {
 
+    private static final String PREINFO = Resources.get("infoPrefix");
     private static final String PREERR = Resources.get("errorPrefix");
 
     /**
@@ -33,9 +34,24 @@ public class LunaChatReplyCommand extends LunaChatMessageCommand {
         }
         Player inviter = (Player)sender;
 
-        // 引数が無ければ、usageを表示して終了する
+        // 会話相手を履歴から取得する
+        String invitedName = DataMaps.privateMessageMap.get(inviter.getName());
+
+        // 引数が無ければ、現在の会話相手を表示して終了する
         if (args.length == 0) {
-            printUsage(sender, label);
+            if ( invitedName == null ) {
+                sendResourceMessage(sender, PREINFO, 
+                        "cmdmsgReplyInviterNone", inviter.getName());
+            } else {
+                sendResourceMessage(sender, PREINFO, 
+                        "cmdmsgReplyInviter", inviter.getName(), invitedName);
+            }
+            return true;
+        }
+
+        // 会話相手がからっぽなら、コマンドを終了する。
+        if ( invitedName == null ) {
+            sendResourceMessage(sender, PREERR, "errmsgNotfoundPM");
             return true;
         }
 
@@ -45,25 +61,8 @@ public class LunaChatReplyCommand extends LunaChatMessageCommand {
             message.append(args[i] + " ");
         }
 
-        // 招待した人を履歴から取得する
-        String invitedName = DataMaps.privateMessageMap.get(inviter.getName());
-        if ( invitedName == null ) {
-            sendResourceMessage(sender, PREERR, "errmsgNotfoundPM");
-            return true;
-        }
-
         sendTellMessage(inviter, invitedName, message.toString().trim());
 
         return true;
-    }
-
-    /**
-     * コマンドの使い方を senderに送る
-     *
-     * @param sender
-     * @param label
-     */
-    private void printUsage(CommandSender sender, String label) {
-        sendResourceMessage(sender, "", "usageReply", label);
     }
 }

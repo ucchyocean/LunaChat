@@ -1,3 +1,8 @@
+# LunaChat v2.5.7
+# @author     ucchy
+# @license    LGPLv3
+# @copyright  Copyright ucchy 2013
+
 defaultFormat: '&a[%ch]%prefix%username%suffix&a:&f %color%msg'
 defaultFormatForPersonalChat: '&7[%ch] %msg'
 
@@ -61,6 +66,9 @@ cmdmsgTemplateRemove: 'テンプレート %s番を削除しました。'
 
 cmdmsgPlayerJapanize: 'Your chat''s Japanize conversion was turned %s.'
 cmdmsgPlayerJapanizeOther: '%s さんのJapanize変換を %s にしました。'
+
+cmdmsgReplyInviter: '%sの現在の会話相手 : %s'
+cmdmsgReplyInviterNone: '%sの現在の会話相手 : 相手がいません。'
 
 errmsgIngame: 'このコマンドはゲーム内からしか実行できません。'
 errmsgCommand: 'コマンドの指定が正しくありません。'
