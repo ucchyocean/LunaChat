@@ -73,13 +73,6 @@ public class LunaChatMessageCommand implements CommandExecutor {
      */
     protected void sendTellMessage(Player inviter, String invitedName, String message) {
 
-        // 招待相手が自分自身でないか確認する
-        if (inviter.getName().equals(invitedName)) {
-            sendResourceMessage(inviter, PREERR,
-                    "errmsgCannotSendPMSelf");
-            return;
-        }
-
         // 招待相手が存在するかどうかを確認する
         Player invited = Bukkit.getPlayerExact(invitedName);
         if (invited == null) {
@@ -88,16 +81,23 @@ public class LunaChatMessageCommand implements CommandExecutor {
             return;
         }
 
+        // 招待相手が自分自身でないか確認する
+        if (inviter.getName().equals(invited.getName())) {
+            sendResourceMessage(inviter, PREERR,
+                    "errmsgCannotSendPMSelf");
+            return;
+        }
+
         // チャンネルが存在するかどうかをチェックする
         LunaChatAPI api = LunaChat.instance.getLunaChatAPI();
-        String cname = inviter.getName() + ">" + invitedName;
+        String cname = inviter.getName() + ">" + invited.getName();
         Channel channel = api.getChannel(cname);
         if ( channel == null ) {
             // チャンネルを作成して、送信者、受信者をメンバーにする
             channel = api.createChannel(cname);
             channel.setVisible(false);
             channel.addMember(inviter.getName());
-            channel.addMember(invitedName);
+            channel.addMember(invited.getName());
         }
 
         // メッセージがあるなら送信する
@@ -106,8 +106,10 @@ public class LunaChatMessageCommand implements CommandExecutor {
         }
 
         // 送信履歴を残す
-        DataMaps.privateMessageMap.put(invitedName, inviter.getName());
-        DataMaps.privateMessageMap.put(inviter.getName(), invitedName);
+        DataMaps.privateMessageMap.put(
+                invited.getName(), inviter.getName());
+        DataMaps.privateMessageMap.put(
+                inviter.getName(), invited.getName());
 
         return;
     }
