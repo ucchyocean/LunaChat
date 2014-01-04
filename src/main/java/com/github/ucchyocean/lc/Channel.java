@@ -456,6 +456,8 @@ public class Channel implements ConfigurationSerializable {
     protected void sendMessage(Player player, String message, 
             String format, boolean sendDynmap) {
 
+        String originalMessage = new String(message);
+
         // 受信者を設定する
         ArrayList<Player> recipients = new ArrayList<Player>();
         boolean isRangeChat = false;
@@ -528,10 +530,19 @@ public class Channel implements ConfigurationSerializable {
                 LunaChat.dynmap != null &&
                 isBroadcastChannel() && 
                 !isWorldRange ) {
-            if ( player != null ) 
-                LunaChat.dynmap.chat(player, message);
-            else 
-                LunaChat.dynmap.broadcast(message);
+            if ( LunaChat.config.isSendFormattedMessageToDynmap() ) {
+                if ( player != null ) {
+                    LunaChat.dynmap.chat(player, message);
+                } else {
+                    LunaChat.dynmap.broadcast(message);
+                }
+            } else {
+                if ( player != null ) {
+                    LunaChat.dynmap.chat(player, originalMessage);
+                } else {
+                    LunaChat.dynmap.broadcast(originalMessage);
+                }
+            }
         }
         
         // 送信する

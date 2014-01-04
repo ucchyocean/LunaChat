@@ -52,6 +52,12 @@ formatConstraint: ['%username', '%msg']
 # dynmapがロードされていない場合は、この設定は無視される（false扱い）。
 sendBroadcastChannelChatToDynmap: true
 
+# dynmapへ送信するときに、チャンネルのフォーマットを反映して送信するかどうか。
+# trueにするとチャンネルフォーマットを反映したメッセージをdynmapに表示します。
+# falseにするとメッセージのみをdynmapに表示します。
+# 参考：https://github.com/ucchyocean/LunaChat/issues/68
+sendFormattedMessageToDynmap: false
+
 # dynmapのWebUIから発言された発言内容を表示するチャンネル。
 # dynmapChannelが無指定で、globalChannelが指定されているなら、グローバルチャンネルに、
 # dynmapChannelが無指定で、globalChannelも無指定なら、通常チャットに発言される。

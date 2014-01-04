@@ -40,7 +40,8 @@ public class LunaChatConfig {
     /** ログイン時に、参加中チャンネルを表示するかどうか */
     private boolean showListOnJoin;
 
-    /** /ch join コマンドで存在しないチャンネルを指定したときに、チャンネルを新規作成して入室するかどうか */
+    /** /ch join コマンドで存在しないチャンネルを指定したときに、
+     *  チャンネルを新規作成して入室するかどうか */
     private boolean createChannelOnJoinCommand;
 
     /** サーバーに初参加したユーザーを参加させる、既定のチャンネル。<br/>
@@ -57,6 +58,9 @@ public class LunaChatConfig {
     /** ブロードキャストチャンネルの発言内容を、dynmapに送信するかどうか。<br/>
      *  dynmapがロードされていない場合は、この設定は無視される（false扱い）。 */
     private boolean sendBroadcastChannelChatToDynmap;
+    
+    /** dynmapへ送信するときに、チャンネルのフォーマットを反映して送信するかどうか。*/
+    private boolean sendFormattedMessageToDynmap;
     
     /** dynmapのWebUIから発言された発言内容を表示するチャンネル。 */
     private String dynmapChannel;
@@ -152,6 +156,8 @@ public class LunaChatConfig {
 
         sendBroadcastChannelChatToDynmap =
             config.getBoolean("sendBroadcastChannelChatToDynmap", true);
+        sendFormattedMessageToDynmap = 
+            config.getBoolean("sendFormattedMessageToDynmap", false);
         dynmapChannel = config.getString("dynmapChannel", "");
         ngword = config.getStringList("ngword");
         ngwordAction = NGWordAction.fromID(config.getString("ngwordAction", "mask"));
@@ -284,6 +290,14 @@ public class LunaChatConfig {
      */
     public boolean isSendBroadcastChannelChatToDynmap() {
         return sendBroadcastChannelChatToDynmap;
+    }
+
+    /**
+     * dynmapへ送信するときに、チャンネルのフォーマットを反映して送信するかどうか。
+     * @return sendFormattedMessageToDynmapを返す
+     */
+    public boolean isSendFormattedMessageToDynmap() {
+        return sendFormattedMessageToDynmap;
     }
 
     /**
