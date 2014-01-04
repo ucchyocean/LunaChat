@@ -166,7 +166,7 @@ public class LunaChatConfig {
         if ( japanizeDisplayLine != 1 && japanizeDisplayLine != 2 ) {
             japanizeDisplayLine = 2;
         }
-        japanizeLine1Format = config.getString("japanizeLine1Format", "%msg (%japanize)");
+        japanizeLine1Format = config.getString("japanizeLine1Format", "%msg &7(%japanize)");
         japanizeLine2Format = config.getString("japanizeLine2Format", "&6[JP] %japanize");
         noneJapanizeMarker = config.getString("noneJapanizeMarker", "#");
         japanizeWait = config.getInt("japanizeWait", 1);
