@@ -56,7 +56,7 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
 
             // チャンネルへ送信
             if ( channel != null ) {
-                channel.sendMessage(player, result, lineFormat);
+                channel.sendMessage(player, result, lineFormat, true);
             } else {
                 Bukkit.broadcastMessage(result);
 

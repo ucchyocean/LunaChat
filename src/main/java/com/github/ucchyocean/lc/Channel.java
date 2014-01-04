@@ -275,7 +275,7 @@ public class Channel implements ConfigurationSerializable {
 
         if ( isIncludeSyncChat ) {
             // メッセージの送信
-            sendMessage(player, maskedMessage, msgFormat);
+            sendMessage(player, maskedMessage, msgFormat, true);
         }
         
         // 非同期実行タスクがある場合、追加で実行する
@@ -348,7 +348,7 @@ public class Channel implements ConfigurationSerializable {
         maskedMessage = Utility.replaceColorCode(maskedMessage);
 
         // メッセージの送信
-        sendMessage(null, maskedMessage, msgFormat);
+        sendMessage(null, maskedMessage, msgFormat, false);
     }
 
     /**
@@ -443,7 +443,7 @@ public class Channel implements ConfigurationSerializable {
         Player p = Bukkit.getPlayerExact(player);
         msg = replaceKeywords(msg, p);
 
-        sendMessage(null, msg, null);
+        sendMessage(null, msg, null, false);
     }
 
     /**
@@ -451,8 +451,10 @@ public class Channel implements ConfigurationSerializable {
      * @param player プレイヤー（ワールドチャット、範囲チャットの場合は必須です）
      * @param message メッセージ
      * @param format フォーマット
+     * @param sendDynmap dynmapへ送信するかどうか
      */
-    protected void sendMessage(Player player, String message, String format) {
+    protected void sendMessage(Player player, String message, 
+            String format, boolean sendDynmap) {
 
         // 受信者を設定する
         ArrayList<Player> recipients = new ArrayList<Player>();
@@ -522,8 +524,10 @@ public class Channel implements ConfigurationSerializable {
 
         // 通常ブロードキャストなら、設定に応じてdynmapへ送信する
         if ( LunaChat.config.isSendBroadcastChannelChatToDynmap() &&
+                sendDynmap &&
                 LunaChat.dynmap != null &&
-                isBroadcastChannel() && !isWorldRange ) {
+                isBroadcastChannel() && 
+                !isWorldRange ) {
             if ( player != null ) 
                 LunaChat.dynmap.chat(player, message);
             else 
@@ -536,8 +540,10 @@ public class Channel implements ConfigurationSerializable {
         }
         
         // 受信者が自分以外いない場合は、メッセージを表示する
-        if ( isRangeChat && ( recipients.size() == 0 ||
-                (recipients.size() == 1 && recipients.get(0).getName().equals(player.getName()) ) ) ) {
+        if ( isRangeChat && ( 
+                recipients.size() == 0 ||
+                (recipients.size() == 1 && 
+                 recipients.get(0).getName().equals(player.getName()) ) ) ) {
             String msg = replaceKeywords(MSG_NO_RECIPIENT, null);
             player.sendMessage(msg);
         }
