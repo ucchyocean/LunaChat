@@ -20,6 +20,8 @@ import com.github.ucchyocean.lc.japanize.KanaConverter;
  */
 public class DelayedJapanizeConvertTask extends BukkitRunnable {
 
+    private static final String REGEX_URL = "https?://[\\w/:%#\\$&\\?\\(\\)~\\.=\\+\\-]+";
+
     private String org;
     private JapanizeType type;
     private Channel channel;
@@ -76,10 +78,13 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
      * 同期処理で変換を行います。結果は getResult() で取得してください。
      * @return 同期処理を実行したかどうか（イベントでキャンセルされた場合はfalseになります）
      */
-    private boolean runSync() {
+    public boolean runSync() {
 
+        // URL削除
+        String deletedURL = org.replaceAll(REGEX_URL, "URL");
+        
         // カナ変換
-        String japanized = KanaConverter.conv(org);
+        String japanized = KanaConverter.conv(deletedURL);
 
         // IME変換
         if ( type == JapanizeType.GOOGLE_IME ) {
@@ -104,6 +109,14 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
         result = Utility.replaceColorCode(result);
 
         return true;
+    }
+    
+    /**
+     * Japanize変換の結果を返します。
+     * @return 変換結果
+     */
+    public String getResult() {
+        return result;
     }
 }
 

@@ -117,6 +117,18 @@ public class KanaConverter {
                     if ( tmp.equals("-") ) {
                         line.append(last + "ー");
                         last = "";
+                    } else if ( tmp.equals(".") ) {
+                        line.append(last + "。");
+                        last = "";
+                    } else if ( tmp.equals(",") ) {
+                        line.append(last + "、");
+                        last = "";
+                    } else if ( tmp.equals("?") ) {
+                        line.append(last + "？");
+                        last = "";
+                    } else if ( tmp.equals("!") ) {
+                        line.append(last + "！");
+                        last = "";
                     } else {
                         line.append(last + tmp);
                         last = "";

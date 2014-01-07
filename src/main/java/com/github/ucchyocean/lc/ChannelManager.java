@@ -18,10 +18,7 @@ import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.event.LunaChatChannelCreateEvent;
 import com.github.ucchyocean.lc.event.LunaChatChannelRemoveEvent;
-import com.github.ucchyocean.lc.event.LunaChatPostJapanizeEvent;
-import com.github.ucchyocean.lc.japanize.IMEConverter;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
-import com.github.ucchyocean.lc.japanize.KanaConverter;
 
 /**
  * チャンネルマネージャー
@@ -482,26 +479,13 @@ public class ChannelManager implements LunaChatAPI {
             return message;
         }
 
-        // カナ変換
-        String japanized = KanaConverter.conv(message);
-
-        // IME変換
-        if ( type == JapanizeType.GOOGLE_IME ) {
-            japanized = IMEConverter.convByGoogleIME(japanized);
-        } else if ( type == JapanizeType.SOCIAL_IME ) {
-            japanized = IMEConverter.convBySocialIME(japanized);
+        // Japanize変換タスクを作成して、同期で実行する。
+        DelayedJapanizeConvertTask task = new DelayedJapanizeConvertTask(
+                message, type, null, null, "%japanize", null);
+        if ( task.runSync() ) {
+            return task.getResult();
         }
-
-        // イベントコール
-        LunaChatPostJapanizeEvent event =
-                new LunaChatPostJapanizeEvent("", message, japanized);
-        Bukkit.getServer().getPluginManager().callEvent(event);
-        if ( event.isCancelled() ) {
-            return null;
-        }
-        japanized = event.getJapanized();
-
-        return japanized;
+        return null;
     }
 
     /**
