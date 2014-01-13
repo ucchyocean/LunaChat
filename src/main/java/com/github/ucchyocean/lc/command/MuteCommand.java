@@ -19,7 +19,8 @@ public class MuteCommand extends SubCommandAbst {
 
     private static final String COMMAND_NAME = "mute";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
-    private static final String USAGE_KEY = "usageMute";
+    private static final String USAGE_KEY1 = "usageMute";
+    private static final String USAGE_KEY2 = "usageMute2";
     
     /**
      * コマンドを取得します。
@@ -60,7 +61,8 @@ public class MuteCommand extends SubCommandAbst {
     @Override
     public void sendUsageMessage(
             CommandSender sender, String label) {
-        sendResourceMessage(sender, "", USAGE_KEY, label);
+        sendResourceMessage(sender, "", USAGE_KEY1, label);
+        sendResourceMessage(sender, "", USAGE_KEY2, label);
     }
 
     /**
@@ -109,20 +111,43 @@ public class MuteCommand extends SubCommandAbst {
             sendResourceMessage(sender, PREERR, "errmsgNomemberOther");
             return true;
         }
-        
+
         // 既にMuteされているかどうかチェックする
         if (channel.getMuted().contains(kickedName)) {
             sendResourceMessage(sender, PREERR, "errmsgAlreadyMuted");
             return true;
         }
 
+        // 期限付きMuteの場合、期限の指定が正しいかどうかをチェックする
+        int expireMinutes = -1;
+        if (args.length >= 3) {
+            if ( !args[2].matches("[0-9]+") ) {
+                sendResourceMessage(sender, PREERR, "errmsgInvalidMuteExpireParameter");
+                return true;
+            }
+            expireMinutes = Integer.parseInt(args[2]);
+            if ( expireMinutes < 1 || 43200 < expireMinutes ) {
+                sendResourceMessage(sender, PREERR, "errmsgInvalidMuteExpireParameter");
+                return true;
+            }
+        }
+
         // Mute実行
         Player kicked = Bukkit.getPlayerExact(kickedName);
         channel.getMuted().add(kickedName);
+        if ( expireMinutes != -1 ) {
+            long expire = System.currentTimeMillis() + expireMinutes * 60 * 1000;
+            channel.getMuteExpires().put(kickedName, expire);
+        }
         channel.save();
 
-        sendResourceMessage(sender, PREINFO,
-                "cmdmsgMute", kickedName, channel.getName());
+        if ( expireMinutes != -1 ) {
+            sendResourceMessage(sender, PREINFO,
+                    "cmdmsgMuteWithExpire", kickedName, channel.getName(), expireMinutes);
+        } else {
+            sendResourceMessage(sender, PREINFO,
+                    "cmdmsgMute", kickedName, channel.getName());
+        }
         if (kicked != null) {
             sendResourceMessage(kicked, PREINFO,
                     "cmdmsgMuted", channel.getName());

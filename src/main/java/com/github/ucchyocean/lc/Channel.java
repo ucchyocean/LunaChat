@@ -55,6 +55,10 @@ public class Channel implements ConfigurationSerializable {
             Resources.get("defaultFormatForPersonalChat");
     private static final String MSG_JOIN = Resources.get("joinMessage");
     private static final String MSG_QUIT = Resources.get("quitMessage");
+    private static final String MSG_BAN_EXPIRED = Resources.get("expiredBan");
+    private static final String MSG_MUTE_EXPIRED = Resources.get("expiredMute");
+    private static final String MSG_BAN_EXPIRED_PLAYER = Resources.get("cmdmsgPardoned");
+    private static final String MSG_MUTE_EXPIRED_PLAYER = Resources.get("cmdmsgUnmuted");
 
     private static final String PREINFO = Resources.get("infoPrefix");
     private static final String PREERR = Resources.get("errorPrefix");
@@ -82,6 +86,8 @@ public class Channel implements ConfigurationSerializable {
     private static final String KEY_BROADCAST = "broadcast";
     private static final String KEY_WORLD = "world";
     private static final String KEY_RANGE = "range";
+    private static final String KEY_BAN_EXPIRES = "ban_expires";
+    private static final String KEY_MUTE_EXPIRES = "mute_expires";
 
     /** 参加者 */
     private List<String> members;
@@ -133,6 +139,12 @@ public class Channel implements ConfigurationSerializable {
     /** チャットの可聴範囲 0は無制限 */
     private int chatRange;
 
+    /** 期限付きBANの期限（key=プレイヤー名、value=期日（ミリ秒）） */
+    private Map<String, Long> banExpires;
+
+    /** 期限付きMuteの期限（key=プレイヤー名、value=期日（ミリ秒）） */
+    private Map<String, Long> muteExpires;
+
     /** ロガー */
     private LunaChatLogger logger;
 
@@ -154,6 +166,8 @@ public class Channel implements ConfigurationSerializable {
         this.broadcastChannel = false;
         this.isWorldRange = false;
         this.chatRange = 0;
+        this.banExpires = new HashMap<String, Long>();
+        this.muteExpires = new HashMap<String, Long>();
 
         if ( isPersonalChat() ) {
             this.format = DEFAULT_FORMAT_FOR_PERSONAL;
@@ -769,6 +783,60 @@ public class Channel implements ConfigurationSerializable {
 
         return members.size();
     }
+    
+    /**
+     * 期限付きBanや期限付きMuteをチェックし、期限が切れていたら解除を行う
+     */
+    public void checkExpires() {
+        
+        long now = System.currentTimeMillis();
+        
+        // 期限付きBANのチェック
+        for ( String name : banExpires.keySet() ) {
+            if ( banExpires.get(name) <= now ) {
+                
+                // 期限マップから削除し、BANを解除
+                banExpires.remove(name);
+                if ( banned.contains(name) ) {
+                    banned.remove(name);
+                    save();
+                    
+                    // メッセージ通知を流す
+                    String msg = String.format(MSG_BAN_EXPIRED, this.name, name);
+                    sendMessage(null, msg, null, false);
+                    
+                    Player player = Bukkit.getPlayerExact(name);
+                    if ( player != null ) {
+                        msg = PREINFO + String.format(MSG_BAN_EXPIRED_PLAYER, this.name);
+                        player.sendMessage(msg);
+                    }
+                }
+            }
+        }
+        
+        // 期限付きMuteのチェック
+        for ( String name : muteExpires.keySet() ) {
+            if ( muteExpires.get(name) <= now ) {
+                
+                // 期限マップから削除し、Muteを解除
+                muteExpires.remove(name);
+                if ( muted.contains(name) ) {
+                    muted.remove(name);
+                    save();
+                    
+                    // メッセージ通知を流す
+                    String msg = String.format(MSG_MUTE_EXPIRED, this.name, name);
+                    sendMessage(null, msg, null, false);
+                    
+                    Player player = Bukkit.getPlayerExact(name);
+                    if ( player != null ) {
+                        msg = PREINFO + String.format(MSG_MUTE_EXPIRED_PLAYER, this.name);
+                        player.sendMessage(msg);
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * シリアライズ<br>
@@ -793,6 +861,8 @@ public class Channel implements ConfigurationSerializable {
         map.put(KEY_BROADCAST, broadcastChannel);
         map.put(KEY_WORLD, isWorldRange);
         map.put(KEY_RANGE, chatRange);
+        map.put(KEY_BAN_EXPIRES, banExpires);
+        map.put(KEY_MUTE_EXPIRES, muteExpires);
         return map;
     }
 
@@ -822,6 +892,8 @@ public class Channel implements ConfigurationSerializable {
         channel.broadcastChannel = castWithDefault(data.get(KEY_BROADCAST), false);
         channel.isWorldRange = castWithDefault(data.get(KEY_WORLD), false);
         channel.chatRange = castWithDefault(data.get(KEY_RANGE), 0);
+        channel.banExpires = castToStringLongMap(data.get(KEY_BAN_EXPIRES));
+        channel.muteExpires = castToStringLongMap(data.get(KEY_MUTE_EXPIRES));
         return channel;
     }
 
@@ -855,6 +927,23 @@ public class Channel implements ConfigurationSerializable {
             return new ArrayList<String>();
         }
         return (List<String>)obj;
+    }
+
+    /**
+     * Objectを、Map&lt;String, Long&gt;に変換する。nullなら空のリストを返す。
+     * @param obj 変換元
+     * @return 変換後
+     */
+    @SuppressWarnings("unchecked")
+    private static Map<String, Long> castToStringLongMap(Object obj) {
+
+        if ( obj == null ) {
+            return new HashMap<String, Long>();
+        }
+        if ( !(obj instanceof HashMap<?, ?>) ) {
+            return new HashMap<String, Long>();
+        }
+        return (Map<String, Long>)obj;
     }
 
     /**
@@ -963,6 +1052,22 @@ public class Channel implements ConfigurationSerializable {
      */
     public List<String> getMuted() {
         return muted;
+    }
+
+    /**
+     * 期限付きBANの期限マップを返す（key=プレイヤー名、value=期日（ミリ秒））
+     * @return banExpires
+     */
+    public Map<String, Long> getBanExpires() {
+        return banExpires;
+    }
+
+    /**
+     * 期限付きMuteの期限マップを返す（key=プレイヤー名、value=期日（ミリ秒））
+     * @return muteExpires
+     */
+    public Map<String, Long> getMuteExpires() {
+        return muteExpires;
     }
 
     /**

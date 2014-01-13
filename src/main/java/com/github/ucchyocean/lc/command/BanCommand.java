@@ -19,7 +19,8 @@ public class BanCommand extends SubCommandAbst {
 
     private static final String COMMAND_NAME = "ban";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
-    private static final String USAGE_KEY = "usageBan";
+    private static final String USAGE_KEY1 = "usageBan";
+    private static final String USAGE_KEY2 = "usageBan2";
     
     /**
      * コマンドを取得します。
@@ -60,7 +61,8 @@ public class BanCommand extends SubCommandAbst {
     @Override
     public void sendUsageMessage(
             CommandSender sender, String label) {
-        sendResourceMessage(sender, "", USAGE_KEY, label);
+        sendResourceMessage(sender, "", USAGE_KEY1, label);
+        sendResourceMessage(sender, "", USAGE_KEY2, label);
     }
 
     /**
@@ -115,20 +117,43 @@ public class BanCommand extends SubCommandAbst {
             sendResourceMessage(sender, PREERR, "errmsgNomemberOther");
             return true;
         }
-        
+
         // 既にBANされているかどうかチェックする
         if (channel.getBanned().contains(kickedName)) {
             sendResourceMessage(sender, PREERR, "errmsgAlreadyBanned");
             return true;
         }
 
+        // 期限付きBANの場合、期限の指定が正しいかどうかをチェックする
+        int expireMinutes = -1;
+        if (args.length >= 3) {
+            if ( !args[2].matches("[0-9]+") ) {
+                sendResourceMessage(sender, PREERR, "errmsgInvalidBanExpireParameter");
+                return true;
+            }
+            expireMinutes = Integer.parseInt(args[2]);
+            if ( expireMinutes < 1 || 43200 < expireMinutes ) {
+                sendResourceMessage(sender, PREERR, "errmsgInvalidBanExpireParameter");
+                return true;
+            }
+        }
+
         // BAN実行
         Player kicked = Bukkit.getPlayerExact(kickedName);
         channel.getBanned().add(kickedName);
+        if ( expireMinutes != -1 ) {
+            long expire = System.currentTimeMillis() + expireMinutes * 60 * 1000;
+            channel.getBanExpires().put(kickedName, expire);
+        }
         channel.removeMember(kickedName);
 
-        sendResourceMessage(sender, PREINFO,
-                "cmdmsgBan", kickedName, channel.getName());
+        if ( expireMinutes != -1 ) {
+            sendResourceMessage(sender, PREINFO,
+                    "cmdmsgBanWithExpire", kickedName, channel.getName(), expireMinutes);
+        } else {
+            sendResourceMessage(sender, PREINFO,
+                    "cmdmsgBan", kickedName, channel.getName());
+        }
         if (kicked != null) {
             sendResourceMessage(kicked, PREINFO,
                     "cmdmsgBanned", channel.getName());

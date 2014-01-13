@@ -18,8 +18,10 @@ commands:
            /<command> deny - 招待を拒否します。
            /<command> kick (name) - 指定した人をチャンネルチャットからキックします。
            /<command> ban (name) - 指定した人をチャンネルチャットからBANします。
+           /<command> ban (name) [minutes] - 指定した人を指定した分間、BANします。
            /<command> pardon (name) - 指定した人のBANを解除します。
            /<command> mute (name) - 指定した人をチャンネルチャットからMuteします。
+           /<command> mute (name) [minutes] - 指定した人を指定した分間、Muteします。
            /<command> unmute (name) - 指定した人のMuteを解除します。
            /<command> hide [channel] - 指定したチャンネルの発言内容を非表示にします。指定を省略すると、現在自分が居るチャンネルが非表示になります。
            /<command> unhide [channel] - 指定したチャンネルの発言内容を非表示から表示に戻します。
