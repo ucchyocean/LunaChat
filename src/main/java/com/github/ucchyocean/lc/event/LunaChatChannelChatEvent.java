@@ -5,25 +5,37 @@
  */
 package com.github.ucchyocean.lc.event;
 
+import org.bukkit.entity.Player;
+
 /**
  * チャンネルチャットのチャットイベント
  * @author ucchy
  */
 public class LunaChatChannelChatEvent extends LunaChatBaseCancellableEvent {
 
+    private Player player;
     private String originalMessage;
     private String ngMaskedMessage;
     private String messageFormat;
 
-    public LunaChatChannelChatEvent(String channelName,
+    public LunaChatChannelChatEvent(String channelName, Player player,
             String originalMessage, String ngMaskedMessage,
             String messageFormat) {
         super(channelName);
+        this.player = player;
         this.originalMessage = originalMessage;
         this.ngMaskedMessage = ngMaskedMessage;
         this.messageFormat = messageFormat;
     }
 
+    /**
+     * 発言を行ったプレイヤーを取得します。
+     * @return 発言したプレイヤー
+     */
+    public Player getPlayer() {
+        return player;
+    }
+    
     /**
      * 置き換え前の、発言されたままのテキストをかえす
      * @return 発言内容

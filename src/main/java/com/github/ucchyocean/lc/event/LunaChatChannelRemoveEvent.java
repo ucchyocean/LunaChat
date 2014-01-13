@@ -5,13 +5,26 @@
  */
 package com.github.ucchyocean.lc.event;
 
+import org.bukkit.command.CommandSender;
+
 /**
  * チャンネル削除イベント
  * @author ucchy
  */
 public class LunaChatChannelRemoveEvent extends LunaChatBaseCancellableEvent {
 
-    public LunaChatChannelRemoveEvent(String channelName) {
+    private CommandSender sender;
+    
+    public LunaChatChannelRemoveEvent(String channelName, CommandSender sender) {
         super(channelName);
+        this.sender = sender;
+    }
+    
+    /**
+     * チャンネルを削除した人を取得する。
+     * @return チャンネルを削除したCommandSender
+     */
+    public CommandSender getSender() {
+        return sender;
     }
 }

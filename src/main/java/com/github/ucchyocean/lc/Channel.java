@@ -233,7 +233,7 @@ public class Channel implements ConfigurationSerializable {
 
         // イベントコール
         LunaChatChannelChatEvent event =
-                new LunaChatChannelChatEvent(this.name,
+                new LunaChatChannelChatEvent(this.name, player,
                         preReplaceMessage, maskedMessage, msgFormat);
         Bukkit.getServer().getPluginManager().callEvent(event);
         if ( event.isCancelled() ) {

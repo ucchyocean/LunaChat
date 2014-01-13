@@ -137,7 +137,7 @@ public class OptionCommand extends SubCommandAbst {
 
         // イベントコール
         LunaChatChannelOptionChangedEvent event =
-                new LunaChatChannelOptionChangedEvent(cname, options);
+                new LunaChatChannelOptionChangedEvent(cname, sender, options);
         Bukkit.getServer().getPluginManager().callEvent(event);
         if ( event.isCancelled() ) {
             return true;

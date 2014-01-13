@@ -13,6 +13,7 @@ import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
@@ -379,10 +380,21 @@ public class ChannelManager implements LunaChatAPI {
      */
     @Override
     public Channel createChannel(String channelName) {
+        return createChannel(channelName, null);
+    }
+
+    /**
+     * 新しいチャンネルを作成する
+     * @param channelName チャンネル名
+     * @return 作成されたチャンネル
+     * @see com.github.ucchyocean.lc.LunaChatAPI#createChannel(java.lang.String, org.bukkit.command.CommandSender)
+     */
+    @Override
+    public Channel createChannel(String channelName, CommandSender sender) {
 
         // イベントコール
         LunaChatChannelCreateEvent event =
-                new LunaChatChannelCreateEvent(channelName);
+                new LunaChatChannelCreateEvent(channelName, sender);
         Bukkit.getServer().getPluginManager().callEvent(event);
         if ( event.isCancelled() ) {
             return null;
@@ -403,12 +415,23 @@ public class ChannelManager implements LunaChatAPI {
      */
     @Override
     public boolean removeChannel(String channelName) {
+        return removeChannel(channelName, null);
+    }
+
+    /**
+     * チャンネルを削除する
+     * @param channelName 削除するチャンネル名
+     * @return 削除したかどうか
+     * @see com.github.ucchyocean.lc.LunaChatAPI#removeChannel(java.lang.String, org.bukkit.command.CommandSender)
+     */
+    @Override
+    public boolean removeChannel(String channelName, CommandSender sender) {
 
         channelName = channelName.toLowerCase();
 
         // イベントコール
         LunaChatChannelRemoveEvent event =
-                new LunaChatChannelRemoveEvent(channelName);
+                new LunaChatChannelRemoveEvent(channelName, sender);
         Bukkit.getServer().getPluginManager().callEvent(event);
         if ( event.isCancelled() ) {
             return false;

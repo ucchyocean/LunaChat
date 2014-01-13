@@ -7,6 +7,8 @@ package com.github.ucchyocean.lc;
 
 import java.util.Collection;
 
+import org.bukkit.command.CommandSender;
+
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 
 /**
@@ -70,11 +72,27 @@ public interface LunaChatAPI {
     public Channel createChannel(String channelName);
 
     /**
+     * 新しいチャンネルを作成する
+     * @param channelName チャンネル名
+     * @param sender チャンネルを作成した人
+     * @return 作成されたチャンネル
+     */
+    public Channel createChannel(String channelName, CommandSender sender);
+
+    /**
      * チャンネルを削除する
      * @param channelName 削除するチャンネル名
      * @return 削除したかどうか
      */
     public boolean removeChannel(String channelName);
+
+    /**
+     * チャンネルを削除する
+     * @param channelName 削除するチャンネル名
+     * @param sender チャンネルを削除した人
+     * @return 削除したかどうか
+     */
+    public boolean removeChannel(String channelName, CommandSender sender);
 
     /**
      * テンプレートを取得する
