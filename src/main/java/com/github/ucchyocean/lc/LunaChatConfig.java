@@ -92,6 +92,9 @@ public class LunaChatConfig {
     /** Japanize変換の2行表示時の2行目のフォーマット */
     private String japanizeLine2Format;
     
+    /** 発言に含まれているプレイヤー名を、Japanize変換から除外するかどうか */
+    private boolean japanizeIgnorePlayerName;
+    
     /** ノンジャパナイズマーカー これが発言の頭に入っている場合は、一時的にjapanizeを実行しない */
     private String noneJapanizeMarker;
     
@@ -168,6 +171,7 @@ public class LunaChatConfig {
         }
         japanizeLine1Format = config.getString("japanizeLine1Format", "%msg &7(%japanize)");
         japanizeLine2Format = config.getString("japanizeLine2Format", "&6[JP] %japanize");
+        japanizeIgnorePlayerName = config.getBoolean("japanizeIgnorePlayerName", true);
         noneJapanizeMarker = config.getString("noneJapanizeMarker", "#");
         japanizeWait = config.getInt("japanizeWait", 1);
 
@@ -355,6 +359,14 @@ public class LunaChatConfig {
      */
     public String getJapanizeLine2Format() {
         return japanizeLine2Format;
+    }
+
+    /**
+     * 発言に含まれているプレイヤー名を、Japanize変換から除外するかどうか
+     * @return japanizeIgnorePlayerName
+     */
+    public boolean isJapanizeIgnorePlayerName() {
+        return japanizeIgnorePlayerName;
     }
 
     /**

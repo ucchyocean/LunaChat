@@ -5,6 +5,9 @@
  */
 package com.github.ucchyocean.lc;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -80,11 +83,37 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
      */
     public boolean runSync() {
 
+        // 変換対象外のキーワード
+        HashMap<String, String> keywordMap = new HashMap<String, String>();
+        ArrayList<String> keywords = new ArrayList<String>();
+        if ( LunaChat.instance.getLunaChatConfig().isJapanizeIgnorePlayerName() ) {
+            for ( Player player : Bukkit.getOnlinePlayers() ) {
+                keywords.add(player.getName());
+            }
+        }
+
         // URL削除
         String deletedURL = org.replaceAll(REGEX_URL, " ");
-        
+
+        // キーワードをロック
+        int index = 0;
+        String keywordLocked = deletedURL;
+        for ( String keyword : keywords ) {
+            if ( keywordLocked.contains(keyword) ) {
+                index++;
+                String key = "＜" + index + "＞";
+                keywordLocked = keywordLocked.replace(keyword, key);
+                keywordMap.put(key, keyword);
+            }
+        }
+
         // カナ変換
-        String japanized = KanaConverter.conv(deletedURL);
+        String japanized = KanaConverter.conv(keywordLocked);
+
+        // キーワードのアンロック
+        for ( String key : keywordMap.keySet() ) {
+            japanized = japanized.replace(key, keywordMap.get(key));
+        }
 
         // IME変換
         if ( type == JapanizeType.GOOGLE_IME ) {

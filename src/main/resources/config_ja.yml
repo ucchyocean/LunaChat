@@ -101,6 +101,9 @@ japanizeLine1Format: '%msg &7(%japanize)'
 # japanizeDisplayLine が 2 のときの、2行目の表示フォーマットを設定する。
 japanizeLine2Format: '&6[JP] %japanize'
 
+# 発言に含まれているプレイヤー名を、Japanize変換から除外するかどうかを設定する。
+japanizeIgnorePlayerName: true
+
 # ノンジャパナイズマーカー。
 # これが発言の頭に入っている場合は、一時的にjapanizeを実行しない
 noneJapanizeMarker: '#'
