@@ -81,7 +81,7 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
     public boolean runSync() {
 
         // URL削除
-        String deletedURL = org.replaceAll(REGEX_URL, "URL");
+        String deletedURL = org.replaceAll(REGEX_URL, " ");
         
         // カナ変換
         String japanized = KanaConverter.conv(deletedURL);
