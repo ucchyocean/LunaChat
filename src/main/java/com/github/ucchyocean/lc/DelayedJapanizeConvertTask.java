@@ -122,6 +122,14 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
             japanized = IMEConverter.convBySocialIME(japanized);
         }
 
+        // NGワードが含まれている場合は、マスクする
+        for ( String word : LunaChat.config.getNgword() ) {
+            if ( japanized.contains(word) ) {
+                japanized = japanized.replace(
+                        word, Utility.getAstariskString(word.length()));
+            }
+        }
+
         // イベントコール
         String channelName = (channel == null) ? "" : channel.getName();
         LunaChatPostJapanizeEvent event =
