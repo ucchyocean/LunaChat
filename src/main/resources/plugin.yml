@@ -1,8 +1,8 @@
-name: LunaChat
+name: ${project.name}
 main: com.github.ucchyocean.lc.LunaChat
-version: 2.5.7
+version: ${project.version}
 author: ucchy
-description: チャンネルチャットプラグイン
+description: ${project.description}
 softdepend: [Vault, dynmap]
 
 commands:
