@@ -174,6 +174,13 @@ public class PlayerListener implements Listener {
                 }
             }
 
+            // チャットフォーマット装飾の適用
+            if ( LunaChat.config.isEnableNormalChatMessageFormat() ) {
+                String format = LunaChat.config.getNormalChatMessageFormat();
+                format = replaceNormalChatFormatKeywords(format, event.getPlayer());
+                event.setFormat(format);
+            }
+
             // カラーコード置き換え
             message = Utility.replaceColorCode(message);
             
@@ -282,5 +289,32 @@ public class PlayerListener implements Listener {
                 LunaChat.manager.setDefaultChannel(playerName, cname);
             }
         }
+    }
+
+    /**
+     * 通常チャットのフォーマット設定のキーワードを置き換えして返す
+     * @param org フォーマット設定
+     * @param player 発言プレイヤー
+     * @return キーワード置き換え済みの文字列
+     */
+    private String replaceNormalChatFormatKeywords(String org, Player player) {
+
+        String format = org;
+        format = format.replace("%username", "%1$s");
+        format = format.replace("%msg", "%2$s");
+
+        if ( format.contains("%prefix") || format.contains("%suffix") ) {
+            String prefix = "";
+            String suffix = "";
+            if ( LunaChat.vaultchat != null ) {
+                prefix = LunaChat.vaultchat.getPlayerPrefix(player);
+                suffix = LunaChat.vaultchat.getPlayerSuffix(player);
+            }
+            format = format.replace("%prefix", prefix);
+            format = format.replace("%suffix", suffix);
+        }
+
+        return Utility.replaceColorCode(format);
+
     }
 }

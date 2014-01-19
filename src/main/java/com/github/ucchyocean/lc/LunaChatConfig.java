@@ -74,6 +74,12 @@ public class LunaChatConfig {
      *  ban = マスクしてチャンネルからBANする */
     private NGWordAction ngwordAction;
 
+    /** 通常チャット（非チャンネルチャット）の装飾を、LunaChatから行うかどうか */
+    private boolean enableNormalChatMessageFormat;
+
+    /** 通常チャットの装飾フォーマット */
+    private String normalChatMessageFormat;
+
     /** Japanize変換のタイプ<br/>
      *  none = 日本語変換をしない<br/>
      *  kana = カナ変換のみする<br/>
@@ -164,6 +170,12 @@ public class LunaChatConfig {
         dynmapChannel = config.getString("dynmapChannel", "");
         ngword = config.getStringList("ngword");
         ngwordAction = NGWordAction.fromID(config.getString("ngwordAction", "mask"));
+        
+        enableNormalChatMessageFormat = 
+                config.getBoolean("enableNormalChatMessageFormat", false);
+        normalChatMessageFormat = 
+                config.getString("normalChatMessageFormat", "&f<%prefix%username%suffix&f> %msg");
+        
         japanizeType = JapanizeType.fromID(config.getString("japanizeType", "kana"));
         japanizeDisplayLine = config.getInt("japanizeDisplayLine", 2);
         if ( japanizeDisplayLine != 1 && japanizeDisplayLine != 2 ) {
@@ -321,6 +333,22 @@ public class LunaChatConfig {
      */
     public NGWordAction getNgwordAction() {
         return ngwordAction;
+    }
+
+    /**
+     * 通常チャット（非チャンネルチャット）の装飾を、LunaChatから行うかどうか
+     * @return enableNormalChatMessageFormatを返す
+     */
+    public boolean isEnableNormalChatMessageFormat() {
+        return enableNormalChatMessageFormat;
+    }
+
+    /**
+     * 通常チャットの装飾フォーマット
+     * @return normalChatMessageFormatを返す
+     */
+    public String getNormalChatMessageFormat() {
+        return normalChatMessageFormat;
     }
 
     /**
