@@ -6,7 +6,10 @@
 package com.github.ucchyocean.lc;
 
 import java.io.File;
+import java.util.List;
 
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -33,6 +36,8 @@ public class LunaChat extends JavaPlugin {
     protected static DynmapBridge dynmap;
     
     private static BukkitTask expireCheckerTask;
+    
+    private LunaChatCommand mainCommand;
 
     /**
      * プラグインが有効化されたときに呼び出されるメソッド
@@ -65,7 +70,8 @@ public class LunaChat extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
 
         // コマンドの登録
-        getCommand("lunachat").setExecutor(new LunaChatCommand());
+        mainCommand = new LunaChatCommand();
+        getCommand("lunachat").setExecutor(mainCommand);
         getCommand("message").setExecutor(new LunaChatMessageCommand());
         getCommand("reply").setExecutor(new LunaChatReplyCommand());
         getCommand("lcjapanize").setExecutor(new LunaChatJapanizeCommand());
@@ -90,6 +96,29 @@ public class LunaChat extends JavaPlugin {
         if ( expireCheckerTask != null ) {
             getServer().getScheduler().cancelTask(expireCheckerTask.getTaskId());
         }
+    }
+
+    /**
+     * TABキー補完が実行されたときに呼び出されるメソッド
+     * @param sender
+     * @param command
+     * @param label
+     * @param args
+     * @return
+     * @see org.bukkit.plugin.java.JavaPlugin#onTabComplete(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
+     */
+    @Override
+    public List<String> onTabComplete(
+            CommandSender sender, Command command, String label, String[] args) {
+
+        List<String> completeList = null;
+        if ( command.getName().equals("lunachat") ) {
+            completeList = mainCommand.onTabComplete(sender, command, label, args);
+        }
+        if ( completeList != null ) {
+            return completeList;
+        }
+        return super.onTabComplete(sender, command, label, args);
     }
 
     /**

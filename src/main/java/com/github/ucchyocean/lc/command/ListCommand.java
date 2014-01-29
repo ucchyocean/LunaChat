@@ -95,7 +95,6 @@ public class ListCommand extends SubCommandAbst {
         }
         return true;
     }
-    
 
     /**
      * リスト表示用のリストを返す

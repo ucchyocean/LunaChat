@@ -6,11 +6,14 @@
 package com.github.ucchyocean.lc.command;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
+import com.github.ucchyocean.lc.Channel;
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.Resources;
 
@@ -105,6 +108,59 @@ public class LunaChatCommand implements CommandExecutor {
         
         return joinCommand.runCommand(sender, label, args);
     }
+    
+    /**
+     * TABキー補完が実行されたときに呼び出されるメソッド
+     * @param sender TABキー補完の実行者
+     * @param command 実行されたコマンド
+     * @param label 実行されたコマンドのラベル
+     * @param args 実行されたコマンドの引数
+     * @return 補完候補
+     */
+    public List<String> onTabComplete(
+            CommandSender sender, Command command, String label, String[] args) {
+        
+        if ( args.length == 1 ) {
+            // コマンド名で補完する
+            String arg = args[0].toLowerCase();
+            ArrayList<String> coms = new ArrayList<String>();
+            for ( SubCommandAbst c : commands ) {
+                if ( c.getCommandName().startsWith(arg) && 
+                        sender.hasPermission(c.getPermissionNode()) ) {
+                    coms.add(c.getCommandName());
+                }
+            }
+            return coms;
+            
+        } else if ( args.length == 2 && (
+                args[0].equalsIgnoreCase("join") || 
+                args[0].equalsIgnoreCase("hide") || 
+                args[0].equalsIgnoreCase("unhide") || 
+                args[0].equalsIgnoreCase("info") ) ) {
+            // 参加可能チャンネル名で補完する
+            String arg = args[1].toLowerCase();
+            ArrayList<String> items = new ArrayList<String>();
+            for ( String name : getListCanJoin(sender) ) {
+                if ( name.toLowerCase().startsWith(arg) ) {
+                    items.add(name);
+                }
+            }
+            return items;
+            
+        } else if ( args.length == 2 && args[0].equalsIgnoreCase("remove") ) {
+            // 削除可能チャンネル名で補完する
+            String arg = args[1].toLowerCase();
+            ArrayList<String> items = new ArrayList<String>();
+            for ( String name : getListCanRemove(sender) ) {
+                if ( name.toLowerCase().startsWith(arg) ) {
+                    items.add(name);
+                }
+            }
+            return items;
+            
+        }
+        return null;
+    }
 
     /**
      * メッセージリソースのメッセージを、カラーコード置き換えしつつ、senderに送信する
@@ -118,5 +174,75 @@ public class LunaChatCommand implements CommandExecutor {
             String key, Object... args) {
         String msg = String.format(pre + Resources.get(key), args);
         sender.sendMessage(msg);
+    }
+
+    /**
+     * 補完用の参加可能チャンネルリストを返す
+     * @param sender コマンド実行者
+     * @return リスト
+     */
+    private ArrayList<String> getListCanJoin(CommandSender sender) {
+
+        ArrayList<String> items = new ArrayList<String>();
+        String playerName = "";
+        if ( sender instanceof Player ) {
+            playerName = ((Player)sender).getName();
+        }
+
+        for ( Channel channel : LunaChat.instance.getLunaChatAPI().getChannels() ) {
+
+            // BANされているチャンネルは対象外
+            if ( channel.getBanned().contains(playerName) ) {
+                continue;
+            }
+
+            // 個人チャットは対象外
+            if ( channel.isPersonalChat() ) {
+                continue;
+            }
+
+            // 未参加で visible=false のチャンネルは対象外
+            if ( sender instanceof Player && 
+                    !channel.getMembers().contains(playerName) && 
+                    !channel.isGlobalChannel() &&
+                    !channel.isVisible() ) {
+                continue;
+            }
+
+            items.add(channel.getName());
+        }
+
+        return items;
+    }
+
+    /**
+     * 補完用の削除可能チャンネルリストを返す
+     * @param sender コマンド実行者
+     * @return リスト
+     */
+    private ArrayList<String> getListCanRemove(CommandSender sender) {
+
+        ArrayList<String> items = new ArrayList<String>();
+        String playerName = "";
+        if ( sender instanceof Player ) {
+            playerName = ((Player)sender).getName();
+        }
+
+        for ( Channel channel : LunaChat.instance.getLunaChatAPI().getChannels() ) {
+            
+            // 実行者がチャンネルモデレーターでもOPでもない場合は対象外
+            if ( !sender.isOp() && !channel.getModerator().contains(playerName) ) {
+                continue;
+            }
+
+            // グローバルチャンネルは対象外
+            if ( channel.isGlobalChannel() ) {
+                continue;
+            }
+
+            items.add(channel.getName());
+        }
+
+        return items;
     }
 }
