@@ -67,6 +67,9 @@ cmdmsgModeratorMinus: '%s さんをチャンネル %s のモデレーターか�
 cmdmsgOption: '%s を %s に設定しました。'
 cmdmsgTemplate: 'テンプレート %s番を、%s に設定しました。'
 cmdmsgTemplateRemove: 'テンプレート %s番を削除しました。'
+cmdmsgCheck: '削除対象のチャンネルは %d 個です。'
+cmdmsgCheckConfirm: '全て削除する場合は、/%s check remove を実行してください。'
+cmdmsgCheckRemove: '%d 個のチャンネルを削除しました。'
 
 cmdmsgPlayerJapanize: 'Your chat''s Japanize conversion was turned %s.'
 cmdmsgPlayerJapanizeOther: '%s さんのJapanize変換を %s にしました。'
@@ -122,6 +125,7 @@ errmsgCannotOffGlobalBroadcast: 'このチャンネルはグローバルチャ�
 errmsgFormatConstraint: '必須キーワード %s が指定されていません。'
 errmsgInvalidBanExpireParameter: 'BAN期限(分)の指定が正しくありません。1 から 43200 の間の数値を指定してください。'
 errmsgInvalidMuteExpireParameter: 'Mute期限(分)の指定が正しくありません。1 から 43200 の間の数値を指定してください。'
+errmsgNotInCheckRemoveConfirm: 'あなたはクリーンアップモードに入っていません。先に、/%s check を実行してください。'
 
 errmsgNotPermission: 'パーミッション "%s" が無いため、実行できません。'
 errmsgChannelChatDisabled: 'このサーバーでは、チャンネルチャットは動作しません。'
@@ -152,6 +156,8 @@ usageModerator: '&6/%s moderator [channel] (player) &7- チャンネルのモデ
 usageMod: '&6/%s mod [channel] (player) &7- チャンネルのモデレーターを指定したプレイヤーに設定します。'
 usageOption: '&6/%s option [channel] (key=value...) &7- チャンネルのオプションを設定します。'
 usageTemplate: '&6/%s template (number) (template...) &7- メッセージフォーマットのテンプレートを登録します。'
+usageCheck1: '&6/%s check &7- モデレータがいないチャンネルを一覧します。'
+usageCheck2: '&6/%s check remove &7- /ch check で一覧されたチャンネルを全て削除します。'
 usageReload: '&6/%s reload &7- config.ymlの再読み込みをします。'
 usageHelp: '&6/%s help [user|mod|admin] [page] &7- ヘルプを表示します。'
 

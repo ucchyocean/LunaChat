@@ -32,6 +32,8 @@ commands:
            /<command> moderator [channel] (player...) - チャンネルのモデレーターを指定したプレイヤーに設定します。
            /<command> option (key=value...) - チャンネルのオプションを設定します。
            /<command> template (number) (template...) - メッセージフォーマットのテンプレートを登録します。
+           /<command> check - モデレータがいないチャンネルを一覧します。
+           /<command> check remove - /<command> check で一覧されたチャンネルを全て削除します。
            /<command> reload - config.ymlの再読み込みをします。
            /<command> help [user|mod|admin] [page] - ヘルプを表示します。
   message:
@@ -183,6 +185,9 @@ permissions:
   lunachat-admin.template:
     description: templateコマンドの使用権限
     default: op
+  lunachat-admin.check:
+    description: checkコマンドの使用権限
+    default: op
   lunachat-admin.reload:
     description: reloadコマンドの使用権限
     default: op
@@ -192,6 +197,7 @@ permissions:
   lunachat-admin.*:
     children:
       lunachat-admin.template: true
+      lunachat-admin.check: true
       lunachat-admin.reload: true
       lunachat-admin.japanize-other: true
     description: 管理者向けの全コマンドの使用権限
