@@ -98,7 +98,7 @@ public class InviteCommand extends SubCommandAbst {
         }
 
         // モデレーターかどうか確認する
-        if ( !channel.getModerator().contains(inviter.getName()) && !inviter.isOp()) {
+        if ( !channel.hasModeratorPermission(sender) ) {
             sendResourceMessage(sender, PREERR, "errmsgNotModerator");
             return true;
         }

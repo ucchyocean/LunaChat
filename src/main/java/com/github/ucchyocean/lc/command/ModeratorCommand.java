@@ -111,11 +111,9 @@ public class ModeratorCommand extends SubCommandAbst {
 
         // モデレーターかどうか確認する
         Channel channel = api.getChannel(cname);
-        if ( player != null ) {
-            if ( !channel.getModerator().contains(player.getName()) && !player.isOp()) {
-                sendResourceMessage(sender, PREERR, "errmsgNotModerator");
-                return true;
-            }
+        if ( !channel.hasModeratorPermission(sender) ) {
+            sendResourceMessage(sender, PREERR, "errmsgNotModerator");
+            return true;
         }
 
         // グローバルチャンネルなら設定できない

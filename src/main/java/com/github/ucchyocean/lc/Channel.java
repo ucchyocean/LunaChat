@@ -16,6 +16,7 @@ import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
@@ -203,6 +204,16 @@ public class Channel implements ConfigurationSerializable {
      */
     public boolean isForceJoinChannel() {
         return LunaChat.config.getForceJoinChannels().contains(name);
+    }
+    
+    /**
+     * このチャンネルのモデレータ権限を持っているかどうかを確認する
+     * @param sender 権限を確認する対象
+     * @return チャンネルのモデレータ権限を持っているかどうか
+     */
+    public boolean hasModeratorPermission(CommandSender sender) {
+        return sender.isOp() || moderator.contains(sender.getName()) ||
+                sender.hasPermission("lunachat-admin.mod-all-channels");
     }
 
     /**

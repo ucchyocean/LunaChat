@@ -182,6 +182,9 @@ permissions:
       lunachat.option.visible: true
     description: オプション設定の全コマンドの使用権限
 
+  lunachat-admin.mod-all-channels:
+    description: 全チャンネルのモデレータ権限
+    default: op
   lunachat-admin.template:
     description: templateコマンドの使用権限
     default: op
@@ -196,6 +199,7 @@ permissions:
     default: op
   lunachat-admin.*:
     children:
+      lunachat-admin.mod-all-channels: true
       lunachat-admin.template: true
       lunachat-admin.check: true
       lunachat-admin.reload: true

@@ -223,15 +223,11 @@ public class LunaChatCommand implements CommandExecutor {
     private ArrayList<String> getListCanRemove(CommandSender sender) {
 
         ArrayList<String> items = new ArrayList<String>();
-        String playerName = "";
-        if ( sender instanceof Player ) {
-            playerName = ((Player)sender).getName();
-        }
 
         for ( Channel channel : LunaChat.instance.getLunaChatAPI().getChannels() ) {
             
-            // 実行者がチャンネルモデレーターでもOPでもない場合は対象外
-            if ( !sender.isOp() && !channel.getModerator().contains(playerName) ) {
+            // 実行者がチャンネルモデレーターでない場合は対象外
+            if ( !channel.hasModeratorPermission(sender) ) {
                 continue;
             }
             

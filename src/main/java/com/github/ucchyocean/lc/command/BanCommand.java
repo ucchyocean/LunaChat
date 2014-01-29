@@ -101,7 +101,7 @@ public class BanCommand extends SubCommandAbst {
         }
 
         // モデレーターかどうか確認する
-        if (!channel.getModerator().contains(kicker.getName()) && !kicker.isOp()) {
+        if ( !channel.hasModeratorPermission(sender) ) {
             sendResourceMessage(sender, PREERR, "errmsgNotModerator");
             return true;
         }
