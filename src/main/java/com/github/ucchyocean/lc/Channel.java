@@ -1165,7 +1165,7 @@ public class Channel implements ConfigurationSerializable {
      * チャンネルの情報を保存したファイルを、削除する。
      * @return 削除したかどうか。
      */
-    public boolean remove() {
+    protected boolean remove() {
 
         // フォルダーの取得
         File folder = new File(
