@@ -85,7 +85,7 @@ ngwordAction: mask
 
 # 通常チャット（非チャンネルチャット）の装飾を、LunaChatから行うかどうか
 # Vault がロードされていない場合は、この設定は無視される（false扱い）。
-enableNormalChatMessageFormat: false
+enableNormalChatMessageFormat: true
 
 # チャット装飾のフォーマット設定です。
 normalChatMessageFormat: '%prefix&f<%username>%suffix&f %msg'

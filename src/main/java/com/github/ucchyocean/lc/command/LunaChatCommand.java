@@ -234,6 +234,11 @@ public class LunaChatCommand implements CommandExecutor {
             if ( !sender.isOp() && !channel.getModerator().contains(playerName) ) {
                 continue;
             }
+            
+            // 個人チャットは対象外
+            if ( channel.isPersonalChat() ) {
+                continue;
+            }
 
             // グローバルチャンネルは対象外
             if ( channel.isGlobalChannel() ) {

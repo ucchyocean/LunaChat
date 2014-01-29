@@ -172,7 +172,7 @@ public class LunaChatConfig {
         ngwordAction = NGWordAction.fromID(config.getString("ngwordAction", "mask"));
         
         enableNormalChatMessageFormat = 
-                config.getBoolean("enableNormalChatMessageFormat", false);
+                config.getBoolean("enableNormalChatMessageFormat", true);
         normalChatMessageFormat = 
                 config.getString("normalChatMessageFormat", "&f<%prefix%username%suffix&f> %msg");
         

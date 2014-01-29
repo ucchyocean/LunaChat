@@ -37,7 +37,10 @@ public class LunaChat extends JavaPlugin {
     
     private static BukkitTask expireCheckerTask;
     
-    private LunaChatCommand mainCommand;
+    private LunaChatCommand lunachatCommand;
+    private LunaChatMessageCommand messageCommand;
+    private LunaChatReplyCommand replyCommand;
+    private LunaChatJapanizeCommand lcjapanizeCommand;
 
     /**
      * プラグインが有効化されたときに呼び出されるメソッド
@@ -70,11 +73,10 @@ public class LunaChat extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
 
         // コマンドの登録
-        mainCommand = new LunaChatCommand();
-        getCommand("lunachat").setExecutor(mainCommand);
-        getCommand("message").setExecutor(new LunaChatMessageCommand());
-        getCommand("reply").setExecutor(new LunaChatReplyCommand());
-        getCommand("lcjapanize").setExecutor(new LunaChatJapanizeCommand());
+        lunachatCommand = new LunaChatCommand();
+        messageCommand = new LunaChatMessageCommand();
+        replyCommand = new LunaChatReplyCommand();
+        lcjapanizeCommand = new LunaChatJapanizeCommand();
 
         // シリアル化可能オブジェクトの登録
         ConfigurationSerialization.registerClass(Channel.class, "Channel");
@@ -99,12 +101,28 @@ public class LunaChat extends JavaPlugin {
     }
 
     /**
+     * コマンド実行時に呼び出されるメソッド
+     * @see org.bukkit.plugin.java.JavaPlugin#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
+     */
+    @Override
+    public boolean onCommand(
+            CommandSender sender, Command command, String label, String[] args) {
+        
+        if ( command.getName().equals("lunachat") ) {
+            return lunachatCommand.onCommand(sender, command, label, args);
+        } else if ( command.getName().equals("message") ) {
+            return messageCommand.onCommand(sender, command, label, args);
+        } else if ( command.getName().equals("reply") ) {
+            return replyCommand.onCommand(sender, command, label, args);
+        } else if ( command.getName().equals("lcjapanize") ) {
+            return lcjapanizeCommand.onCommand(sender, command, label, args);
+        }
+        
+        return false;
+    }
+    
+    /**
      * TABキー補完が実行されたときに呼び出されるメソッド
-     * @param sender
-     * @param command
-     * @param label
-     * @param args
-     * @return
      * @see org.bukkit.plugin.java.JavaPlugin#onTabComplete(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
      */
     @Override
@@ -113,7 +131,7 @@ public class LunaChat extends JavaPlugin {
 
         List<String> completeList = null;
         if ( command.getName().equals("lunachat") ) {
-            completeList = mainCommand.onTabComplete(sender, command, label, args);
+            completeList = lunachatCommand.onTabComplete(sender, command, label, args);
         }
         if ( completeList != null ) {
             return completeList;
