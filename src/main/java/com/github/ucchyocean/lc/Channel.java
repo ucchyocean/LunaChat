@@ -465,8 +465,7 @@ public class Channel implements ConfigurationSerializable {
         }
 
         // キーワード置き換え
-        Player p = Bukkit.getPlayerExact(player);
-        msg = replaceKeywords(msg, p);
+        msg = replaceKeywordsForSystemMessages(msg, player);
 
         sendMessage(null, msg, null, false);
     }
@@ -580,7 +579,7 @@ public class Channel implements ConfigurationSerializable {
                 recipients.size() == 0 ||
                 (recipients.size() == 1 && 
                  recipients.get(0).getName().equals(player.getName()) ) ) ) {
-            String msg = replaceKeywords(MSG_NO_RECIPIENT, null);
+            String msg = replaceKeywordsForSystemMessages(MSG_NO_RECIPIENT, "");
             player.sendMessage(msg);
         }
 
@@ -756,6 +755,22 @@ public class Channel implements ConfigurationSerializable {
                 msg = msg.replace("%suffix", suffix);
             }
         }
+
+        return Utility.replaceColorCode(msg);
+    }
+
+    /**
+     * チャットフォーマット内のキーワードを置き換えする
+     * @param format チャットフォーマット
+     * @param playerName プレイヤー名
+     * @return 置き換え結果
+     */
+    private String replaceKeywordsForSystemMessages(String format, String playerName) {
+
+        String msg = format;
+        msg = msg.replace("%ch", name);
+        msg = msg.replace("%color", colorCode);
+        msg = msg.replace("%username", playerName);
 
         return Utility.replaceColorCode(msg);
     }
