@@ -3,13 +3,13 @@
 # @license    LGPLv3
 # @copyright  Copyright ucchy 2013
 
-defaultFormat: '&a[%ch]%prefix%username%suffix&a:&f %color%msg'
+defaultFormat: '&f[%color%ch&f]%prefix%username%suffix&a:&f %msg'
 defaultFormatForPersonalChat: '&7[%ch] %msg'
 
-joinMessage: '&a[%ch]&7%username さんがチャンネルチャットに参加しました。'
-quitMessage: '&a[%ch]&7%username さんがチャンネルチャットから退出しました。'
+joinMessage: '&f[%color%ch&f]&7%username さんがチャンネルチャットに参加しました。'
+quitMessage: '&f[%color%ch&f]&7%username さんがチャンネルチャットから退出しました。'
 breakupMessage: '&a[%s]&7チャンネルチャットが削除されました。'
-noRecipientMessage: '&a[%ch]&7あなたの発言は、誰にも届きませんでした。'
+noRecipientMessage: '&f[%color%ch&f]&7あなたの発言は、誰にも届きませんでした。'
 expiredBan: '&a[%s]&7%s さんの期限付きBANが解除されました。'
 expiredMute: '&a[%s]&7%s さんの期限付きMuteが解除されました。'
 
@@ -31,8 +31,8 @@ channelInfoMuted: '&8| &cMuteリスト：'
 
 motdFirstLine: '&8----- &bあなたが参加中のチャット &8-----'
 
-infoPrefix: '&7[LC]'
-errorPrefix: '&c[LC]'
+infoPrefix: '&a[Info]'
+errorPrefix: '&c[Error]'
 
 cmdmsgJoin: 'チャンネル %s に参加しました。'
 cmdmsgSet: 'デフォルトの発言先を %s に設定しました。'
@@ -127,7 +127,7 @@ errmsgInvalidBanExpireParameter: 'BAN期限(分)の指定が正しくありま�
 errmsgInvalidMuteExpireParameter: 'Mute期限(分)の指定が正しくありません。1 から 43200 の間の数値を指定してください。'
 errmsgNotInCheckRemoveConfirm: 'あなたはクリーンアップモードに入っていません。先に、/%s check を実行してください。'
 
-errmsgNotPermission: 'パーミッション "%s" が無いため、実行できません。'
+errmsgNotPermission: '権限がありません&7(%s)'
 errmsgChannelChatDisabled: 'このサーバーでは、チャンネルチャットは動作しません。'
 
 ngwordPrefix: 'NGワード発言により、'
