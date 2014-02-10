@@ -36,9 +36,9 @@ commands:
            /<command> check remove - /<command> check で一覧されたチャンネルを全て削除します。
            /<command> reload - config.ymlの再読み込みをします。
            /<command> help [user|mod|admin] [page] - ヘルプを表示します。
-  message:
+  tell:
     description: 1:1チャット送信コマンド
-    aliases: [msg, tell, m, t, w]
+    aliases: [msg, message, m, t, w]
     usage: /<command> (name) [message] - 指定した人との1:1チャットを開始します。
     permission: lunachat.message
     permission-message: パーミッション "<permission>" が無いため、実行できません。

@@ -110,7 +110,7 @@ public class LunaChat extends JavaPlugin {
         
         if ( command.getName().equals("lunachat") ) {
             return lunachatCommand.onCommand(sender, command, label, args);
-        } else if ( command.getName().equals("message") ) {
+        } else if ( command.getName().equals("tell") ) {
             return messageCommand.onCommand(sender, command, label, args);
         } else if ( command.getName().equals("reply") ) {
             return replyCommand.onCommand(sender, command, label, args);
