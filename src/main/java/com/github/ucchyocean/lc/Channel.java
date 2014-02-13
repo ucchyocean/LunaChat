@@ -145,6 +145,9 @@ public class Channel implements ConfigurationSerializable {
 
     /** 期限付きMuteの期限（key=プレイヤー名、value=期日（ミリ秒）） */
     private Map<String, Long> muteExpires;
+    
+    /** 1:1チャットの相手名 */
+    private String privateMessageTo;
 
     /** ロガー */
     private LunaChatLogger logger;
@@ -169,6 +172,7 @@ public class Channel implements ConfigurationSerializable {
         this.chatRange = 0;
         this.banExpires = new HashMap<String, Long>();
         this.muteExpires = new HashMap<String, Long>();
+        this.privateMessageTo = "";
 
         if ( isPersonalChat() ) {
             this.format = DEFAULT_FORMAT_FOR_PERSONAL;
@@ -740,9 +744,11 @@ public class Channel implements ConfigurationSerializable {
         msg = msg.replace("%ch", name);
         //msg = msg.replace("%msg", message);
         msg = msg.replace("%color", colorCode);
+        msg = msg.replace("%to", privateMessageTo);
 
         if ( player != null ) {
             msg = msg.replace("%username", player.getDisplayName());
+            msg = msg.replace("%player", player.getName());
 
             if ( msg.contains("%prefix") || msg.contains("%suffix") ) {
                 String prefix = "";
@@ -754,6 +760,11 @@ public class Channel implements ConfigurationSerializable {
                 msg = msg.replace("%prefix", prefix);
                 msg = msg.replace("%suffix", suffix);
             }
+        } else {
+            msg = msg.replace("%username", "");
+            msg = msg.replace("%player", "");
+            msg = msg.replace("%prefix", "");
+            msg = msg.replace("%suffix", "");
         }
 
         return Utility.replaceColorCode(msg);
@@ -1150,6 +1161,22 @@ public class Channel implements ConfigurationSerializable {
      */
     public void setRange(int range) {
         this.chatRange = range;
+    }
+
+    /**
+     * 1:1チャットのときに、会話の相手先を取得する
+     * @return 会話の相手のプレイヤー名
+     */
+    public String getPrivateMessageTo() {
+        return privateMessageTo;
+    }
+
+    /**
+     * 1:1チャットのときに、会話の相手先を設定する
+     * @param name 会話の相手のプレイヤー名
+     */
+    public void setPrivateMessageTo(String name) {
+        this.privateMessageTo = name;
     }
 
     /**

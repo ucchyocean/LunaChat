@@ -98,6 +98,7 @@ public class LunaChatMessageCommand implements CommandExecutor {
             channel.setVisible(false);
             channel.addMember(inviter.getName());
             channel.addMember(invited.getName());
+            channel.setPrivateMessageTo(invited.getName());
         }
 
         // メッセージがあるなら送信する
