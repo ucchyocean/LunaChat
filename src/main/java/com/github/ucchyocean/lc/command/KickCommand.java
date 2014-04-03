@@ -5,11 +5,11 @@
  */
 package com.github.ucchyocean.lc.command;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.Channel;
+import com.github.ucchyocean.lc.Utility;
 
 /**
  * kickコマンドの実行クラス
@@ -20,7 +20,7 @@ public class KickCommand extends SubCommandAbst {
     private static final String COMMAND_NAME = "kick";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
     private static final String USAGE_KEY = "usageKick";
-    
+
     /**
      * コマンドを取得します。
      * @return コマンド
@@ -122,7 +122,7 @@ public class KickCommand extends SubCommandAbst {
         sendResourceMessage(sender, PREINFO,
                 "cmdmsgKick", kickedName, channel.getName());
 
-        Player kicked = Bukkit.getPlayerExact(kickedName);
+        Player kicked = Utility.getPlayerExact(kickedName);
         if (kicked != null) {
             sendResourceMessage(kicked, PREINFO,
                     "cmdmsgKicked", channel.getName());

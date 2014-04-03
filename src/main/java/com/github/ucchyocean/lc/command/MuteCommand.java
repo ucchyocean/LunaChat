@@ -5,11 +5,11 @@
  */
 package com.github.ucchyocean.lc.command;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.Channel;
+import com.github.ucchyocean.lc.Utility;
 
 /**
  * muteコマンドの実行クラス
@@ -21,7 +21,7 @@ public class MuteCommand extends SubCommandAbst {
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
     private static final String USAGE_KEY1 = "usageMute";
     private static final String USAGE_KEY2 = "usageMute2";
-    
+
     /**
      * コマンドを取得します。
      * @return コマンド
@@ -133,7 +133,7 @@ public class MuteCommand extends SubCommandAbst {
         }
 
         // Mute実行
-        Player kicked = Bukkit.getPlayerExact(kickedName);
+        Player kicked = Utility.getPlayerExact(kickedName);
         channel.getMuted().add(kickedName);
         if ( expireMinutes != -1 ) {
             long expire = System.currentTimeMillis() + expireMinutes * 60 * 1000;

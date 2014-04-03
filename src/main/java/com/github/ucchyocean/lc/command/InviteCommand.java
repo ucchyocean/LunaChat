@@ -5,11 +5,11 @@
  */
 package com.github.ucchyocean.lc.command;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.Channel;
+import com.github.ucchyocean.lc.Utility;
 
 /**
  * inviteコマンドの実行クラス
@@ -104,7 +104,7 @@ public class InviteCommand extends SubCommandAbst {
         }
 
         // 招待相手が存在するかどうかを確認する
-        Player invited = Bukkit.getPlayerExact(invitedName);
+        Player invited = Utility.getPlayerExact(invitedName);
         if (invited == null) {
             sendResourceMessage(sender, PREERR,
                     "errmsgNotfoundPlayer", invitedName);

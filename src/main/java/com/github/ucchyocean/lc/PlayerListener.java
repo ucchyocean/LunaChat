@@ -79,7 +79,7 @@ public class PlayerListener implements Listener {
 
         // 強制参加チャンネル設定を確認し、参加させる
         forceJoinToForceJoinChannels(player);
-        
+
         // グローバルチャンネル設定がある場合
         if ( !LunaChat.config.getGlobalChannel().equals("") ) {
             tryJoinToGlobalChannel(player);
@@ -114,7 +114,7 @@ public class PlayerListener implements Listener {
                 boolean isAllOffline = true;
                 for ( String pname : channel.getMembers() ) {
                     if ( !pname.equals(player.getName()) ) {
-                        Player p = Bukkit.getPlayerExact(pname);
+                        Player p = Utility.getPlayerExact(pname);
                         if ( p != null && p.isOnline() ) {
                             isAllOffline = false;
                         }
@@ -183,7 +183,7 @@ public class PlayerListener implements Listener {
 
             // カラーコード置き換え
             message = Utility.replaceColorCode(message);
-            
+
             // 一時的にJapanizeスキップ設定かどうかを確認する
             boolean skipJapanize = false;
             String marker = LunaChat.config.getNoneJapanizeMarker();
@@ -193,7 +193,7 @@ public class PlayerListener implements Listener {
             }
 
             // 2byteコードを含むなら、Japanize変換は行わない
-            if ( !skipJapanize && 
+            if ( !skipJapanize &&
                     ( message.getBytes().length > message.length() ||
                       message.matches("[ \\uFF61-\\uFF9F]+") ) ) {
                 skipJapanize = true;
@@ -224,7 +224,7 @@ public class PlayerListener implements Listener {
 
                     DelayedJapanizeConvertTask task = new DelayedJapanizeConvertTask(message,
                             LunaChat.config.getJapanizeType(), null, player, taskFormat, null);
-                    
+
                     // 発言処理を必ず先に実施させるため、遅延を入れてタスクを実行する。
                     int wait = LunaChat.config.getJapanizeWait();
                     Bukkit.getScheduler().runTaskLater(LunaChat.instance, task, wait);
@@ -260,29 +260,29 @@ public class PlayerListener implements Listener {
 
         return true;
     }
-    
+
     /**
      * 強制参加チャンネルへ参加させる
      * @param player プレイヤー
      */
     private void forceJoinToForceJoinChannels(Player player) {
-        
+
         List<String> forceJoinChannels = LunaChat.config.getForceJoinChannels();
         String playerName = player.getName();
-        
+
         for ( String cname : forceJoinChannels ) {
-            
+
             // チャンネルが存在しない場合は作成する
             Channel channel = LunaChat.manager.getChannel(cname);
             if ( channel == null ) {
                 channel = LunaChat.manager.createChannel(cname);
             }
-            
+
             // チャンネルのメンバーでないなら、参加する
             if ( !channel.getMembers().contains(playerName) ) {
                 channel.addMember(playerName);
             }
-            
+
             // デフォルト発言先が無いなら、グローバルチャンネルに設定する
             Channel dchannel = LunaChat.manager.getDefaultChannel(playerName);
             if ( dchannel == null ) {

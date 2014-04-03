@@ -260,7 +260,7 @@ public class ChannelManager implements LunaChatAPI {
         }
         return japanize.get(playerName);
     }
-    
+
     /**
      * デフォルトチャンネル設定を全て削除する
      */
@@ -445,7 +445,7 @@ public class ChannelManager implements LunaChatAPI {
             // チャンネルのメンバーを強制解散させる
             String message = String.format(MSG_BREAKUP, channelName);
             for ( String pname : channel.getMembers() ) {
-                Player player = Bukkit.getPlayerExact(pname);
+                Player player = Utility.getPlayerExact(pname);
                 if ( player != null ) {
                     player.sendMessage(message);
                 }

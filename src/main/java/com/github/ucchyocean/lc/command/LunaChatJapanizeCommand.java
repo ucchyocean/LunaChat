@@ -5,7 +5,6 @@
  */
 package com.github.ucchyocean.lc.command;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,6 +13,7 @@ import org.bukkit.entity.Player;
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.Resources;
+import com.github.ucchyocean.lc.Utility;
 
 /**
  * Japanize変換設定コマンド
@@ -22,7 +22,7 @@ import com.github.ucchyocean.lc.Resources;
 public class LunaChatJapanizeCommand implements CommandExecutor {
 
     private static final String PERM_JAPANIZE_OTHER = "lunachat-admin.japanize-other";
-    
+
     private static final String PREINFO = Resources.get("infoPrefix");
     private static final String PREERR = Resources.get("errorPrefix");
 
@@ -65,7 +65,7 @@ public class LunaChatJapanizeCommand implements CommandExecutor {
             }
 
             // 指定されたプレイヤーが存在するかチェック
-            Player target = Bukkit.getPlayerExact(args[0]);
+            Player target = Utility.getPlayerExact(args[0]);
             if ( target == null ) {
                 sendResourceMessage(sender, PREERR,
                         "errmsgNotfoundPlayer", args[0]);

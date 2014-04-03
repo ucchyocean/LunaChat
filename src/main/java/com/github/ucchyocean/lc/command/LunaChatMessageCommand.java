@@ -5,7 +5,6 @@
  */
 package com.github.ucchyocean.lc.command;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,6 +14,7 @@ import com.github.ucchyocean.lc.Channel;
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.Resources;
+import com.github.ucchyocean.lc.Utility;
 
 /**
  * 1:1チャット送信コマンド
@@ -74,7 +74,7 @@ public class LunaChatMessageCommand implements CommandExecutor {
     protected void sendTellMessage(Player inviter, String invitedName, String message) {
 
         // 招待相手が存在するかどうかを確認する
-        Player invited = Bukkit.getPlayerExact(invitedName);
+        Player invited = Utility.getPlayerExact(invitedName);
         if (invited == null) {
             sendResourceMessage(inviter, PREERR,
                     "errmsgNotfoundPlayer", invitedName);

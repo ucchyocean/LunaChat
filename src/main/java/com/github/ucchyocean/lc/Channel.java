@@ -98,10 +98,10 @@ public class Channel implements ConfigurationSerializable {
 
     /** BANされたプレイヤー */
     private List<String> banned;
-    
+
     /** Muteされたプレイヤー */
     private List<String> muted;
-    
+
     /** Hideしているプレイヤー */
     private List<String> hided;
 
@@ -145,7 +145,7 @@ public class Channel implements ConfigurationSerializable {
 
     /** 期限付きMuteの期限（key=プレイヤー名、value=期日（ミリ秒）） */
     private Map<String, Long> muteExpires;
-    
+
     /** 1:1チャットの相手名 */
     private String privateMessageTo;
 
@@ -209,7 +209,7 @@ public class Channel implements ConfigurationSerializable {
     public boolean isForceJoinChannel() {
         return LunaChat.config.getForceJoinChannels().contains(name);
     }
-    
+
     /**
      * このチャンネルのモデレータ権限を持っているかどうかを確認する
      * @param sender 権限を確認する対象
@@ -232,9 +232,9 @@ public class Channel implements ConfigurationSerializable {
             player.sendMessage( PREERR + ERRMSG_MUTED );
             return;
         }
-        
+
         String preReplaceMessage = message;
-        
+
         // 一時的にJapanizeスキップ設定かどうかを確認する
         boolean skipJapanize = false;
         String marker = LunaChat.config.getNoneJapanizeMarker();
@@ -272,7 +272,7 @@ public class Channel implements ConfigurationSerializable {
         maskedMessage = event.getNgMaskedMessage();
 
         // 2byteコードを含むか、半角カタカナのみなら、Japanize変換は行わない
-        if ( !skipJapanize && 
+        if ( !skipJapanize &&
                 ( message.getBytes().length > message.length() ||
                   message.matches("[ \\uFF61-\\uFF9F]+") ) ) {
             skipJapanize = true;
@@ -306,7 +306,7 @@ public class Channel implements ConfigurationSerializable {
             // メッセージの送信
             sendMessage(player, maskedMessage, msgFormat, true);
         }
-        
+
         // 非同期実行タスクがある場合、追加で実行する
         if ( delayedTask != null ) {
             Bukkit.getScheduler().runTask(LunaChat.instance, delayedTask);
@@ -334,7 +334,7 @@ public class Channel implements ConfigurationSerializable {
                     String m = String.format(temp, name);
                     player.sendMessage(m);
                 }
-                
+
             } else if ( LunaChat.config.getNgwordAction() == NGWordAction.MUTE ) {
                 // Muteする
 
@@ -346,7 +346,7 @@ public class Channel implements ConfigurationSerializable {
             }
         }
     }
-    
+
     /**
      * ほかの連携先などから、このチャットに発言する
      * @param player プレイヤー名
@@ -354,10 +354,10 @@ public class Channel implements ConfigurationSerializable {
      * @param message メッセージ
      */
     public void chatFromOtherSource(String player, String source, String message) {
-        
+
         // 表示名
         String name = player + "@" + source;
-        
+
         // NGワード発言のマスク
         String maskedMessage = message;
         for ( String word : LunaChat.config.getNgword() ) {
@@ -437,7 +437,7 @@ public class Channel implements ConfigurationSerializable {
                 save();
             }
         }
-        
+
         // 非表示設定プレイヤーだったら、リストから削除する
         if ( hided.contains(name) ) {
             hided.remove(name);
@@ -481,7 +481,7 @@ public class Channel implements ConfigurationSerializable {
      * @param format フォーマット
      * @param sendDynmap dynmapへ送信するかどうか
      */
-    protected void sendMessage(Player player, String message, 
+    protected void sendMessage(Player player, String message,
             String format, boolean sendDynmap) {
 
         String originalMessage = new String(message);
@@ -489,7 +489,7 @@ public class Channel implements ConfigurationSerializable {
         // 受信者を設定する
         ArrayList<Player> recipients = new ArrayList<Player>();
         boolean isRangeChat = false;
-        
+
         if ( isBroadcastChannel() ) {
             // ブロードキャストチャンネル
 
@@ -532,7 +532,7 @@ public class Channel implements ConfigurationSerializable {
             // 通常チャンネル
 
             for ( String name : members ) {
-                Player p = Bukkit.getPlayerExact(name);
+                Player p = Utility.getPlayerExact(name);
                 if ( p != null && !hided.contains(p.getName()) ) {
                     recipients.add(p);
                 }
@@ -543,7 +543,7 @@ public class Channel implements ConfigurationSerializable {
         if ( format != null ) {
             message = format.replace("%msg", message);
         }
-        
+
         // イベントコール
         LunaChatChannelMessageEvent event =
                 new LunaChatChannelMessageEvent(
@@ -556,7 +556,7 @@ public class Channel implements ConfigurationSerializable {
         if ( LunaChat.config.isSendBroadcastChannelChatToDynmap() &&
                 sendDynmap &&
                 LunaChat.dynmap != null &&
-                isBroadcastChannel() && 
+                isBroadcastChannel() &&
                 !isWorldRange ) {
             if ( LunaChat.config.isSendFormattedMessageToDynmap() ) {
                 if ( player != null ) {
@@ -572,16 +572,16 @@ public class Channel implements ConfigurationSerializable {
                 }
             }
         }
-        
+
         // 送信する
         for ( Player p : recipients ) {
             p.sendMessage(message);
         }
-        
+
         // 受信者が自分以外いない場合は、メッセージを表示する
-        if ( isRangeChat && ( 
+        if ( isRangeChat && (
                 recipients.size() == 0 ||
-                (recipients.size() == 1 && 
+                (recipients.size() == 1 &&
                  recipients.get(0).getName().equals(player.getName()) ) ) ) {
             String msg = replaceKeywordsForSystemMessages(MSG_NO_RECIPIENT, "");
             player.sendMessage(msg);
@@ -614,7 +614,7 @@ public class Channel implements ConfigurationSerializable {
             // メンバーを、5人ごとに表示する
             StringBuffer buf = new StringBuffer();
             buf.append(INFO_PREFIX);
-            
+
             for ( int i=0; i<members.size(); i++ ) {
 
                 if ( i%5 == 0 && i != 0 ) {
@@ -641,12 +641,12 @@ public class Channel implements ConfigurationSerializable {
 
             info.add(buf.toString());
         }
-        
+
         // シークレットチャンネルかどうか
         if ( !visible ) {
             info.add(INFO_SECRET);
         }
-        
+
         // パスワード設定があるかどうか
         if ( password.length() > 0 ) {
             if ( !forModerator ) {
@@ -655,23 +655,23 @@ public class Channel implements ConfigurationSerializable {
                 info.add(INFO_PASSWORD + " " + password);
             }
         }
-        
+
         // 範囲チャット、ワールドチャット
         if ( isWorldRange && chatRange > 0 ) {
             info.add(String.format(INFO_RANGECHAT, chatRange));
         } else if ( isWorldRange ) {
             info.add(INFO_WORLDCHAT);
         }
-        
+
         if ( forModerator ) {
-            
+
             // フォーマット情報
             info.add(INFO_FORMAT + format);
-            
+
             // Muteリスト情報、5人ごとに表示する
             if ( muted.size() > 0 ) {
                 info.add(INFO_MUTED);
-    
+
                 StringBuffer buf = new StringBuffer();
                 buf.append(INFO_PREFIX + ChatColor.WHITE);
                 for ( int i=0; i<muted.size(); i++ ) {
@@ -682,7 +682,7 @@ public class Channel implements ConfigurationSerializable {
                     }
                     buf.append(muted.get(i) + ",");
                 }
-    
+
                 info.add(buf.toString());
             }
 
@@ -700,11 +700,11 @@ public class Channel implements ConfigurationSerializable {
                     }
                     buf.append(banned.get(i) + ",");
                 }
-    
+
                 info.add(buf.toString());
             }
         }
-        
+
         info.add(LIST_ENDLINE);
 
         return info;
@@ -716,7 +716,7 @@ public class Channel implements ConfigurationSerializable {
      * @return オンラインかどうか
      */
     private boolean isOnlinePlayer(String playerName) {
-        Player p = Bukkit.getPlayerExact(playerName);
+        Player p = Utility.getPlayerExact(playerName);
         return ( p != null && p.isOnline() );
     }
 
@@ -820,29 +820,29 @@ public class Channel implements ConfigurationSerializable {
 
         return members.size();
     }
-    
+
     /**
      * 期限付きBanや期限付きMuteをチェックし、期限が切れていたら解除を行う
      */
     public void checkExpires() {
-        
+
         long now = System.currentTimeMillis();
-        
+
         // 期限付きBANのチェック
         for ( String name : banExpires.keySet() ) {
             if ( banExpires.get(name) <= now ) {
-                
+
                 // 期限マップから削除し、BANを解除
                 banExpires.remove(name);
                 if ( banned.contains(name) ) {
                     banned.remove(name);
                     save();
-                    
+
                     // メッセージ通知を流す
                     String msg = String.format(MSG_BAN_EXPIRED, this.name, name);
                     sendMessage(null, msg, null, false);
-                    
-                    Player player = Bukkit.getPlayerExact(name);
+
+                    Player player = Utility.getPlayerExact(name);
                     if ( player != null ) {
                         msg = PREINFO + String.format(MSG_BAN_EXPIRED_PLAYER, this.name);
                         player.sendMessage(msg);
@@ -850,22 +850,22 @@ public class Channel implements ConfigurationSerializable {
                 }
             }
         }
-        
+
         // 期限付きMuteのチェック
         for ( String name : muteExpires.keySet() ) {
             if ( muteExpires.get(name) <= now ) {
-                
+
                 // 期限マップから削除し、Muteを解除
                 muteExpires.remove(name);
                 if ( muted.contains(name) ) {
                     muted.remove(name);
                     save();
-                    
+
                     // メッセージ通知を流す
                     String msg = String.format(MSG_MUTE_EXPIRED, this.name, name);
                     sendMessage(null, msg, null, false);
-                    
-                    Player player = Bukkit.getPlayerExact(name);
+
+                    Player player = Utility.getPlayerExact(name);
                     if ( player != null ) {
                         msg = PREINFO + String.format(MSG_MUTE_EXPIRED_PLAYER, this.name);
                         player.sendMessage(msg);
@@ -1052,7 +1052,7 @@ public class Channel implements ConfigurationSerializable {
      * @return チャンネルのメンバー
      */
     public List<String> getMembers() {
-        
+
         // ブロードキャストチャンネルなら、
         // 現在サーバーに接続している全プレイヤーをメンバーとして返す
         if ( isBroadcastChannel() ) {
@@ -1063,7 +1063,7 @@ public class Channel implements ConfigurationSerializable {
             }
             return mem;
         }
-        
+
         return members;
     }
 

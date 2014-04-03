@@ -5,11 +5,11 @@
  */
 package com.github.ucchyocean.lc.command;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.Channel;
+import com.github.ucchyocean.lc.Utility;
 
 /**
  * unmuteコマンドの実行クラス
@@ -20,7 +20,7 @@ public class UnmuteCommand extends SubCommandAbst {
     private static final String COMMAND_NAME = "unmute";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
     private static final String USAGE_KEY = "usageUnmute";
-    
+
     /**
      * コマンドを取得します。
      * @return コマンド
@@ -111,7 +111,7 @@ public class UnmuteCommand extends SubCommandAbst {
         }
 
         // Mute解除実行
-        Player kicked = Bukkit.getPlayerExact(kickedName);
+        Player kicked = Utility.getPlayerExact(kickedName);
         channel.getMuted().remove(kickedName);
         channel.save();
 
