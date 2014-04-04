@@ -204,9 +204,7 @@ public abstract class Channel implements ConfigurationSerializable {
      * メンバーを追加する
      * @param name 追加するメンバー名
      */
-    public void addMember(String name) {
-
-        ChannelPlayer player = ChannelPlayer.getChannelPlayer(name);
+    public void addMember(ChannelPlayer player) {
 
         // 既に参加しているなら、何もしない
         if ( members.contains(player) ) {
@@ -238,9 +236,7 @@ public abstract class Channel implements ConfigurationSerializable {
      * メンバーを削除する
      * @param name 削除するメンバー名
      */
-    public void removeMember(String name) {
-
-        ChannelPlayer player = ChannelPlayer.getChannelPlayer(name);
+    public void removeMember(ChannelPlayer player) {
 
         // 既に削除しているなら、何もしない
         if ( !members.contains(player) ) {
@@ -262,9 +258,9 @@ public abstract class Channel implements ConfigurationSerializable {
         // デフォルト発言先が退出するチャンネルと一致する場合、
         // デフォルト発言先を削除する
         LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
-        Channel def = api.getDefaultChannel(name);
+        Channel def = api.getDefaultChannel(player.getName());
         if ( def != null && def.getName().equals(getName()) ) {
-            api.removeDefaultChannel(name);
+            api.removeDefaultChannel(player.getName());
         }
 
         // 実際にメンバーから削除する
@@ -396,12 +392,9 @@ public abstract class Channel implements ConfigurationSerializable {
             return null;
         }
 
-        String defaultFormat =
-                LunaChat.getInstance().getLunaChatConfig().getDefaultFormat();
-
         Channel channel = new ChannelImpl(name);
         channel.description = castWithDefault(data.get(KEY_DESC), "");
-        channel.format = castWithDefault(data.get(KEY_FORMAT), defaultFormat);
+        channel.format = castWithDefault(data.get(KEY_FORMAT), channel.format);
         channel.members = castToChannelPlayerList(data.get(KEY_MEMBERS));
         channel.banned = castToChannelPlayerList(data.get(KEY_BANNED));
         channel.muted = castToChannelPlayerList(data.get(KEY_MUTED));

@@ -5,8 +5,8 @@
 
 joinMessage: '&f[%color%ch&f]&7%username さんがチャンネルチャットに参加しました。'
 quitMessage: '&f[%color%ch&f]&7%username さんがチャンネルチャットから退出しました。'
-breakupMessage: '&a[%s]&7チャンネルチャットが削除されました。'
 noRecipientMessage: '&f[%color%ch&f]&7あなたの発言は、誰にも届きませんでした。'
+breakupMessage: '&a[%s]&7チャンネルチャットが削除されました。'
 expiredBan: '&a[%s]&7%s さんの期限付きBANが解除されました。'
 expiredMute: '&a[%s]&7%s さんの期限付きMuteが解除されました。'
 

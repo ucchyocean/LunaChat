@@ -107,7 +107,7 @@ public class AcceptCommand extends SubCommandAbst {
         }
 
         // 参加する
-        channel.addMember(player.getName());
+        channel.addMember(cp);
         sendResourceMessage(sender, PREINFO, "cmdmsgJoin", channel.getName());
 
         return true;

@@ -145,7 +145,7 @@ public class BanCommand extends SubCommandAbst {
             long expire = System.currentTimeMillis() + expireMinutes * 60 * 1000;
             channel.getBanExpires().put(kicked, expire);
         }
-        channel.removeMember(kickedName);
+        channel.removeMember(kicked);
 
         if ( expireMinutes != -1 ) {
             sendResourceMessage(sender, PREINFO,

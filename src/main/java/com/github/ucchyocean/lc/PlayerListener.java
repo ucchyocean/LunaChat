@@ -286,7 +286,6 @@ public class PlayerListener implements Listener {
         LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
 
         List<String> forceJoinChannels = config.getForceJoinChannels();
-        String playerName = player.getName();
 
         for ( String cname : forceJoinChannels ) {
 
@@ -299,13 +298,13 @@ public class PlayerListener implements Listener {
             // チャンネルのメンバーでないなら、参加する
             ChannelPlayer cp = ChannelPlayer.getChannelPlayer(player);
             if ( !channel.getMembers().contains(cp) ) {
-                channel.addMember(playerName);
+                channel.addMember(cp);
             }
 
             // デフォルト発言先が無いなら、グローバルチャンネルに設定する
-            Channel dchannel = api.getDefaultChannel(playerName);
+            Channel dchannel = api.getDefaultChannel(player.getName());
             if ( dchannel == null ) {
-                api.setDefaultChannel(playerName, cname);
+                api.setDefaultChannel(player.getName(), cname);
             }
         }
     }

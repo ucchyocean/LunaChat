@@ -95,8 +95,8 @@ public class LunaChatMessageCommand implements CommandExecutor {
             // チャンネルを作成して、送信者、受信者をメンバーにする
             channel = api.createChannel(cname);
             channel.setVisible(false);
-            channel.addMember(inviter.getName());
-            channel.addMember(invited.getName());
+            channel.addMember(inviter);
+            channel.addMember(invited);
             channel.setPrivateMessageTo(invited.getName());
         }
 

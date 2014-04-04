@@ -32,15 +32,28 @@ public class ChannelPlayerUUID extends ChannelPlayer {
     }
 
     /**
+     * コンストラクタ
+     * @param id UUID
+     */
+    public ChannelPlayerUUID(UUID id) {
+        this.id = id;
+    }
+
+    /**
      * プレイヤー名からUUIDを取得してChannelPlayerUUIDを作成して返す
      * @param name プレイヤー名
      * @return ChannelPlayerUUID
      */
     public static ChannelPlayerUUID getChannelPlayerUUIDFromName(String name) {
         @SuppressWarnings("deprecation")
-        OfflinePlayer player = Bukkit.getOfflinePlayer(name);
+        Player player = Bukkit.getPlayerExact(name);
         if ( player != null ) {
-            return new ChannelPlayerUUID(player.getUniqueId().toString());
+            return new ChannelPlayerUUID(player.getUniqueId());
+        }
+        @SuppressWarnings("deprecation")
+        OfflinePlayer offline = Bukkit.getOfflinePlayer(name);
+        if ( offline != null && offline.getUniqueId() != null ) {
+            return new ChannelPlayerUUID(offline.getUniqueId());
         }
         return null;
     }
@@ -52,7 +65,7 @@ public class ChannelPlayerUUID extends ChannelPlayer {
      */
     public static ChannelPlayer getChannelPlayer(CommandSender sender) {
         if ( sender instanceof Player ) {
-            return new ChannelPlayerUUID(((Player)sender).getUniqueId().toString());
+            return new ChannelPlayerUUID(((Player)sender).getUniqueId());
         }
         return new ChannelPlayerName(sender.getName());
     }
@@ -63,8 +76,8 @@ public class ChannelPlayerUUID extends ChannelPlayer {
      */
     @Override
     public boolean isOnline() {
-        OfflinePlayer player = Bukkit.getOfflinePlayer(id);
-        return (player != null && player.isOnline());
+        Player player = Bukkit.getPlayer(id);
+        return (player != null);
     }
 
     /**
@@ -74,10 +87,17 @@ public class ChannelPlayerUUID extends ChannelPlayer {
      */
     @Override
     public String getName() {
-        OfflinePlayer player = Bukkit.getOfflinePlayer(id);
-        @SuppressWarnings("deprecation")
-        String name = player.getName();
-        return name;
+        Player player = Bukkit.getPlayer(id);
+        if ( player != null ) {
+            return player.getName();
+        }
+        OfflinePlayer offlineplayer = Bukkit.getOfflinePlayer(id);
+        if ( offlineplayer != null ) {
+            @SuppressWarnings("deprecation")
+            String name = offlineplayer.getName();
+            return name;
+        }
+        return id.toString();
     }
 
     /**

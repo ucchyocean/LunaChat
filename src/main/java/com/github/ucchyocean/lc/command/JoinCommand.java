@@ -131,7 +131,7 @@ public class JoinCommand extends SubCommandAbst {
                 // チャンネル作成
                 Channel c = api.createChannel(channelName);
                 if ( c != null ) {
-                    c.addMember(player.getName());
+                    c.addMember(player);
                     sendResourceMessage(sender, PREINFO, "cmdmsgCreate", channelName);
                 }
                 return true;
@@ -199,7 +199,7 @@ public class JoinCommand extends SubCommandAbst {
 
             // チャンネルに参加し、デフォルトの発言先に設定する
             if ( !channel.getName().equals(config.getGlobalChannel()) ) {
-                channel.addMember(player.getName());
+                channel.addMember(player);
                 sendResourceMessage(sender, PREINFO, "cmdmsgJoin", channelName);
             }
             api.setDefaultChannel(player.getName(), channelName);

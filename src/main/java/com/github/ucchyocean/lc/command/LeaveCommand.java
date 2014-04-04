@@ -119,7 +119,7 @@ public class LeaveCommand extends SubCommandAbst {
         }
 
         // チャンネルから退出する
-        channel.removeMember(player.getName());
+        channel.removeMember(player);
         sendResourceMessage(sender, PREINFO, "cmdmsgLeave", channelName);
         return true;
     }

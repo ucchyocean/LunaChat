@@ -53,8 +53,8 @@ public class LunaChat extends JavaPlugin {
 
         // 変数などの初期化
         instance = this;
-        manager = new ChannelManager();
         config = new LunaChatConfig();
+        manager = new ChannelManager();
 
         // Chat Plugin のロード
         Plugin temp = getServer().getPluginManager().getPlugin("Vault");

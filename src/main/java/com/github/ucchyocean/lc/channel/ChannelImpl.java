@@ -69,12 +69,6 @@ public class ChannelImpl extends Channel {
     /** ロガー */
     private LunaChatLogger logger;
 
-    /** コンフィグ */
-    private LunaChatConfig config;
-
-    /** API */
-    private LunaChatAPI api;
-
     /**
      * コンストラクタ
      * @param name チャンネル名
@@ -83,8 +77,6 @@ public class ChannelImpl extends Channel {
 
         super(name);
 
-        config = LunaChat.getInstance().getLunaChatConfig();
-        api = LunaChat.getInstance().getLunaChatAPI();
         logger = new LunaChatLogger(name.replace(">", "-"));
     }
 
@@ -95,6 +87,9 @@ public class ChannelImpl extends Channel {
      */
     @Override
     public void chat(ChannelPlayer player, String message) {
+
+        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
+        LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
 
         // Muteされているかどうかを確認する
         if ( player != null && getMuted().contains(player) ) {
@@ -150,6 +145,7 @@ public class ChannelImpl extends Channel {
         // Japanize変換タスクを作成する
         boolean isIncludeSyncChat = true;
         DelayedJapanizeConvertTask delayedTask = null;
+
         if ( !skipJapanize &&
                 api.isPlayerJapanize(player.getName()) &&
                 config.getJapanizeType() != JapanizeType.NONE ) {
@@ -188,7 +184,7 @@ public class ChannelImpl extends Channel {
 
                 if ( !isGlobalChannel() ) {
                     getBanned().add(player);
-                    removeMember(player.getName());
+                    removeMember(player);
                     String temp = PREINFO + NGWORD_PREFIX + MSG_BANNED;
                     String m = String.format(temp, getName());
                     player.sendMessage(m);
@@ -198,7 +194,7 @@ public class ChannelImpl extends Channel {
                 // キックする
 
                 if ( !isGlobalChannel() ) {
-                    removeMember(player.getName());
+                    removeMember(player);
                     String temp = PREINFO + NGWORD_PREFIX + MSG_KICKED;
                     String m = String.format(temp, getName());
                     player.sendMessage(m);
@@ -224,6 +220,8 @@ public class ChannelImpl extends Channel {
      */
     @Override
     public void chatFromOtherSource(String player, String source, String message) {
+
+        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
 
         // 表示名
         String name = player + "@" + source;
@@ -275,6 +273,7 @@ public class ChannelImpl extends Channel {
         msg = msg.replace("%ch", getName());
         msg = msg.replace("%color", getColorCode());
         msg = msg.replace("%username", player.getDisplayName());
+        msg = Utility.replaceColorCode(msg);
 
         sendMessage(null, msg, null, false);
     }
@@ -289,6 +288,8 @@ public class ChannelImpl extends Channel {
     @Override
     protected void sendMessage(ChannelPlayer player, String message,
             String format, boolean sendDynmap) {
+
+        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
 
         String originalMessage = new String(message);
 
@@ -583,6 +584,8 @@ public class ChannelImpl extends Channel {
      */
     private String replaceKeywords(String format, ChannelPlayer player) {
 
+        LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
+
         String msg = format;
 
         // テンプレートのキーワードを、まず最初に置き換える
@@ -641,6 +644,8 @@ public class ChannelImpl extends Channel {
      * @param message 記録するメッセージ
      */
     private void log(String message) {
+
+        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
 
         if ( config.isDisplayChatOnConsole() ) {
             Bukkit.getLogger().info(ChatColor.stripColor(message));
