@@ -46,7 +46,7 @@ public class LunaChatJapanizeCommand implements CommandExecutor {
 
             // Japanize設定をon/offにする
             boolean value = args[0].equalsIgnoreCase("on");
-            LunaChatAPI api = LunaChat.instance.getLunaChatAPI();
+            LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
             api.setPlayersJapanize(player.getName(), value);
 
             sendResourceMessage(sender, PREINFO,
@@ -74,7 +74,7 @@ public class LunaChatJapanizeCommand implements CommandExecutor {
 
             // Japanize設定をon/offにする
             boolean value = args[1].equalsIgnoreCase("on");
-            LunaChatAPI api = LunaChat.instance.getLunaChatAPI();
+            LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
             api.setPlayersJapanize(target.getName(), value);
 
             sendResourceMessage(target, PREINFO,

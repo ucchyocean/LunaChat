@@ -19,7 +19,7 @@ public class JoinCommand extends SubCommandAbst {
     private static final String COMMAND_NAME = "join";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
     private static final String USAGE_KEY = "usageJoin";
-    
+
     /**
      * コマンドを取得します。
      * @return コマンド
@@ -102,7 +102,7 @@ public class JoinCommand extends SubCommandAbst {
             sendResourceMessage(sender, PREERR, "errmsgCommand");
             return true;
         }
-        
+
         // チャンネルが存在するかどうかをチェックする
         if ( !api.isExistChannel(channelName) ) {
             if (config.getGlobalChannel().equals("") &&
@@ -151,7 +151,7 @@ public class JoinCommand extends SubCommandAbst {
             sendResourceMessage(sender, PREERR, "errmsgBanned");
             return true;
         }
-        
+
         // 個人チャットの場合はエラーにする
         if (channel.isPersonalChat()) {
             sendResourceMessage(sender, PREERR, "errmsgCannotJoinPersonal");
@@ -173,7 +173,7 @@ public class JoinCommand extends SubCommandAbst {
         } else {
 
             // グローバルチャンネルで、何かメッセージがあるなら、そのままチャット送信する
-            if (channel.getName().equals(config.getGlobalChannel()) && 
+            if (channel.getName().equals(config.getGlobalChannel()) &&
                     message.length() > 0) {
                 channel.chat(player, message.toString());
                 return true;
@@ -204,7 +204,7 @@ public class JoinCommand extends SubCommandAbst {
             api.setDefaultChannel(player.getName(), channelName);
             sendResourceMessage(sender, PREINFO, "cmdmsgSet", channelName);
         }
-        
+
         // 非表示に設定しているなら、注意を流す
         if ( channel.getHided().contains(player.getName()) ) {
             sendResourceMessage(sender, PREINFO, "cmdmsgSetHide");

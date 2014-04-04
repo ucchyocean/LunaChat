@@ -60,7 +60,7 @@ public class ChannelManager implements LunaChatAPI {
 
         // デフォルトチャンネル設定のロード
         fileDefaults = new File(
-                LunaChat.instance.getDataFolder(), FILE_NAME_DCHANNELS);
+                LunaChat.getInstance().getDataFolder(), FILE_NAME_DCHANNELS);
 
         if ( !fileDefaults.exists() ) {
             YamlConfiguration conf = new YamlConfiguration();
@@ -81,7 +81,7 @@ public class ChannelManager implements LunaChatAPI {
 
         // テンプレート設定のロード
         fileTemplates = new File(
-                LunaChat.instance.getDataFolder(), FILE_NAME_TEMPLATES);
+                LunaChat.getInstance().getDataFolder(), FILE_NAME_TEMPLATES);
 
         if ( !fileTemplates.exists() ) {
             YamlConfiguration conf = new YamlConfiguration();
@@ -102,7 +102,7 @@ public class ChannelManager implements LunaChatAPI {
 
         // Japanize設定のロード
         fileJapanize = new File(
-                LunaChat.instance.getDataFolder(), FILE_NAME_JAPANIZE);
+                LunaChat.getInstance().getDataFolder(), FILE_NAME_JAPANIZE);
 
         if ( !fileJapanize.exists() ) {
             YamlConfiguration conf = new YamlConfiguration();
@@ -123,11 +123,6 @@ public class ChannelManager implements LunaChatAPI {
 
         // チャンネル設定のロード
         channels = Channel.loadAllChannels();
-
-        // コンフィグのリロード
-        if ( LunaChat.config != null ) {
-            LunaChat.config.reloadConfig();
-        }
     }
 
     /**

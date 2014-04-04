@@ -22,6 +22,8 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Player;
 
+import com.github.ucchyocean.lc.bridge.DynmapBridge;
+import com.github.ucchyocean.lc.bridge.VaultChatBridge;
 import com.github.ucchyocean.lc.event.LunaChatChannelChatEvent;
 import com.github.ucchyocean.lc.event.LunaChatChannelMemberChangedEvent;
 import com.github.ucchyocean.lc.event.LunaChatChannelMessageEvent;
@@ -152,11 +154,21 @@ public class Channel implements ConfigurationSerializable {
     /** ロガー */
     private LunaChatLogger logger;
 
+    /** コンフィグ */
+    private LunaChatConfig config;
+
+    /** マネージャ */
+    private ChannelManager manager;
+
     /**
      * コンストラクタ
      * @param name チャンネルの名称
      */
     protected Channel(String name) {
+
+        this.config = LunaChat.getInstance().getLunaChatConfig();
+        this.manager = LunaChat.getInstance().getManager();
+
         this.name = name;
         this.description = "";
         this.members = new ArrayList<String>();
@@ -200,14 +212,14 @@ public class Channel implements ConfigurationSerializable {
      * @return グローバルチャンネルかどうか
      */
     public boolean isGlobalChannel() {
-        return name.equals(LunaChat.config.getGlobalChannel());
+        return name.equals(config.getGlobalChannel());
     }
 
     /**
      * @return 強制参加チャンネルかどうか
      */
     public boolean isForceJoinChannel() {
-        return LunaChat.config.getForceJoinChannels().contains(name);
+        return config.getForceJoinChannels().contains(name);
     }
 
     /**
@@ -237,7 +249,7 @@ public class Channel implements ConfigurationSerializable {
 
         // 一時的にJapanizeスキップ設定かどうかを確認する
         boolean skipJapanize = false;
-        String marker = LunaChat.config.getNoneJapanizeMarker();
+        String marker = config.getNoneJapanizeMarker();
         if ( !marker.equals("") && message.startsWith(marker) ) {
             skipJapanize = true;
             message = message.substring(marker.length());
@@ -246,7 +258,7 @@ public class Channel implements ConfigurationSerializable {
         // NGワード発言をしたかどうかのチェックとマスク
         boolean isNG = false;
         String maskedMessage = message;
-        for ( String word : LunaChat.config.getNgword() ) {
+        for ( String word : config.getNgword() ) {
             if ( maskedMessage.contains(word) ) {
                 maskedMessage = maskedMessage.replace(
                         word, Utility.getAstariskString(word.length()));
@@ -282,23 +294,23 @@ public class Channel implements ConfigurationSerializable {
         boolean isIncludeSyncChat = true;
         DelayedJapanizeConvertTask delayedTask = null;
         if ( !skipJapanize &&
-                LunaChat.manager.isPlayerJapanize(player.getName()) &&
-                LunaChat.config.getJapanizeType() != JapanizeType.NONE ) {
+                manager.isPlayerJapanize(player.getName()) &&
+                config.getJapanizeType() != JapanizeType.NONE ) {
 
-            int lineType = LunaChat.config.getJapanizeDisplayLine();
+            int lineType = config.getJapanizeDisplayLine();
             String jpFormat;
             String messageFormat = null;
             if ( lineType == 1 ) {
-                jpFormat = LunaChat.config.getJapanizeLine1Format();
+                jpFormat = config.getJapanizeLine1Format();
                 messageFormat = msgFormat;
                 isIncludeSyncChat = false;
             } else {
-                jpFormat = LunaChat.config.getJapanizeLine2Format();
+                jpFormat = config.getJapanizeLine2Format();
             }
 
             // タスクを作成しておく
             delayedTask = new DelayedJapanizeConvertTask(maskedMessage,
-                            LunaChat.config.getJapanizeType(),
+                            config.getJapanizeType(),
                             this, player, jpFormat, messageFormat);
         }
 
@@ -309,12 +321,12 @@ public class Channel implements ConfigurationSerializable {
 
         // 非同期実行タスクがある場合、追加で実行する
         if ( delayedTask != null ) {
-            Bukkit.getScheduler().runTask(LunaChat.instance, delayedTask);
+            delayedTask.runTaskAsynchronously(LunaChat.getInstance());
         }
 
         // NGワード発言者に、NGワードアクションを実行する
         if ( isNG && player != null ) {
-            if ( LunaChat.config.getNgwordAction() == NGWordAction.BAN ) {
+            if ( config.getNgwordAction() == NGWordAction.BAN ) {
                 // BANする
 
                 if ( !isGlobalChannel() ) {
@@ -325,7 +337,7 @@ public class Channel implements ConfigurationSerializable {
                     player.sendMessage(m);
                 }
 
-            } else if ( LunaChat.config.getNgwordAction() == NGWordAction.KICK ) {
+            } else if ( config.getNgwordAction() == NGWordAction.KICK ) {
                 // キックする
 
                 if ( !isGlobalChannel() ) {
@@ -335,7 +347,7 @@ public class Channel implements ConfigurationSerializable {
                     player.sendMessage(m);
                 }
 
-            } else if ( LunaChat.config.getNgwordAction() == NGWordAction.MUTE ) {
+            } else if ( config.getNgwordAction() == NGWordAction.MUTE ) {
                 // Muteする
 
                 muted.add(player.getName());
@@ -360,7 +372,7 @@ public class Channel implements ConfigurationSerializable {
 
         // NGワード発言のマスク
         String maskedMessage = message;
-        for ( String word : LunaChat.config.getNgword() ) {
+        for ( String word : config.getNgword() ) {
             if ( maskedMessage.contains(word) ) {
                 maskedMessage = maskedMessage.replace(
                         word, Utility.getAstariskString(word.length()));
@@ -421,17 +433,17 @@ public class Channel implements ConfigurationSerializable {
 
         // デフォルト発言先が退出するチャンネルと一致する場合、
         // デフォルト発言先を削除する
-        Channel def = LunaChat.manager.getDefaultChannel(name);
+        Channel def = manager.getDefaultChannel(name);
         if ( def != null && def.name.equals(this.name) ) {
-            LunaChat.manager.removeDefaultChannel(name);
+            manager.removeDefaultChannel(name);
         }
 
         // 実際にメンバーから削除する
         if ( members.contains(name) ) {
             members.remove(name);
             sendJoinQuitMessage(false, name);
-            if ( LunaChat.config.isZeroMemberRemove() && members.size() <= 0 ) {
-                LunaChat.manager.removeChannel(this.name);
+            if ( config.isZeroMemberRemove() && members.size() <= 0 ) {
+                manager.removeChannel(this.name);
                 return;
             } else {
                 save();
@@ -553,22 +565,23 @@ public class Channel implements ConfigurationSerializable {
         recipients = event.getRecipients();
 
         // 通常ブロードキャストなら、設定に応じてdynmapへ送信する
-        if ( LunaChat.config.isSendBroadcastChannelChatToDynmap() &&
+        DynmapBridge dynmap = LunaChat.getInstance().getDynmap();
+        if ( config.isSendBroadcastChannelChatToDynmap() &&
                 sendDynmap &&
-                LunaChat.dynmap != null &&
+                dynmap != null &&
                 isBroadcastChannel() &&
                 !isWorldRange ) {
-            if ( LunaChat.config.isSendFormattedMessageToDynmap() ) {
+            if ( config.isSendFormattedMessageToDynmap() ) {
                 if ( player != null ) {
-                    LunaChat.dynmap.chat(player, message);
+                    dynmap.chat(player, message);
                 } else {
-                    LunaChat.dynmap.broadcast(message);
+                    dynmap.broadcast(message);
                 }
             } else {
                 if ( player != null ) {
-                    LunaChat.dynmap.chat(player, originalMessage);
+                    dynmap.chat(player, originalMessage);
                 } else {
-                    LunaChat.dynmap.broadcast(originalMessage);
+                    dynmap.broadcast(originalMessage);
                 }
             }
         }
@@ -734,8 +747,8 @@ public class Channel implements ConfigurationSerializable {
         for ( int i=0; i<=9; i++ ) {
             String key = "%" + i;
             if ( msg.contains(key) ) {
-                if ( LunaChat.manager.getTemplate("" + i) != null ) {
-                    msg = msg.replace(key, LunaChat.manager.getTemplate("" + i));
+                if ( manager.getTemplate("" + i) != null ) {
+                    msg = msg.replace(key, manager.getTemplate("" + i));
                     break;
                 }
             }
@@ -753,9 +766,10 @@ public class Channel implements ConfigurationSerializable {
             if ( msg.contains("%prefix") || msg.contains("%suffix") ) {
                 String prefix = "";
                 String suffix = "";
-                if ( LunaChat.vaultchat != null ) {
-                    prefix = LunaChat.vaultchat.getPlayerPrefix(player);
-                    suffix = LunaChat.vaultchat.getPlayerSuffix(player);
+                VaultChatBridge vaultchat = LunaChat.getInstance().getVaultChat();
+                if ( vaultchat != null ) {
+                    prefix = vaultchat.getPlayerPrefix(player);
+                    suffix = vaultchat.getPlayerSuffix(player);
                 }
                 msg = msg.replace("%prefix", prefix);
                 msg = msg.replace("%suffix", suffix);
@@ -1187,7 +1201,7 @@ public class Channel implements ConfigurationSerializable {
 
         // フォルダーの取得と、必要に応じて作成
         File folder = new File(
-                LunaChat.instance.getDataFolder(), FOLDER_NAME_CHANNELS);
+                LunaChat.getInstance().getDataFolder(), FOLDER_NAME_CHANNELS);
         if ( !folder.exists() ) {
             folder.mkdirs();
         }
@@ -1222,7 +1236,7 @@ public class Channel implements ConfigurationSerializable {
 
         // フォルダーの取得
         File folder = new File(
-                LunaChat.instance.getDataFolder(), FOLDER_NAME_CHANNELS);
+                LunaChat.getInstance().getDataFolder(), FOLDER_NAME_CHANNELS);
         if ( !folder.exists() ) {
             return false;
         }
@@ -1243,7 +1257,7 @@ public class Channel implements ConfigurationSerializable {
 
         // フォルダーの取得
         File folder = new File(
-                LunaChat.instance.getDataFolder(), FOLDER_NAME_CHANNELS);
+                LunaChat.getInstance().getDataFolder(), FOLDER_NAME_CHANNELS);
         if ( !folder.exists() ) {
             return new HashMap<String, Channel>();
         }
@@ -1276,10 +1290,10 @@ public class Channel implements ConfigurationSerializable {
      */
     private void log(String message) {
 
-        if ( LunaChat.config.isDisplayChatOnConsole() ) {
+        if ( config.isDisplayChatOnConsole() ) {
             Bukkit.getLogger().info(ChatColor.stripColor(message));
         }
-        if ( LunaChat.config.isLoggingChat() && logger != null ) {
+        if ( config.isLoggingChat() && logger != null ) {
             logger.log(ChatColor.stripColor(message));
         }
     }

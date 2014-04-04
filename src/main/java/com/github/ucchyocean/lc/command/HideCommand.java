@@ -19,7 +19,7 @@ public class HideCommand extends SubCommandAbst {
     private static final String COMMAND_NAME = "hide";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
     private static final String USAGE_KEY = "usageHide";
-    
+
     /**
      * コマンドを取得します。
      * @return コマンド
@@ -113,7 +113,7 @@ public class HideCommand extends SubCommandAbst {
             sendResourceMessage(sender, PREERR, "errmsgNomember");
             return true;
         }
-        
+
         // 設定する
         channel.getHided().add(player.getName());
         channel.save();

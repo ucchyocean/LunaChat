@@ -40,10 +40,10 @@ public class LunaChatReplyCommand extends LunaChatMessageCommand {
         // 引数が無ければ、現在の会話相手を表示して終了する
         if (args.length == 0) {
             if ( invitedName == null ) {
-                sendResourceMessage(sender, PREINFO, 
+                sendResourceMessage(sender, PREINFO,
                         "cmdmsgReplyInviterNone", inviter.getName());
             } else {
-                sendResourceMessage(sender, PREINFO, 
+                sendResourceMessage(sender, PREINFO,
                         "cmdmsgReplyInviter", inviter.getName(), invitedName);
             }
             return true;

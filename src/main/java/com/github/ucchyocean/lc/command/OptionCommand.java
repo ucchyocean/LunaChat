@@ -147,13 +147,13 @@ public class OptionCommand extends SubCommandAbst {
 
         if ( options.containsKey("description") ) {
             // チャンネル説明文
-            
+
             String pnode = PERMISSION_NODE + ".description";
             if ( !sender.hasPermission(pnode) ) {
                 sendResourceMessage(sender, PREERR,
                         "errmsgNotPermission", pnode);
             } else {
-                
+
                 String desc = options.get("description");
                 // チャンネル説明文は最大文字長を超えていないか確認
                 if ( desc.length() > MAX_LENGTH_DESCRIPTION ) {
@@ -170,13 +170,13 @@ public class OptionCommand extends SubCommandAbst {
 
         if ( options.containsKey("color") ) {
             // チャンネルカラー
-            
+
             String pnode = PERMISSION_NODE + ".color";
             if ( !sender.hasPermission(pnode) ) {
                 sendResourceMessage(sender, PREERR,
                         "errmsgNotPermission", pnode);
             } else {
-                
+
                 String code = options.get("color");
                 if ( Utility.isValidColor(code) ) {
                     code = Utility.changeToColorCode(code);
@@ -195,15 +195,15 @@ public class OptionCommand extends SubCommandAbst {
 
         if ( options.containsKey("broadcast") ) {
             // ブロードキャストチャンネル
-            
+
             String pnode = PERMISSION_NODE + ".broadcast";
             if ( !sender.hasPermission(pnode) ) {
                 sendResourceMessage(sender, PREERR,
                         "errmsgNotPermission", pnode);
             } else {
-                
+
                 String value = options.get("broadcast");
-                
+
                 if ( value.equals("") || value.equalsIgnoreCase("false") ) {
                     if ( channel.isGlobalChannel() ) {
                         sendResourceMessage(sender, PREERR,
@@ -228,15 +228,15 @@ public class OptionCommand extends SubCommandAbst {
 
         if ( options.containsKey("range") ) {
             // レンジ
-            
+
             String pnode = PERMISSION_NODE + ".range";
             if ( !sender.hasPermission(pnode) ) {
                 sendResourceMessage(sender, PREERR,
                         "errmsgNotPermission", pnode);
             } else {
-                
+
                 String value = options.get("range");
-                
+
                 if ( value.equals("") ) {
                     channel.setWorldRange(false);
                     channel.setRange(0);
@@ -266,13 +266,13 @@ public class OptionCommand extends SubCommandAbst {
 
             if ( options.containsKey("password") ) {
                 // パスワード
-                
+
                 String pnode = PERMISSION_NODE + ".password";
                 if ( !sender.hasPermission(pnode) ) {
                     sendResourceMessage(sender, PREERR,
                             "errmsgNotPermission", pnode);
                 } else {
-                    
+
                     String password = options.get("password");
                     // パスワードが文字制限を超える場合はエラー
                     if ( password.length() > MAX_LENGTH_PASSWORD ) {
@@ -289,13 +289,13 @@ public class OptionCommand extends SubCommandAbst {
 
             if ( options.containsKey("visible") ) {
                 // ビジブル
-                
+
                 String pnode = PERMISSION_NODE + ".visible";
                 if ( !sender.hasPermission(pnode) ) {
                     sendResourceMessage(sender, PREERR,
                             "errmsgNotPermission", pnode);
                 } else {
-                    
+
                     String temp = options.get("visible");
                     if ( temp.equalsIgnoreCase("false") ) {
                         channel.setVisible(false);

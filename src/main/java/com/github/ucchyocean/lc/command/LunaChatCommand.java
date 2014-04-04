@@ -24,16 +24,16 @@ import com.github.ucchyocean.lc.Resources;
 public class LunaChatCommand implements CommandExecutor {
 
     private static final String PREERR = Resources.get("errorPrefix");
-    
+
     private ArrayList<SubCommandAbst> commands;
     private JoinCommand joinCommand;
     private HelpCommand helpCommand;
-    
+
     /**
      * コンストラクタ
      */
     public LunaChatCommand() {
-        
+
         commands = new ArrayList<SubCommandAbst>();
         joinCommand = new JoinCommand();
         commands.add(joinCommand);
@@ -71,12 +71,12 @@ public class LunaChatCommand implements CommandExecutor {
             String label, String[] args) {
 
         // チャンネルチャット機能が無効になっている場合は、メッセージを表示して終了
-        if ( !LunaChat.instance.getLunaChatConfig().isEnableChannelChat() 
+        if ( !LunaChat.getInstance().getLunaChatConfig().isEnableChannelChat()
                 && !sender.isOp() ) {
             sendResourceMessage(sender, PREERR, "errmsgChannelChatDisabled");
             return true;
         }
-        
+
         // 引数なしは、ヘルプを表示
         if (args.length == 0) {
             helpCommand.runCommand(sender, label, args);
@@ -86,14 +86,14 @@ public class LunaChatCommand implements CommandExecutor {
         // 第1引数に指定されたコマンドを実行する
         for ( SubCommandAbst c : commands ) {
             if ( c.getCommandName().equalsIgnoreCase(args[0]) ) {
-                
+
                 // パーミッションの確認
                 String node = c.getPermissionNode();
                 if ( !sender.hasPermission(node) ) {
                     sendResourceMessage(sender, PREERR, "errmsgPermission", node);
                     return true;
                 }
-                
+
                 // 実行
                 return c.runCommand(sender, label, args);
             }
@@ -105,10 +105,10 @@ public class LunaChatCommand implements CommandExecutor {
             sendResourceMessage(sender, PREERR, "errmsgPermission", node);
             return true;
         }
-        
+
         return joinCommand.runCommand(sender, label, args);
     }
-    
+
     /**
      * TABキー補完が実行されたときに呼び出されるメソッド
      * @param sender TABキー補完の実行者
@@ -119,23 +119,23 @@ public class LunaChatCommand implements CommandExecutor {
      */
     public List<String> onTabComplete(
             CommandSender sender, Command command, String label, String[] args) {
-        
+
         if ( args.length == 1 ) {
             // コマンド名で補完する
             String arg = args[0].toLowerCase();
             ArrayList<String> coms = new ArrayList<String>();
             for ( SubCommandAbst c : commands ) {
-                if ( c.getCommandName().startsWith(arg) && 
+                if ( c.getCommandName().startsWith(arg) &&
                         sender.hasPermission(c.getPermissionNode()) ) {
                     coms.add(c.getCommandName());
                 }
             }
             return coms;
-            
+
         } else if ( args.length == 2 && (
-                args[0].equalsIgnoreCase("join") || 
-                args[0].equalsIgnoreCase("hide") || 
-                args[0].equalsIgnoreCase("unhide") || 
+                args[0].equalsIgnoreCase("join") ||
+                args[0].equalsIgnoreCase("hide") ||
+                args[0].equalsIgnoreCase("unhide") ||
                 args[0].equalsIgnoreCase("info") ) ) {
             // 参加可能チャンネル名で補完する
             String arg = args[1].toLowerCase();
@@ -146,7 +146,7 @@ public class LunaChatCommand implements CommandExecutor {
                 }
             }
             return items;
-            
+
         } else if ( args.length == 2 && args[0].equalsIgnoreCase("remove") ) {
             // 削除可能チャンネル名で補完する
             String arg = args[1].toLowerCase();
@@ -157,7 +157,7 @@ public class LunaChatCommand implements CommandExecutor {
                 }
             }
             return items;
-            
+
         }
         return null;
     }
@@ -189,7 +189,7 @@ public class LunaChatCommand implements CommandExecutor {
             playerName = ((Player)sender).getName();
         }
 
-        for ( Channel channel : LunaChat.instance.getLunaChatAPI().getChannels() ) {
+        for ( Channel channel : LunaChat.getInstance().getLunaChatAPI().getChannels() ) {
 
             // BANされているチャンネルは対象外
             if ( channel.getBanned().contains(playerName) ) {
@@ -202,8 +202,8 @@ public class LunaChatCommand implements CommandExecutor {
             }
 
             // 未参加で visible=false のチャンネルは対象外
-            if ( sender instanceof Player && 
-                    !channel.getMembers().contains(playerName) && 
+            if ( sender instanceof Player &&
+                    !channel.getMembers().contains(playerName) &&
                     !channel.isGlobalChannel() &&
                     !channel.isVisible() ) {
                 continue;
@@ -224,13 +224,13 @@ public class LunaChatCommand implements CommandExecutor {
 
         ArrayList<String> items = new ArrayList<String>();
 
-        for ( Channel channel : LunaChat.instance.getLunaChatAPI().getChannels() ) {
-            
+        for ( Channel channel : LunaChat.getInstance().getLunaChatAPI().getChannels() ) {
+
             // 実行者がチャンネルモデレーターでない場合は対象外
             if ( !channel.hasModeratorPermission(sender) ) {
                 continue;
             }
-            
+
             // 個人チャットは対象外
             if ( channel.isPersonalChat() ) {
                 continue;

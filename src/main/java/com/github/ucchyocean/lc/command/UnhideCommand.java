@@ -19,7 +19,7 @@ public class UnhideCommand extends SubCommandAbst {
     private static final String COMMAND_NAME = "unhide";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
     private static final String USAGE_KEY = "usageUnhide";
-    
+
     /**
      * コマンドを取得します。
      * @return コマンド
@@ -107,7 +107,7 @@ public class UnhideCommand extends SubCommandAbst {
             sendResourceMessage(sender, PREERR, "errmsgAlreadyUnhided");
             return true;
         }
-        
+
         // 設定する
         channel.getHided().remove(player.getName());
         channel.save();

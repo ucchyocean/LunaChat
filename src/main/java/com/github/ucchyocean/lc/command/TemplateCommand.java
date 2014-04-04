@@ -16,7 +16,7 @@ public class TemplateCommand extends SubCommandAbst {
     private static final String COMMAND_NAME = "template";
     private static final String PERMISSION_NODE = "lunachat-admin." + COMMAND_NAME;
     private static final String USAGE_KEY = "usageTemplate";
-    
+
     /**
      * コマンドを取得します。
      * @return コマンド

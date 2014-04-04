@@ -55,47 +55,47 @@ public class DynmapBridge implements Listener {
 
         dynmap.postPlayerMessageToWeb(player, message);
     }
-    
+
     /**
      * dynmapにブロードキャストメッセージを流す
      * @param message メッセージ
      */
     public void broadcast(String message) {
-        
+
         dynmap.sendBroadcastToWeb(null, message);
     }
-    
+
     /**
      * DynmapのWebUIからチャット発言されたときのイベント
-     * @param event 
+     * @param event
      */
     @EventHandler
     public void onDynmapWebChat(DynmapWebChatEvent event) {
-        
-        LunaChatAPI api = LunaChat.instance.getLunaChatAPI();
-        LunaChatConfig config = LunaChat.instance.getLunaChatConfig();
+
+        LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
+        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
         String dchannel = config.getDynmapChannel();
         Channel channel = null;
-        
+
         if ( !dchannel.equals("") ) {
             // dynmapChannelが設定されている場合
             channel = api.getChannel(dchannel);
-            
+
         } else {
             String gchannel = config.getGlobalChannel();
             if ( !gchannel.equals("") ) {
                 // dynmapChannelが設定されていなくて、
                 // globalChannelが設定されている場合
                 channel = api.getChannel(gchannel);
-                
+
             }
         }
-        
+
         if ( channel != null ) {
             // チャンネルへ送信
             channel.chatFromOtherSource(
                     event.getName(), event.getSource(), event.getMessage());
-            event.setProcessed(); 
+            event.setProcessed();
         }
     }
 }

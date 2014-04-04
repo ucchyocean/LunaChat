@@ -19,7 +19,8 @@ public class ExpireCheckTask extends BukkitRunnable {
      */
     @Override
     public void run() {
-        for ( Channel channel : LunaChat.instance.getLunaChatAPI().getChannels() ) {
+        for ( Channel channel :
+                LunaChat.getInstance().getLunaChatAPI().getChannels() ) {
             channel.checkExpires();
         }
     }

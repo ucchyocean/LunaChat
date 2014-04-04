@@ -35,7 +35,7 @@ public class LunaChatChannelChatEvent extends LunaChatBaseCancellableEvent {
     public Player getPlayer() {
         return player;
     }
-    
+
     /**
      * 置き換え前の、発言されたままのテキストをかえす
      * @return 発言内容
@@ -59,7 +59,7 @@ public class LunaChatChannelChatEvent extends LunaChatBaseCancellableEvent {
     public String getMessageFormat() {
         return messageFormat;
     }
-    
+
     /**
      * NGワードマスク後のテキストを上書き設定する
      * @param ngMaskedMessage 上書きする発言内容

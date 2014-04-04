@@ -23,31 +23,31 @@ public abstract class SubCommandAbst {
      * @author ucchy
      */
     protected enum CommandType {
-        
+
         /** 一般ユーザー向けコマンド */
         USER,
-        
+
         /** チャンネルモデレーター向けコマンド */
         MODERATOR,
-        
+
         /** サーバー管理者向けコマンド */
         ADMIN
     }
-    
+
     protected static final String PREINFO = Resources.get("infoPrefix");
     protected static final String PREERR = Resources.get("errorPrefix");
 
     protected LunaChatAPI api;
     protected LunaChatConfig config;
-    
+
     /**
      * コンストラクタ
      */
     public SubCommandAbst() {
-        api = LunaChat.instance.getLunaChatAPI();
-        config = LunaChat.instance.getLunaChatConfig();
+        api = LunaChat.getInstance().getLunaChatAPI();
+        config = LunaChat.getInstance().getLunaChatConfig();
     }
-    
+
     /**
      * メッセージリソースのメッセージを、カラーコード置き換えしつつ、senderに送信する
      *
@@ -62,19 +62,19 @@ public abstract class SubCommandAbst {
         String msg = String.format(pre + Resources.get(key), args);
         sender.sendMessage(msg);
     }
-    
+
     /**
      * コマンドを取得します。
      * @return コマンド
      */
     public abstract String getCommandName();
-    
+
     /**
      * パーミッションノードを取得します。
      * @return パーミッションノード
      */
     public abstract String getPermissionNode();
-    
+
     /**
      * コマンドの種別を取得します。
      * @return コマンド種別
@@ -88,7 +88,7 @@ public abstract class SubCommandAbst {
      */
     public abstract void sendUsageMessage(
             CommandSender sender, String label);
-    
+
     /**
      * コマンドを実行します。
      * @param sender コマンド実行者

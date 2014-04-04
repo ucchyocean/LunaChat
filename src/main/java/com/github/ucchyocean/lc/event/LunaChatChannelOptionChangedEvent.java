@@ -40,7 +40,7 @@ public class LunaChatChannelOptionChangedEvent extends LunaChatBaseCancellableEv
     public void setOptions(HashMap<String, String> options) {
         this.options = options;
     }
-    
+
     /**
      * チャンネルのオプションを変更した人を取得する。
      * @return チャンネルのオプションを変更したCommandSender

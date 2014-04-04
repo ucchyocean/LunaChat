@@ -66,12 +66,13 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
                 Bukkit.broadcastMessage(result);
 
                 // 設定に応じてdynmapへ送信する
-                if ( LunaChat.config.isSendBroadcastChannelChatToDynmap() &&
-                        LunaChat.dynmap != null ) {
-                    if ( player != null ) 
-                        LunaChat.dynmap.chat(player, result);
-                    else 
-                        LunaChat.dynmap.broadcast(result);
+                if ( LunaChat.getInstance().getLunaChatConfig().
+                        isSendBroadcastChannelChatToDynmap() &&
+                        LunaChat.getInstance().getDynmap() != null ) {
+                    if ( player != null )
+                        LunaChat.getInstance().getDynmap().chat(player, result);
+                    else
+                        LunaChat.getInstance().getDynmap().broadcast(result);
                 }
             }
         }
@@ -86,7 +87,7 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
         // 変換対象外のキーワード
         HashMap<String, String> keywordMap = new HashMap<String, String>();
         ArrayList<String> keywords = new ArrayList<String>();
-        if ( LunaChat.instance.getLunaChatConfig().isJapanizeIgnorePlayerName() ) {
+        if ( LunaChat.getInstance().getLunaChatConfig().isJapanizeIgnorePlayerName() ) {
             for ( Player player : Bukkit.getOnlinePlayers() ) {
                 keywords.add(player.getName());
             }
@@ -123,7 +124,7 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
         }
 
         // NGワードが含まれている場合は、マスクする
-        for ( String word : LunaChat.config.getNgword() ) {
+        for ( String word : LunaChat.getInstance().getLunaChatConfig().getNgword() ) {
             if ( japanized.contains(word) ) {
                 japanized = japanized.replace(
                         word, Utility.getAstariskString(word.length()));
@@ -147,7 +148,7 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
 
         return true;
     }
-    
+
     /**
      * Japanize変換の結果を返します。
      * @return 変換結果

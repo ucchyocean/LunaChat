@@ -39,7 +39,7 @@ public class LunaChatPostJapanizeEvent extends LunaChatBaseCancellableEvent {
     public Player getPlayer() {
         return player;
     }
-    
+
     /**
      * Japanize変換後の文字列を返す
      * @return 変換後の文字列

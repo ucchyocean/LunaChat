@@ -19,7 +19,7 @@ public class LunaChatChannelMessageEvent extends LunaChatBaseEvent {
     private Player player;
     private String message;
     private ArrayList<Player> recipients;
-    
+
     public LunaChatChannelMessageEvent(String channelName,
             Player player, String message, ArrayList<Player> recipients) {
         super(channelName);

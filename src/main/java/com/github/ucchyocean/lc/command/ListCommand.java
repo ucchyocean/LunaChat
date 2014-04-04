@@ -28,7 +28,7 @@ public class ListCommand extends SubCommandAbst {
     private static final String COMMAND_NAME = "list";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
     private static final String USAGE_KEY = "usageList";
-    
+
     /**
      * コマンドを取得します。
      * @return コマンド
@@ -124,7 +124,7 @@ public class ListCommand extends SubCommandAbst {
             if ( channel.getBanned().contains(playerName) ) {
                 continue;
             }
-            
+
             // 個人チャットはリストに表示しない
             if ( channel.isPersonalChat() ) {
                 continue;
@@ -137,8 +137,8 @@ public class ListCommand extends SubCommandAbst {
             } else if ( channel.getHided().contains(playerName) ) {
                 disp = ChatColor.DARK_AQUA + channel.getName();
             }
-            
-            if ( player != null && 
+
+            if ( player != null &&
                     !channel.getMembers().contains(playerName) &&
                     !channel.isGlobalChannel() ) {
 

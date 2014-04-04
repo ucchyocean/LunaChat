@@ -18,20 +18,20 @@ public class HelpCommand extends SubCommandAbst {
     private static final String COMMAND_NAME = "help";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
     private static final String USAGE_KEY = "usageHelp";
-    
+
     // 1ページに表示するコマンドヘルプの項目数
     private static final int PAGE_ITEM_NUM = 6;
-    
+
     private ArrayList<SubCommandAbst> commands;
-    
+
     /**
      * コンストラクタ
-     * @param commands 
+     * @param commands
      */
     public HelpCommand(ArrayList<SubCommandAbst> commands) {
         this.commands = commands;
     }
-    
+
     /**
      * コマンドを取得します。
      * @return コマンド
@@ -84,12 +84,12 @@ public class HelpCommand extends SubCommandAbst {
      */
     @Override
     public boolean runCommand(CommandSender sender, String label, String[] args) {
-        
+
         CommandType type = CommandType.USER;
         int page = 1;
-        
-        if ( args.length >= 2 && 
-                (args[1].equalsIgnoreCase("mod") 
+
+        if ( args.length >= 2 &&
+                (args[1].equalsIgnoreCase("mod")
                         || args[1].equalsIgnoreCase("moderator") ) ) {
             type = CommandType.MODERATOR;
         } else if ( args.length >= 2 && args[1].equalsIgnoreCase("admin") ) {
@@ -97,13 +97,13 @@ public class HelpCommand extends SubCommandAbst {
         } else if ( args.length >= 2 && args[1].matches("[1-9]") ) {
             page = Integer.parseInt(args[1]);
         }
-        
+
         if ( args.length >= 3 && args[2].matches("[1-9]") ) {
             page = Integer.parseInt(args[2]);
         }
-        
+
         printUsage(sender, label, type, page);
-        
+
         return true;
     }
 
@@ -114,9 +114,9 @@ public class HelpCommand extends SubCommandAbst {
      * @param type コマンド種別
      * @param page ページ
      */
-    private void printUsage(CommandSender sender, String label, 
+    private void printUsage(CommandSender sender, String label,
             CommandType type, int page) {
-        
+
         String typeDesc;
         switch (type) {
         case USER:
@@ -131,18 +131,18 @@ public class HelpCommand extends SubCommandAbst {
         default:
             typeDesc = "user";
         }
-        
+
         // 種別に該当するコマンドを取得
         ArrayList<SubCommandAbst> com = new ArrayList<SubCommandAbst>();
         for ( SubCommandAbst c : commands ) {
-            if ( c.getCommandType() == type 
+            if ( c.getCommandType() == type
                     && sender.hasPermission(c.getPermissionNode()) ) {
                 com.add(c);
             }
         }
-        
+
         int lastPage = ( (com.size() - 1) / PAGE_ITEM_NUM) + 1;
-        
+
         // 表示処理
         sendResourceMessage(sender, "", "usageTop", typeDesc, page, lastPage);
         for (int index=(page-1)*PAGE_ITEM_NUM; index<page*PAGE_ITEM_NUM; index++) {

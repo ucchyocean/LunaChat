@@ -21,7 +21,7 @@ public class InfoCommand extends SubCommandAbst {
     private static final String COMMAND_NAME = "info";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
     private static final String USAGE_KEY = "usageInfo";
-    
+
     /**
      * コマンドを取得します。
      * @return コマンド
@@ -108,7 +108,7 @@ public class InfoCommand extends SubCommandAbst {
             sendResourceMessage(sender, PREERR, "errmsgBanned");
             return true;
         }
-        
+
         // チャンネルモデレーターかどうか確認する
         boolean isModerator = channel.hasModeratorPermission(sender);
 

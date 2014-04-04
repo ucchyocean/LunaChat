@@ -21,7 +21,7 @@ public class ModeratorCommand extends SubCommandAbst {
     private static final String COMMAND_NAME = "moderator";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
     private static final String USAGE_KEY = "usageModerator";
-    
+
     /**
      * コマンドを取得します。
      * @return コマンド

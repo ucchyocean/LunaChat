@@ -21,7 +21,7 @@ public class FormatCommand extends SubCommandAbst {
     private static final String COMMAND_NAME = "format";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
     private static final String USAGE_KEY = "usageFormat";
-    
+
     /**
      * コマンドを取得します。
      * @return コマンド
@@ -116,7 +116,7 @@ public class FormatCommand extends SubCommandAbst {
             sendResourceMessage(sender, PREERR, "errmsgNotModerator");
             return true;
         }
-        
+
         // 制約キーワードを確認する
         List<String> constraints = config.getFormatConstraint();
         String tempFormat = new String(format);
