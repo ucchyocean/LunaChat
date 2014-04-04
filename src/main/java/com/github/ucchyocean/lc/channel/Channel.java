@@ -3,7 +3,7 @@
  * @license    LGPLv3
  * @copyright  Copyright ucchy 2013
  */
-package com.github.ucchyocean.lc;
+package com.github.ucchyocean.lc.channel;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -22,6 +22,13 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Player;
 
+import com.github.ucchyocean.lc.LunaChat;
+import com.github.ucchyocean.lc.LunaChatAPI;
+import com.github.ucchyocean.lc.LunaChatConfig;
+import com.github.ucchyocean.lc.LunaChatLogger;
+import com.github.ucchyocean.lc.NGWordAction;
+import com.github.ucchyocean.lc.Resources;
+import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.bridge.DynmapBridge;
 import com.github.ucchyocean.lc.bridge.VaultChatBridge;
 import com.github.ucchyocean.lc.event.LunaChatChannelChatEvent;
@@ -157,8 +164,8 @@ public class Channel implements ConfigurationSerializable {
     /** コンフィグ */
     private LunaChatConfig config;
 
-    /** マネージャ */
-    private ChannelManager manager;
+    /** API */
+    private LunaChatAPI api;
 
     /**
      * コンストラクタ
@@ -167,7 +174,7 @@ public class Channel implements ConfigurationSerializable {
     protected Channel(String name) {
 
         this.config = LunaChat.getInstance().getLunaChatConfig();
-        this.manager = LunaChat.getInstance().getManager();
+        this.api = LunaChat.getInstance().getLunaChatAPI();
 
         this.name = name;
         this.description = "";
@@ -294,7 +301,7 @@ public class Channel implements ConfigurationSerializable {
         boolean isIncludeSyncChat = true;
         DelayedJapanizeConvertTask delayedTask = null;
         if ( !skipJapanize &&
-                manager.isPlayerJapanize(player.getName()) &&
+                api.isPlayerJapanize(player.getName()) &&
                 config.getJapanizeType() != JapanizeType.NONE ) {
 
             int lineType = config.getJapanizeDisplayLine();
@@ -433,9 +440,9 @@ public class Channel implements ConfigurationSerializable {
 
         // デフォルト発言先が退出するチャンネルと一致する場合、
         // デフォルト発言先を削除する
-        Channel def = manager.getDefaultChannel(name);
+        Channel def = api.getDefaultChannel(name);
         if ( def != null && def.name.equals(this.name) ) {
-            manager.removeDefaultChannel(name);
+            api.removeDefaultChannel(name);
         }
 
         // 実際にメンバーから削除する
@@ -443,7 +450,7 @@ public class Channel implements ConfigurationSerializable {
             members.remove(name);
             sendJoinQuitMessage(false, name);
             if ( config.isZeroMemberRemove() && members.size() <= 0 ) {
-                manager.removeChannel(this.name);
+                api.removeChannel(this.name);
                 return;
             } else {
                 save();
@@ -747,8 +754,8 @@ public class Channel implements ConfigurationSerializable {
         for ( int i=0; i<=9; i++ ) {
             String key = "%" + i;
             if ( msg.contains(key) ) {
-                if ( manager.getTemplate("" + i) != null ) {
-                    msg = msg.replace(key, manager.getTemplate("" + i));
+                if ( api.getTemplate("" + i) != null ) {
+                    msg = msg.replace(key, api.getTemplate("" + i));
                     break;
                 }
             }

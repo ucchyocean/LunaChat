@@ -3,7 +3,7 @@
  * @license    LGPLv3
  * @copyright  Copyright ucchy 2013
  */
-package com.github.ucchyocean.lc;
+package com.github.ucchyocean.lc.channel;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,11 +12,14 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
+import com.github.ucchyocean.lc.LunaChat;
+import com.github.ucchyocean.lc.LunaChatAPI;
+import com.github.ucchyocean.lc.Resources;
+import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.event.LunaChatChannelCreateEvent;
 import com.github.ucchyocean.lc.event.LunaChatChannelRemoveEvent;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
@@ -26,10 +29,6 @@ import com.github.ucchyocean.lc.japanize.JapanizeType;
  * @author ucchy
  */
 public class ChannelManager implements LunaChatAPI {
-
-    private static final String MOTD_FIRSTLINE = Resources.get("motdFirstLine");
-    private static final String LIST_ENDLINE = Resources.get("listEndLine");
-    private static final String LIST_FORMAT = Resources.get("listFormat");
 
     private static final String MSG_BREAKUP = Resources.get("breakupMessage");
 
@@ -195,53 +194,11 @@ public class ChannelManager implements LunaChatAPI {
     }
 
     /**
-     * プレイヤーのサーバー参加時用の参加チャンネルリストを返す
-     * @param player プレイヤー
-     * @return リスト
+     * デフォルトチャンネル設定を全て削除する
      */
-    protected ArrayList<String> getListForMotd(Player player) {
-
-        ArrayList<String> items = new ArrayList<String>();
-        String playerName = player.getName();
-        String dchannel = defaultChannels.get(player.getName());
-        if ( dchannel == null ) {
-            dchannel = "";
-        }
-
-        items.add(MOTD_FIRSTLINE);
-        for ( String key : channels.keySet() ) {
-            Channel channel = channels.get(key);
-
-            // BANされているチャンネルは表示しない
-            if ( channel.getBanned().contains(playerName) ) {
-                continue;
-            }
-
-            // 個人チャットはリストに表示しない
-            if ( channel.isPersonalChat() ) {
-                continue;
-            }
-
-            // 参加していないチャンネルは、グローバルチャンネルを除き表示しない
-            if ( !channel.getMembers().contains(playerName) &&
-                    !channel.isGlobalChannel() ) {
-                continue;
-            }
-
-            String disp = ChatColor.WHITE + channel.getName();
-            if ( key.equals(dchannel.toLowerCase()) ) {
-                disp = ChatColor.RED + channel.getName();
-            }
-            String desc = channel.getDescription();
-            int onlineNum = channel.getOnlineNum();
-            int memberNum = channel.getTotalNum();
-            String item = String.format(
-                    LIST_FORMAT, disp, onlineNum, memberNum, desc);
-            items.add(item);
-        }
-        items.add(LIST_ENDLINE);
-
-        return items;
+    public void removeAllDefaultChannels() {
+        defaultChannels.clear();
+        saveDefaults();
     }
 
     /**
@@ -249,19 +206,12 @@ public class ChannelManager implements LunaChatAPI {
      * @param playerName プレイヤー名
      * @return Japanize設定
      */
-    protected boolean isPlayerJapanize(String playerName) {
+    @Override
+    public boolean isPlayerJapanize(String playerName) {
         if ( !japanize.containsKey(playerName) ) {
             return true;
         }
         return japanize.get(playerName);
-    }
-
-    /**
-     * デフォルトチャンネル設定を全て削除する
-     */
-    protected void removeAllDefaultChannels() {
-        defaultChannels.clear();
-        saveDefaults();
     }
 
     /**

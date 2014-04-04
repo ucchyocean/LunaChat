@@ -12,8 +12,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.Channel;
 import com.github.ucchyocean.lc.Resources;
+import com.github.ucchyocean.lc.channel.Channel;
 
 /**
  * listコマンドの実行クラス

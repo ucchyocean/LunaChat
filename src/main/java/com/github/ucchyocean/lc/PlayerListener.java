@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,6 +18,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.github.ucchyocean.lc.bridge.VaultChatBridge;
+import com.github.ucchyocean.lc.channel.Channel;
+import com.github.ucchyocean.lc.channel.DelayedJapanizeConvertTask;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 
 /**
@@ -24,6 +27,10 @@ import com.github.ucchyocean.lc.japanize.JapanizeType;
  * @author ucchy
  */
 public class PlayerListener implements Listener {
+
+    private static final String MOTD_FIRSTLINE = Resources.get("motdFirstLine");
+    private static final String LIST_ENDLINE = Resources.get("listEndLine");
+    private static final String LIST_FORMAT = Resources.get("listFormat");
 
     /**
      * プレイヤーのチャットごとに呼び出されるメソッド
@@ -91,8 +98,7 @@ public class PlayerListener implements Listener {
 
         // チャンネルチャット情報を表示する
         if ( config.isShowListOnJoin() ) {
-            ArrayList<String> list =
-                    LunaChat.getInstance().getManager().getListForMotd(player);
+            ArrayList<String> list = getListForMotd(player);
             for ( String msg : list ) {
                 player.sendMessage(msg);
             }
@@ -207,7 +213,7 @@ public class PlayerListener implements Listener {
 
             // Japanize変換と、発言処理
             if ( !skipJapanize &&
-                    LunaChat.getInstance().getManager().isPlayerJapanize(player.getName()) &&
+                    LunaChat.getInstance().getLunaChatAPI().isPlayerJapanize(player.getName()) &&
                     config.getJapanizeType() != JapanizeType.NONE ) {
 
                 int lineType = config.getJapanizeDisplayLine();
@@ -329,6 +335,56 @@ public class PlayerListener implements Listener {
         }
 
         return Utility.replaceColorCode(format);
+    }
 
+    /**
+     * プレイヤーのサーバー参加時用の参加チャンネルリストを返す
+     * @param player プレイヤー
+     * @return リスト
+     */
+    private ArrayList<String> getListForMotd(Player player) {
+
+        String name = player.getName();
+        LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
+        Channel dc = api.getDefaultChannel(name);
+        String dchannel = "";
+        if ( dc != null ) {
+            dchannel = dc.getName().toLowerCase();
+        }
+
+        ArrayList<String> items = new ArrayList<String>();
+        items.add(MOTD_FIRSTLINE);
+        for ( Channel channel : api.getChannels() ) {
+
+            // BANされているチャンネルは表示しない
+            if ( channel.getBanned().contains(name) ) {
+                continue;
+            }
+
+            // 個人チャットはリストに表示しない
+            if ( channel.isPersonalChat() ) {
+                continue;
+            }
+
+            // 参加していないチャンネルは、グローバルチャンネルを除き表示しない
+            if ( !channel.getMembers().contains(name) &&
+                    !channel.isGlobalChannel() ) {
+                continue;
+            }
+
+            String disp = ChatColor.WHITE + channel.getName();
+            if ( channel.getName().equals(dchannel) ) {
+                disp = ChatColor.RED + channel.getName();
+            }
+            String desc = channel.getDescription();
+            int onlineNum = channel.getOnlineNum();
+            int memberNum = channel.getTotalNum();
+            String item = String.format(
+                    LIST_FORMAT, disp, onlineNum, memberNum, desc);
+            items.add(item);
+        }
+        items.add(LIST_ENDLINE);
+
+        return items;
     }
 }

@@ -199,7 +199,7 @@ public class LunaChatConfig {
 
         // チャンネルチャット無効なら、デフォルト発言先をクリアする(see issue #59)
         if ( !enableChannelChat ) {
-            LunaChat.getInstance().getManager().removeAllDefaultChannels();
+            LunaChat.getInstance().removeAllDefaultChannels();
         }
     }
 

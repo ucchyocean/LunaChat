@@ -12,8 +12,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.Channel;
 import com.github.ucchyocean.lc.Utility;
+import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.event.LunaChatChannelOptionChangedEvent;
 
 /**

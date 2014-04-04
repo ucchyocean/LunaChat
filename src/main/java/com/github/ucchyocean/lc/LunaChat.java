@@ -17,6 +17,8 @@ import org.bukkit.scheduler.BukkitTask;
 
 import com.github.ucchyocean.lc.bridge.DynmapBridge;
 import com.github.ucchyocean.lc.bridge.VaultChatBridge;
+import com.github.ucchyocean.lc.channel.Channel;
+import com.github.ucchyocean.lc.channel.ChannelManager;
 import com.github.ucchyocean.lc.command.LunaChatCommand;
 import com.github.ucchyocean.lc.command.LunaChatJapanizeCommand;
 import com.github.ucchyocean.lc.command.LunaChatMessageCommand;
@@ -172,14 +174,6 @@ public class LunaChat extends JavaPlugin {
     }
 
     /**
-     * Managerを取得する
-     * @return ChannelManager
-     */
-    protected ChannelManager getManager() {
-        return manager;
-    }
-
-    /**
      * LunaChatConfigを取得する
      * @return LunaChatConfig
      */
@@ -201,5 +195,12 @@ public class LunaChat extends JavaPlugin {
      */
     public DynmapBridge getDynmap() {
         return dynmap;
+    }
+
+    /**
+     * 全てのデフォルトチャンネル設定を削除する
+     */
+    protected void removeAllDefaultChannels() {
+        manager.removeAllDefaultChannels();
     }
 }

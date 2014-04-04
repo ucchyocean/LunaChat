@@ -13,9 +13,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.Channel;
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.Resources;
+import com.github.ucchyocean.lc.channel.Channel;
 
 /**
  * Lunachatコマンドの処理クラス

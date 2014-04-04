@@ -7,7 +7,7 @@ package com.github.ucchyocean.lc.command;
 
 import org.bukkit.command.CommandSender;
 
-import com.github.ucchyocean.lc.Channel;
+import com.github.ucchyocean.lc.channel.Channel;
 
 /**
  * createコマンドの実行クラス

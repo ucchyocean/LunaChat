@@ -7,6 +7,8 @@ package com.github.ucchyocean.lc;
 
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.github.ucchyocean.lc.channel.Channel;
+
 /**
  * 各チャンネルの期限付きBANや期限付きMuteを、1分間隔で確認しに行くタスク
  * @author ucchy

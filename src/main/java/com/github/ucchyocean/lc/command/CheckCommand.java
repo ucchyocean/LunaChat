@@ -13,9 +13,9 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 
-import com.github.ucchyocean.lc.Channel;
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.Resources;
+import com.github.ucchyocean.lc.channel.Channel;
 
 /**
  * checkコマンドの実行クラス

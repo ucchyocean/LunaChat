@@ -12,10 +12,10 @@ import org.bukkit.plugin.Plugin;
 import org.dynmap.DynmapAPI;
 import org.dynmap.DynmapWebChatEvent;
 
-import com.github.ucchyocean.lc.Channel;
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.LunaChatConfig;
+import com.github.ucchyocean.lc.channel.Channel;
 
 /**
  * dynmap連携クラス
