@@ -11,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.channel.Channel;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
 /**
  * infoコマンドの実行クラス
@@ -104,7 +105,8 @@ public class InfoCommand extends SubCommandAbst {
         }
 
         // BANされていないかどうか確認する
-        if ( player != null && channel.getBanned().contains(player.getName()) ) {
+        ChannelPlayer cp = ChannelPlayer.getChannelPlayer(player);
+        if ( player != null && channel.getBanned().contains(cp) ) {
             sendResourceMessage(sender, PREERR, "errmsgBanned");
             return true;
         }

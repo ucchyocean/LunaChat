@@ -14,12 +14,10 @@ import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.Resources;
-import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.event.LunaChatChannelCreateEvent;
 import com.github.ucchyocean.lc.event.LunaChatChannelRemoveEvent;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
@@ -248,10 +246,11 @@ public class ChannelManager implements LunaChatAPI {
     @Override
     public Collection<Channel> getChannelsByPlayer(String playerName) {
 
+        ChannelPlayer cp = ChannelPlayer.getChannelPlayer(playerName);
         Collection<Channel> result = new ArrayList<Channel>();
         for ( String key : channels.keySet() ) {
             Channel channel = channels.get(key);
-            if ( channel.getMembers().contains(playerName) ||
+            if ( channel.getMembers().contains(cp) ||
                     channel.isGlobalChannel() ) {
                 result.add(channel);
             }
@@ -387,13 +386,10 @@ public class ChannelManager implements LunaChatAPI {
             channel.remove();
             channels.remove(channelName);
 
-            // チャンネルのメンバーを強制解散させる
+            // 強制解散のメッセージを、残ったメンバーに流す
             String message = String.format(MSG_BREAKUP, channelName);
-            for ( String pname : channel.getMembers() ) {
-                Player player = Utility.getPlayerExact(pname);
-                if ( player != null ) {
-                    player.sendMessage(message);
-                }
+            for ( ChannelPlayer cp : channel.getMembers() ) {
+                cp.sendMessage(message);
             }
         }
 

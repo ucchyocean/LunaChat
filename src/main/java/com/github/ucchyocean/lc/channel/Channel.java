@@ -23,7 +23,6 @@ import org.bukkit.entity.Player;
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.LunaChatConfig;
-import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.event.LunaChatChannelMemberChangedEvent;
 
 /**
@@ -53,19 +52,19 @@ public abstract class Channel implements ConfigurationSerializable {
     private static final String KEY_MUTE_EXPIRES = "mute_expires";
 
     /** 参加者 */
-    private List<String> members;
+    private List<ChannelPlayer> members;
 
     /** チャンネルモデレータ */
-    private List<String> moderator;
+    private List<ChannelPlayer> moderator;
 
     /** BANされたプレイヤー */
-    private List<String> banned;
+    private List<ChannelPlayer> banned;
 
     /** Muteされたプレイヤー */
-    private List<String> muted;
+    private List<ChannelPlayer> muted;
 
     /** Hideしているプレイヤー */
-    private List<String> hided;
+    private List<ChannelPlayer> hided;
 
     /** チャンネルの名称 */
     private String name;
@@ -103,10 +102,10 @@ public abstract class Channel implements ConfigurationSerializable {
     private int chatRange;
 
     /** 期限付きBANの期限（key=プレイヤー名、value=期日（ミリ秒）） */
-    private Map<String, Long> banExpires;
+    private Map<ChannelPlayer, Long> banExpires;
 
     /** 期限付きMuteの期限（key=プレイヤー名、value=期日（ミリ秒）） */
-    private Map<String, Long> muteExpires;
+    private Map<ChannelPlayer, Long> muteExpires;
 
     /** 1:1チャットの相手名 */
     private String privateMessageTo;
@@ -119,19 +118,19 @@ public abstract class Channel implements ConfigurationSerializable {
 
         this.name = name;
         this.description = "";
-        this.members = new ArrayList<String>();
-        this.banned = new ArrayList<String>();
-        this.muted = new ArrayList<String>();
-        this.hided = new ArrayList<String>();
-        this.moderator = new ArrayList<String>();
+        this.members = new ArrayList<ChannelPlayer>();
+        this.banned = new ArrayList<ChannelPlayer>();
+        this.muted = new ArrayList<ChannelPlayer>();
+        this.hided = new ArrayList<ChannelPlayer>();
+        this.moderator = new ArrayList<ChannelPlayer>();
         this.password = "";
         this.visible = true;
         this.colorCode = "";
         this.broadcastChannel = false;
         this.isWorldRange = false;
         this.chatRange = 0;
-        this.banExpires = new HashMap<String, Long>();
-        this.muteExpires = new HashMap<String, Long>();
+        this.banExpires = new HashMap<ChannelPlayer, Long>();
+        this.muteExpires = new HashMap<ChannelPlayer, Long>();
         this.privateMessageTo = "";
 
         LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
@@ -178,8 +177,12 @@ public abstract class Channel implements ConfigurationSerializable {
      * @return チャンネルのモデレータ権限を持っているかどうか
      */
     public boolean hasModeratorPermission(CommandSender sender) {
-        return sender.isOp() || moderator.contains(sender.getName()) ||
-                sender.hasPermission("lunachat-admin.mod-all-channels");
+        if (sender.isOp() ||
+                sender.hasPermission("lunachat-admin.mod-all-channels")) {
+            return true;
+        }
+        ChannelPlayer player = ChannelPlayer.getChannelPlayer(sender);
+        return moderator.contains(player);
     }
 
     /**
@@ -187,7 +190,7 @@ public abstract class Channel implements ConfigurationSerializable {
      * @param player 発言をするプレイヤー
      * @param message 発言をするメッセージ
      */
-    public abstract void chat(Player player, String message);
+    public abstract void chat(ChannelPlayer player, String message);
 
     /**
      * ほかの連携先などから、このチャットに発言する
@@ -203,14 +206,16 @@ public abstract class Channel implements ConfigurationSerializable {
      */
     public void addMember(String name) {
 
+        ChannelPlayer player = ChannelPlayer.getChannelPlayer(name);
+
         // 既に参加しているなら、何もしない
-        if ( members.contains(name) ) {
+        if ( members.contains(player) ) {
             return;
         }
 
         // 変更後のメンバーリストを作成
-        ArrayList<String> after = new ArrayList<String>(members);
-        after.add(name);
+        ArrayList<ChannelPlayer> after = new ArrayList<ChannelPlayer>(members);
+        after.add(player);
 
         // イベントコール
         LunaChatChannelMemberChangedEvent event =
@@ -222,10 +227,10 @@ public abstract class Channel implements ConfigurationSerializable {
 
         // メンバー更新
         if ( members.size() == 0 && moderator.size() == 0 ) {
-            moderator.add(name);
+            moderator.add(player);
         }
         members = after;
-        sendJoinQuitMessage(true, name);
+        sendJoinQuitMessage(true, player);
         save();
     }
 
@@ -235,14 +240,16 @@ public abstract class Channel implements ConfigurationSerializable {
      */
     public void removeMember(String name) {
 
+        ChannelPlayer player = ChannelPlayer.getChannelPlayer(name);
+
         // 既に削除しているなら、何もしない
-        if ( !members.contains(name) ) {
+        if ( !members.contains(player) ) {
             return;
         }
 
         // 変更後のメンバーリストを作成
-        ArrayList<String> after = new ArrayList<String>(members);
-        after.remove(name);
+        ArrayList<ChannelPlayer> after = new ArrayList<ChannelPlayer>(members);
+        after.remove(player);
 
         // イベントコール
         LunaChatChannelMemberChangedEvent event =
@@ -256,13 +263,13 @@ public abstract class Channel implements ConfigurationSerializable {
         // デフォルト発言先を削除する
         LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
         Channel def = api.getDefaultChannel(name);
-        if ( def != null && def.name.equals(this.name) ) {
+        if ( def != null && def.getName().equals(getName()) ) {
             api.removeDefaultChannel(name);
         }
 
         // 実際にメンバーから削除する
-        members.remove(name);
-        sendJoinQuitMessage(false, name);
+        members.remove(player);
+        sendJoinQuitMessage(false, player);
 
         // 0人で削除する設定がオンで、0人になったなら、チャンネルを削除する
         LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
@@ -272,13 +279,13 @@ public abstract class Channel implements ConfigurationSerializable {
         }
 
         // 非表示設定プレイヤーだったら、リストから削除する
-        if ( hided.contains(name) ) {
-            hided.remove(name);
+        if ( hided.contains(player) ) {
+            hided.remove(player);
         }
 
         // モデレーターだった場合は、モデレーターから除去する
-        if ( moderator.contains(name) ) {
-            moderator.remove(name);
+        if ( moderator.contains(player) ) {
+            moderator.remove(player);
         }
 
         save();
@@ -287,9 +294,9 @@ public abstract class Channel implements ConfigurationSerializable {
     /**
      * 入退室メッセージを流す
      * @param isJoin 入室かどうか（falseなら退室）
-     * @param player 入退室したプレイヤー名
+     * @param player 入退室したプレイヤー
      */
-    protected abstract void sendJoinQuitMessage(boolean isJoin, String player);
+    protected abstract void sendJoinQuitMessage(boolean isJoin, ChannelPlayer player);
 
     /**
      * メッセージを表示します。指定したプレイヤーの発言として処理されます。
@@ -299,7 +306,7 @@ public abstract class Channel implements ConfigurationSerializable {
      * @param sendDynmap dynmapへ送信するかどうか
      */
     protected abstract void sendMessage(
-            Player player, String message, String format, boolean sendDynmap);
+            ChannelPlayer player, String message, String format, boolean sendDynmap);
 
     /**
      * チャンネル情報を返す
@@ -307,16 +314,6 @@ public abstract class Channel implements ConfigurationSerializable {
      * @return チャンネル情報
      */
     public abstract ArrayList<String> getInfo(boolean forModerator);
-
-    /**
-     * 指定された名前のプレイヤーがオンラインかどうかを確認する
-     * @param playerName プレイヤー名
-     * @return オンラインかどうか
-     */
-    private boolean isOnlinePlayer(String playerName) {
-        Player p = Utility.getPlayerExact(playerName);
-        return ( p != null && p.isOnline() );
-    }
 
     /**
      * チャンネルのオンライン人数を返す
@@ -331,8 +328,8 @@ public abstract class Channel implements ConfigurationSerializable {
 
         // メンバーの人数を数える
         int onlineNum = 0;
-        for ( String pname : members ) {
-            if ( isOnlinePlayer(pname) ) {
+        for ( ChannelPlayer player : members ) {
+            if ( player.isOnline() ) {
                 onlineNum++;
             }
         }
@@ -370,19 +367,19 @@ public abstract class Channel implements ConfigurationSerializable {
         map.put(KEY_NAME, name);
         map.put(KEY_DESC, description);
         map.put(KEY_FORMAT, format);
-        map.put(KEY_MEMBERS, members);
-        map.put(KEY_BANNED, banned);
-        map.put(KEY_MUTED, muted);
-        map.put(KEY_HIDED, hided);
-        map.put(KEY_MODERATOR, moderator);
+        map.put(KEY_MEMBERS, getStringList(members));
+        map.put(KEY_BANNED, getStringList(banned));
+        map.put(KEY_MUTED, getStringList(muted));
+        map.put(KEY_HIDED, getStringList(hided));
+        map.put(KEY_MODERATOR, getStringList(moderator));
         map.put(KEY_PASSWORD, password);
         map.put(KEY_VISIBLE, visible);
         map.put(KEY_COLOR, colorCode);
         map.put(KEY_BROADCAST, broadcastChannel);
         map.put(KEY_WORLD, isWorldRange);
         map.put(KEY_RANGE, chatRange);
-        map.put(KEY_BAN_EXPIRES, banExpires);
-        map.put(KEY_MUTE_EXPIRES, muteExpires);
+        map.put(KEY_BAN_EXPIRES, getStringLongMap(banExpires));
+        map.put(KEY_MUTE_EXPIRES, getStringLongMap(muteExpires));
         return map;
     }
 
@@ -403,22 +400,50 @@ public abstract class Channel implements ConfigurationSerializable {
                 LunaChat.getInstance().getLunaChatConfig().getDefaultFormat();
 
         Channel channel = new ChannelImpl(name);
-        channel.members = castToStringList(data.get(KEY_MEMBERS));
         channel.description = castWithDefault(data.get(KEY_DESC), "");
         channel.format = castWithDefault(data.get(KEY_FORMAT), defaultFormat);
-        channel.banned = castToStringList(data.get(KEY_BANNED));
-        channel.muted = castToStringList(data.get(KEY_MUTED));
-        channel.hided = castToStringList(data.get(KEY_HIDED));
-        channel.moderator = castToStringList(data.get(KEY_MODERATOR));
+        channel.members = castToChannelPlayerList(data.get(KEY_MEMBERS));
+        channel.banned = castToChannelPlayerList(data.get(KEY_BANNED));
+        channel.muted = castToChannelPlayerList(data.get(KEY_MUTED));
+        channel.hided = castToChannelPlayerList(data.get(KEY_HIDED));
+        channel.moderator = castToChannelPlayerList(data.get(KEY_MODERATOR));
         channel.password = castWithDefault(data.get(KEY_PASSWORD), "");
         channel.visible = castWithDefault(data.get(KEY_VISIBLE), true);
         channel.colorCode = castWithDefault(data.get(KEY_COLOR), "");
         channel.broadcastChannel = castWithDefault(data.get(KEY_BROADCAST), false);
         channel.isWorldRange = castWithDefault(data.get(KEY_WORLD), false);
         channel.chatRange = castWithDefault(data.get(KEY_RANGE), 0);
-        channel.banExpires = castToStringLongMap(data.get(KEY_BAN_EXPIRES));
-        channel.muteExpires = castToStringLongMap(data.get(KEY_MUTE_EXPIRES));
+        channel.banExpires = castToChannelPlayerLongMap(data.get(KEY_BAN_EXPIRES));
+        channel.muteExpires = castToChannelPlayerLongMap(data.get(KEY_MUTE_EXPIRES));
         return channel;
+    }
+
+    /**
+     * List&lt;ChannelPlayer&gt;を、List&lt;String&gt;に変換する。
+     * @param org 変換元
+     * @return 変換後
+     */
+    private static List<String> getStringList(List<ChannelPlayer> org) {
+
+        ArrayList<String> result = new ArrayList<String>();
+        for ( ChannelPlayer cp : org ) {
+            result.add(cp.toString());
+        }
+        return result;
+    }
+
+    /**
+     * Map&lt;ChannelPlayer, Long&gt;を、Map&lt;String, Long&gt;に変換する。
+     * @param org 変換元
+     * @return 変換後
+     */
+    private static Map<String, Long> getStringLongMap(Map<ChannelPlayer, Long> org) {
+
+        HashMap<String, Long> result = new HashMap<String, Long>();
+        for ( ChannelPlayer cp : org.keySet() ) {
+            result.put(cp.toString(), org.get(cp));
+        }
+        return result;
     }
 
     /**
@@ -437,6 +462,23 @@ public abstract class Channel implements ConfigurationSerializable {
     }
 
     /**
+     * Objectを、List&lt;ChannelPlayer&gt;に変換する。nullなら空のリストを返す。
+     * @param obj 変換元
+     * @return 変換後
+     */
+    private static List<ChannelPlayer> castToChannelPlayerList(Object obj) {
+
+        List<String> entries = castToStringList(obj);
+        ArrayList<ChannelPlayer> players = new ArrayList<ChannelPlayer>();
+
+        for ( String entry : entries ) {
+            players.add(ChannelPlayer.getChannelPlayer(entry));
+        }
+
+        return players;
+    }
+
+    /**
      * Objectを、List&lt;String&gt;に変換する。nullなら空のリストを返す。
      * @param obj 変換元
      * @return 変換後
@@ -451,6 +493,24 @@ public abstract class Channel implements ConfigurationSerializable {
             return new ArrayList<String>();
         }
         return (List<String>)obj;
+    }
+
+    /**
+     * Objectを、Map&lt;ChannelPlayer, Long&gt;に変換する。nullなら空のリストを返す。
+     * @param obj 変換元
+     * @return 変換後
+     */
+    private static Map<ChannelPlayer, Long> castToChannelPlayerLongMap(Object obj) {
+
+        Map<String, Long> entries = castToStringLongMap(obj);
+        HashMap<ChannelPlayer, Long> map = new HashMap<ChannelPlayer, Long>();
+
+        for ( String key : entries.keySet() ) {
+            ChannelPlayer cp = ChannelPlayer.getChannelPlayer(key);
+            map.put(cp, entries.get(key));
+        }
+
+        return map;
     }
 
     /**
@@ -538,15 +598,15 @@ public abstract class Channel implements ConfigurationSerializable {
      * チャンネルのメンバーを返す
      * @return チャンネルのメンバー
      */
-    public List<String> getMembers() {
+    public List<ChannelPlayer> getMembers() {
 
         // ブロードキャストチャンネルなら、
         // 現在サーバーに接続している全プレイヤーをメンバーとして返す
         if ( isBroadcastChannel() ) {
             Player[] players = Bukkit.getOnlinePlayers();
-            List<String> mem = new ArrayList<String>();
+            List<ChannelPlayer> mem = new ArrayList<ChannelPlayer>();
             for ( Player p : players ) {
-                mem.add(p.getName());
+                mem.add(ChannelPlayer.getChannelPlayer(p));
             }
             return mem;
         }
@@ -558,7 +618,7 @@ public abstract class Channel implements ConfigurationSerializable {
      * チャンネルのモデレーターを返す
      * @return チャンネルのモデレーター
      */
-    public List<String> getModerator() {
+    public List<ChannelPlayer> getModerator() {
         return moderator;
     }
 
@@ -566,7 +626,7 @@ public abstract class Channel implements ConfigurationSerializable {
      * チャンネルのBANリストを返す
      * @return チャンネルのBANリスト
      */
-    public List<String> getBanned() {
+    public List<ChannelPlayer> getBanned() {
         return banned;
     }
 
@@ -574,7 +634,7 @@ public abstract class Channel implements ConfigurationSerializable {
      * チャンネルのMuteリストを返す
      * @return チャンネルのMuteリスト
      */
-    public List<String> getMuted() {
+    public List<ChannelPlayer> getMuted() {
         return muted;
     }
 
@@ -582,7 +642,7 @@ public abstract class Channel implements ConfigurationSerializable {
      * 期限付きBANの期限マップを返す（key=プレイヤー名、value=期日（ミリ秒））
      * @return banExpires
      */
-    public Map<String, Long> getBanExpires() {
+    public Map<ChannelPlayer, Long> getBanExpires() {
         return banExpires;
     }
 
@@ -590,7 +650,7 @@ public abstract class Channel implements ConfigurationSerializable {
      * 期限付きMuteの期限マップを返す（key=プレイヤー名、value=期日（ミリ秒））
      * @return muteExpires
      */
-    public Map<String, Long> getMuteExpires() {
+    public Map<ChannelPlayer, Long> getMuteExpires() {
         return muteExpires;
     }
 
@@ -598,7 +658,7 @@ public abstract class Channel implements ConfigurationSerializable {
      * 非表示プレイヤーの一覧を返す
      * @return チャンネルの非表示プレイヤーの一覧
      */
-    public List<String> getHided() {
+    public List<ChannelPlayer> getHided() {
         return hided;
     }
 

@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.Resources;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
 /**
  * 1:1チャット受信コマンド
@@ -32,7 +33,7 @@ public class LunaChatReplyCommand extends LunaChatMessageCommand {
             sendResourceMessage(sender, PREERR, "errmsgIngame");
             return true;
         }
-        Player inviter = (Player)sender;
+        ChannelPlayer inviter = ChannelPlayer.getChannelPlayer(sender);
 
         // 会話相手を履歴から取得する
         String invitedName = DataMaps.privateMessageMap.get(inviter.getName());

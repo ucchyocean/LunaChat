@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.Resources;
 import com.github.ucchyocean.lc.channel.Channel;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
 /**
  * Lunachatコマンドの処理クラス
@@ -177,22 +178,19 @@ public class LunaChatCommand implements CommandExecutor {
     }
 
     /**
-     * 補完用の参加可能チャンネルリストを返す
+     * TAB補完用の参加可能チャンネルリストを返す
      * @param sender コマンド実行者
      * @return リスト
      */
     private ArrayList<String> getListCanJoin(CommandSender sender) {
 
         ArrayList<String> items = new ArrayList<String>();
-        String playerName = "";
-        if ( sender instanceof Player ) {
-            playerName = ((Player)sender).getName();
-        }
+        ChannelPlayer cp = ChannelPlayer.getChannelPlayer(sender);
 
         for ( Channel channel : LunaChat.getInstance().getLunaChatAPI().getChannels() ) {
 
             // BANされているチャンネルは対象外
-            if ( channel.getBanned().contains(playerName) ) {
+            if ( channel.getBanned().contains(cp) ) {
                 continue;
             }
 
@@ -203,7 +201,7 @@ public class LunaChatCommand implements CommandExecutor {
 
             // 未参加で visible=false のチャンネルは対象外
             if ( sender instanceof Player &&
-                    !channel.getMembers().contains(playerName) &&
+                    !channel.getMembers().contains(cp) &&
                     !channel.isGlobalChannel() &&
                     !channel.isVisible() ) {
                 continue;
@@ -216,7 +214,7 @@ public class LunaChatCommand implements CommandExecutor {
     }
 
     /**
-     * 補完用の削除可能チャンネルリストを返す
+     * TAB補完用の削除可能チャンネルリストを返す
      * @param sender コマンド実行者
      * @return リスト
      */

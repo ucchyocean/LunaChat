@@ -8,8 +8,8 @@ package com.github.ucchyocean.lc.command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.channel.Channel;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
 /**
  * inviteコマンドの実行クラス
@@ -104,15 +104,15 @@ public class InviteCommand extends SubCommandAbst {
         }
 
         // 招待相手が存在するかどうかを確認する
-        Player invited = Utility.getPlayerExact(invitedName);
-        if (invited == null) {
+        ChannelPlayer invited = ChannelPlayer.getChannelPlayer(invitedName);
+        if ( invited == null || !invited.isOnline() ) {
             sendResourceMessage(sender, PREERR,
                     "errmsgNotfoundPlayer", invitedName);
             return true;
         }
 
         // 招待相手が既にチャンネルに参加しているかどうかを確認する
-        if (channel.getMembers().contains(invitedName)) {
+        if (channel.getMembers().contains(invited)) {
             sendResourceMessage(sender, PREERR,
                     "errmsgInvitedAlreadyExist", invitedName);
             return true;

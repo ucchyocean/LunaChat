@@ -11,6 +11,7 @@ import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.LunaChatConfig;
 import com.github.ucchyocean.lc.Resources;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
 /**
  * サブコマンドの抽象クラス
@@ -50,7 +51,6 @@ public abstract class SubCommandAbst {
 
     /**
      * メッセージリソースのメッセージを、カラーコード置き換えしつつ、senderに送信する
-     *
      * @param sender メッセージの送り先
      * @param pre プレフィックス
      * @param key リソースキー
@@ -61,6 +61,20 @@ public abstract class SubCommandAbst {
             String key, Object... args) {
         String msg = String.format(pre + Resources.get(key), args);
         sender.sendMessage(msg);
+    }
+
+    /**
+     * メッセージリソースのメッセージを、カラーコード置き換えしつつ、ChannelPlayerに送信する
+     * @param sender メッセージの送り先
+     * @param pre プレフィックス
+     * @param key リソースキー
+     * @param args リソース内の置き換え対象キーワード
+     */
+    protected void sendResourceMessage(
+            ChannelPlayer cp, String pre,
+            String key, Object... args) {
+        String msg = String.format(pre + Resources.get(key), args);
+        cp.sendMessage(msg);
     }
 
     /**

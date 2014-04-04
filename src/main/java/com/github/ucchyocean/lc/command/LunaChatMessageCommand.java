@@ -13,8 +13,8 @@ import org.bukkit.entity.Player;
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.Resources;
-import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.channel.Channel;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
 /**
  * 1:1チャット送信コマンド
@@ -22,7 +22,6 @@ import com.github.ucchyocean.lc.channel.Channel;
  */
 public class LunaChatMessageCommand implements CommandExecutor {
 
-//    private static final String PREINFO = Resources.get("infoPrefix");
     private static final String PREERR = Resources.get("errorPrefix");
 
     /**
@@ -37,7 +36,7 @@ public class LunaChatMessageCommand implements CommandExecutor {
             sendResourceMessage(sender, PREERR, "errmsgIngame");
             return true;
         }
-        Player inviter = (Player)sender;
+        ChannelPlayer inviter = ChannelPlayer.getChannelPlayer(sender);
 
         // 引数が無ければ、usageを表示して終了する
         if (args.length == 0) {
@@ -71,11 +70,11 @@ public class LunaChatMessageCommand implements CommandExecutor {
      * @param invitedName
      * @param message
      */
-    protected void sendTellMessage(Player inviter, String invitedName, String message) {
+    protected void sendTellMessage(ChannelPlayer inviter, String invitedName, String message) {
 
         // 招待相手が存在するかどうかを確認する
-        Player invited = Utility.getPlayerExact(invitedName);
-        if (invited == null) {
+        ChannelPlayer invited = ChannelPlayer.getChannelPlayer(invitedName);
+        if ( invited == null || !invited.isOnline() ) {
             sendResourceMessage(inviter, PREERR,
                     "errmsgNotfoundPlayer", invitedName);
             return;
@@ -117,7 +116,6 @@ public class LunaChatMessageCommand implements CommandExecutor {
 
     /**
      * コマンドの使い方を senderに送る
-     *
      * @param sender
      * @param label
      */
@@ -127,7 +125,6 @@ public class LunaChatMessageCommand implements CommandExecutor {
 
     /**
      * メッセージリソースのメッセージを、カラーコード置き換えしつつ、senderに送信する
-     *
      * @param sender メッセージの送り先
      * @param pre プレフィックス
      * @param key リソースキー
@@ -137,5 +134,18 @@ public class LunaChatMessageCommand implements CommandExecutor {
             String key, Object... args) {
         String msg = String.format(pre + Resources.get(key), args);
         sender.sendMessage(msg);
+    }
+
+    /**
+     * メッセージリソースのメッセージを、カラーコード置き換えしつつ、senderに送信する
+     * @param sender メッセージの送り先
+     * @param pre プレフィックス
+     * @param key リソースキー
+     * @param args リソース内の置き換え対象キーワード
+     */
+    protected void sendResourceMessage(ChannelPlayer cp, String pre,
+            String key, Object... args) {
+        String msg = String.format(pre + Resources.get(key), args);
+        cp.sendMessage(msg);
     }
 }

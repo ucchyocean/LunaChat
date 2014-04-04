@@ -7,14 +7,16 @@ package com.github.ucchyocean.lc.event;
 
 import java.util.List;
 
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
+
 /**
  * メンバー変更イベント
  * @author ucchy
  */
 public class LunaChatChannelMemberChangedEvent extends LunaChatBaseCancellableEvent {
 
-    private List<String> before;
-    private List<String> after;
+    private List<ChannelPlayer> before;
+    private List<ChannelPlayer> after;
 
     /**
      * コンストラクタ
@@ -23,7 +25,7 @@ public class LunaChatChannelMemberChangedEvent extends LunaChatBaseCancellableEv
      * @param after 変更後のメンバー
      */
     public LunaChatChannelMemberChangedEvent(
-            String channelName, List<String> before, List<String> after) {
+            String channelName, List<ChannelPlayer> before, List<ChannelPlayer> after) {
         super(channelName);
         this.before = before;
         this.after = after;
@@ -33,7 +35,7 @@ public class LunaChatChannelMemberChangedEvent extends LunaChatBaseCancellableEv
      * 変更前のメンバーリストをかえす
      * @return
      */
-    public List<String> getMembersBefore() {
+    public List<ChannelPlayer> getMembersBefore() {
         return before;
     }
 
@@ -41,7 +43,7 @@ public class LunaChatChannelMemberChangedEvent extends LunaChatBaseCancellableEv
      * 変更後のメンバーリストをかえす
      * @return
      */
-    public List<String> getMembersAfter() {
+    public List<ChannelPlayer> getMembersAfter() {
         return after;
     }
 }

@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.channel.Channel;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
 /**
  * joinコマンドの実行クラス
@@ -79,7 +80,7 @@ public class JoinCommand extends SubCommandAbst {
             sendResourceMessage(sender, PREERR, "errmsgIngame");
             return true;
         }
-        Player player = (Player) sender;
+        ChannelPlayer player = ChannelPlayer.getChannelPlayer(sender);
 
         // 実行引数から、参加するチャンネルを取得する
         String channelName = "";
@@ -108,12 +109,12 @@ public class JoinCommand extends SubCommandAbst {
             if (config.getGlobalChannel().equals("") &&
                     channelName.equals(config.getGlobalMarker()) ) {
                 // グローバルチャンネル設定が無くて、指定チャンネルがマーカーの場合、
-                // 発言先をnullに設定して、グローバルチャンネルにする
+                // 発言先を削除して、グローバルチャンネルにする
 
                 api.removeDefaultChannel(player.getName());
                 sendResourceMessage(sender, PREINFO, "cmdmsgSet", "グローバル");
                 if (message.length() > 0) {
-                    player.chat(config.getGlobalMarker() + message.toString());
+                    player.getPlayer().chat(config.getGlobalMarker() + message.toString());
                 }
                 return true;
             }
@@ -147,7 +148,7 @@ public class JoinCommand extends SubCommandAbst {
         Channel channel = api.getChannel(channelName);
 
         // BANされていないか確認する
-        if (channel.getBanned().contains(player.getName())) {
+        if (channel.getBanned().contains(player)) {
             sendResourceMessage(sender, PREERR, "errmsgBanned");
             return true;
         }
@@ -158,7 +159,7 @@ public class JoinCommand extends SubCommandAbst {
             return true;
         }
 
-        if (channel.getMembers().contains(player.getName())) {
+        if (channel.getMembers().contains(player)) {
 
             // 何かメッセージがあるなら、そのままチャット送信する
             if (message.length() > 0) {
@@ -206,7 +207,7 @@ public class JoinCommand extends SubCommandAbst {
         }
 
         // 非表示に設定しているなら、注意を流す
-        if ( channel.getHided().contains(player.getName()) ) {
+        if ( channel.getHided().contains(player) ) {
             sendResourceMessage(sender, PREINFO, "cmdmsgSetHide");
         }
 

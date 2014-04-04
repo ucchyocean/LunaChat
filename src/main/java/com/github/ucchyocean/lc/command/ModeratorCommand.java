@@ -11,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.channel.Channel;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
 /**
  * moderatorコマンドの実行クラス
@@ -127,11 +128,13 @@ public class ModeratorCommand extends SubCommandAbst {
         for ( String mod : moderator ) {
             if ( mod.startsWith("-") ) {
                 String name = mod.substring(1);
-                channel.getModerator().remove(name);
+                ChannelPlayer cp = ChannelPlayer.getChannelPlayer(name);
+                channel.getModerator().remove(cp);
                 sendResourceMessage(sender, PREINFO,
                         "cmdmsgModeratorMinus", name, cname);
             } else {
-                channel.getModerator().add(mod);
+                ChannelPlayer cp = ChannelPlayer.getChannelPlayer(mod);
+                channel.getModerator().add(cp);
                 sendResourceMessage(sender, PREINFO,
                         "cmdmsgModerator", mod, cname);
             }

@@ -8,7 +8,7 @@ package com.github.ucchyocean.lc.command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.Utility;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
 /**
  * denyコマンドの実行クラス
@@ -93,7 +93,7 @@ public class DenyCommand extends SubCommandAbst {
 
         // メッセージ送信
         sendResourceMessage(sender, PREINFO, "cmdmsgDeny");
-        Player inviter = Utility.getPlayerExact(inviterName);
+        ChannelPlayer inviter = ChannelPlayer.getChannelPlayer(inviterName);
         if (inviter != null) {
             sendResourceMessage(inviter, PREINFO, "cmdmsgDenyed");
         }

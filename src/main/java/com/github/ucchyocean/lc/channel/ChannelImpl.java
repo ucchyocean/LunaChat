@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -20,7 +21,6 @@ import com.github.ucchyocean.lc.NGWordAction;
 import com.github.ucchyocean.lc.Resources;
 import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.bridge.DynmapBridge;
-import com.github.ucchyocean.lc.bridge.VaultChatBridge;
 import com.github.ucchyocean.lc.event.LunaChatChannelChatEvent;
 import com.github.ucchyocean.lc.event.LunaChatChannelMessageEvent;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
@@ -94,10 +94,10 @@ public class ChannelImpl extends Channel {
      * @param message 発言をするメッセージ
      */
     @Override
-    public void chat(Player player, String message) {
+    public void chat(ChannelPlayer player, String message) {
 
         // Muteされているかどうかを確認する
-        if ( player != null && getMuted().contains(player.getName()) ) {
+        if ( player != null && getMuted().contains(player) ) {
             player.sendMessage( PREERR + ERRMSG_MUTED );
             return;
         }
@@ -187,7 +187,7 @@ public class ChannelImpl extends Channel {
                 // BANする
 
                 if ( !isGlobalChannel() ) {
-                    getBanned().add(player.getName());
+                    getBanned().add(player);
                     removeMember(player.getName());
                     String temp = PREINFO + NGWORD_PREFIX + MSG_BANNED;
                     String m = String.format(temp, getName());
@@ -207,7 +207,7 @@ public class ChannelImpl extends Channel {
             } else if ( config.getNgwordAction() == NGWordAction.MUTE ) {
                 // Muteする
 
-                getMuted().add(player.getName());
+                getMuted().add(player);
                 save();
                 String temp = PREINFO + NGWORD_PREFIX + MSG_MUTED;
                 String m = String.format(temp, getName());
@@ -254,10 +254,10 @@ public class ChannelImpl extends Channel {
     /**
      * 入退室メッセージを流す
      * @param isJoin 入室かどうか（falseなら退室）
-     * @param player 入退室したプレイヤー名
+     * @param player 入退室したプレイヤー
      */
     @Override
-    protected void sendJoinQuitMessage(boolean isJoin, String player) {
+    protected void sendJoinQuitMessage(boolean isJoin, ChannelPlayer player) {
 
         // 1:1チャットなら、入退室メッセージは表示しない
         if ( isPersonalChat() ) {
@@ -274,7 +274,7 @@ public class ChannelImpl extends Channel {
         // キーワード置き換え
         msg = msg.replace("%ch", getName());
         msg = msg.replace("%color", getColorCode());
-        msg = msg.replace("%username", player);
+        msg = msg.replace("%username", player.getDisplayName());
 
         sendMessage(null, msg, null, false);
     }
@@ -287,30 +287,32 @@ public class ChannelImpl extends Channel {
      * @param sendDynmap dynmapへ送信するかどうか
      */
     @Override
-    protected void sendMessage(Player player, String message,
+    protected void sendMessage(ChannelPlayer player, String message,
             String format, boolean sendDynmap) {
 
         String originalMessage = new String(message);
 
         // 受信者を設定する
-        ArrayList<Player> recipients = new ArrayList<Player>();
+        ArrayList<ChannelPlayer> recipients = new ArrayList<ChannelPlayer>();
         boolean isRangeChat = false;
 
         if ( isBroadcastChannel() ) {
             // ブロードキャストチャンネル
 
-            if ( isWorldRange() && player != null ) {
+            if ( isWorldRange() && player != null && player.isOnline() ) {
                 isRangeChat = true;
-                World w = player.getWorld();
+                World w = player.getPlayer().getWorld();
 
                 if ( getChatRange() > 0 ) {
                     // 範囲チャット
 
+                    Location origin = player.getPlayer().getLocation();
                     for ( Player p : Bukkit.getOnlinePlayers() ) {
+                        ChannelPlayer cp = ChannelPlayer.getChannelPlayer(p);
                         if ( p.getWorld().equals(w) &&
-                                player.getLocation().distance(p.getLocation()) <= getChatRange() &&
-                                !getHided().contains(p.getName()) ) {
-                            recipients.add(p);
+                                origin.distance(p.getLocation()) <= getChatRange() &&
+                                !getHided().contains(cp) ) {
+                            recipients.add(ChannelPlayer.getChannelPlayer(p));
                         }
                     }
 
@@ -318,8 +320,9 @@ public class ChannelImpl extends Channel {
                     // ワールドチャット
 
                     for ( Player p : Bukkit.getOnlinePlayers() ) {
-                        if ( p.getWorld().equals(w) && !getHided().contains(p.getName()) ) {
-                            recipients.add(p);
+                        ChannelPlayer cp = ChannelPlayer.getChannelPlayer(p);
+                        if ( p.getWorld().equals(w) && !getHided().contains(cp) ) {
+                            recipients.add(ChannelPlayer.getChannelPlayer(p));
                         }
                     }
                 }
@@ -328,8 +331,9 @@ public class ChannelImpl extends Channel {
                 // 通常ブロードキャスト（全員へ送信）
 
                 for ( Player p : Bukkit.getOnlinePlayers() ) {
-                    if ( !getHided().contains(p.getName()) ) {
-                        recipients.add(p);
+                    ChannelPlayer cp = ChannelPlayer.getChannelPlayer(p);
+                    if ( !getHided().contains(cp) ) {
+                        recipients.add(cp);
                     }
                 }
             }
@@ -337,10 +341,9 @@ public class ChannelImpl extends Channel {
         } else {
             // 通常チャンネル
 
-            for ( String name : getMembers() ) {
-                Player p = Utility.getPlayerExact(name);
-                if ( p != null && !getHided().contains(p.getName()) ) {
-                    recipients.add(p);
+            for ( ChannelPlayer mem : getMembers() ) {
+                if ( mem != null && mem.isOnline() && !getHided().contains(mem) ) {
+                    recipients.add(mem);
                 }
             }
         }
@@ -366,14 +369,14 @@ public class ChannelImpl extends Channel {
                 isBroadcastChannel() &&
                 !isWorldRange() ) {
             if ( config.isSendFormattedMessageToDynmap() ) {
-                if ( player != null ) {
-                    dynmap.chat(player, message);
+                if ( player != null && player.getPlayer() != null ) {
+                    dynmap.chat(player.getPlayer(), message);
                 } else {
                     dynmap.broadcast(message);
                 }
             } else {
-                if ( player != null ) {
-                    dynmap.chat(player, originalMessage);
+                if ( player != null && player.getPlayer() != null ) {
+                    dynmap.chat(player.getPlayer(), originalMessage);
                 } else {
                     dynmap.broadcast(originalMessage);
                 }
@@ -381,7 +384,7 @@ public class ChannelImpl extends Channel {
         }
 
         // 送信する
-        for ( Player p : recipients ) {
+        for ( ChannelPlayer p : recipients ) {
             p.sendMessage(message);
         }
 
@@ -431,13 +434,14 @@ public class ChannelImpl extends Channel {
                     buf.append(INFO_PREFIX);
                 }
 
-                String name = getMembers().get(i);
+                ChannelPlayer cp = getMembers().get(i);
+                String name = cp.getName();
                 String disp;
-                if ( getModerator().contains(name) ) {
+                if ( getModerator().contains(cp) ) {
                     name = "@" + name;
                 }
-                if ( isOnlinePlayer(getMembers().get(i)) ) {
-                    if ( getHided().contains(getMembers().get(i)) )
+                if ( cp.isOnline() ) {
+                    if ( getHided().contains(cp) )
                         disp = ChatColor.DARK_AQUA + name;
                     else
                         disp = ChatColor.WHITE + name;
@@ -527,46 +531,44 @@ public class ChannelImpl extends Channel {
         long now = System.currentTimeMillis();
 
         // 期限付きBANのチェック
-        for ( String name : getBanExpires().keySet() ) {
-            if ( getBanExpires().get(name) <= now ) {
+        for ( ChannelPlayer cp : getBanExpires().keySet() ) {
+            if ( getBanExpires().get(cp) <= now ) {
 
                 // 期限マップから削除し、BANを解除
-                getBanExpires().remove(name);
-                if ( getBanned().contains(name) ) {
-                    getBanned().remove(name);
+                getBanExpires().remove(cp);
+                if ( getBanned().contains(cp) ) {
+                    getBanned().remove(cp);
                     save();
 
                     // メッセージ通知を流す
-                    String msg = String.format(MSG_BAN_EXPIRED, getName(), name);
+                    String msg = String.format(MSG_BAN_EXPIRED, getName(), cp.getName());
                     sendMessage(null, msg, null, false);
 
-                    Player player = Utility.getPlayerExact(name);
-                    if ( player != null ) {
+                    if ( cp.isOnline() ) {
                         msg = PREINFO + String.format(MSG_BAN_EXPIRED_PLAYER, getName());
-                        player.sendMessage(msg);
+                        cp.sendMessage(msg);
                     }
                 }
             }
         }
 
         // 期限付きMuteのチェック
-        for ( String name : getMuteExpires().keySet() ) {
-            if ( getMuteExpires().get(name) <= now ) {
+        for ( ChannelPlayer cp : getMuteExpires().keySet() ) {
+            if ( getMuteExpires().get(cp) <= now ) {
 
                 // 期限マップから削除し、Muteを解除
-                getMuteExpires().remove(name);
-                if ( getMuted().contains(name) ) {
-                    getMuted().remove(name);
+                getMuteExpires().remove(cp);
+                if ( getMuted().contains(cp) ) {
+                    getMuted().remove(cp);
                     save();
 
                     // メッセージ通知を流す
-                    String msg = String.format(MSG_MUTE_EXPIRED, getName(), name);
+                    String msg = String.format(MSG_MUTE_EXPIRED, getName(), cp.getName());
                     sendMessage(null, msg, null, false);
 
-                    Player player = Utility.getPlayerExact(name);
-                    if ( player != null ) {
+                    if ( cp.isOnline() ) {
                         msg = PREINFO + String.format(MSG_MUTE_EXPIRED_PLAYER, getName());
-                        player.sendMessage(msg);
+                        cp.sendMessage(msg);
                     }
                 }
             }
@@ -579,7 +581,7 @@ public class ChannelImpl extends Channel {
      * @param player プレイヤー
      * @return 置き換え結果
      */
-    private String replaceKeywords(String format, Player player) {
+    private String replaceKeywords(String format, ChannelPlayer player) {
 
         String msg = format;
 
@@ -604,16 +606,10 @@ public class ChannelImpl extends Channel {
             msg = msg.replace("%player", player.getName());
 
             if ( msg.contains("%prefix") || msg.contains("%suffix") ) {
-                String prefix = "";
-                String suffix = "";
-                VaultChatBridge vaultchat = LunaChat.getInstance().getVaultChat();
-                if ( vaultchat != null ) {
-                    prefix = vaultchat.getPlayerPrefix(player);
-                    suffix = vaultchat.getPlayerSuffix(player);
-                }
-                msg = msg.replace("%prefix", prefix);
-                msg = msg.replace("%suffix", suffix);
+                msg = msg.replace("%prefix", player.getPrefix());
+                msg = msg.replace("%suffix", player.getSuffix());
             }
+
         } else {
             msg = msg.replace("%username", "");
             msg = msg.replace("%player", "");
@@ -638,16 +634,6 @@ public class ChannelImpl extends Channel {
         msg = msg.replace("%username", playerName);
 
         return Utility.replaceColorCode(msg);
-    }
-
-    /**
-     * 指定された名前のプレイヤーがオンラインかどうかを確認する
-     * @param playerName プレイヤー名
-     * @return オンラインかどうか
-     */
-    private boolean isOnlinePlayer(String playerName) {
-        Player p = Utility.getPlayerExact(playerName);
-        return ( p != null && p.isOnline() );
     }
 
     /**

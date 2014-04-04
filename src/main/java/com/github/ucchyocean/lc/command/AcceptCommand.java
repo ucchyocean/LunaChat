@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.channel.Channel;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
 /**
  * acceptコマンドの実行クラス
@@ -99,7 +100,8 @@ public class AcceptCommand extends SubCommandAbst {
         }
 
         // 既に参加しているなら、エラーを表示して終了する
-        if (channel.getMembers().contains(player.getName())) {
+        ChannelPlayer cp = ChannelPlayer.getChannelPlayer(player);
+        if (channel.getMembers().contains(cp)) {
             sendResourceMessage(sender, PREERR, "errmsgInvitedAlreadyJoin");
             return true;
         }

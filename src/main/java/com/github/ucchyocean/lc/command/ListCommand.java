@@ -6,7 +6,6 @@
 package com.github.ucchyocean.lc.command;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -14,6 +13,7 @@ import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.Resources;
 import com.github.ucchyocean.lc.channel.Channel;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
 /**
  * listコマンドの実行クラス
@@ -115,13 +115,13 @@ public class ListCommand extends SubCommandAbst {
                 dchannel = def.getName();
             }
         }
-        Collection<Channel> channels = api.getChannels();
+        ChannelPlayer cp = ChannelPlayer.getChannelPlayer(player);
 
         items.add(LIST_FIRSTLINE);
-        for ( Channel channel : channels ) {
+        for ( Channel channel : api.getChannels() ) {
 
             // BANされているチャンネルは表示しない
-            if ( channel.getBanned().contains(playerName) ) {
+            if ( channel.getBanned().contains(cp) ) {
                 continue;
             }
 
@@ -134,12 +134,12 @@ public class ListCommand extends SubCommandAbst {
             String disp = ChatColor.WHITE + channel.getName();
             if ( channel.getName().equalsIgnoreCase(dchannel) ) {
                 disp = ChatColor.RED + channel.getName();
-            } else if ( channel.getHided().contains(playerName) ) {
+            } else if ( channel.getHided().contains(cp) ) {
                 disp = ChatColor.DARK_AQUA + channel.getName();
             }
 
             if ( player != null &&
-                    !channel.getMembers().contains(playerName) &&
+                    !channel.getMembers().contains(cp) &&
                     !channel.isGlobalChannel() ) {
 
                 // 未参加で visible=false のチャンネルは表示しない

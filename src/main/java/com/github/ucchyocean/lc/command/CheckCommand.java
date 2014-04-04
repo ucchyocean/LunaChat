@@ -16,6 +16,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.Resources;
 import com.github.ucchyocean.lc.channel.Channel;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
 /**
  * checkコマンドの実行クラス
@@ -181,6 +182,7 @@ public class CheckCommand extends SubCommandAbst {
         ArrayList<String> items = new ArrayList<String>();
         String dchannel = "";
         String playerName = "";
+        ChannelPlayer cp = ChannelPlayer.getChannelPlayer(player);
         if ( player != null ) {
             playerName = player.getName();
             Channel def = api.getDefaultChannel(playerName);
@@ -200,7 +202,7 @@ public class CheckCommand extends SubCommandAbst {
             }
 
             if ( player != null &&
-                    !channel.getMembers().contains(playerName) &&
+                    !channel.getMembers().contains(cp) &&
                     !channel.isGlobalChannel() ) {
 
                 // 参加していないチャンネルならグレーにする

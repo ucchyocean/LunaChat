@@ -30,7 +30,7 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
     private String org;
     private JapanizeType type;
     private Channel channel;
-    private Player player;
+    private ChannelPlayer player;
     private String format;
     private String lineFormat;
     private String result;
@@ -44,7 +44,7 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
      * @param japanizeFormat 変換後に発言するときの、発言フォーマット
      */
     public DelayedJapanizeConvertTask(String org, JapanizeType type, Channel channel,
-            Player player, String japanizeFormat, String lineFormat) {
+            ChannelPlayer player, String japanizeFormat, String lineFormat) {
         this.org = org;
         this.type = type;
         this.channel = channel;
@@ -71,8 +71,8 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
                 if ( LunaChat.getInstance().getLunaChatConfig().
                         isSendBroadcastChannelChatToDynmap() &&
                         LunaChat.getInstance().getDynmap() != null ) {
-                    if ( player != null )
-                        LunaChat.getInstance().getDynmap().chat(player, result);
+                    if ( player != null && player.getPlayer() != null )
+                        LunaChat.getInstance().getDynmap().chat(player.getPlayer(), result);
                     else
                         LunaChat.getInstance().getDynmap().broadcast(result);
                 }

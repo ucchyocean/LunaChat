@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.channel.Channel;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
 /**
  * leaveコマンドの実行クラス
@@ -82,7 +83,7 @@ public class LeaveCommand extends SubCommandAbst {
 
         // 実行引数から退出するチャンネルを取得する
         // 指定が無いならデフォルトの発言先にする
-        Player player = (Player) sender;
+        ChannelPlayer player = ChannelPlayer.getChannelPlayer(sender);
         Channel def = api.getDefaultChannel(player.getName());
         String channelName = null;
         if ( def != null ) {
@@ -112,7 +113,7 @@ public class LeaveCommand extends SubCommandAbst {
         }
 
         // チャンネルのメンバーかどうかを確認する
-        if (!channel.getMembers().contains(player.getName())) {
+        if (!channel.getMembers().contains(player)) {
             sendResourceMessage(sender, PREERR, "errmsgNomember");
             return true;
         }
