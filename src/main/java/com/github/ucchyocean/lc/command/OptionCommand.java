@@ -239,19 +239,19 @@ public class OptionCommand extends SubCommandAbst {
 
                 if ( value.equals("") ) {
                     channel.setWorldRange(false);
-                    channel.setRange(0);
+                    channel.setChatRange(0);
                     sendResourceMessage(sender, PREINFO,
                             "cmdmsgOption", "range", "無効");
                     setOption = true;
                 } else if ( value.equalsIgnoreCase("world") ) {
                     channel.setWorldRange(true);
-                    channel.setRange(0);
+                    channel.setChatRange(0);
                     sendResourceMessage(sender, PREINFO,
                             "cmdmsgOption", "range", "world");
                     setOption = true;
                 } else if ( value.matches("[0-9]+") ) {
                     channel.setWorldRange(true);
-                    channel.setRange(Integer.parseInt(value));
+                    channel.setChatRange(Integer.parseInt(value));
                     sendResourceMessage(sender, PREINFO,
                             "cmdmsgOption", "range", value);
                     setOption = true;

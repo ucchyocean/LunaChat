@@ -55,6 +55,12 @@ public class LunaChatConfig {
     /** formatコマンド実行時に、必ず含まれる必要があるキーワード。 */
     private List<String> formatConstraint;
 
+    /** チャンネルを作成したときに、デフォルトで設定されるフォーマット */
+    private String defaultFormat;
+
+    /** プライベートメッセージを送信するときに、適用されるフォーマット */
+    private String defaultFormatForPrivateMessage;
+
     /** ブロードキャストチャンネルの発言内容を、dynmapに送信するかどうか。<br/>
      *  dynmapがロードされていない場合は、この設定は無視される（false扱い）。 */
     private boolean sendBroadcastChannelChatToDynmap;
@@ -163,6 +169,12 @@ public class LunaChatConfig {
             formatConstraint.add("%username");
             formatConstraint.add("%msg");
         }
+
+        defaultFormat = config.getString("defaultFormat",
+                "&f[%color%ch&f]%prefix%username%suffix&a:&f %msg");
+        defaultFormatForPrivateMessage =
+                config.getString("defaultFormatForPrivateMessage",
+                "&7[%player > %to] %msg");
 
         sendBroadcastChannelChatToDynmap =
             config.getBoolean("sendBroadcastChannelChatToDynmap", true);
@@ -291,6 +303,22 @@ public class LunaChatConfig {
      */
     public List<String> getFormatConstraint() {
         return formatConstraint;
+    }
+
+    /**
+     * チャンネルを作成したときに、デフォルトで設定されるフォーマット。
+     * @return defaultFormatを返す
+     */
+    public String getDefaultFormat() {
+        return defaultFormat;
+    }
+
+    /**
+     * プライベートメッセージを送信するときに、適用されるフォーマット。
+     * @return defaultFormatForPrivateMessageを返す
+     */
+    public String getDefaultFormatForPrivateMessage() {
+        return defaultFormatForPrivateMessage;
     }
 
     /**

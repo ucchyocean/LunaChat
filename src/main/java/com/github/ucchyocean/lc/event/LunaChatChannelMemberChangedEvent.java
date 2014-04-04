@@ -13,18 +13,35 @@ import java.util.List;
  */
 public class LunaChatChannelMemberChangedEvent extends LunaChatBaseCancellableEvent {
 
-    private List<String> members;
+    private List<String> before;
+    private List<String> after;
 
-    public LunaChatChannelMemberChangedEvent(String channelName, List<String> members) {
+    /**
+     * コンストラクタ
+     * @param channelName チャンネル名
+     * @param before 変更前のメンバー
+     * @param after 変更後のメンバー
+     */
+    public LunaChatChannelMemberChangedEvent(
+            String channelName, List<String> before, List<String> after) {
         super(channelName);
-        this.members = members;
+        this.before = before;
+        this.after = after;
+    }
+
+    /**
+     * 変更前のメンバーリストをかえす
+     * @return
+     */
+    public List<String> getMembersBefore() {
+        return before;
     }
 
     /**
      * 変更後のメンバーリストをかえす
      * @return
      */
-    public List<String> getMembers() {
-        return members;
+    public List<String> getMembersAfter() {
+        return after;
     }
 }

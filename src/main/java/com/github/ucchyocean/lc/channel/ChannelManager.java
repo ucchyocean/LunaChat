@@ -346,7 +346,7 @@ public class ChannelManager implements LunaChatAPI {
         }
         String name = event.getChannelName();
 
-        Channel channel = new Channel(name);
+        Channel channel = new ChannelImpl(name);
         channels.put(name.toLowerCase(), channel);
         channel.save();
         return channel;

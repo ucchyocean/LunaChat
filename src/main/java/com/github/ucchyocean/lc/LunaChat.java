@@ -13,7 +13,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
 
 import com.github.ucchyocean.lc.bridge.DynmapBridge;
 import com.github.ucchyocean.lc.bridge.VaultChatBridge;
@@ -38,19 +37,12 @@ public class LunaChat extends JavaPlugin {
     private VaultChatBridge vaultchat;
     private DynmapBridge dynmap;
 
-    private BukkitTask expireCheckerTask;
+    private ExpireCheckTask expireCheckerTask;
 
     private LunaChatCommand lunachatCommand;
     private LunaChatMessageCommand messageCommand;
     private LunaChatReplyCommand replyCommand;
     private LunaChatJapanizeCommand lcjapanizeCommand;
-
-    /**
-     * コンストラクタ
-     */
-    public LunaChat() {
-        instance = this;
-    }
 
     /**
      * プラグインが有効化されたときに呼び出されるメソッド
@@ -92,9 +84,8 @@ public class LunaChat extends JavaPlugin {
         ConfigurationSerialization.registerClass(Channel.class, "Channel");
 
         // 期限チェッカータスクの起動
-        expireCheckerTask =
-                getServer().getScheduler().runTaskTimer(
-                        this, new ExpireCheckTask(), 100, 1200);
+        expireCheckerTask = new ExpireCheckTask();
+        expireCheckerTask.runTaskTimer(this, 100, 1200);
     }
 
     /**
@@ -106,7 +97,7 @@ public class LunaChat extends JavaPlugin {
 
         // 期限チェッカータスクの停止
         if ( expireCheckerTask != null ) {
-            getServer().getScheduler().cancelTask(expireCheckerTask.getTaskId());
+            expireCheckerTask.cancel();
         }
     }
 

@@ -19,10 +19,8 @@ import org.bukkit.scheduler.BukkitRunnable;
  */
 public class LunaChatLogger {
 
-    private static final SimpleDateFormat lformat =
-            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    private static final SimpleDateFormat dformat =
-            new SimpleDateFormat("yyyy-MM-dd");
+    private SimpleDateFormat lformat;
+    private SimpleDateFormat dformat;
 
     private File file;
     private String dirPath;
@@ -33,6 +31,9 @@ public class LunaChatLogger {
      * @param name ログ名
      */
     public LunaChatLogger(String name) {
+
+        lformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        dformat = new SimpleDateFormat("yyyy-MM-dd");
 
         this.name = name;
         checkDir();
@@ -80,8 +81,7 @@ public class LunaChatLogger {
     private void checkDir() {
 
         String temp = LunaChat.getInstance().getDataFolder() +
-                File.separator + "logs" + File.separator +
-                dformat.format(new Date());
+                File.separator + "logs" + File.separator + dformat.format(new Date());
 
         if ( temp.equals(dirPath) ) {
             return;

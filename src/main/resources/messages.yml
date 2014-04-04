@@ -3,9 +3,6 @@
 # @license    LGPLv3
 # @copyright  Copyright ucchy 2013
 
-defaultFormat: '&f[%color%ch&f]%prefix%username%suffix&a:&f %msg'
-defaultFormatForPersonalChat: '&7[%player > %to] %msg'
-
 joinMessage: '&f[%color%ch&f]&7%username さんがチャンネルチャットに参加しました。'
 quitMessage: '&f[%color%ch&f]&7%username さんがチャンネルチャットから退出しました。'
 breakupMessage: '&a[%s]&7チャンネルチャットが削除されました。'
