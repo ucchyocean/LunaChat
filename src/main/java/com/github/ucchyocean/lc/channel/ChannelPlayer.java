@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
  * プレイヤーの抽象クラス
  * @author ucchy
  */
-public abstract class ChannelPlayer {
+public abstract class ChannelPlayer implements Comparable<ChannelPlayer> {
 
     /**
      * オンラインかどうか
@@ -76,11 +76,24 @@ public abstract class ChannelPlayer {
      * @param other 他方のオブジェクト
      * @return 同一かどうか
      */
+    @Override
     public boolean equals(Object other) {
         if ( !(other instanceof ChannelPlayer) ) {
             return false;
         }
         return this.toString().equals(other.toString());
+    }
+
+    /**
+     * インスタンス同士の比較を行う。このメソッドを実装しておくことで、
+     * Java8でのHashMapのキー挿入における高速化が期待できる（らしい）。
+     * @param other
+     * @return
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     */
+    @Override
+    public int compareTo(ChannelPlayer other) {
+        return this.toString().compareTo(other.toString());
     }
 
     /**
