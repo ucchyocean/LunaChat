@@ -8,8 +8,8 @@ package com.github.ucchyocean.lc.command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.Channel;
-import com.github.ucchyocean.lc.Utility;
+import com.github.ucchyocean.lc.channel.Channel;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
 /**
  * banコマンドの実行クラス
@@ -113,13 +113,14 @@ public class BanCommand extends SubCommandAbst {
         }
 
         // BANされるプレイヤーがメンバーかどうかチェックする
-        if (!channel.getMembers().contains(kickedName)) {
+        ChannelPlayer kicked = ChannelPlayer.getChannelPlayer(kickedName);
+        if (!channel.getMembers().contains(kicked)) {
             sendResourceMessage(sender, PREERR, "errmsgNomemberOther");
             return true;
         }
 
         // 既にBANされているかどうかチェックする
-        if (channel.getBanned().contains(kickedName)) {
+        if (channel.getBanned().contains(kicked)) {
             sendResourceMessage(sender, PREERR, "errmsgAlreadyBanned");
             return true;
         }
@@ -139,14 +140,14 @@ public class BanCommand extends SubCommandAbst {
         }
 
         // BAN実行
-        Player kicked = Utility.getPlayerExact(kickedName);
-        channel.getBanned().add(kickedName);
+        channel.getBanned().add(kicked);
         if ( expireMinutes != -1 ) {
             long expire = System.currentTimeMillis() + expireMinutes * 60 * 1000;
-            channel.getBanExpires().put(kickedName, expire);
+            channel.getBanExpires().put(kicked, expire);
         }
-        channel.removeMember(kickedName);
+        channel.removeMember(kicked);
 
+        // senderに通知メッセージを出す
         if ( expireMinutes != -1 ) {
             sendResourceMessage(sender, PREINFO,
                     "cmdmsgBanWithExpire", kickedName, channel.getName(), expireMinutes);
@@ -154,7 +155,17 @@ public class BanCommand extends SubCommandAbst {
             sendResourceMessage(sender, PREINFO,
                     "cmdmsgBan", kickedName, channel.getName());
         }
-        if (kicked != null) {
+
+        // チャンネルに通知メッセージを出す
+        if ( expireMinutes != -1 ) {
+            sendResourceMessageWithKeyword(channel,
+                    "banWithExpireMessage", kicked, expireMinutes);
+        } else {
+            sendResourceMessageWithKeyword(channel, "banMessage", kicked);
+        }
+
+        // BANされた人に通知メッセージを出す
+        if ( kicked != null && kicked.isOnline() ) {
             sendResourceMessage(kicked, PREINFO,
                     "cmdmsgBanned", channel.getName());
         }

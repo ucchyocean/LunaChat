@@ -7,7 +7,7 @@ package com.github.ucchyocean.lc.event;
 
 import java.util.ArrayList;
 
-import org.bukkit.entity.Player;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
 /**
  * チャンネルチャットのメッセージイベント、
@@ -16,12 +16,12 @@ import org.bukkit.entity.Player;
  */
 public class LunaChatChannelMessageEvent extends LunaChatBaseEvent {
 
-    private Player player;
+    private ChannelPlayer player;
     private String message;
-    private ArrayList<Player> recipients;
-    
+    private ArrayList<ChannelPlayer> recipients;
+
     public LunaChatChannelMessageEvent(String channelName,
-            Player player, String message, ArrayList<Player> recipients) {
+            ChannelPlayer player, String message, ArrayList<ChannelPlayer> recipients) {
         super(channelName);
         this.player = player;
         this.message = message;
@@ -32,7 +32,7 @@ public class LunaChatChannelMessageEvent extends LunaChatBaseEvent {
      * 発言したプレイヤー、システムメッセージの場合はnullになることに注意
      * @return player 発言プレイヤー
      */
-    public Player getPlayer() {
+    public ChannelPlayer getPlayer() {
         return player;
     }
 
@@ -48,7 +48,7 @@ public class LunaChatChannelMessageEvent extends LunaChatBaseEvent {
      * メッセージを受信するプレイヤーリスト
      * @return recipients プレイヤーリスト
      */
-    public ArrayList<Player> getRecipients() {
+    public ArrayList<ChannelPlayer> getRecipients() {
         return recipients;
     }
 
@@ -64,7 +64,7 @@ public class LunaChatChannelMessageEvent extends LunaChatBaseEvent {
      * メッセージ受信者を上書き設定する
      * @param recipients メッセージ受信者
      */
-    public void setRecipients(ArrayList<Player> recipients) {
+    public void setRecipients(ArrayList<ChannelPlayer> recipients) {
         this.recipients = recipients;
     }
 }

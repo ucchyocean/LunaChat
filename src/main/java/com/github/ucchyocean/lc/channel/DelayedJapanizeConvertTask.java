@@ -3,7 +3,7 @@
  * @license    LGPLv3
  * @copyright  Copyright ucchy 2013
  */
-package com.github.ucchyocean.lc;
+package com.github.ucchyocean.lc.channel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +12,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.github.ucchyocean.lc.LunaChat;
+import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.event.LunaChatPostJapanizeEvent;
 import com.github.ucchyocean.lc.japanize.IMEConverter;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
@@ -28,7 +30,7 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
     private String org;
     private JapanizeType type;
     private Channel channel;
-    private Player player;
+    private ChannelPlayer player;
     private String format;
     private String lineFormat;
     private String result;
@@ -42,7 +44,7 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
      * @param japanizeFormat 変換後に発言するときの、発言フォーマット
      */
     public DelayedJapanizeConvertTask(String org, JapanizeType type, Channel channel,
-            Player player, String japanizeFormat, String lineFormat) {
+            ChannelPlayer player, String japanizeFormat, String lineFormat) {
         this.org = org;
         this.type = type;
         this.channel = channel;
@@ -66,12 +68,13 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
                 Bukkit.broadcastMessage(result);
 
                 // 設定に応じてdynmapへ送信する
-                if ( LunaChat.config.isSendBroadcastChannelChatToDynmap() &&
-                        LunaChat.dynmap != null ) {
-                    if ( player != null ) 
-                        LunaChat.dynmap.chat(player, result);
-                    else 
-                        LunaChat.dynmap.broadcast(result);
+                if ( LunaChat.getInstance().getLunaChatConfig().
+                        isSendBroadcastChannelChatToDynmap() &&
+                        LunaChat.getInstance().getDynmap() != null ) {
+                    if ( player != null && player.getPlayer() != null )
+                        LunaChat.getInstance().getDynmap().chat(player.getPlayer(), result);
+                    else
+                        LunaChat.getInstance().getDynmap().broadcast(result);
                 }
             }
         }
@@ -86,7 +89,7 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
         // 変換対象外のキーワード
         HashMap<String, String> keywordMap = new HashMap<String, String>();
         ArrayList<String> keywords = new ArrayList<String>();
-        if ( LunaChat.instance.getLunaChatConfig().isJapanizeIgnorePlayerName() ) {
+        if ( LunaChat.getInstance().getLunaChatConfig().isJapanizeIgnorePlayerName() ) {
             for ( Player player : Bukkit.getOnlinePlayers() ) {
                 keywords.add(player.getName());
             }
@@ -123,7 +126,7 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
         }
 
         // NGワードが含まれている場合は、マスクする
-        for ( String word : LunaChat.config.getNgword() ) {
+        for ( String word : LunaChat.getInstance().getLunaChatConfig().getNgword() ) {
             if ( japanized.contains(word) ) {
                 japanized = japanized.replace(
                         word, Utility.getAstariskString(word.length()));
@@ -147,7 +150,7 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
 
         return true;
     }
-    
+
     /**
      * Japanize変換の結果を返します。
      * @return 変換結果

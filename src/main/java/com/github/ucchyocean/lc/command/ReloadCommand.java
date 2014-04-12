@@ -16,7 +16,7 @@ public class ReloadCommand extends SubCommandAbst {
     private static final String COMMAND_NAME = "reload";
     private static final String PERMISSION_NODE = "lunachat-admin." + COMMAND_NAME;
     private static final String USAGE_KEY = "usageReload";
-    
+
     /**
      * コマンドを取得します。
      * @return コマンド
@@ -72,6 +72,7 @@ public class ReloadCommand extends SubCommandAbst {
             CommandSender sender, String label, String[] args) {
 
         api.reloadAllData();
+        config.reloadConfig();
         sendResourceMessage(sender, PREINFO, "cmdmsgReload");
         return true;
     }

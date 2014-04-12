@@ -9,6 +9,7 @@ import java.util.Collection;
 
 import org.bukkit.command.CommandSender;
 
+import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 
 /**
@@ -128,6 +129,13 @@ public interface LunaChatAPI {
      * @param doJapanize Japanize変換するかどうか
      */
     public void setPlayersJapanize(String playerName, boolean doJapanize);
+
+    /**
+     * プレイヤーのJapanize設定を返す
+     * @param playerName プレイヤー名
+     * @return Japanize設定
+     */
+    public boolean isPlayerJapanize(String playerName);
 
     /**
      * 指定された名前がチャンネル名として使用可能かどうかを判定する<br/>

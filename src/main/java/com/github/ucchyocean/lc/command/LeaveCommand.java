@@ -8,7 +8,8 @@ package com.github.ucchyocean.lc.command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.Channel;
+import com.github.ucchyocean.lc.channel.Channel;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
 /**
  * leaveコマンドの実行クラス
@@ -19,7 +20,7 @@ public class LeaveCommand extends SubCommandAbst {
     private static final String COMMAND_NAME = "leave";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
     private static final String USAGE_KEY = "usageLeave";
-    
+
     /**
      * コマンドを取得します。
      * @return コマンド
@@ -82,7 +83,7 @@ public class LeaveCommand extends SubCommandAbst {
 
         // 実行引数から退出するチャンネルを取得する
         // 指定が無いならデフォルトの発言先にする
-        Player player = (Player) sender;
+        ChannelPlayer player = ChannelPlayer.getChannelPlayer(sender);
         Channel def = api.getDefaultChannel(player.getName());
         String channelName = null;
         if ( def != null ) {
@@ -112,13 +113,13 @@ public class LeaveCommand extends SubCommandAbst {
         }
 
         // チャンネルのメンバーかどうかを確認する
-        if (!channel.getMembers().contains(player.getName())) {
+        if (!channel.getMembers().contains(player)) {
             sendResourceMessage(sender, PREERR, "errmsgNomember");
             return true;
         }
 
         // チャンネルから退出する
-        channel.removeMember(player.getName());
+        channel.removeMember(player);
         sendResourceMessage(sender, PREINFO, "cmdmsgLeave", channelName);
         return true;
     }

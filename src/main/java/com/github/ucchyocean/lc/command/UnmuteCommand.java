@@ -8,8 +8,8 @@ package com.github.ucchyocean.lc.command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.Channel;
-import com.github.ucchyocean.lc.Utility;
+import com.github.ucchyocean.lc.channel.Channel;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
 /**
  * unmuteコマンドの実行クラス
@@ -105,19 +105,28 @@ public class UnmuteCommand extends SubCommandAbst {
         }
 
         // Mute解除されるプレイヤーがMuteされているかどうかチェックする
-        if (!channel.getMuted().contains(kickedName)) {
+        ChannelPlayer kicked = ChannelPlayer.getChannelPlayer(kickedName);
+        if (!channel.getMuted().contains(kicked)) {
             sendResourceMessage(sender, PREERR, "errmsgNotMuted");
             return true;
         }
 
         // Mute解除実行
-        Player kicked = Utility.getPlayerExact(kickedName);
-        channel.getMuted().remove(kickedName);
+        channel.getMuted().remove(kicked);
+        if ( channel.getMuteExpires().containsKey(kicked) ) {
+            channel.getMuteExpires().remove(kicked);
+        }
         channel.save();
 
+        // senderに通知メッセージを出す
         sendResourceMessage(sender, PREINFO,
                 "cmdmsgUnmute", kickedName, channel.getName());
-        if (kicked != null) {
+
+        // チャンネルに通知メッセージを出す
+        sendResourceMessageWithKeyword(channel, "unmuteMessage", kicked);
+
+        // BANされていた人に通知メッセージを出す
+        if ( kicked != null && kicked.isOnline() ) {
             sendResourceMessage(kicked, PREINFO,
                     "cmdmsgUnmuted", channel.getName());
         }

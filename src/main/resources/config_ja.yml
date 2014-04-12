@@ -44,6 +44,11 @@ forceJoinChannels: []
 # formatコマンド実行時に、必ず含まれる必要があるキーワード。
 formatConstraint: ['%username', '%msg']
 
+# チャンネルを作成したときに、デフォルトで設定されるフォーマット
+defaultFormat: '&f[%color%ch&f]%prefix%username%suffix&a:&f %msg'
+
+# プライベートメッセージを送信するときに、適用されるフォーマット
+defaultFormatForPrivateMessage: '&7[%player > %to] %msg'
 
 
 # -------------------- dynmap連携設定 --------------------

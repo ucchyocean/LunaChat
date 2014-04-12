@@ -8,7 +8,8 @@ package com.github.ucchyocean.lc.command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.Channel;
+import com.github.ucchyocean.lc.channel.Channel;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
 /**
  * unhideコマンドの実行クラス
@@ -19,7 +20,7 @@ public class UnhideCommand extends SubCommandAbst {
     private static final String COMMAND_NAME = "unhide";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
     private static final String USAGE_KEY = "usageUnhide";
-    
+
     /**
      * コマンドを取得します。
      * @return コマンド
@@ -79,7 +80,7 @@ public class UnhideCommand extends SubCommandAbst {
             sendResourceMessage(sender, PREERR, "errmsgIngame");
             return true;
         }
-        Player player = (Player)sender;
+        ChannelPlayer player = ChannelPlayer.getChannelPlayer(sender);
 
         // 引数チェック
         String cname = null;
@@ -103,13 +104,13 @@ public class UnhideCommand extends SubCommandAbst {
 
         // 非表示になっているかどうかをチェックする
         Channel channel = api.getChannel(cname);
-        if ( !channel.getHided().contains(player.getName()) ) {
+        if ( !channel.getHided().contains(player) ) {
             sendResourceMessage(sender, PREERR, "errmsgAlreadyUnhided");
             return true;
         }
-        
+
         // 設定する
-        channel.getHided().remove(player.getName());
+        channel.getHided().remove(player);
         channel.save();
         sendResourceMessage(sender, PREINFO, "cmdmsgUnhided", channel.getName());
 

@@ -15,7 +15,7 @@ public class ModCommand extends ModeratorCommand {
 
     private static final String COMMAND_NAME = "mod";
     private static final String USAGE_KEY = "usageMod";
-    
+
     /**
      * コマンドを取得します。
      * @return コマンド

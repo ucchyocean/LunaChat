@@ -8,7 +8,7 @@ package com.github.ucchyocean.lc.command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.Channel;
+import com.github.ucchyocean.lc.channel.Channel;
 
 /**
  * removeコマンドの実行クラス
@@ -19,7 +19,7 @@ public class RemoveCommand extends SubCommandAbst {
     private static final String COMMAND_NAME = "remove";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
     private static final String USAGE_KEY = "usageRemove";
-    
+
     /**
      * コマンドを取得します。
      * @return コマンド

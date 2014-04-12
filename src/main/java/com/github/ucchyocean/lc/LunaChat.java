@@ -13,10 +13,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
 
 import com.github.ucchyocean.lc.bridge.DynmapBridge;
 import com.github.ucchyocean.lc.bridge.VaultChatBridge;
+import com.github.ucchyocean.lc.channel.Channel;
+import com.github.ucchyocean.lc.channel.ChannelManager;
 import com.github.ucchyocean.lc.command.LunaChatCommand;
 import com.github.ucchyocean.lc.command.LunaChatJapanizeCommand;
 import com.github.ucchyocean.lc.command.LunaChatMessageCommand;
@@ -28,15 +29,16 @@ import com.github.ucchyocean.lc.command.LunaChatReplyCommand;
  */
 public class LunaChat extends JavaPlugin {
 
-    public static LunaChat instance;
-    protected static LunaChatConfig config;
-    protected static ChannelManager manager;
+    private static LunaChat instance;
 
-    protected static VaultChatBridge vaultchat;
-    protected static DynmapBridge dynmap;
-    
-    private static BukkitTask expireCheckerTask;
-    
+    private LunaChatConfig config;
+    private ChannelManager manager;
+
+    private VaultChatBridge vaultchat;
+    private DynmapBridge dynmap;
+
+    private ExpireCheckTask expireCheckerTask;
+
     private LunaChatCommand lunachatCommand;
     private LunaChatMessageCommand messageCommand;
     private LunaChatReplyCommand replyCommand;
@@ -51,8 +53,8 @@ public class LunaChat extends JavaPlugin {
 
         // 変数などの初期化
         instance = this;
-        manager = new ChannelManager();
         config = new LunaChatConfig();
+        manager = new ChannelManager();
 
         // Chat Plugin のロード
         Plugin temp = getServer().getPluginManager().getPlugin("Vault");
@@ -80,11 +82,10 @@ public class LunaChat extends JavaPlugin {
 
         // シリアル化可能オブジェクトの登録
         ConfigurationSerialization.registerClass(Channel.class, "Channel");
-        
+
         // 期限チェッカータスクの起動
-        expireCheckerTask =
-                getServer().getScheduler().runTaskTimer(
-                        this, new ExpireCheckTask(), 100, 1200);
+        expireCheckerTask = new ExpireCheckTask();
+        expireCheckerTask.runTaskTimer(this, 100, 1200);
     }
 
     /**
@@ -93,10 +94,10 @@ public class LunaChat extends JavaPlugin {
      */
     @Override
     public void onDisable() {
-        
+
         // 期限チェッカータスクの停止
         if ( expireCheckerTask != null ) {
-            getServer().getScheduler().cancelTask(expireCheckerTask.getTaskId());
+            expireCheckerTask.cancel();
         }
     }
 
@@ -107,7 +108,7 @@ public class LunaChat extends JavaPlugin {
     @Override
     public boolean onCommand(
             CommandSender sender, Command command, String label, String[] args) {
-        
+
         if ( command.getName().equals("lunachat") ) {
             return lunachatCommand.onCommand(sender, command, label, args);
         } else if ( command.getName().equals("tell") ) {
@@ -117,10 +118,10 @@ public class LunaChat extends JavaPlugin {
         } else if ( command.getName().equals("lcjapanize") ) {
             return lcjapanizeCommand.onCommand(sender, command, label, args);
         }
-        
+
         return false;
     }
-    
+
     /**
      * TABキー補完が実行されたときに呼び出されるメソッド
      * @see org.bukkit.plugin.java.JavaPlugin#onTabComplete(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
@@ -140,8 +141,16 @@ public class LunaChat extends JavaPlugin {
     }
 
     /**
+     * LunaChatのインスタンスを返す
+     * @return LunaChat
+     */
+    public static LunaChat getInstance() {
+        return instance;
+    }
+
+    /**
      * このプラグインのJarファイル自身を示すFileクラスを返す。
-     * @return
+     * @return Jarファイル
      */
     protected static File getPluginJarFile() {
         return instance.getFile();
@@ -161,5 +170,28 @@ public class LunaChat extends JavaPlugin {
      */
     public LunaChatConfig getLunaChatConfig() {
         return config;
+    }
+
+    /**
+     * VaultChat連携クラスを返す
+     * @return VaultChatBridge
+     */
+    public VaultChatBridge getVaultChat() {
+        return vaultchat;
+    }
+
+    /**
+     * Dynmap連携クラスを返す
+     * @return DynmapBridge
+     */
+    public DynmapBridge getDynmap() {
+        return dynmap;
+    }
+
+    /**
+     * 全てのデフォルトチャンネル設定を削除する
+     */
+    protected void removeAllDefaultChannels() {
+        manager.removeAllDefaultChannels();
     }
 }

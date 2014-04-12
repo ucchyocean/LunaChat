@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.Resources;
-import com.github.ucchyocean.lc.Utility;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
 /**
  * Japanize変換設定コマンド
@@ -46,7 +46,7 @@ public class LunaChatJapanizeCommand implements CommandExecutor {
 
             // Japanize設定をon/offにする
             boolean value = args[0].equalsIgnoreCase("on");
-            LunaChatAPI api = LunaChat.instance.getLunaChatAPI();
+            LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
             api.setPlayersJapanize(player.getName(), value);
 
             sendResourceMessage(sender, PREINFO,
@@ -65,8 +65,8 @@ public class LunaChatJapanizeCommand implements CommandExecutor {
             }
 
             // 指定されたプレイヤーが存在するかチェック
-            Player target = Utility.getPlayerExact(args[0]);
-            if ( target == null ) {
+            ChannelPlayer target = ChannelPlayer.getChannelPlayer(args[0]);
+            if ( target == null || !target.isOnline() ) {
                 sendResourceMessage(sender, PREERR,
                         "errmsgNotfoundPlayer", args[0]);
                 return true;
@@ -74,7 +74,7 @@ public class LunaChatJapanizeCommand implements CommandExecutor {
 
             // Japanize設定をon/offにする
             boolean value = args[1].equalsIgnoreCase("on");
-            LunaChatAPI api = LunaChat.instance.getLunaChatAPI();
+            LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
             api.setPlayersJapanize(target.getName(), value);
 
             sendResourceMessage(target, PREINFO,
@@ -91,7 +91,6 @@ public class LunaChatJapanizeCommand implements CommandExecutor {
 
     /**
      * コマンドの使い方を senderに送る
-     *
      * @param sender
      * @param label
      */
@@ -104,7 +103,6 @@ public class LunaChatJapanizeCommand implements CommandExecutor {
 
     /**
      * メッセージリソースのメッセージを、カラーコード置き換えしつつ、senderに送信する
-     *
      * @param sender メッセージの送り先
      * @param pre プレフィックス
      * @param key リソースキー
@@ -114,5 +112,18 @@ public class LunaChatJapanizeCommand implements CommandExecutor {
             String key, Object... args) {
         String msg = String.format(pre + Resources.get(key), args);
         sender.sendMessage(msg);
+    }
+
+    /**
+     * メッセージリソースのメッセージを、カラーコード置き換えしつつ、senderに送信する
+     * @param cp メッセージの送り先
+     * @param pre プレフィックス
+     * @param key リソースキー
+     * @param args リソース内の置き換え対象キーワード
+     */
+    protected void sendResourceMessage(ChannelPlayer cp, String pre,
+            String key, Object... args) {
+        String msg = String.format(pre + Resources.get(key), args);
+        cp.sendMessage(msg);
     }
 }

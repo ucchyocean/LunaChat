@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.Channel;
+import com.github.ucchyocean.lc.channel.Channel;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
 /**
  * moderatorコマンドの実行クラス
@@ -21,7 +22,7 @@ public class ModeratorCommand extends SubCommandAbst {
     private static final String COMMAND_NAME = "moderator";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
     private static final String USAGE_KEY = "usageModerator";
-    
+
     /**
      * コマンドを取得します。
      * @return コマンド
@@ -127,17 +128,18 @@ public class ModeratorCommand extends SubCommandAbst {
         for ( String mod : moderator ) {
             if ( mod.startsWith("-") ) {
                 String name = mod.substring(1);
-                channel.getModerator().remove(name);
+                ChannelPlayer cp = ChannelPlayer.getChannelPlayer(name);
+                channel.removeModerator(cp);
                 sendResourceMessage(sender, PREINFO,
                         "cmdmsgModeratorMinus", name, cname);
             } else {
-                channel.getModerator().add(mod);
+                ChannelPlayer cp = ChannelPlayer.getChannelPlayer(mod);
+                channel.addModerator(cp);
                 sendResourceMessage(sender, PREINFO,
                         "cmdmsgModerator", mod, cname);
             }
         }
 
-        channel.save();
         return true;
     }
 }

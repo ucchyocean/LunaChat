@@ -135,6 +135,8 @@ public class KanaConverter {
                     } else if ( tmp.equals("]") ) {
                         line.append(last + "」");
                         last = "";
+                    } else if ( tmp.equals("(") || tmp.equals(")") ) {
+                        last = "";
                     } else {
                         line.append(last + tmp);
                         last = "";

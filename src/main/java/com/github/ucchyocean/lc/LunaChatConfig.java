@@ -21,7 +21,7 @@ public class LunaChatConfig {
 
     /** チャンネルチャット機能を利用可能にするかどうか */
     private boolean enableChannelChat;
-    
+
     /** チャンネルチャットに入っていない人の発言を、グローバルとして扱うかどうか */
     private boolean noJoinAsGlobal;
 
@@ -51,17 +51,23 @@ public class LunaChatConfig {
     /** サーバーに参加したユーザーに必ず参加させるチャンネル。<br/>
      *  グローバルチャンネルとは別で指定できる。 */
     private List<String> forceJoinChannels;
-    
+
     /** formatコマンド実行時に、必ず含まれる必要があるキーワード。 */
     private List<String> formatConstraint;
+
+    /** チャンネルを作成したときに、デフォルトで設定されるフォーマット */
+    private String defaultFormat;
+
+    /** プライベートメッセージを送信するときに、適用されるフォーマット */
+    private String defaultFormatForPrivateMessage;
 
     /** ブロードキャストチャンネルの発言内容を、dynmapに送信するかどうか。<br/>
      *  dynmapがロードされていない場合は、この設定は無視される（false扱い）。 */
     private boolean sendBroadcastChannelChatToDynmap;
-    
+
     /** dynmapへ送信するときに、チャンネルのフォーマットを反映して送信するかどうか。*/
     private boolean sendFormattedMessageToDynmap;
-    
+
     /** dynmapのWebUIから発言された発言内容を表示するチャンネル。 */
     private String dynmapChannel;
 
@@ -97,13 +103,13 @@ public class LunaChatConfig {
 
     /** Japanize変換の2行表示時の2行目のフォーマット */
     private String japanizeLine2Format;
-    
+
     /** 発言に含まれているプレイヤー名を、Japanize変換から除外するかどうか */
     private boolean japanizeIgnorePlayerName;
-    
+
     /** ノンジャパナイズマーカー これが発言の頭に入っている場合は、一時的にjapanizeを実行しない */
     private String noneJapanizeMarker;
-    
+
     /** 通常チャットで、JapanizeDisplayLine=2のとき、Japanize変換したあと表示するまでのウェイト(tick)
      *  隠し設定。 */
     private int japanizeWait;
@@ -120,15 +126,16 @@ public class LunaChatConfig {
      */
     public void reloadConfig() {
 
-        File configFile = new File(LunaChat.instance.getDataFolder(), "config.yml");
+        File configFile = new File(
+                LunaChat.getInstance().getDataFolder(), "config.yml");
         if ( !configFile.exists() ) {
             //LunaChat.instance.saveDefaultConfig();
-            Utility.copyFileFromJar(LunaChat.getPluginJarFile(), 
+            Utility.copyFileFromJar(LunaChat.getPluginJarFile(),
                     configFile, "config_ja.yml", false);
         }
 
-        LunaChat.instance.reloadConfig();
-        FileConfiguration config = LunaChat.instance.getConfig();
+        LunaChat.getInstance().reloadConfig();
+        FileConfiguration config = LunaChat.getInstance().getConfig();
 
         enableChannelChat = config.getBoolean("enableChannelChat", true);
         noJoinAsGlobal = config.getBoolean("noJoinAsGlobal", true);
@@ -139,7 +146,7 @@ public class LunaChatConfig {
         showListOnJoin = config.getBoolean("showListOnJoin", false);
         createChannelOnJoinCommand =
             config.getBoolean("createChannelOnJoinCommand", true);
-        
+
         // チャンネルチャット有効のときだけ、globalChannel設定を読み込む
         // (see issue #58)
         if ( enableChannelChat ) {
@@ -154,7 +161,7 @@ public class LunaChatConfig {
         } else {
             forceJoinChannels = new ArrayList<String>();
         }
-        
+
         if ( config.contains("formatConstraint") ) {
             formatConstraint = config.getStringList("formatConstraint");
         } else {
@@ -163,19 +170,25 @@ public class LunaChatConfig {
             formatConstraint.add("%msg");
         }
 
+        defaultFormat = config.getString("defaultFormat",
+                "&f[%color%ch&f]%prefix%username%suffix&a:&f %msg");
+        defaultFormatForPrivateMessage =
+                config.getString("defaultFormatForPrivateMessage",
+                "&7[%player > %to] %msg");
+
         sendBroadcastChannelChatToDynmap =
             config.getBoolean("sendBroadcastChannelChatToDynmap", true);
-        sendFormattedMessageToDynmap = 
+        sendFormattedMessageToDynmap =
             config.getBoolean("sendFormattedMessageToDynmap", false);
         dynmapChannel = config.getString("dynmapChannel", "");
         ngword = config.getStringList("ngword");
         ngwordAction = NGWordAction.fromID(config.getString("ngwordAction", "mask"));
-        
-        enableNormalChatMessageFormat = 
+
+        enableNormalChatMessageFormat =
                 config.getBoolean("enableNormalChatMessageFormat", true);
-        normalChatMessageFormat = 
+        normalChatMessageFormat =
                 config.getString("normalChatMessageFormat", "&f<%prefix%username%suffix&f> %msg");
-        
+
         japanizeType = JapanizeType.fromID(config.getString("japanizeType", "kana"));
         japanizeDisplayLine = config.getInt("japanizeDisplayLine", 2);
         if ( japanizeDisplayLine != 1 && japanizeDisplayLine != 2 ) {
@@ -188,27 +201,28 @@ public class LunaChatConfig {
         japanizeWait = config.getInt("japanizeWait", 1);
 
         // globalチャンネルが、使用可能なチャンネル名かどうかを調べる
-        if ( !globalChannel.equals("") && !LunaChat.manager.checkForChannelName(globalChannel) ) {
+        if ( !globalChannel.equals("") &&
+                !LunaChat.getInstance().getLunaChatAPI().checkForChannelName(globalChannel) ) {
             String msg = String.format(
                     Resources.get("errmsgCannotUseForGlobal"), globalChannel);
-            LunaChat.instance.getLogger().warning(msg);
+            LunaChat.getInstance().getLogger().warning(msg);
             globalChannel = "";
         }
 
         // チャンネルチャット無効なら、デフォルト発言先をクリアする(see issue #59)
         if ( !enableChannelChat ) {
-            LunaChat.manager.removeAllDefaultChannels();
+            LunaChat.getInstance().removeAllDefaultChannels();
         }
     }
 
-    /** 
+    /**
      * チャンネルチャット機能を利用可能にするかどうか
      * @return enableChannelChatを返す
      */
     public boolean isEnableChannelChat() {
         return enableChannelChat;
     }
-    
+
     /**
      * チャンネルチャットに入っていない人の発言を、グローバルとして扱うかどうか
      * @return noJoinAsGlobalを返す
@@ -282,13 +296,29 @@ public class LunaChatConfig {
     public List<String> getForceJoinChannels() {
         return forceJoinChannels;
     }
-    
+
     /**
      * formatコマンド実行時に、必ず含まれる必要があるキーワード。
      * @return formatConstraintを返す
      */
     public List<String> getFormatConstraint() {
         return formatConstraint;
+    }
+
+    /**
+     * チャンネルを作成したときに、デフォルトで設定されるフォーマット。
+     * @return defaultFormatを返す
+     */
+    public String getDefaultFormat() {
+        return defaultFormat;
+    }
+
+    /**
+     * プライベートメッセージを送信するときに、適用されるフォーマット。
+     * @return defaultFormatForPrivateMessageを返す
+     */
+    public String getDefaultFormatForPrivateMessage() {
+        return defaultFormatForPrivateMessage;
     }
 
     /**
@@ -404,7 +434,7 @@ public class LunaChatConfig {
     public String getNoneJapanizeMarker() {
         return noneJapanizeMarker;
     }
-    
+
     /**
      * 通常チャットで、JapanizeDisplayLine=2のとき、Japanize変換したあと表示するまでのウェイト(tick)
      * @return japanizeWaitを返す

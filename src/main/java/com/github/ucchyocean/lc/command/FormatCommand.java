@@ -10,7 +10,7 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.Channel;
+import com.github.ucchyocean.lc.channel.Channel;
 
 /**
  * formatコマンドの実行クラス
@@ -21,7 +21,7 @@ public class FormatCommand extends SubCommandAbst {
     private static final String COMMAND_NAME = "format";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
     private static final String USAGE_KEY = "usageFormat";
-    
+
     /**
      * コマンドを取得します。
      * @return コマンド
@@ -116,7 +116,7 @@ public class FormatCommand extends SubCommandAbst {
             sendResourceMessage(sender, PREERR, "errmsgNotModerator");
             return true;
         }
-        
+
         // 制約キーワードを確認する
         List<String> constraints = config.getFormatConstraint();
         String tempFormat = new String(format);

@@ -8,8 +8,8 @@ package com.github.ucchyocean.lc.command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.Channel;
-import com.github.ucchyocean.lc.Utility;
+import com.github.ucchyocean.lc.channel.Channel;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
 /**
  * muteコマンドの実行クラス
@@ -107,13 +107,14 @@ public class MuteCommand extends SubCommandAbst {
         }
 
         // Muteされるプレイヤーがメンバーかどうかチェックする
-        if (!channel.getMembers().contains(kickedName)) {
+        ChannelPlayer kicked = ChannelPlayer.getChannelPlayer(kickedName);
+        if (!channel.getMembers().contains(kicked)) {
             sendResourceMessage(sender, PREERR, "errmsgNomemberOther");
             return true;
         }
 
         // 既にMuteされているかどうかチェックする
-        if (channel.getMuted().contains(kickedName)) {
+        if (channel.getMuted().contains(kicked)) {
             sendResourceMessage(sender, PREERR, "errmsgAlreadyMuted");
             return true;
         }
@@ -133,14 +134,14 @@ public class MuteCommand extends SubCommandAbst {
         }
 
         // Mute実行
-        Player kicked = Utility.getPlayerExact(kickedName);
-        channel.getMuted().add(kickedName);
+        channel.getMuted().add(kicked);
         if ( expireMinutes != -1 ) {
             long expire = System.currentTimeMillis() + expireMinutes * 60 * 1000;
-            channel.getMuteExpires().put(kickedName, expire);
+            channel.getMuteExpires().put(kicked, expire);
         }
         channel.save();
 
+        // senderに通知メッセージを出す
         if ( expireMinutes != -1 ) {
             sendResourceMessage(sender, PREINFO,
                     "cmdmsgMuteWithExpire", kickedName, channel.getName(), expireMinutes);
@@ -148,7 +149,17 @@ public class MuteCommand extends SubCommandAbst {
             sendResourceMessage(sender, PREINFO,
                     "cmdmsgMute", kickedName, channel.getName());
         }
-        if (kicked != null) {
+
+        // チャンネルに通知メッセージを出す
+        if ( expireMinutes != -1 ) {
+            sendResourceMessageWithKeyword(channel,
+                    "muteWithExpireMessage", kicked, expireMinutes);
+        } else {
+            sendResourceMessageWithKeyword(channel, "muteMessage", kicked);
+        }
+
+        // BANされた人に通知メッセージを出す
+        if ( kicked != null ) {
             sendResourceMessage(kicked, PREINFO,
                     "cmdmsgMuted", channel.getName());
         }

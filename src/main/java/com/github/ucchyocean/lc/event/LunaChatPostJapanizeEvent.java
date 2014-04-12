@@ -5,7 +5,7 @@
  */
 package com.github.ucchyocean.lc.event;
 
-import org.bukkit.entity.Player;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
 /**
  * Japanize変換が行われた後に呼び出されるイベント
@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
  */
 public class LunaChatPostJapanizeEvent extends LunaChatBaseCancellableEvent {
 
-    private Player player;
+    private ChannelPlayer player;
     private String original;
     private String japanized;
 
@@ -24,7 +24,7 @@ public class LunaChatPostJapanizeEvent extends LunaChatBaseCancellableEvent {
      * @param original 変換前の文字列
      * @param japanized 変換後の文字列
      */
-    public LunaChatPostJapanizeEvent(String channelName, Player player,
+    public LunaChatPostJapanizeEvent(String channelName, ChannelPlayer player,
             String original, String japanized) {
         super(channelName);
         this.player = player;
@@ -36,10 +36,10 @@ public class LunaChatPostJapanizeEvent extends LunaChatBaseCancellableEvent {
      * 発言を行ったプレイヤーを取得します。
      * @return 発言したプレイヤー
      */
-    public Player getPlayer() {
+    public ChannelPlayer getPlayer() {
         return player;
     }
-    
+
     /**
      * Japanize変換後の文字列を返す
      * @return 変換後の文字列

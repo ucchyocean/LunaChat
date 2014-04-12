@@ -32,7 +32,7 @@ public class Resources {
     protected static void initialize() {
 
         File file = new File(
-                LunaChat.instance.getDataFolder() +
+                LunaChat.getInstance().getDataFolder() +
                 File.separator + FILE_NAME);
 
         if ( !file.exists() ) {

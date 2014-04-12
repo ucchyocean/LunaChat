@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.Channel;
+import com.github.ucchyocean.lc.channel.Channel;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
 /**
  * infoコマンドの実行クラス
@@ -21,7 +22,7 @@ public class InfoCommand extends SubCommandAbst {
     private static final String COMMAND_NAME = "info";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
     private static final String USAGE_KEY = "usageInfo";
-    
+
     /**
      * コマンドを取得します。
      * @return コマンド
@@ -104,11 +105,12 @@ public class InfoCommand extends SubCommandAbst {
         }
 
         // BANされていないかどうか確認する
-        if ( player != null && channel.getBanned().contains(player.getName()) ) {
+        ChannelPlayer cp = ChannelPlayer.getChannelPlayer(player);
+        if ( player != null && channel.getBanned().contains(cp) ) {
             sendResourceMessage(sender, PREERR, "errmsgBanned");
             return true;
         }
-        
+
         // チャンネルモデレーターかどうか確認する
         boolean isModerator = channel.hasModeratorPermission(sender);
 

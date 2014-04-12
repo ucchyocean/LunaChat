@@ -8,7 +8,8 @@ package com.github.ucchyocean.lc.command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.Channel;
+import com.github.ucchyocean.lc.channel.Channel;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
 /**
  * hideコマンドの実行クラス
@@ -19,7 +20,7 @@ public class HideCommand extends SubCommandAbst {
     private static final String COMMAND_NAME = "hide";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
     private static final String USAGE_KEY = "usageHide";
-    
+
     /**
      * コマンドを取得します。
      * @return コマンド
@@ -103,19 +104,20 @@ public class HideCommand extends SubCommandAbst {
 
         // 既に非表示になっていないかどうかをチェックする
         Channel channel = api.getChannel(cname);
-        if ( channel.getHided().contains(player.getName()) ) {
+        ChannelPlayer cp = ChannelPlayer.getChannelPlayer(player);
+        if ( channel.getHided().contains(cp) ) {
             sendResourceMessage(sender, PREERR, "errmsgAlreadyHided");
             return true;
         }
 
         // メンバーかどうかをチェックする
-        if ( !channel.getMembers().contains(player.getName()) ) {
+        if ( !channel.getMembers().contains(cp) ) {
             sendResourceMessage(sender, PREERR, "errmsgNomember");
             return true;
         }
-        
+
         // 設定する
-        channel.getHided().add(player.getName());
+        channel.getHided().add(cp);
         channel.save();
         sendResourceMessage(sender, PREINFO, "cmdmsgHided", channel.getName());
 

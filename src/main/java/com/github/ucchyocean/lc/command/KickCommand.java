@@ -8,8 +8,8 @@ package com.github.ucchyocean.lc.command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.Channel;
-import com.github.ucchyocean.lc.Utility;
+import com.github.ucchyocean.lc.channel.Channel;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
 /**
  * kickコマンドの実行クラス
@@ -106,24 +106,31 @@ public class KickCommand extends SubCommandAbst {
 
         // グローバルチャンネルならキックできない
         if ( channel.isGlobalChannel() ) {
-            sendResourceMessage(sender, PREERR, "errmsgCannotKickGlobal", channel.getName());
+            sendResourceMessage(sender, PREERR,
+                    "errmsgCannotKickGlobal", channel.getName());
             return true;
         }
 
         // キックされるプレイヤーがメンバーかどうかチェックする
-        if (!channel.getMembers().contains(kickedName)) {
+        ChannelPlayer kicked = ChannelPlayer.getChannelPlayer(kickedName);
+        if (!channel.getMembers().contains(kicked)) {
             sendResourceMessage(sender, PREERR, "errmsgNomemberOther");
             return true;
         }
 
         // キック実行
-        channel.removeMember(kickedName);
+        channel.removeMember(kicked);
         channel.save();
+
+        // senderに通知メッセージを出す
         sendResourceMessage(sender, PREINFO,
                 "cmdmsgKick", kickedName, channel.getName());
 
-        Player kicked = Utility.getPlayerExact(kickedName);
-        if (kicked != null) {
+        // チャンネルに通知メッセージを出す
+        sendResourceMessageWithKeyword(channel, "kickMessage", kicked);
+
+        // キックされた人に通知メッセージを出す
+        if ( kicked != null && kicked.isOnline() ) {
             sendResourceMessage(kicked, PREINFO,
                     "cmdmsgKicked", channel.getName());
         }
