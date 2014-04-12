@@ -23,6 +23,7 @@ import org.bukkit.entity.Player;
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.LunaChatConfig;
+import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.event.LunaChatChannelMemberChangedEvent;
 
 /**
@@ -567,6 +568,30 @@ public abstract class Channel implements ConfigurationSerializable {
     }
 
     /**
+     * チャンネルの設定ファイルが、UUID化のために一旦保存が必要かどうかを返す
+     * @param data チャンネルの実コンフィグデータ
+     */
+    private static boolean isNeedToSaveForUUIDUpdate(Map<String, Object> data) {
+
+        if ( !Utility.isCB178orLater() ) {
+            return false;
+        }
+
+        List<String> members = castToStringList(data.get(KEY_MEMBERS));
+        if ( members.size() == 0 ) {
+            return false;
+        }
+
+        for ( String member : members ) {
+            if ( member.startsWith("$") ) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * チャンネルの説明文を返す
      * @return チャンネルの説明文
      */
@@ -863,6 +888,12 @@ public abstract class Channel implements ConfigurationSerializable {
                 data.put(key, config.get(key));
             }
             Channel channel = deserialize(data);
+
+            // 自動アップデート
+            if ( isNeedToSaveForUUIDUpdate(data) ) {
+                channel.save();
+            }
+
             result.put(channel.name.toLowerCase(), channel);
         }
 

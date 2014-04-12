@@ -17,6 +17,7 @@ import java.io.OutputStreamWriter;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 /**
@@ -180,5 +181,43 @@ public class Utility {
             return false;
         }
         return code.matches("&[0-9a-f]");
+    }
+
+    /**
+     * 現在動作中のCraftBukkitが、v1.7.8 以上かどうかを確認する
+     * @return v1.7.8以上ならtrue、そうでないならfalse
+     */
+    public static boolean isCB178orLater() {
+
+        int[] borderNumbers = {1, 7, 8};
+
+        String version = Bukkit.getBukkitVersion();
+        int hyphen = version.indexOf("-");
+        if ( hyphen > 0 ) {
+            version = version.substring(0, hyphen);
+        }
+
+        String[] versionArray = version.split("\\.");
+        int[] versionNumbers = new int[versionArray.length];
+        for ( int i=0; i<versionArray.length; i++ ) {
+            if ( !versionArray[i].matches("[0-9]+") )
+                return false;
+            versionNumbers[i] = Integer.parseInt(versionArray[i]);
+        }
+
+        int index = 0;
+        while ( (versionNumbers.length > index) && (borderNumbers.length > index) ) {
+            if ( versionNumbers[index] > borderNumbers[index] ) {
+                return true;
+            } else if ( versionNumbers[index] < borderNumbers[index] ) {
+                return false;
+            }
+            index++;
+        }
+        if ( borderNumbers.length == index ) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

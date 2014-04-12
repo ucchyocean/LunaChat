@@ -5,9 +5,10 @@
  */
 package com.github.ucchyocean.lc.channel;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import com.github.ucchyocean.lc.Utility;
 
 /**
  * プレイヤーの抽象クラス
@@ -106,7 +107,7 @@ public abstract class ChannelPlayer implements Comparable<ChannelPlayer> {
             String id = nameOrUuid.substring(1);
             return new ChannelPlayerUUID(id);
         }
-        if ( isCB175orLater() ) {
+        if ( Utility.isCB178orLater() ) {
             ChannelPlayer player =
                     ChannelPlayerUUID.getChannelPlayerUUIDFromName(nameOrUuid);
             if ( player != null ) {
@@ -125,47 +126,9 @@ public abstract class ChannelPlayer implements Comparable<ChannelPlayer> {
         if ( sender == null ) {
             return null;
         }
-        if ( isCB175orLater() ) {
+        if ( Utility.isCB178orLater() ) {
             return ChannelPlayerUUID.getChannelPlayer(sender);
         }
         return new ChannelPlayerName(sender.getName());
-    }
-
-    /**
-     * 現在動作中のCraftBukkitが、v1.7.5 以上かどうかを確認する
-     * @return v1.7.5以上ならtrue、そうでないならfalse
-     */
-    private static boolean isCB175orLater() {
-
-        int[] borderNumbers = {1, 7, 5};
-
-        String version = Bukkit.getBukkitVersion();
-        int hyphen = version.indexOf("-");
-        if ( hyphen > 0 ) {
-            version = version.substring(0, hyphen);
-        }
-
-        String[] versionArray = version.split("\\.");
-        int[] versionNumbers = new int[versionArray.length];
-        for ( int i=0; i<versionArray.length; i++ ) {
-            if ( !versionArray[i].matches("[0-9]+") )
-                return false;
-            versionNumbers[i] = Integer.parseInt(versionArray[i]);
-        }
-
-        int index = 0;
-        while ( (versionNumbers.length > index) && (borderNumbers.length > index) ) {
-            if ( versionNumbers[index] > borderNumbers[index] ) {
-                return true;
-            } else if ( versionNumbers[index] < borderNumbers[index] ) {
-                return false;
-            }
-            index++;
-        }
-        if ( borderNumbers.length == index ) {
-            return true;
-        } else {
-            return false;
-        }
     }
 }
