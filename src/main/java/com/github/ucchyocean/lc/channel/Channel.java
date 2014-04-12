@@ -202,7 +202,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /**
      * メンバーを追加する
-     * @param name 追加するメンバー名
+     * @param name 追加するプレイヤー
      */
     public void addMember(ChannelPlayer player) {
 
@@ -228,13 +228,15 @@ public abstract class Channel implements ConfigurationSerializable {
             moderator.add(player);
         }
         members = after;
-        sendJoinQuitMessage(true, player);
+
+        sendSystemMessage("joinMessage", player);
+
         save();
     }
 
     /**
      * メンバーを削除する
-     * @param name 削除するメンバー名
+     * @param name 削除するプレイヤー
      */
     public void removeMember(ChannelPlayer player) {
 
@@ -265,7 +267,8 @@ public abstract class Channel implements ConfigurationSerializable {
 
         // 実際にメンバーから削除する
         members.remove(player);
-        sendJoinQuitMessage(false, player);
+
+        sendSystemMessage("quitMessage", player);
 
         // 0人で削除する設定がオンで、0人になったなら、チャンネルを削除する
         LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
@@ -288,11 +291,51 @@ public abstract class Channel implements ConfigurationSerializable {
     }
 
     /**
-     * 入退室メッセージを流す
-     * @param isJoin 入室かどうか（falseなら退室）
-     * @param player 入退室したプレイヤー
+     * モデレータを追加する
+     * @param player 追加するプレイヤー
      */
-    protected abstract void sendJoinQuitMessage(boolean isJoin, ChannelPlayer player);
+    public void addModerator(ChannelPlayer player) {
+
+        // 既にモデレータなら何もしない
+        if ( moderator.contains(player) ) {
+            return;
+        }
+
+        // モデレータへ追加
+        moderator.add(player);
+
+        // メッセージ
+        sendSystemMessage("addModeratorMessage", player);
+
+        save();
+    }
+
+    /**
+     * モデレータを削除する
+     * @param player 削除するプレイヤー
+     */
+    public void removeModerator(ChannelPlayer player) {
+
+        // 既にモデレータでないなら何もしない
+        if ( !moderator.contains(player) ) {
+            return;
+        }
+
+        // モデレータから削除
+        moderator.remove(player);
+
+        // メッセージ
+        sendSystemMessage("removeModeratorMessage", player);
+
+        save();
+    }
+
+    /**
+     * プレイヤーに関連する、システムメッセージをチャンネルに流す
+     * @param key リソースキー
+     * @param player プレイヤー
+     */
+    protected abstract void sendSystemMessage(String key, ChannelPlayer player);
 
     /**
      * メッセージを表示します。指定したプレイヤーの発言として処理されます。
@@ -301,7 +344,7 @@ public abstract class Channel implements ConfigurationSerializable {
      * @param format フォーマット
      * @param sendDynmap dynmapへ送信するかどうか
      */
-    protected abstract void sendMessage(
+    public abstract void sendMessage(
             ChannelPlayer player, String message, String format, boolean sendDynmap);
 
     /**

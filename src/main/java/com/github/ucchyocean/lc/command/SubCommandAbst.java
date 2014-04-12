@@ -11,6 +11,8 @@ import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.LunaChatConfig;
 import com.github.ucchyocean.lc.Resources;
+import com.github.ucchyocean.lc.Utility;
+import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
 /**
@@ -50,6 +52,56 @@ public abstract class SubCommandAbst {
     }
 
     /**
+     * メッセージリソースのメッセージを、カラーコード置き換えしつつ、Channelに送信する
+     * @param channel メッセージの送り先
+     * @param pre プレフィックス
+     * @param key リソースキー
+     * @param player キーワード置き換えに使用するプレイヤー
+     */
+    protected void sendResourceMessageWithKeyword(
+            Channel channel, String key, ChannelPlayer player) {
+
+        String msg = Resources.get(key);
+        msg = msg.replace("%ch", channel.getName());
+        msg = msg.replace("%color", channel.getColorCode());
+        if ( player != null ) {
+            msg = msg.replace("%username", player.getDisplayName());
+            msg = msg.replace("%player", player.getName());
+        } else {
+            msg = msg.replace("%username", "");
+            msg = msg.replace("%player", "");
+        }
+        msg = Utility.replaceColorCode(msg);
+        channel.sendMessage(null, msg, null, true);
+    }
+
+    /**
+     * メッセージリソースのメッセージを、カラーコード置き換えしつつ、Channelに送信する
+     * @param channel メッセージの送り先
+     * @param pre プレフィックス
+     * @param key リソースキー
+     * @param player キーワード置き換えに使用するプレイヤー
+     * @param minutes キーワード置き換えに使用する数値
+     */
+    protected void sendResourceMessageWithKeyword(
+            Channel channel, String key, ChannelPlayer player, int minutes) {
+
+        String msg = Resources.get(key);
+        msg = msg.replace("%ch", channel.getName());
+        msg = msg.replace("%color", channel.getColorCode());
+        msg = msg.replace("%d", String.valueOf(minutes));
+        if ( player != null ) {
+            msg = msg.replace("%username", player.getDisplayName());
+            msg = msg.replace("%player", player.getName());
+        } else {
+            msg = msg.replace("%username", "");
+            msg = msg.replace("%player", "");
+        }
+        msg = Utility.replaceColorCode(msg);
+        channel.sendMessage(null, msg, null, true);
+    }
+
+    /**
      * メッセージリソースのメッセージを、カラーコード置き換えしつつ、senderに送信する
      * @param sender メッセージの送り先
      * @param pre プレフィックス
@@ -57,8 +109,7 @@ public abstract class SubCommandAbst {
      * @param args リソース内の置き換え対象キーワード
      */
     protected void sendResourceMessage(
-            CommandSender sender, String pre,
-            String key, Object... args) {
+            CommandSender sender, String pre, String key, Object... args) {
         String msg = String.format(pre + Resources.get(key), args);
         sender.sendMessage(msg);
     }
@@ -71,8 +122,7 @@ public abstract class SubCommandAbst {
      * @param args リソース内の置き換え対象キーワード
      */
     protected void sendResourceMessage(
-            ChannelPlayer cp, String pre,
-            String key, Object... args) {
+            ChannelPlayer cp, String pre, String key, Object... args) {
         String msg = String.format(pre + Resources.get(key), args);
         cp.sendMessage(msg);
     }

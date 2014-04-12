@@ -121,9 +121,15 @@ public class KickCommand extends SubCommandAbst {
         // キック実行
         channel.removeMember(kicked);
         channel.save();
+
+        // senderに通知メッセージを出す
         sendResourceMessage(sender, PREINFO,
                 "cmdmsgKick", kickedName, channel.getName());
 
+        // チャンネルに通知メッセージを出す
+        sendResourceMessageWithKeyword(channel, "kickMessage", kicked);
+
+        // キックされた人に通知メッセージを出す
         if ( kicked != null && kicked.isOnline() ) {
             sendResourceMessage(kicked, PREINFO,
                     "cmdmsgKicked", channel.getName());

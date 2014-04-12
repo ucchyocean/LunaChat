@@ -141,6 +141,7 @@ public class MuteCommand extends SubCommandAbst {
         }
         channel.save();
 
+        // senderに通知メッセージを出す
         if ( expireMinutes != -1 ) {
             sendResourceMessage(sender, PREINFO,
                     "cmdmsgMuteWithExpire", kickedName, channel.getName(), expireMinutes);
@@ -148,7 +149,17 @@ public class MuteCommand extends SubCommandAbst {
             sendResourceMessage(sender, PREINFO,
                     "cmdmsgMute", kickedName, channel.getName());
         }
-        if (kicked != null) {
+
+        // チャンネルに通知メッセージを出す
+        if ( expireMinutes != -1 ) {
+            sendResourceMessageWithKeyword(channel,
+                    "muteWithExpireMessage", kicked, expireMinutes);
+        } else {
+            sendResourceMessageWithKeyword(channel, "muteMessage", kicked);
+        }
+
+        // BANされた人に通知メッセージを出す
+        if ( kicked != null ) {
             sendResourceMessage(kicked, PREINFO,
                     "cmdmsgMuted", channel.getName());
         }

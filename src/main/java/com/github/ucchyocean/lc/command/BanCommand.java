@@ -147,6 +147,7 @@ public class BanCommand extends SubCommandAbst {
         }
         channel.removeMember(kicked);
 
+        // senderに通知メッセージを出す
         if ( expireMinutes != -1 ) {
             sendResourceMessage(sender, PREINFO,
                     "cmdmsgBanWithExpire", kickedName, channel.getName(), expireMinutes);
@@ -154,7 +155,17 @@ public class BanCommand extends SubCommandAbst {
             sendResourceMessage(sender, PREINFO,
                     "cmdmsgBan", kickedName, channel.getName());
         }
-        if (kicked != null) {
+
+        // チャンネルに通知メッセージを出す
+        if ( expireMinutes != -1 ) {
+            sendResourceMessageWithKeyword(channel,
+                    "banWithExpireMessage", kicked, expireMinutes);
+        } else {
+            sendResourceMessageWithKeyword(channel, "banMessage", kicked);
+        }
+
+        // BANされた人に通知メッセージを出す
+        if ( kicked != null && kicked.isOnline() ) {
             sendResourceMessage(kicked, PREINFO,
                     "cmdmsgBanned", channel.getName());
         }

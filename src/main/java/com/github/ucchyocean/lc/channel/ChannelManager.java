@@ -383,14 +383,17 @@ public class ChannelManager implements LunaChatAPI {
 
         Channel channel = getChannel(channelName);
         if ( channel != null ) {
-            channel.remove();
-            channels.remove(channelName);
 
             // 強制解散のメッセージを、残ったメンバーに流す
-            String message = String.format(MSG_BREAKUP, channelName);
+            String message = new String(MSG_BREAKUP);
+            message = message.replace("%ch", channel.getName());
+            message = message.replace("%color", channel.getColorCode());
             for ( ChannelPlayer cp : channel.getMembers() ) {
                 cp.sendMessage(message);
             }
+
+            channel.remove();
+            channels.remove(channelName);
         }
 
         return true;

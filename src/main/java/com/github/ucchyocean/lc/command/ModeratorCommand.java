@@ -129,18 +129,17 @@ public class ModeratorCommand extends SubCommandAbst {
             if ( mod.startsWith("-") ) {
                 String name = mod.substring(1);
                 ChannelPlayer cp = ChannelPlayer.getChannelPlayer(name);
-                channel.getModerator().remove(cp);
+                channel.removeModerator(cp);
                 sendResourceMessage(sender, PREINFO,
                         "cmdmsgModeratorMinus", name, cname);
             } else {
                 ChannelPlayer cp = ChannelPlayer.getChannelPlayer(mod);
-                channel.getModerator().add(cp);
+                channel.addModerator(cp);
                 sendResourceMessage(sender, PREINFO,
                         "cmdmsgModerator", mod, cname);
             }
         }
 
-        channel.save();
         return true;
     }
 }

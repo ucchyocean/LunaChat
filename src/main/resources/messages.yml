@@ -3,12 +3,26 @@
 # @license    LGPLv3
 # @copyright  Copyright ucchy 2013
 
-joinMessage: '&f[%color%ch&f]&7%username さんがチャンネルチャットに参加しました。'
-quitMessage: '&f[%color%ch&f]&7%username さんがチャンネルチャットから退出しました。'
+joinMessage: '&f[%color%ch&f]&7%player さんがチャンネルチャットに参加しました。'
+quitMessage: '&f[%color%ch&f]&7%player さんがチャンネルチャットから退出しました。'
+breakupMessage: '&f[%color%ch&f]&7チャンネルチャットが削除されました。'
+banMessage: '&f[%color%ch&f]&7%player さんをチャンネルからBANしました。'
+kickMessage: '&f[%color%ch&f]&7%player さんをチャンネルからキックしました。'
+muteMessage: '&f[%color%ch&f]&7%player さんをチャンネルからMuteしました。'
+banNGWordMessage: '&f[%color%ch&f]&7NGワード発言により、%player さんをチャンネルからBANしました。'
+kickNGWordMessage: '&f[%color%ch&f]&7NGワード発言により、%player さんをチャンネルからキックしました。'
+muteNGWordMessage: '&f[%color%ch&f]&7NGワード発言により、%player さんをチャンネルからMuteしました。'
+banWithExpireMessage: '&f[%color%ch&f]&7%player さんを期限 %d 分でチャンネルからBANしました。'
+muteWithExpireMessage: '&f[%color%ch&f]&7%player さんを期限 %d 分でチャンネルからMuteしました。'
+pardonMessage: '&f[%color%ch&f]&7%player さんのBANが解除されました。'
+unmuteMessage: '&f[%color%ch&f]&7%player さんのMuteが解除されました。'
+expiredBanMessage: '&f[%color%ch&f]&7%player さんの期限付きBANが解除されました。'
+expiredMuteMessage: '&f[%color%ch&f]&7%player さんの期限付きMuteが解除されました。'
+
+addModeratorMessage: '&f[%color%ch&f]&7%player さんがチャンネルのモデレータになりました。'
+removeModeratorMessage: '&f[%color%ch&f]&7%player さんがチャンネルのモデレータから外れました。'
+
 noRecipientMessage: '&f[%color%ch&f]&7あなたの発言は、誰にも届きませんでした。'
-breakupMessage: '&a[%s]&7チャンネルチャットが削除されました。'
-expiredBan: '&a[%s]&7%s さんの期限付きBANが解除されました。'
-expiredMute: '&a[%s]&7%s さんの期限付きMuteが解除されました。'
 
 listFirstLine: '&8---------- &bチャンネルリスト &8----------'
 listEndLine: '&8----------------------------------'
@@ -126,8 +140,6 @@ errmsgNotInCheckRemoveConfirm: 'あなたはクリーンアップモードに入
 
 errmsgNotPermission: '権限がありません&7(%s)'
 errmsgChannelChatDisabled: 'このサーバーでは、チャンネルチャットは動作しません。'
-
-ngwordPrefix: 'NGワード発言により、'
 
 usageJoin: '&6/%s join (channel) &7- チャンネルに参加します。'
 usageLeave: '&6/%s leave &7- 参加しているチャンネルから退出します。'

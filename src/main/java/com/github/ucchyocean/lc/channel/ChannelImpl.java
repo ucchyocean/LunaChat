@@ -46,21 +46,17 @@ public class ChannelImpl extends Channel {
     private static final String LIST_ENDLINE = Resources.get("listEndLine");
     private static final String LIST_FORMAT = Resources.get("listFormat");
 
-    private static final String MSG_JOIN = Resources.get("joinMessage");
-    private static final String MSG_QUIT = Resources.get("quitMessage");
+    private static final String MSG_BAN_NGWORD = Resources.get("banNGWordMessage");
+    private static final String MSG_KICK_NGWORD = Resources.get("kickNGWordMessage");
+    private static final String MSG_MUTE_NGWORD = Resources.get("muteNGWordMessage");
 
-    private static final String MSG_BAN_EXPIRED = Resources.get("expiredBan");
-    private static final String MSG_MUTE_EXPIRED = Resources.get("expiredMute");
+    private static final String MSG_BAN_EXPIRED = Resources.get("expiredBanMessage");
+    private static final String MSG_MUTE_EXPIRED = Resources.get("expiredMuteMessage");
     private static final String MSG_BAN_EXPIRED_PLAYER = Resources.get("cmdmsgPardoned");
     private static final String MSG_MUTE_EXPIRED_PLAYER = Resources.get("cmdmsgUnmuted");
 
     private static final String PREINFO = Resources.get("infoPrefix");
     private static final String PREERR = Resources.get("errorPrefix");
-
-    private static final String NGWORD_PREFIX = Resources.get("ngwordPrefix");
-    private static final String MSG_KICKED = Resources.get("cmdmsgKicked");
-    private static final String MSG_BANNED = Resources.get("cmdmsgBanned");
-    private static final String MSG_MUTED = Resources.get("cmdmsgMuted");
 
     private static final String MSG_NO_RECIPIENT = Resources.get("noRecipientMessage");
 
@@ -185,9 +181,10 @@ public class ChannelImpl extends Channel {
                 if ( !isGlobalChannel() ) {
                     getBanned().add(player);
                     removeMember(player);
-                    String temp = PREINFO + NGWORD_PREFIX + MSG_BANNED;
-                    String m = String.format(temp, getName());
+                    String m = replaceKeywordsForSystemMessages(
+                            MSG_BAN_NGWORD, player.getName());
                     player.sendMessage(m);
+                    sendMessage(null, m, null, true);
                 }
 
             } else if ( config.getNgwordAction() == NGWordAction.KICK ) {
@@ -195,9 +192,10 @@ public class ChannelImpl extends Channel {
 
                 if ( !isGlobalChannel() ) {
                     removeMember(player);
-                    String temp = PREINFO + NGWORD_PREFIX + MSG_KICKED;
-                    String m = String.format(temp, getName());
+                    String m = replaceKeywordsForSystemMessages(
+                            MSG_KICK_NGWORD, player.getName());
                     player.sendMessage(m);
+                    sendMessage(null, m, null, true);
                 }
 
             } else if ( config.getNgwordAction() == NGWordAction.MUTE ) {
@@ -205,9 +203,10 @@ public class ChannelImpl extends Channel {
 
                 getMuted().add(player);
                 save();
-                String temp = PREINFO + NGWORD_PREFIX + MSG_MUTED;
-                String m = String.format(temp, getName());
+                String m = replaceKeywordsForSystemMessages(
+                        MSG_MUTE_NGWORD, player.getName());
                 player.sendMessage(m);
+                sendMessage(null, m, null, true);
             }
         }
     }
@@ -236,9 +235,7 @@ public class ChannelImpl extends Channel {
         }
 
         // キーワード置き換え
-        String msgFormat = replaceKeywords(getFormat(), null);
-        msgFormat = msgFormat.replace("%username", name);
-        msgFormat = msgFormat.replace("%player", name);
+        String msgFormat = replaceKeywordsForSystemMessages(getFormat(), name);
         msgFormat = msgFormat.replace("%prefix", "");
         msgFormat = msgFormat.replace("%suffix", "");
 
@@ -250,31 +247,15 @@ public class ChannelImpl extends Channel {
     }
 
     /**
-     * 入退室メッセージを流す
-     * @param isJoin 入室かどうか（falseなら退室）
-     * @param player 入退室したプレイヤー
+     * プレイヤーに関連する、システムメッセージをチャンネルに流す
+     * @param key リソースキー
+     * @param player プレイヤー
      */
     @Override
-    protected void sendJoinQuitMessage(boolean isJoin, ChannelPlayer player) {
+    protected void sendSystemMessage(String key, ChannelPlayer player) {
 
-        // 1:1チャットなら、入退室メッセージは表示しない
-        if ( isPersonalChat() ) {
-            return;
-        }
-
-        String msg;
-        if ( isJoin ) {
-            msg = MSG_JOIN;
-        } else {
-            msg = MSG_QUIT;
-        }
-
-        // キーワード置き換え
-        msg = msg.replace("%ch", getName());
-        msg = msg.replace("%color", getColorCode());
-        msg = msg.replace("%username", player.getDisplayName());
-        msg = Utility.replaceColorCode(msg);
-
+        String msg = Resources.get(key);
+        msg = replaceKeywordsForSystemMessages(msg, player.getName());
         sendMessage(null, msg, null, false);
     }
 
@@ -286,7 +267,7 @@ public class ChannelImpl extends Channel {
      * @param sendDynmap dynmapへ送信するかどうか
      */
     @Override
-    protected void sendMessage(ChannelPlayer player, String message,
+    public void sendMessage(ChannelPlayer player, String message,
             String format, boolean sendDynmap) {
 
         LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
@@ -542,7 +523,7 @@ public class ChannelImpl extends Channel {
                     save();
 
                     // メッセージ通知を流す
-                    String msg = String.format(MSG_BAN_EXPIRED, getName(), cp.getName());
+                    String msg = replaceKeywords(MSG_BAN_EXPIRED, cp);
                     sendMessage(null, msg, null, false);
 
                     if ( cp.isOnline() ) {
@@ -564,7 +545,7 @@ public class ChannelImpl extends Channel {
                     save();
 
                     // メッセージ通知を流す
-                    String msg = String.format(MSG_MUTE_EXPIRED, getName(), cp.getName());
+                    String msg = replaceKeywords(MSG_MUTE_EXPIRED, cp);
                     sendMessage(null, msg, null, false);
 
                     if ( cp.isOnline() ) {
@@ -635,6 +616,7 @@ public class ChannelImpl extends Channel {
         msg = msg.replace("%ch", getName());
         msg = msg.replace("%color", getColorCode());
         msg = msg.replace("%username", playerName);
+        msg = msg.replace("%player", playerName);
 
         return Utility.replaceColorCode(msg);
     }
