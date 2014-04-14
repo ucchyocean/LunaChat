@@ -29,6 +29,8 @@ import com.github.ucchyocean.lc.command.LunaChatReplyCommand;
  */
 public class LunaChat extends JavaPlugin {
 
+    private static final String FILE_NAME_DCHANNELS = "defaults.yml";
+
     private static LunaChat instance;
 
     private LunaChatConfig config;
@@ -192,6 +194,14 @@ public class LunaChat extends JavaPlugin {
      * 全てのデフォルトチャンネル設定を削除する
      */
     protected void removeAllDefaultChannels() {
-        manager.removeAllDefaultChannels();
+        if ( manager != null ) {
+            manager.removeAllDefaultChannels();
+        } else {
+            File fileDefaults = new File(
+                    LunaChat.getInstance().getDataFolder(), FILE_NAME_DCHANNELS);
+            if ( fileDefaults.exists() ) {
+                fileDefaults.delete();
+            }
+        }
     }
 }
