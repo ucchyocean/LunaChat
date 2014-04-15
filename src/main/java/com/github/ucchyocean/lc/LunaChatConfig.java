@@ -154,7 +154,7 @@ public class LunaChatConfig {
         } else {
             globalChannel = "";
         }
-        // チャンネルチャット有効のときだけ、enableChannelChat設定を読み込む
+        // チャンネルチャット有効のときだけ、forceJoinChannels設定を読み込む
         // (see issue #58)
         if ( enableChannelChat ) {
             forceJoinChannels = config.getStringList("forceJoinChannels");
