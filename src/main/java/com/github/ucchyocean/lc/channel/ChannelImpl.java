@@ -254,6 +254,11 @@ public class ChannelImpl extends Channel {
     @Override
     protected void sendSystemMessage(String key, ChannelPlayer player) {
 
+        // プライベートチャットならシステムメッセージを流さない
+        if ( isPersonalChat() ) {
+            return;
+        }
+
         String msg = Resources.get(key);
         msg = replaceKeywordsForSystemMessages(msg, player.getName());
         sendMessage(null, msg, null, false);
