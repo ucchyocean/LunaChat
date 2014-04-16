@@ -29,11 +29,13 @@ zeroMemberRemove: false
 # ログイン時に、参加中チャンネルを表示するかどうか
 showListOnJoin: false
 
-# /ch join コマンドで存在しないチャンネルを指定したときに、チャンネルを新規作成して入室するかどうか
+# /ch join コマンドで存在しないチャンネルを指定したときに、
+# チャンネルを新規作成して入室するかどうか
 createChannelOnJoinCommand: true
 
 # 通常のチャットの代わりに、既定として使用するグローバルチャンネル。
-# グローバルチャンネルを作らず通常のチャットを使用する場合は、から文字列 「''」 を指定すること。
+# グローバルチャンネルを作らず通常のチャットを使用する場合は、
+# から文字列 「''」 を指定すること。
 globalChannel: ''
 
 # サーバーに参加したユーザーに必ず参加させるチャンネル。
@@ -44,10 +46,14 @@ forceJoinChannels: []
 # formatコマンド実行時に、必ず含まれる必要があるキーワード。
 formatConstraint: ['%username', '%msg']
 
-# チャンネルを作成したときに、デフォルトで設定されるフォーマット
+# チャンネルを作成したときに、デフォルトで設定されるフォーマット設定。
 defaultFormat: '&f[%color%ch&f]%prefix%username%suffix&a:&f %msg'
 
-# プライベートメッセージを送信するときに、適用されるフォーマット
+
+# -------------------- プライベートメッセージ設定 --------------------
+
+# /tell や /msg や /r コマンドでプライベートメッセージを送信するときに、
+# 適用されるフォーマット設定。
 defaultFormatForPrivateMessage: '&7[%player > %to] %msg'
 
 
@@ -88,11 +94,11 @@ ngwordAction: mask
 # -------------------- チャット装飾設定 --------------------
 # チャンネルチャット機能を利用しないユーザーのための設定です。
 
-# 通常チャット（非チャンネルチャット）の装飾を、LunaChatから行うかどうか
+# 通常チャット（非チャンネルチャット）の装飾を、LunaChatから行うかどうか。
 # Vault がロードされていない場合は、この設定は無視される（false扱い）。
 enableNormalChatMessageFormat: true
 
-# チャット装飾のフォーマット設定です。
+# チャット装飾のフォーマット設定。
 normalChatMessageFormat: '%prefix&f<%username>%suffix&f %msg'
 
 
@@ -103,13 +109,18 @@ normalChatMessageFormat: '%prefix&f<%username>%suffix&f %msg'
 # none/kana/GoogleIME/SocialIME の4つのいずれかが設定可能。
 # none      : 変換なし。
 # kana      : かな変換のみ。
-# GoogleIME : かな変換したのち、GoogleIMEを使ってIME変換する。(少し発言が重くなります。)
-# SocialIME : かな変換したのち、SocialIMEを使ってIME変換する。(少し発言が重くなります。)
+# GoogleIME : かな変換したのち、GoogleIMEを使って漢字変換する。
+# SocialIME : かな変換したのち、SocialIMEを使って漢字変換する。
 japanizeType: GoogleIME
 
 # かな変換や漢字変換時に、
 # 変換結果を元の発言内容と合わせて1行で表示するか、
 # 変換結果のみを2行目に表示するかを、設定する。
+# 1行表示の例：
+#     <ucchy> aiueo (あいうえお)
+# 2行表示の例：
+#     <ucchy> aiueo
+#     [JP] あいうえお
 japanizeDisplayLine: 1
 
 # japanizeDisplayLine が 1 のときの、表示フォーマットを設定する。
@@ -122,5 +133,5 @@ japanizeLine2Format: '&6[JP] %japanize'
 japanizeIgnorePlayerName: true
 
 # ノンジャパナイズマーカー。
-# これが発言の頭に入っている場合は、一時的にjapanizeを実行しない
+# これが発言の頭に入っている場合は、一時的にJapanize変換を実行しない。
 noneJapanizeMarker: '#'

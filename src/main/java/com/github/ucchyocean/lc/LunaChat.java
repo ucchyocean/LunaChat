@@ -29,8 +29,6 @@ import com.github.ucchyocean.lc.command.LunaChatReplyCommand;
  */
 public class LunaChat extends JavaPlugin {
 
-    private static final String FILE_NAME_DCHANNELS = "defaults.yml";
-
     private static LunaChat instance;
 
     private LunaChatConfig config;
@@ -57,6 +55,11 @@ public class LunaChat extends JavaPlugin {
         instance = this;
         config = new LunaChatConfig();
         manager = new ChannelManager();
+
+        // チャンネルチャット無効なら、デフォルト発言先をクリアする(see issue #59)
+        if ( !config.isEnableChannelChat() ) {
+            manager.removeAllDefaultChannels();
+        }
 
         // Chat Plugin のロード
         Plugin temp = getServer().getPluginManager().getPlugin("Vault");
@@ -188,20 +191,5 @@ public class LunaChat extends JavaPlugin {
      */
     public DynmapBridge getDynmap() {
         return dynmap;
-    }
-
-    /**
-     * 全てのデフォルトチャンネル設定を削除する
-     */
-    protected void removeAllDefaultChannels() {
-        if ( manager != null ) {
-            manager.removeAllDefaultChannels();
-        } else {
-            File fileDefaults = new File(
-                    LunaChat.getInstance().getDataFolder(), FILE_NAME_DCHANNELS);
-            if ( fileDefaults.exists() ) {
-                fileDefaults.delete();
-            }
-        }
     }
 }
