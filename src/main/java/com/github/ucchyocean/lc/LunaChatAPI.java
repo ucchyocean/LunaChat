@@ -138,16 +138,6 @@ public interface LunaChatAPI {
     public boolean isPlayerJapanize(String playerName);
 
     /**
-     * 指定された名前がチャンネル名として使用可能かどうかを判定する<br/>
-     * 具体的には、英数字・ハイフン・アンダーバー のいずれかから構成される、
-     * 1文字から20文字の文字列、の場合に、trueを返す。<br/>
-     * （既に存在するチャンネル名をチェックするわけではない。）
-     * @param name 名前
-     * @return チャンネル名として使用可能かどうか
-     */
-    public boolean checkForChannelName(String name);
-
-    /**
      * LunaChatの全データを再読み込みする
      */
     public void reloadAllData();

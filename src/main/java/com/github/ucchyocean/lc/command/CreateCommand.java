@@ -7,6 +7,7 @@ package com.github.ucchyocean.lc.command;
 
 import org.bukkit.command.CommandSender;
 
+import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.channel.Channel;
 
 /**
@@ -93,7 +94,7 @@ public class CreateCommand extends SubCommandAbst {
         }
 
         // 使用可能なチャンネル名かどうかをチェックする
-        if ( !api.checkForChannelName(name) ) {
+        if ( !LunaChat.checkForChannelName(name) ) {
             sendResourceMessage(sender, PREINFO, "errmsgCannotUseForChannel", name);
             return true;
         }

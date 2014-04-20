@@ -8,6 +8,7 @@ package com.github.ucchyocean.lc.command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
@@ -122,7 +123,7 @@ public class JoinCommand extends SubCommandAbst {
                 // 存在しないチャットには、チャンネルを作って入る設定の場合
 
                 // 使用可能なチャンネル名かどうかをチェックする
-                if ( !api.checkForChannelName(channelName) ) {
+                if ( !LunaChat.checkForChannelName(channelName) ) {
                     sendResourceMessage(sender, PREINFO,
                             "errmsgCannotUseForChannel", channelName);
                     return true;

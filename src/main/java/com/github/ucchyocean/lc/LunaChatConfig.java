@@ -202,7 +202,7 @@ public class LunaChatConfig {
 
         // globalチャンネルが、使用可能なチャンネル名かどうかを調べる
         if ( !globalChannel.equals("") &&
-                !LunaChat.getInstance().getLunaChatAPI().checkForChannelName(globalChannel) ) {
+                !LunaChat.checkForChannelName(globalChannel) ) {
             String msg = String.format(
                     Resources.get("errmsgCannotUseForGlobal"), globalChannel);
             LunaChat.getInstance().getLogger().warning(msg);

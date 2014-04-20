@@ -465,17 +465,4 @@ public class ChannelManager implements LunaChatAPI {
         japanize.put(playerName, doJapanize);
         saveJapanize();
     }
-
-    /**
-     * 指定された名前がチャンネル名として使用可能かどうかを判定する<br/>
-     * 具体的には、英数字・ハイフン・アンダーバー のいずれかから構成される、
-     * 1文字から20文字の文字列、の場合に、trueを返す。<br/>
-     * （既に存在するチャンネル名をチェックするわけではない。）
-     * @param name 名前
-     * @return チャンネル名として使用可能かどうか
-     */
-    @Override
-    public boolean checkForChannelName(String name) {
-        return name.matches("[0-9a-zA-Z\\-_]{1,20}");
-    }
 }
