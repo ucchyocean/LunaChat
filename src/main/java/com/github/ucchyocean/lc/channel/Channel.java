@@ -143,6 +143,7 @@ public abstract class Channel implements ConfigurationSerializable {
     }
 
     /**
+     * 1:1チャットかどうか
      * @return 1:1チャットかどうか
      */
     public boolean isPersonalChat() {
@@ -150,6 +151,7 @@ public abstract class Channel implements ConfigurationSerializable {
     }
 
     /**
+     * ブロードキャストチャンネルかどうか
      * @return ブロードキャストチャンネルかどうか
      */
     public boolean isBroadcastChannel() {
@@ -157,6 +159,7 @@ public abstract class Channel implements ConfigurationSerializable {
     }
 
     /**
+     * グローバルチャンネルかどうか
      * @return グローバルチャンネルかどうか
      */
     public boolean isGlobalChannel() {
@@ -165,6 +168,7 @@ public abstract class Channel implements ConfigurationSerializable {
     }
 
     /**
+     * 強制参加チャンネルかどうか
      * @return 強制参加チャンネルかどうか
      */
     public boolean isForceJoinChannel() {

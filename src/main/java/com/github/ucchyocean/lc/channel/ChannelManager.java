@@ -385,13 +385,16 @@ public class ChannelManager implements LunaChatAPI {
         if ( channel != null ) {
 
             // 強制解散のメッセージを、残ったメンバーに流す
-            String message = new String(MSG_BREAKUP);
-            message = message.replace("%ch", channel.getName());
-            message = message.replace("%color", channel.getColorCode());
-            for ( ChannelPlayer cp : channel.getMembers() ) {
-                cp.sendMessage(message);
+            if ( !channel.isPersonalChat() ) {
+                String message = new String(MSG_BREAKUP);
+                message = message.replace("%ch", channel.getName());
+                message = message.replace("%color", channel.getColorCode());
+                for ( ChannelPlayer cp : channel.getMembers() ) {
+                    cp.sendMessage(message);
+                }
             }
 
+            // チャンネルの削除
             channel.remove();
             channels.remove(channelName);
         }
