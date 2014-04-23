@@ -5,7 +5,9 @@
  */
 package com.github.ucchyocean.lc.channel;
 
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.Utility;
@@ -59,11 +61,11 @@ public abstract class ChannelPlayer implements Comparable<ChannelPlayer> {
     public abstract Player getPlayer();
 
     /**
-     * 指定されたPlayerと同一かどうかを返す
-     * @param player プレイヤー
+     * 指定されたCommandSenderと同一かどうかを返す
+     * @param sender
      * @return 同一かどうか
      */
-    public abstract boolean equals(Player player);
+    public abstract boolean equals(CommandSender sender);
 
     /**
      * 文字列表現を返す
@@ -125,8 +127,11 @@ public abstract class ChannelPlayer implements Comparable<ChannelPlayer> {
     public static ChannelPlayer getChannelPlayer(CommandSender sender) {
         if ( sender == null ) {
             return null;
-        }
-        if ( Utility.isCB178orLater() ) {
+        } else if ( sender instanceof BlockCommandSender ) {
+            return new ChannelPlayerBlock((BlockCommandSender)sender);
+        } else if ( sender instanceof ConsoleCommandSender ) {
+            return new ChannelPlayerConsole((ConsoleCommandSender)sender);
+        } else if ( Utility.isCB178orLater() ) {
             return ChannelPlayerUUID.getChannelPlayer(sender);
         }
         return new ChannelPlayerName(sender.getName());

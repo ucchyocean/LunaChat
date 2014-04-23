@@ -8,7 +8,6 @@ package com.github.ucchyocean.lc.command;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
@@ -31,11 +30,7 @@ public class LunaChatMessageCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command,
             String label, String[] args) {
 
-        // プレイヤーでなければ終了する
-        if (!(sender instanceof Player)) {
-            sendResourceMessage(sender, PREERR, "errmsgIngame");
-            return true;
-        }
+        // senderからChannelPlayerを作成する
         ChannelPlayer inviter = ChannelPlayer.getChannelPlayer(sender);
 
         // 引数が無ければ、usageを表示して終了する
@@ -60,6 +55,7 @@ public class LunaChatMessageCommand implements CommandExecutor {
             return true;
         }
 
+        // メッセージを送信する
         sendTellMessage(inviter, invitedName, message.toString().trim());
         return true;
     }

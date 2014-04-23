@@ -173,16 +173,17 @@ public class ChannelPlayerUUID extends ChannelPlayer {
     }
 
     /**
-     * 指定されたPlayerと同一かどうかを返す
-     * @param player プレイヤー
+     * 指定されたCommandSenderと同一かどうかを返す
+     * @param sender
      * @return 同一かどうか
      * @see com.github.ucchyocean.lc.channel.ChannelPlayer#equals(org.bukkit.entity.Player)
      */
     @Override
-    public boolean equals(Player player) {
-        if ( player == null ) {
+    public boolean equals(CommandSender sender) {
+        if ( sender == null || !(sender instanceof Player) ) {
             return false;
         }
+        Player player = (Player)sender;
         return id.equals(player.getUniqueId());
     }
 

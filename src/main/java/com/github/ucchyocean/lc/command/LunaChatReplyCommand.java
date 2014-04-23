@@ -7,7 +7,6 @@ package com.github.ucchyocean.lc.command;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.Resources;
 import com.github.ucchyocean.lc.channel.ChannelPlayer;
@@ -28,11 +27,7 @@ public class LunaChatReplyCommand extends LunaChatMessageCommand {
     public boolean onCommand(CommandSender sender, Command command,
             String label, String[] args) {
 
-        // プレイヤーでなければ終了する
-        if (!(sender instanceof Player)) {
-            sendResourceMessage(sender, PREERR, "errmsgIngame");
-            return true;
-        }
+        // senderからChannelPlayerを作成する
         ChannelPlayer inviter = ChannelPlayer.getChannelPlayer(sender);
 
         // 会話相手を履歴から取得する

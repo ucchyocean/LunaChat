@@ -107,14 +107,14 @@ public class JoinCommand extends SubCommandAbst {
 
         // チャンネルが存在するかどうかをチェックする
         if ( !api.isExistChannel(channelName) ) {
-            if (config.getGlobalChannel().equals("") &&
+            if ( config.getGlobalChannel().equals("") &&
                     channelName.equals(config.getGlobalMarker()) ) {
                 // グローバルチャンネル設定が無くて、指定チャンネルがマーカーの場合、
                 // 発言先を削除して、グローバルチャンネルにする
 
                 api.removeDefaultChannel(player.getName());
                 sendResourceMessage(sender, PREINFO, "cmdmsgSet", "グローバル");
-                if (message.length() > 0) {
+                if ( message.length() > 0 && player.getPlayer() != null ) {
                     player.getPlayer().chat(config.getGlobalMarker() + message.toString());
                 }
                 return true;

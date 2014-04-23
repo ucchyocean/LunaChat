@@ -5,37 +5,35 @@
  */
 package com.github.ucchyocean.lc.channel;
 
-import org.bukkit.Bukkit;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.LunaChat;
-import com.github.ucchyocean.lc.bridge.VaultChatBridge;
-
 /**
- * 名前管理のプレイヤー
+ * コマンドブロック
  * @author ucchy
  */
-public class ChannelPlayerName extends ChannelPlayer {
 
-    private String name;
+public class ChannelPlayerBlock extends ChannelPlayer {
+
+    BlockCommandSender sender;
 
     /**
      * コンストラクタ
-     * @param name プレイヤー名
+     * @param sender コマンドブロック
      */
-    public ChannelPlayerName(String name) {
-        this.name = name;
+    public ChannelPlayerBlock(BlockCommandSender sender) {
+        this.sender = sender;
     }
 
     /**
      * オンラインかどうか
-     * @return オンラインかどうか
+     * @return 常にtrue
+     * @see com.github.ucchyocean.lc.channel.ChannelPlayer#isOnline()
      */
     @Override
     public boolean isOnline() {
-        Player player = getPlayer();
-        return (player != null && player.isOnline());
+        return true;
     }
 
     /**
@@ -45,7 +43,7 @@ public class ChannelPlayerName extends ChannelPlayer {
      */
     @Override
     public String getName() {
-        return name;
+        return sender.getName();
     }
 
     /**
@@ -55,71 +53,47 @@ public class ChannelPlayerName extends ChannelPlayer {
      */
     @Override
     public String getDisplayName() {
-        Player player = getPlayer();
-        if ( player != null ) {
-            return player.getDisplayName();
-        }
-        return name;
+        return sender.getName();
     }
 
     /**
      * プレフィックスを返す
-     * @return プレフィックス
+     * @return 常に空文字列
      * @see com.github.ucchyocean.lc.channel.ChannelPlayer#getPrefix()
      */
     @Override
     public String getPrefix() {
-        VaultChatBridge vault = LunaChat.getInstance().getVaultChat();
-        if ( vault == null ) {
-            return "";
-        }
-        Player player = getPlayer();
-        if ( player != null ) {
-            return vault.getPlayerPrefix(player);
-        }
         return "";
     }
 
     /**
      * サフィックスを返す
-     * @return サフィックス
+     * @return 常に空文字列
      * @see com.github.ucchyocean.lc.channel.ChannelPlayer#getSuffix()
      */
     @Override
     public String getSuffix() {
-        VaultChatBridge vault = LunaChat.getInstance().getVaultChat();
-        if ( vault == null ) {
-            return "";
-        }
-        Player player = getPlayer();
-        if ( player != null ) {
-            return vault.getPlayerSuffix(player);
-        }
         return "";
     }
 
     /**
-     * メッセージを送る
-     * @param message 送るメッセージ
+     * メッセージを送る、実際は何もせずにメッセージを捨てる
+     * @param message
      * @see com.github.ucchyocean.lc.channel.ChannelPlayer#sendMessage(java.lang.String)
      */
     @Override
     public void sendMessage(String message) {
-        Player player = getPlayer();
-        if ( player != null ) {
-            player.sendMessage(message);
-        }
+        // do nothing.
     }
 
     /**
      * BukkitのPlayerを取得する
-     * @return Player
+     * @return 常にnullが返される
      * @see com.github.ucchyocean.lc.channel.ChannelPlayer#getPlayer()
      */
-    @SuppressWarnings("deprecation")
     @Override
     public Player getPlayer() {
-        return Bukkit.getPlayerExact(name);
+        return null;
     }
 
     /**
@@ -130,11 +104,7 @@ public class ChannelPlayerName extends ChannelPlayer {
      */
     @Override
     public boolean equals(CommandSender sender) {
-        if ( sender == null || !(sender instanceof Player) ) {
-            return false;
-        }
-        Player player = (Player)sender;
-        return name.equals(player.getName());
+        return this.sender.equals(sender);
     }
 
     /**
@@ -144,6 +114,6 @@ public class ChannelPlayerName extends ChannelPlayer {
      */
     @Override
     public String toString() {
-        return name;
+        return getName();
     }
 }

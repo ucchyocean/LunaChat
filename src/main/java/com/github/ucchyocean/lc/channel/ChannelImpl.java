@@ -286,7 +286,8 @@ public class ChannelImpl extends Channel {
         if ( isBroadcastChannel() ) {
             // ブロードキャストチャンネル
 
-            if ( isWorldRange() && player != null && player.isOnline() ) {
+            if ( isWorldRange() && player != null &&
+                    player.isOnline() && player.getPlayer() != null ) {
                 isRangeChat = true;
                 World w = player.getPlayer().getWorld();
 

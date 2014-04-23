@@ -20,6 +20,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import com.github.ucchyocean.lc.bridge.VaultChatBridge;
 import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import com.github.ucchyocean.lc.channel.ChannelPlayerName;
+import com.github.ucchyocean.lc.channel.ChannelPlayerUUID;
 import com.github.ucchyocean.lc.channel.DelayedJapanizeConvertTask;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 
@@ -125,7 +127,8 @@ public class PlayerListener implements Listener {
             if ( channel.isPersonalChat() && cname.contains(player.getName()) ) {
                 boolean isAllOffline = true;
                 for ( ChannelPlayer cp : channel.getMembers() ) {
-                    if ( !cp.equals(player) && cp.isOnline() ) {
+                    if ( !cp.equals(player) && cp.isOnline() &&
+                            (cp instanceof ChannelPlayerName || cp instanceof ChannelPlayerUUID) ) {
                         isAllOffline = false;
                     }
                 }
