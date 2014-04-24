@@ -9,6 +9,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
+/**
+ * コンソール
+ * @author ucchy
+ */
 public class ChannelPlayerConsole extends ChannelPlayer {
 
     ConsoleCommandSender sender;

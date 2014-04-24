@@ -13,7 +13,6 @@ import org.bukkit.entity.Player;
  * コマンドブロック
  * @author ucchy
  */
-
 public class ChannelPlayerBlock extends ChannelPlayer {
 
     BlockCommandSender sender;
