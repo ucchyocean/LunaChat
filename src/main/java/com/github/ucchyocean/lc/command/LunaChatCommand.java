@@ -173,7 +173,12 @@ public class LunaChatCommand implements CommandExecutor {
      */
     private void sendResourceMessage(CommandSender sender, String pre,
             String key, Object... args) {
-        String msg = String.format(pre + Resources.get(key), args);
+
+        String org = Resources.get(key);
+        if ( org == null || org.equals("") ) {
+            return;
+        }
+        String msg = String.format(pre + org, args);
         sender.sendMessage(msg);
     }
 

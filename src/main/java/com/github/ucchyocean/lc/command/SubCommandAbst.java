@@ -62,6 +62,9 @@ public abstract class SubCommandAbst {
             Channel channel, String key, ChannelPlayer player) {
 
         String msg = Resources.get(key);
+        if ( msg == null || msg.equals("") ) {
+            return;
+        }
         msg = msg.replace("%ch", channel.getName());
         msg = msg.replace("%color", channel.getColorCode());
         if ( player != null ) {
@@ -87,6 +90,9 @@ public abstract class SubCommandAbst {
             Channel channel, String key, ChannelPlayer player, int minutes) {
 
         String msg = Resources.get(key);
+        if ( msg == null || msg.equals("") ) {
+            return;
+        }
         msg = msg.replace("%ch", channel.getName());
         msg = msg.replace("%color", channel.getColorCode());
         msg = msg.replace("%d", String.valueOf(minutes));
@@ -110,7 +116,12 @@ public abstract class SubCommandAbst {
      */
     protected void sendResourceMessage(
             CommandSender sender, String pre, String key, Object... args) {
-        String msg = String.format(pre + Resources.get(key), args);
+
+        String org = Resources.get(key);
+        if ( org == null || org.equals("") ) {
+            return;
+        }
+        String msg = String.format(pre + org, args);
         sender.sendMessage(msg);
     }
 
@@ -123,7 +134,12 @@ public abstract class SubCommandAbst {
      */
     protected void sendResourceMessage(
             ChannelPlayer cp, String pre, String key, Object... args) {
-        String msg = String.format(pre + Resources.get(key), args);
+
+        String org = Resources.get(key);
+        if ( org == null || org.equals("") ) {
+            return;
+        }
+        String msg = String.format(pre + org, args);
         cp.sendMessage(msg);
     }
 

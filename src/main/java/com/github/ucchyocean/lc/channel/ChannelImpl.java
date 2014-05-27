@@ -260,6 +260,9 @@ public class ChannelImpl extends Channel {
         }
 
         String msg = Resources.get(key);
+        if ( msg == null || msg.equals("") ) {
+            return;
+        }
         msg = replaceKeywordsForSystemMessages(msg, player.getName());
         sendMessage(null, msg, null, false);
     }
