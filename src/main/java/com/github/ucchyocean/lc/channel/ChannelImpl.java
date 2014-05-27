@@ -483,7 +483,7 @@ public class ChannelImpl extends Channel {
                         buf = new StringBuffer();
                         buf.append(INFO_PREFIX + ChatColor.WHITE);
                     }
-                    buf.append(getMuted().get(i) + ",");
+                    buf.append(getMuted().get(i).getName() + ",");
                 }
 
                 info.add(buf.toString());
@@ -501,7 +501,7 @@ public class ChannelImpl extends Channel {
                         buf = new StringBuffer();
                         buf.append(INFO_PREFIX + ChatColor.WHITE);
                     }
-                    buf.append(getBanned().get(i) + ",");
+                    buf.append(getBanned().get(i).getName() + ",");
                 }
 
                 info.add(buf.toString());
