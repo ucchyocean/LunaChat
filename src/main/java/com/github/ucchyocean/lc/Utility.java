@@ -26,6 +26,8 @@ import org.bukkit.ChatColor;
  */
 public class Utility {
 
+    private static Boolean isCB178orLaterCache;
+
     /**
      * jarファイルの中に格納されているファイルを、jarファイルの外にコピーするメソッド
      * @param jarFile jarファイル
@@ -189,6 +191,10 @@ public class Utility {
      */
     public static boolean isCB178orLater() {
 
+        if ( isCB178orLaterCache != null ) {
+            return isCB178orLaterCache;
+        }
+
         int[] borderNumbers = {1, 7, 8};
 
         String version = Bukkit.getBukkitVersion();
@@ -200,23 +206,29 @@ public class Utility {
         String[] versionArray = version.split("\\.");
         int[] versionNumbers = new int[versionArray.length];
         for ( int i=0; i<versionArray.length; i++ ) {
-            if ( !versionArray[i].matches("[0-9]+") )
+            if ( !versionArray[i].matches("[0-9]+") ) {
+                isCB178orLaterCache = false;
                 return false;
+            }
             versionNumbers[i] = Integer.parseInt(versionArray[i]);
         }
 
         int index = 0;
         while ( (versionNumbers.length > index) && (borderNumbers.length > index) ) {
             if ( versionNumbers[index] > borderNumbers[index] ) {
+                isCB178orLaterCache = true;
                 return true;
             } else if ( versionNumbers[index] < borderNumbers[index] ) {
+                isCB178orLaterCache = false;
                 return false;
             }
             index++;
         }
         if ( borderNumbers.length == index ) {
+            isCB178orLaterCache = true;
             return true;
         } else {
+            isCB178orLaterCache = false;
             return false;
         }
     }
