@@ -367,7 +367,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
         // ブロードキャストチャンネルならサーバー接続人数を返す
         if ( isBroadcastChannel() ) {
-            return Bukkit.getOnlinePlayers().length;
+            return Utility.getOnlinePlayersCount();
         }
 
         // メンバーの人数を数える
@@ -388,7 +388,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
         // ブロードキャストチャンネルならサーバー接続人数を返す
         if ( isBroadcastChannel() ) {
-            return Bukkit.getOnlinePlayers().length;
+            return Utility.getOnlinePlayersCount();
         }
 
         return members.size();
@@ -668,9 +668,8 @@ public abstract class Channel implements ConfigurationSerializable {
         // ブロードキャストチャンネルなら、
         // 現在サーバーに接続している全プレイヤーをメンバーとして返す
         if ( isBroadcastChannel() ) {
-            Player[] players = Bukkit.getOnlinePlayers();
             List<ChannelPlayer> mem = new ArrayList<ChannelPlayer>();
-            for ( Player p : players ) {
+            for ( Player p : Bukkit.getOnlinePlayers() ) {
                 mem.add(ChannelPlayer.getChannelPlayer(p));
             }
             return mem;
