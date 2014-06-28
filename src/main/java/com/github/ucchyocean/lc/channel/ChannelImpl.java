@@ -181,10 +181,12 @@ public class ChannelImpl extends Channel {
                 if ( !isGlobalChannel() ) {
                     getBanned().add(player);
                     removeMember(player);
-                    String m = replaceKeywordsForSystemMessages(
-                            MSG_BAN_NGWORD, player.getName());
-                    player.sendMessage(m);
-                    sendMessage(null, m, null, true);
+                    if ( !MSG_BAN_NGWORD.equals("") ) {
+                        String m = replaceKeywordsForSystemMessages(
+                                MSG_BAN_NGWORD, player.getName());
+                        player.sendMessage(m);
+                        sendMessage(null, m, null, true);
+                    }
                 }
 
             } else if ( config.getNgwordAction() == NGWordAction.KICK ) {
@@ -192,10 +194,12 @@ public class ChannelImpl extends Channel {
 
                 if ( !isGlobalChannel() ) {
                     removeMember(player);
-                    String m = replaceKeywordsForSystemMessages(
-                            MSG_KICK_NGWORD, player.getName());
-                    player.sendMessage(m);
-                    sendMessage(null, m, null, true);
+                    if ( !MSG_KICK_NGWORD.equals("") ) {
+                        String m = replaceKeywordsForSystemMessages(
+                                MSG_KICK_NGWORD, player.getName());
+                        player.sendMessage(m);
+                        sendMessage(null, m, null, true);
+                    }
                 }
 
             } else if ( config.getNgwordAction() == NGWordAction.MUTE ) {
@@ -203,10 +207,12 @@ public class ChannelImpl extends Channel {
 
                 getMuted().add(player);
                 save();
-                String m = replaceKeywordsForSystemMessages(
-                        MSG_MUTE_NGWORD, player.getName());
-                player.sendMessage(m);
-                sendMessage(null, m, null, true);
+                if ( !MSG_MUTE_NGWORD.equals("") ) {
+                    String m = replaceKeywordsForSystemMessages(
+                            MSG_MUTE_NGWORD, player.getName());
+                    player.sendMessage(m);
+                    sendMessage(null, m, null, true);
+                }
             }
         }
     }
@@ -380,7 +386,7 @@ public class ChannelImpl extends Channel {
         }
 
         // 受信者が自分以外いない場合は、メッセージを表示する
-        if ( isRangeChat && (
+        if ( !MSG_NO_RECIPIENT.equals("") && isRangeChat && (
                 recipients.size() == 0 ||
                 (recipients.size() == 1 &&
                  recipients.get(0).getName().equals(player.getName()) ) ) ) {
@@ -532,11 +538,13 @@ public class ChannelImpl extends Channel {
                     save();
 
                     // メッセージ通知を流す
-                    String msg = replaceKeywords(MSG_BAN_EXPIRED, cp);
-                    sendMessage(null, msg, null, false);
+                    if ( !MSG_BAN_EXPIRED.equals("") ) {
+                        String msg = replaceKeywords(MSG_BAN_EXPIRED, cp);
+                        sendMessage(null, msg, null, false);
+                    }
 
-                    if ( cp.isOnline() ) {
-                        msg = PREINFO + String.format(MSG_BAN_EXPIRED_PLAYER, getName());
+                    if ( cp.isOnline() && !MSG_BAN_EXPIRED_PLAYER.equals("") ) {
+                        String msg = PREINFO + String.format(MSG_BAN_EXPIRED_PLAYER, getName());
                         cp.sendMessage(msg);
                     }
                 }
@@ -554,11 +562,13 @@ public class ChannelImpl extends Channel {
                     save();
 
                     // メッセージ通知を流す
-                    String msg = replaceKeywords(MSG_MUTE_EXPIRED, cp);
-                    sendMessage(null, msg, null, false);
+                    if ( !MSG_MUTE_EXPIRED.equals("") ) {
+                        String msg = replaceKeywords(MSG_MUTE_EXPIRED, cp);
+                        sendMessage(null, msg, null, false);
+                    }
 
-                    if ( cp.isOnline() ) {
-                        msg = PREINFO + String.format(MSG_MUTE_EXPIRED_PLAYER, getName());
+                    if ( cp.isOnline() && !MSG_MUTE_EXPIRED_PLAYER.equals("") ) {
+                        String msg = PREINFO + String.format(MSG_MUTE_EXPIRED_PLAYER, getName());
                         cp.sendMessage(msg);
                     }
                 }
