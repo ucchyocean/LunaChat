@@ -1,6 +1,8 @@
 LunaChat
 ========
 
+Build Status : [![Build Status](https://travis-ci.org/ucchyocean/LunaChat.svg?branch=master)](https://travis-ci.org/ucchyocean/LunaChat)
+
 チャンネルチャットプラグイン for ShiroumiServer<br />
 <br />
 ダウンロードはこちらから<br />
