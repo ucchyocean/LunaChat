@@ -61,6 +61,12 @@ public abstract class ChannelPlayer implements Comparable<ChannelPlayer> {
     public abstract Player getPlayer();
 
     /**
+     * 発言者が今いるワールドのワールド名を取得する
+     * @return ワールド名
+     */
+    public abstract String getWorldName();
+
+    /**
      * 指定されたCommandSenderと同一かどうかを返す
      * @param sender
      * @return 同一かどうか

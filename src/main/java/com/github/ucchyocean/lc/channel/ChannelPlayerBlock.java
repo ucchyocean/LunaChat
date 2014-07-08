@@ -96,6 +96,16 @@ public class ChannelPlayerBlock extends ChannelPlayer {
     }
 
     /**
+     * 発言者が今いるワールドのワールド名を取得する
+     * @return 常に "-" が返される。
+     * @see com.github.ucchyocean.lc.channel.ChannelPlayer#getWorldName()
+     */
+    @Override
+    public String getWorldName() {
+        return "-";
+    }
+
+    /**
      * 指定されたCommandSenderと同一かどうかを返す
      * @param sender
      * @return 同一かどうか

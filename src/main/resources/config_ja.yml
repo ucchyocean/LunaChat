@@ -47,6 +47,15 @@ forceJoinChannels: []
 formatConstraint: ['%username', '%msg']
 
 # チャンネルを作成したときに、デフォルトで設定されるフォーマット設定。
+# フォーマット設定には、下記のキーワードが使用できます。
+# %ch       : チャンネル名
+# %color    : チャンネルカラー
+# %username : 発言者表示名
+# %player   : 発言者ID
+# %world    : 発言したワールド名
+# %prefix   : プレフィックス（VaultとPermissionsExが導入されている場合に置き換えられます）
+# %suffix   : サフィックス（VaultとPermissionsExが導入されている場合に置き換えられます）
+# %msg      : 発言内容（Japanize変換された場合は、Japanize結果を含みます。）
 defaultFormat: '&f[%color%ch&f]%prefix%username%suffix&a:&f %msg'
 
 
@@ -54,6 +63,15 @@ defaultFormat: '&f[%color%ch&f]%prefix%username%suffix&a:&f %msg'
 
 # /tell や /msg や /r コマンドでプライベートメッセージを送信するときに、
 # 適用されるフォーマット設定。
+# フォーマット設定には、下記のキーワードが使用できます。
+# %ch       : チャンネル名（「%player>%to」と同一です。）
+# %username : 発言者表示名
+# %player   : 発言者ID
+# %to       : 発言の相手（受信者）のID
+# %world    : 発言したワールド名
+# %prefix   : プレフィックス（VaultとPermissionsExが導入されている場合に置き換えられます）
+# %suffix   : サフィックス（VaultとPermissionsExが導入されている場合に置き換えられます）
+# %msg      : 発言内容（Japanize変換された場合は、Japanize結果を含みます。）
 defaultFormatForPrivateMessage: '&7[%player > %to] %msg'
 
 
@@ -99,6 +117,12 @@ ngwordAction: mask
 enableNormalChatMessageFormat: true
 
 # チャット装飾のフォーマット設定。
+# フォーマット設定には、下記のキーワードが使用できます。
+# %username : 発言者表示名
+# %world    : 発言したワールド名
+# %prefix   : プレフィックス（VaultとPermissionsExが導入されている場合に置き換えられます）
+# %suffix   : サフィックス（VaultとPermissionsExが導入されている場合に置き換えられます）
+# %msg      : 発言内容（Japanize変換された場合は、Japanize結果を含みます。）
 normalChatMessageFormat: '%prefix&f<%username>%suffix&f %msg'
 
 
@@ -124,9 +148,15 @@ japanizeType: GoogleIME
 japanizeDisplayLine: 1
 
 # japanizeDisplayLine が 1 のときの、表示フォーマットを設定する。
+# フォーマット設定には、下記のキーワードが使用できます。
+# %msg      : 元の発言内容
+# %japanize : Japanize変換された発言内容
 japanizeLine1Format: '%msg &7(%japanize)'
 
 # japanizeDisplayLine が 2 のときの、2行目の表示フォーマットを設定する。
+# フォーマット設定には、下記のキーワードが使用できます。
+# %msg      : 元の発言内容
+# %japanize : Japanize変換された発言内容
 japanizeLine2Format: '&6[JP] %japanize'
 
 # 発言に含まれているプレイヤー名を、Japanize変換から除外するかどうかを設定する。

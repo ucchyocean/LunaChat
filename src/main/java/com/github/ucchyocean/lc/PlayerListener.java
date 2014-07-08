@@ -337,6 +337,10 @@ public class PlayerListener implements Listener {
             format = format.replace("%suffix", suffix);
         }
 
+        if ( format.contains("%world") ) {
+            format = format.replace("%world", player.getWorld().getName());
+        }
+
         return Utility.replaceColorCode(format);
     }
 

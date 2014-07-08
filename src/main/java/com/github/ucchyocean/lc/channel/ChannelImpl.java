@@ -613,11 +613,16 @@ public class ChannelImpl extends Channel {
                 msg = msg.replace("%suffix", player.getSuffix());
             }
 
+            if ( msg.contains("%world") ) {
+                msg = msg.replace("%world", player.getWorldName());
+            }
+
         } else {
             msg = msg.replace("%username", "");
             msg = msg.replace("%player", "");
             msg = msg.replace("%prefix", "");
             msg = msg.replace("%suffix", "");
+            msg = msg.replace("%world", "");
         }
 
         return Utility.replaceColorCode(msg);

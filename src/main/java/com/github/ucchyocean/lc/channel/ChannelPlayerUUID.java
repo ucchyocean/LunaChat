@@ -173,6 +173,20 @@ public class ChannelPlayerUUID extends ChannelPlayer {
     }
 
     /**
+     * 発言者が今いるワールドのワールド名を取得する
+     * @return ワールド名
+     * @see com.github.ucchyocean.lc.channel.ChannelPlayer#getWorldName()
+     */
+    @Override
+    public String getWorldName() {
+        Player player = getPlayer();
+        if ( player != null ) {
+            return player.getWorld().getName();
+        }
+        return "-";
+    }
+
+    /**
      * 指定されたCommandSenderと同一かどうかを返す
      * @param sender
      * @return 同一かどうか
