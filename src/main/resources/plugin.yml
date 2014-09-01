@@ -151,7 +151,6 @@ permissions:
       lunachat.format: true
       lunachat.moderator: true
       lunachat.option: true
-      lunachat.option.*: true
       lunachat.message: true
       lunachat.reply: true
       lunachat.help: true
