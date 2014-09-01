@@ -114,12 +114,21 @@ public class Utility {
     }
 
     /**
-     * 文字列内のカラーコードを置き換えする
+     * 文字列内のカラーコード候補（&a）を、カラーコード（§a）に置き換えする
      * @param source 置き換え元の文字列
      * @return 置き換え後の文字列
      */
     public static String replaceColorCode(String source) {
-        return source.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
+        return ChatColor.translateAlternateColorCodes('&', source);
+    }
+
+    /**
+     * 文字列に含まれているカラーコード（§a）を除去して返す
+     * @param source 置き換え元の文字列
+     * @return 置き換え後の文字列
+     */
+    public static String stripColor(String source) {
+        return ChatColor.stripColor(source);
     }
 
     /**

@@ -135,9 +135,10 @@ public class ChannelImpl extends Channel {
         maskedMessage = event.getNgMaskedMessage();
 
         // 2byteコードを含むか、半角カタカナのみなら、Japanize変換は行わない
+        String kanaTemp = Utility.stripColor(maskedMessage);
         if ( !skipJapanize &&
-                ( message.getBytes().length > message.length() ||
-                  message.matches("[ \\uFF61-\\uFF9F]+") ) ) {
+                ( kanaTemp.getBytes().length > kanaTemp.length() ||
+                        kanaTemp.matches("[ \\uFF61-\\uFF9F]+") ) ) {
             skipJapanize = true;
         }
 
@@ -153,11 +154,11 @@ public class ChannelImpl extends Channel {
             String jpFormat;
             String messageFormat = null;
             if ( lineType == 1 ) {
-                jpFormat = config.getJapanizeLine1Format();
+                jpFormat = Utility.replaceColorCode(config.getJapanizeLine1Format());
                 messageFormat = msgFormat;
                 isIncludeSyncChat = false;
             } else {
-                jpFormat = config.getJapanizeLine2Format();
+                jpFormat = Utility.replaceColorCode(config.getJapanizeLine2Format());
             }
 
             // タスクを作成しておく

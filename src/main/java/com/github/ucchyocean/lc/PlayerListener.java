@@ -202,6 +202,7 @@ public class PlayerListener implements Listener {
                 message = Utility.replaceColorCode(message);
             }
 
+
             // 一時的にJapanizeスキップ設定かどうかを確認する
             boolean skipJapanize = false;
             String marker = config.getNoneJapanizeMarker();
@@ -211,9 +212,10 @@ public class PlayerListener implements Listener {
             }
 
             // 2byteコードを含むなら、Japanize変換は行わない
+            String kanaTemp = Utility.stripColor(message);
             if ( !skipJapanize &&
-                    ( message.getBytes().length > message.length() ||
-                      message.matches("[ \\uFF61-\\uFF9F]+") ) ) {
+                    ( kanaTemp.getBytes().length > kanaTemp.length() ||
+                            kanaTemp.matches("[ \\uFF61-\\uFF9F]+") ) ) {
                 skipJapanize = true;
             }
 
@@ -223,22 +225,21 @@ public class PlayerListener implements Listener {
                     config.getJapanizeType() != JapanizeType.NONE ) {
 
                 int lineType = config.getJapanizeDisplayLine();
-                String taskFormat;
+
                 if ( lineType == 1 ) {
 
-                    taskFormat = config.getJapanizeLine1Format();
+                    String taskFormat = Utility.replaceColorCode(config.getJapanizeLine1Format());
 
                     String japanized = api.japanize(
-                            message, config.getJapanizeType());
+                            kanaTemp, config.getJapanizeType());
                     if ( japanized != null ) {
                         String temp = taskFormat.replace("%msg", message);
-                        temp = temp.replace("%japanize", japanized);
-                        message = Utility.replaceColorCode(temp);
+                        message = temp.replace("%japanize", japanized);
                     }
 
                 } else {
 
-                    taskFormat = config.getJapanizeLine2Format();
+                    String taskFormat = Utility.replaceColorCode(config.getJapanizeLine2Format());
 
                     DelayedJapanizeConvertTask task = new DelayedJapanizeConvertTask(message,
                             config.getJapanizeType(), null, player, taskFormat, null);

@@ -95,8 +95,8 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
             }
         }
 
-        // URL削除
-        String deletedURL = org.replaceAll(REGEX_URL, " ");
+        // カラーコード削除、URL削除
+        String deletedURL = Utility.stripColor(org.replaceAll(REGEX_URL, " "));
 
         // キーワードをロック
         int index = 0;
@@ -146,7 +146,6 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
         // フォーマットする
         result = format.replace("%msg", org);
         result = result.replace("%japanize", japanized);
-        result = Utility.replaceColorCode(result);
 
         return true;
     }
