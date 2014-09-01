@@ -86,6 +86,9 @@ public class LunaChatConfig {
     /** 通常チャットの装飾フォーマット */
     private String normalChatMessageFormat;
 
+    /** 通常チャットで、カラーコードを使用可能にするかどうか */
+    private boolean enableNormalChatColorCode;
+
     /** Japanize変換のタイプ<br/>
      *  none = 日本語変換をしない<br/>
      *  kana = カナ変換のみする<br/>
@@ -188,6 +191,8 @@ public class LunaChatConfig {
                 config.getBoolean("enableNormalChatMessageFormat", true);
         normalChatMessageFormat =
                 config.getString("normalChatMessageFormat", "&f<%prefix%username%suffix&f> %msg");
+        enableNormalChatColorCode =
+                config.getBoolean("enableNormalChatColorCode", true);
 
         japanizeType = JapanizeType.fromID(config.getString("japanizeType", "kana"));
         japanizeDisplayLine = config.getInt("japanizeDisplayLine", 2);
@@ -436,5 +441,13 @@ public class LunaChatConfig {
      */
     public int getJapanizeWait() {
         return japanizeWait;
+    }
+
+    /**
+     * 通常チャットで、カラーコードを使用可能にするかどうか
+     * @return enableNormalChatColorCodeを返す
+     */
+    public boolean isEnableNormalChatColorCode() {
+        return enableNormalChatColorCode;
     }
 }

@@ -127,6 +127,9 @@ permissions:
   lunachat.japanize:
     description: lunachatのjapanizeオンオフ設定コマンドの使用権限
     default: true
+  lunachat.allowcc:
+    description: チャットにおけるカラーコードの使用権限
+    default: true
   lunachat.*:
     children:
       lunachat.join: true
@@ -148,10 +151,12 @@ permissions:
       lunachat.format: true
       lunachat.moderator: true
       lunachat.option: true
+      lunachat.option.*: true
       lunachat.message: true
       lunachat.reply: true
       lunachat.help: true
       lunachat.japanize: true
+      lunachat.allowcc: true
     description: 一般ユーザー向けの全コマンドの使用権限
 
   lunachat.option.description:
@@ -172,6 +177,9 @@ permissions:
   lunachat.option.visible:
     description: visibleオプション設定コマンドの使用権限
     default: true
+  lunachat.option.allowcc:
+    description: allowccオプション設定コマンドの使用権限
+    default: true
   lunachat.option.*:
     children:
       lunachat.option.description: true
@@ -180,6 +188,7 @@ permissions:
       lunachat.option.range: true
       lunachat.option.password: true
       lunachat.option.visible: true
+      lunachat.option.allowcc: true
     description: オプション設定の全コマンドの使用権限
 
   lunachat-admin.mod-all-channels:

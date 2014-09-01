@@ -137,6 +137,22 @@ public class ChannelPlayerName extends ChannelPlayer {
     }
 
     /**
+     * 指定されたパーミッションノードの権限を持っているかどうかを取得する
+     * @param node パーミッションノード
+     * @return 権限を持っているかどうか
+     * @see com.github.ucchyocean.lc.channel.ChannelPlayer#hasPermission(java.lang.String)
+     */
+    @Override
+    public boolean hasPermission(String node) {
+        Player player = getPlayer();
+        if ( player == null ) {
+            return false;
+        } else {
+            return player.hasPermission(node);
+        }
+    }
+
+    /**
      * 指定されたCommandSenderと同一かどうかを返す
      * @param sender
      * @return 同一かどうか

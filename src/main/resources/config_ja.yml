@@ -4,11 +4,11 @@
 # @copyright  Copyright ucchy 2013
 
 
-# -------------------- チャンネルチャット設定 --------------------
-
 # チャンネルチャット機能を利用可能にするかどうか
 # Japanize機能のみを利用したい場合は、falseにしてください。
 enableChannelChat: true
+
+# -------------------- チャンネルチャット設定 --------------------
 
 # チャンネルチャットに入っていない人の発言を、グローバルとして扱うかどうか
 noJoinAsGlobal: true
@@ -105,11 +105,14 @@ ngword: []
 # mute : NGワードをマスクしたのち、発言したプレイヤーをチャンネルからMuteする
 # kick : NGワードをマスクしたのち、発言したプレイヤーをチャンネルからキックする
 # ban  : NGワードをマスクしたのち、発言したプレイヤーをチャンネルからBANする
+# ※ 通常チャット（非チャンネルチャット）の場合は、
+#    kickやbanを設定しても、マスクのみが実行されます。
 ngwordAction: mask
 
 
 
 # -------------------- チャット装飾設定 --------------------
+
 # チャンネルチャット機能を利用しないユーザーのための設定です。
 
 # 通常チャット（非チャンネルチャット）の装飾を、LunaChatから行うかどうか。
@@ -124,6 +127,10 @@ enableNormalChatMessageFormat: true
 # %suffix   : サフィックス（VaultとPermissionsExが導入されている場合に置き換えられます）
 # %msg      : 発言内容（Japanize変換された場合は、Japanize結果を含みます。）
 normalChatMessageFormat: '%prefix&f<%username>%suffix&f %msg'
+
+# 通常チャット（非チャンネルチャット）で、カラーコード（&aや&bなど）を
+# 使用可能にするかどうか。falseに設定すると、カラーコードは変換されません。
+enableNormalChatColorCode: true
 
 
 

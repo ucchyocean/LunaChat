@@ -197,7 +197,11 @@ public class PlayerListener implements Listener {
             }
 
             // カラーコード置き換え
-            message = Utility.replaceColorCode(message);
+            // 置き換え設定になっていて、発言者がパーミッションを持っているなら、置き換えする
+            if ( config.isEnableNormalChatColorCode() &&
+                    event.getPlayer().hasPermission("lunachat.allowcc") ) {
+                message = Utility.replaceColorCode(message);
+            }
 
             // 一時的にJapanizeスキップ設定かどうかを確認する
             boolean skipJapanize = false;

@@ -118,7 +118,10 @@ public class ChannelImpl extends Channel {
         String msgFormat = replaceKeywords(getFormat(), player);
 
         // カラーコード置き換え
-        maskedMessage = Utility.replaceColorCode(maskedMessage);
+        // チャンネルで許可されていて、発言者がパーミッションを持っている場合に置き換える
+        if ( isAllowCC() && player.hasPermission("lunachat.allowcc") ) {
+            maskedMessage = Utility.replaceColorCode(maskedMessage);
+        }
 
         // イベントコール
         LunaChatChannelChatEvent event =
@@ -245,8 +248,10 @@ public class ChannelImpl extends Channel {
         msgFormat = msgFormat.replace("%prefix", "");
         msgFormat = msgFormat.replace("%suffix", "");
 
-        // カラーコード置き換え
-        maskedMessage = Utility.replaceColorCode(maskedMessage);
+        // カラーコード置き換え チャンネルで許可されている場合に置き換える。
+        if ( isAllowCC() ) {
+            maskedMessage = Utility.replaceColorCode(maskedMessage);
+        }
 
         // メッセージの送信
         sendMessage(null, maskedMessage, msgFormat, false);

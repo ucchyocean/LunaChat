@@ -51,6 +51,7 @@ public abstract class Channel implements ConfigurationSerializable {
     private static final String KEY_RANGE = "range";
     private static final String KEY_BAN_EXPIRES = "ban_expires";
     private static final String KEY_MUTE_EXPIRES = "mute_expires";
+    private static final String KEY_ALLOWCC = "allowcc";
 
     /** 参加者 */
     private List<ChannelPlayer> members;
@@ -111,6 +112,9 @@ public abstract class Channel implements ConfigurationSerializable {
     /** 1:1チャットの相手名 */
     private String privateMessageTo;
 
+    /** カラーコードの使用可否 */
+    private boolean allowcc;
+
     /**
      * コンストラクタ
      * @param name チャンネルの名称
@@ -133,6 +137,7 @@ public abstract class Channel implements ConfigurationSerializable {
         this.banExpires = new HashMap<ChannelPlayer, Long>();
         this.muteExpires = new HashMap<ChannelPlayer, Long>();
         this.privateMessageTo = "";
+        this.allowcc = true;
 
         LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
         if ( isPersonalChat() ) {
@@ -424,6 +429,7 @@ public abstract class Channel implements ConfigurationSerializable {
         map.put(KEY_RANGE, chatRange);
         map.put(KEY_BAN_EXPIRES, getStringLongMap(banExpires));
         map.put(KEY_MUTE_EXPIRES, getStringLongMap(muteExpires));
+        map.put(KEY_ALLOWCC, allowcc);
         return map;
     }
 
@@ -456,6 +462,7 @@ public abstract class Channel implements ConfigurationSerializable {
         channel.chatRange = castWithDefault(data.get(KEY_RANGE), 0);
         channel.banExpires = castToChannelPlayerLongMap(data.get(KEY_BAN_EXPIRES));
         channel.muteExpires = castToChannelPlayerLongMap(data.get(KEY_MUTE_EXPIRES));
+        channel.allowcc = castWithDefault(data.get(KEY_ALLOWCC), true);
         return channel;
     }
 
@@ -804,6 +811,22 @@ public abstract class Channel implements ConfigurationSerializable {
      */
     public int getChatRange() {
         return chatRange;
+    }
+
+    /**
+     * カラーコードが使用可能な設定かどうか
+     * @return allowccを返す
+     */
+    public boolean isAllowCC() {
+        return allowcc;
+    }
+
+    /**
+     * カラーコードの使用可否を設定する
+     * @param allowcc 使用可否
+     */
+    public void setAllowCC(boolean allowcc) {
+        this.allowcc = allowcc;
     }
 
     /**

@@ -262,6 +262,34 @@ public class OptionCommand extends SubCommandAbst {
             }
         }
 
+        if ( options.containsKey("allowcc") ) {
+            // カラーコード使用可否
+
+            String pnode = PERMISSION_NODE + ".allowcc";
+            if ( !sender.hasPermission(pnode) ) {
+                sendResourceMessage(sender, PREERR,
+                        "errmsgNotPermission", pnode);
+            } else {
+
+                String value = options.get("allowcc");
+
+                if ( value.equals("") || value.equalsIgnoreCase("false") ) {
+                    channel.setAllowCC(false);
+                    sendResourceMessage(sender, PREINFO,
+                            "cmdmsgOption", "allowcc", "false");
+                    setOption = true;
+                } else if ( value.equalsIgnoreCase("true") ) {
+                    channel.setAllowCC(true);
+                    sendResourceMessage(sender, PREINFO,
+                            "cmdmsgOption", "allowcc", "true");
+                    setOption = true;
+                } else {
+                    sendResourceMessage(sender, PREERR,
+                            "errmsgInvalidBooleanOption", "allowcc");
+                }
+            }
+        }
+
         if ( !channel.isGlobalChannel() ) {
 
             if ( options.containsKey("password") ) {

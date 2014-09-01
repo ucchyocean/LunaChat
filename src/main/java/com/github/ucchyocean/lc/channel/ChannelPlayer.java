@@ -67,6 +67,13 @@ public abstract class ChannelPlayer implements Comparable<ChannelPlayer> {
     public abstract String getWorldName();
 
     /**
+     * 指定されたパーミッションノードの権限を持っているかどうかを取得する
+     * @param node パーミッションノード
+     * @return 権限を持っているかどうか
+     */
+    public abstract boolean hasPermission(String node);
+
+    /**
      * 指定されたCommandSenderと同一かどうかを返す
      * @param sender
      * @return 同一かどうか
