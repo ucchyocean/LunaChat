@@ -8,7 +8,6 @@ package com.github.ucchyocean.lc;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -246,7 +245,7 @@ public class PlayerListener implements Listener {
 
                     // 発言処理を必ず先に実施させるため、遅延を入れてタスクを実行する。
                     int wait = config.getJapanizeWait();
-                    Bukkit.getScheduler().runTaskLater(LunaChat.getInstance(), task, wait);
+                    task.runTaskLater(LunaChat.getInstance(), wait);
                 }
             }
 

@@ -10,7 +10,6 @@ import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -48,8 +47,7 @@ public class LunaChatLogger {
         checkDir();
 
         // 以降の処理を、発言処理の負荷軽減のため、非同期実行にする。(see issue #40.)
-        Bukkit.getScheduler().runTaskAsynchronously(
-                LunaChat.getInstance(), new BukkitRunnable() {
+        new BukkitRunnable() {
             @Override
             public void run() {
 
@@ -72,7 +70,7 @@ public class LunaChatLogger {
                 }
 
             }
-        });
+        }.runTaskAsynchronously(LunaChat.getInstance());
     }
 
     /**
