@@ -365,6 +365,17 @@ public abstract class Channel implements ConfigurationSerializable {
     public abstract ArrayList<String> getInfo(boolean forModerator);
 
     /**
+     * ログファイルを読み込んで、ログデータを取得する
+     * @param player プレイヤー名、フィルタしないならnullを指定すること
+     * @param filter フィルタ、フィルタしないならnullを指定すること
+     * @param date 日付、今日のデータを取得するならnullを指定すること
+     * @param reverse 逆順取得
+     * @return ログデータ
+     */
+    public abstract ArrayList<String> getLog(
+            String player, String filter, String date, boolean reverse);
+
+    /**
      * チャンネルのオンライン人数を返す
      * @return オンライン人数
      */

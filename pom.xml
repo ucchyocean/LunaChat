@@ -102,8 +102,7 @@
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>bukkit</artifactId>
-      <version>1.7.9-R0.2-SNAPSHOT</version>
-      <!-- Stay 1.7.9-R0.2, cause by changing Bukkit#getOnlinePlayers method (BUKKIT-5668). -->
+      <version>1.7.9-R0.2</version>
     </dependency>
     <dependency>
       <groupId>net.milkbowl.vault</groupId>

@@ -42,6 +42,10 @@ channelInfoMuted: '&8| &cMuteリスト：'
 
 motdFirstLine: '&8----- &bあなたが参加中のチャット &8-----'
 
+logDisplayFirstLine: '&8----- &b%sの発言ログ &8-----'
+logDisplayEndLine: '&8----------------------------------'
+logDisplayFormat: '&8| &c%s&8, &f%s&8: &f%s'
+
 infoPrefix: '&a[Info]'
 errorPrefix: '&c[Error]'
 
@@ -157,6 +161,7 @@ usageUnmute: '&6/%s unmute (name) &7- 指定した人のチャンネルでの発
 usageHide: '&6/%s hide [channel] &7- 指定したチャンネルの発言内容を非表示にします。'
 usageUnhide: '&6/%s unhide [channel] &7- 指定したチャンネルの発言内容を非表示から表示に戻します。'
 usageInfo: '&6/%s info [channel] &7- チャンネルの情報を表示します。'
+usageLog: '&6/%s log [channel] [p=player] [f=filter] [f=date] [r] &7- チャンネルの発言ログを表示します。'
 
 usageCreate: '&6/%s create (channel) [description] &7- チャンネルを作成します。'
 usageRemove: '&6/%s remove [channel] &7- チャンネルを削除します。'

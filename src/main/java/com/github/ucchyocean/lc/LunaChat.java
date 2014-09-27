@@ -38,6 +38,7 @@ public class LunaChat extends JavaPlugin {
     private DynmapBridge dynmap;
 
     private ExpireCheckTask expireCheckerTask;
+    private LunaChatLogger normalChatLogger;
 
     private LunaChatCommand lunachatCommand;
     private LunaChatMessageCommand messageCommand;
@@ -55,6 +56,7 @@ public class LunaChat extends JavaPlugin {
         instance = this;
         config = new LunaChatConfig();
         manager = new ChannelManager();
+        normalChatLogger = new LunaChatLogger("==normalchat");
 
         // チャンネルチャット無効なら、デフォルト発言先をクリアする(see issue #59)
         if ( !config.isEnableChannelChat() ) {
@@ -191,6 +193,22 @@ public class LunaChat extends JavaPlugin {
      */
     public DynmapBridge getDynmap() {
         return dynmap;
+    }
+
+    /**
+     * 通常チャット用のロガーを返す
+     * @return normalChatLogger
+     */
+    public LunaChatLogger getNormalChatLogger() {
+        return normalChatLogger;
+    }
+
+    /**
+     * 通常チャット用のロガーを設定する
+     * @param normalChatLogger normalChatLogger
+     */
+    protected void setNormalChatLogger(LunaChatLogger normalChatLogger) {
+        this.normalChatLogger = normalChatLogger;
     }
 
     /**

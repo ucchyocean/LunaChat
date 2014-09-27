@@ -401,7 +401,8 @@ public class ChannelImpl extends Channel {
         }
 
         // ロギング
-        log(message);
+        String p = (player != null) ? player.getName() : "";
+        log(originalMessage, p);
     }
 
     /**
@@ -523,6 +524,20 @@ public class ChannelImpl extends Channel {
         info.add(LIST_ENDLINE);
 
         return info;
+    }
+
+    /**
+     * ログファイルを読み込んで、ログデータを取得する
+     * @param player プレイヤー名、フィルタしないならnullを指定すること
+     * @param filter フィルタ、フィルタしないならnullを指定すること
+     * @param date 日付、今日のデータを取得するならnullを指定すること
+     * @param reverse 逆順取得
+     * @return ログデータ
+     */
+    public ArrayList<String> getLog(
+            String player, String filter, String date, boolean reverse) {
+
+        return logger.getLog(player, filter, date, reverse);
     }
 
     /**
@@ -653,9 +668,10 @@ public class ChannelImpl extends Channel {
 
     /**
      * ログを記録する
+     * @param player 発言者
      * @param message 記録するメッセージ
      */
-    private void log(String message) {
+    private void log(String message, String player) {
 
         LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
 
@@ -663,7 +679,7 @@ public class ChannelImpl extends Channel {
             Bukkit.getLogger().info(ChatColor.stripColor(message));
         }
         if ( config.isLoggingChat() && logger != null ) {
-            logger.log(ChatColor.stripColor(message));
+            logger.log(message, player);
         }
     }
 }

@@ -250,7 +250,11 @@ public class PlayerListener implements Listener {
                 }
             }
 
+            // 発言内容の設定
             event.setMessage(message);
+
+            // ロギング
+            logNormalChat(message, player.getName());
 
             return;
         }
@@ -397,5 +401,15 @@ public class PlayerListener implements Listener {
         items.add(LIST_ENDLINE);
 
         return items;
+    }
+
+    /**
+     * 通常チャットの発言をログファイルへ記録する
+     * @param message
+     * @param player
+     */
+    private void logNormalChat(String message, String player) {
+
+        LunaChat.getInstance().getNormalChatLogger().log(message, player);
     }
 }

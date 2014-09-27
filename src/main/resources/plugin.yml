@@ -26,6 +26,7 @@ commands:
            /<command> hide [channel] - 指定したチャンネルの発言内容を非表示にします。指定を省略すると、現在自分が居るチャンネルが非表示になります。
            /<command> unhide [channel] - 指定したチャンネルの発言内容を非表示から表示に戻します。
            /<command> info [channel] - チャンネルの情報を表示します。
+           /<command> log [channel] [key=value...] - チャンネルのログを表示します。
            /<command> create (channel) - チャンネルを作成します。
            /<command> remove [channel] - チャンネルを削除します。
            /<command> format [channel] (format...) - チャンネルのメッセージフォーマットを設定します。
@@ -100,6 +101,9 @@ permissions:
   lunachat.info:
     description: infoコマンドの使用権限
     default: true
+  lunachat.log:
+    description: logコマンドの使用権限
+    default: true
   lunachat.create:
     description: createコマンドの使用権限
     default: true
@@ -146,6 +150,7 @@ permissions:
       lunachat.hide: true
       lunachat.unhide: true
       lunachat.info: true
+      lunachat.log: true
       lunachat.create: true
       lunachat.remove: true
       lunachat.format: true
