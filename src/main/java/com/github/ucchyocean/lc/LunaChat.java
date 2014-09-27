@@ -90,7 +90,7 @@ public class LunaChat extends JavaPlugin {
 
         // 期限チェッカータスクの起動
         expireCheckerTask = new ExpireCheckTask();
-        expireCheckerTask.runTaskTimer(this, 100, 1200);
+        expireCheckerTask.runTaskTimerAsynchronously(this, 100, 600);
     }
 
     /**
