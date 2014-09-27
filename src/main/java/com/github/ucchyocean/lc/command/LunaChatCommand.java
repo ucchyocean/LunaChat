@@ -57,6 +57,8 @@ public class LunaChatCommand implements CommandExecutor {
         commands.add(new FormatCommand());
         commands.add(new ModeratorCommand());
         commands.add(new ModCommand());
+        commands.add(new DictionaryCommand());
+        commands.add(new DicCommand());
         commands.add(new OptionCommand());
         commands.add(new TemplateCommand());
         commands.add(new CheckCommand());
@@ -154,6 +156,32 @@ public class LunaChatCommand implements CommandExecutor {
             String arg = args[1].toLowerCase();
             ArrayList<String> items = new ArrayList<String>();
             for ( String name : getListCanRemove(sender) ) {
+                if ( name.toLowerCase().startsWith(arg) ) {
+                    items.add(name);
+                }
+            }
+            return items;
+
+        } else if ( args.length == 2 &&
+                (args[0].equalsIgnoreCase("dic") || args[0].equalsIgnoreCase("dictionary")) ) {
+            // add、remove、viewで補完する
+            String arg = args[1].toLowerCase();
+            ArrayList<String> items = new ArrayList<String>();
+            for ( String name : new String[]{"add", "remove", "view"} ) {
+                if ( name.toLowerCase().startsWith(arg) ) {
+                    items.add(name);
+                }
+            }
+            return items;
+
+        } else if ( args.length == 3 &&
+                (args[0].equalsIgnoreCase("dic") || args[0].equalsIgnoreCase("dictionary")) &&
+                args[1].equalsIgnoreCase("remove") ) {
+            // 辞書に登録されているワードで補完する
+            String arg = args[2].toLowerCase();
+            ArrayList<String> items = new ArrayList<String>();
+            for ( String name :
+                    LunaChat.getInstance().getLunaChatAPI().getAllDictionary().keySet() ) {
                 if ( name.toLowerCase().startsWith(arg) ) {
                     items.add(name);
                 }

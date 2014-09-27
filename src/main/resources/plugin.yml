@@ -31,6 +31,7 @@ commands:
            /<command> remove [channel] - チャンネルを削除します。
            /<command> format [channel] (format...) - チャンネルのメッセージフォーマットを設定します。
            /<command> moderator [channel] (player...) - チャンネルのモデレーターを指定したプレイヤーに設定します。
+           /<command> dictionary (add (word) (value)|remove (word)) - Japanize変換辞書に新しいワードを登録したり、指定したワードを削除したりします。
            /<command> option (key=value...) - チャンネルのオプションを設定します。
            /<command> template (number) (template...) - メッセージフォーマットのテンプレートを登録します。
            /<command> check - モデレータがいないチャンネルを一覧します。
@@ -201,6 +202,9 @@ permissions:
   lunachat-admin.template:
     description: templateコマンドの使用権限
     default: op
+  lunachat-admin.dictionary:
+    description: dictionaryコマンドの使用権限
+    default: op
   lunachat-admin.check:
     description: checkコマンドの使用権限
     default: op
@@ -214,6 +218,7 @@ permissions:
     children:
       lunachat-admin.mod-all-channels: true
       lunachat-admin.template: true
+      lunachat-admin.dictionary: true
       lunachat-admin.check: true
       lunachat-admin.reload: true
       lunachat-admin.japanize-other: true

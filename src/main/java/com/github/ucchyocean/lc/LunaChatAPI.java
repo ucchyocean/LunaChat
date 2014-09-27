@@ -6,6 +6,7 @@
 package com.github.ucchyocean.lc;
 
 import java.util.Collection;
+import java.util.HashMap;
 
 import org.bukkit.command.CommandSender;
 
@@ -114,6 +115,25 @@ public interface LunaChatAPI {
      * @param id テンプレートID
      */
     public void removeTemplate(String id);
+
+    /**
+     * 辞書データを全て取得する
+     * @return 辞書データ
+     */
+    public HashMap<String, String> getAllDictionary();
+
+    /**
+     * 新しい辞書データを追加する
+     * @param key キー
+     * @param value 値
+     */
+    public void setDictionary(String key, String value);
+
+    /**
+     * 指定したキーの辞書データを削除する
+     * @param key キー
+     */
+    public void removeDictionary(String key);
 
     /**
      * Japanize変換を行う

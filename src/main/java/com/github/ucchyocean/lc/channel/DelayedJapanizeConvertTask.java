@@ -94,6 +94,8 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
                 keywords.add(player.getName());
             }
         }
+        HashMap<String, String> dictionary =
+                LunaChat.getInstance().getLunaChatAPI().getAllDictionary();
 
         // カラーコード削除、URL削除
         String deletedURL = Utility.stripColor(org.replaceAll(REGEX_URL, " "));
@@ -107,6 +109,14 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
                 String key = "＜" + index + "＞";
                 keywordLocked = keywordLocked.replace(keyword, key);
                 keywordMap.put(key, keyword);
+            }
+        }
+        for ( String dickey : dictionary.keySet() ) {
+            if ( keywordLocked.contains(dickey) ) {
+                index++;
+                String key = "＜" + index + "＞";
+                keywordLocked = keywordLocked.replace(dickey, key);
+                keywordMap.put(key, dictionary.get(dickey));
             }
         }
 

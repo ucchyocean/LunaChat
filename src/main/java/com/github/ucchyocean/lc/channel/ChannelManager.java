@@ -33,14 +33,17 @@ public class ChannelManager implements LunaChatAPI {
     private static final String FILE_NAME_DCHANNELS = "defaults.yml";
     private static final String FILE_NAME_TEMPLATES = "templates.yml";
     private static final String FILE_NAME_JAPANIZE = "japanize.yml";
+    private static final String FILE_NAME_DICTIONARY = "dictionary.yml";
 
     private File fileDefaults;
     private File fileTemplates;
     private File fileJapanize;
+    private File fileDictionary;
     private HashMap<String, Channel> channels;
     private HashMap<String, String> defaultChannels;
     private HashMap<String, String> templates;
     private HashMap<String, Boolean> japanize;
+    private HashMap<String, String> dictionary;
 
     /**
      * コンストラクタ
@@ -118,6 +121,26 @@ public class ChannelManager implements LunaChatAPI {
             japanize.put(key, configJapanize.getBoolean(key));
         }
 
+        // dictionaryのロード
+        fileDictionary = new File(
+                LunaChat.getInstance().getDataFolder(), FILE_NAME_DICTIONARY);
+        if ( !fileDictionary.exists() ) {
+            YamlConfiguration conf = new YamlConfiguration();
+            try {
+                conf.save(fileDictionary);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        YamlConfiguration configDictionary =
+                YamlConfiguration.loadConfiguration(fileDictionary);
+
+        dictionary = new HashMap<String, String>();
+        for ( String key : configDictionary.getKeys(false) ) {
+            dictionary.put(key, configDictionary.getString(key));
+        }
+
         // チャンネル設定のロード
         channels = Channel.loadAllChannels();
     }
@@ -184,6 +207,25 @@ public class ChannelManager implements LunaChatAPI {
                 config.set(key, japanize.get(key));
             }
             config.save(fileJapanize);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Dictionary設定を保存する
+     * @return 保存したかどうか
+     */
+    private boolean saveDictionary() {
+
+        try {
+            YamlConfiguration config = new YamlConfiguration();
+            for ( String key : dictionary.keySet() ) {
+                config.set(key, dictionary.get(key));
+            }
+            config.save(fileDictionary);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -434,6 +476,32 @@ public class ChannelManager implements LunaChatAPI {
     public void removeTemplate(String id) {
         templates.remove(id);
         saveTemplates();
+    }
+
+    /**
+     * 辞書データを全て取得する
+     * @return 辞書データ
+     */
+    public HashMap<String, String> getAllDictionary() {
+        return dictionary;
+    }
+
+    /**
+     * 新しい辞書データを追加する
+     * @param key キー
+     * @param value 値
+     */
+    public void setDictionary(String key, String value) {
+        dictionary.put(key, value);
+        saveDictionary();
+    }
+
+    /**
+     * 指定したキーの辞書データを削除する
+     * @param key キー
+     */
+    public void removeDictionary(String key) {
+        dictionary.remove(key);
     }
 
     /**
