@@ -7,6 +7,8 @@ package com.github.ucchyocean.lc.channel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -82,7 +84,7 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
 
     /**
      * 同期処理で変換を行います。結果は getResult() で取得してください。
-     * @return 同期処理を実行したかどうか（イベントでキャンセルされた場合はfalseになります）
+     * @return 処理を実行したかどうか（イベントでキャンセルされた場合はfalseになります）
      */
     public boolean runSync() {
 
@@ -135,11 +137,13 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
             japanized = IMEConverter.convBySocialIME(japanized);
         }
 
-        // NGワードが含まれている場合は、マスクする
-        for ( String word : LunaChat.getInstance().getLunaChatConfig().getNgword() ) {
-            if ( japanized.contains(word) ) {
-                japanized = japanized.replace(
-                        word, Utility.getAstariskString(word.length()));
+        // 変換後の文字列にNGワードが含まれている場合は、マスクする
+        for ( Pattern pattern :
+                LunaChat.getInstance().getLunaChatConfig().getNgwordCompiled() ) {
+            Matcher matcher = pattern.matcher(japanized);
+            if ( matcher.find() ) {
+                japanized = matcher.replaceAll(
+                        Utility.getAstariskString(matcher.group(0).length()));
             }
         }
 

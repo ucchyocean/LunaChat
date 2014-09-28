@@ -8,6 +8,7 @@ package com.github.ucchyocean.lc;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -82,6 +83,9 @@ public class LunaChatConfig {
      *  kick = マスクしてチャンネルからキックする<br/>
      *  ban = マスクしてチャンネルからBANする */
     private NGWordAction ngwordAction;
+
+    /** NGワードの設定、正規表現マッチング用にコンパイルされたもの */
+    private List<Pattern> ngwordCompiled;
 
     /** 通常チャット（非チャンネルチャット）の装飾を、LunaChatから行うかどうか */
     private boolean enableNormalChatMessageFormat;
@@ -191,6 +195,11 @@ public class LunaChatConfig {
         dynmapChannel = config.getString("dynmapChannel", "");
         ngword = config.getStringList("ngword");
         ngwordAction = NGWordAction.fromID(config.getString("ngwordAction", "mask"));
+
+        ngwordCompiled = new ArrayList<Pattern>();
+        for ( String word : ngword ) {
+            ngwordCompiled.add(Pattern.compile(word));
+        }
 
         enableNormalChatMessageFormat =
                 config.getBoolean("enableNormalChatMessageFormat", true);
@@ -337,9 +346,30 @@ public class LunaChatConfig {
     /**
      * NGワード
      * @return ngwordを返す
+     * @deprecated 全て正規表現に変更するため、getNgwordCompiledを使用してください
      */
+    @Deprecated
     public List<String> getNgword() {
         return ngword;
+    }
+
+    /**
+     * NGワードを発言した人に対して実行するアクション<br/>
+     *  mask = マスクするのみ<br/>
+     *  kick = マスクしてチャンネルからキックする<br/>
+     *  ban = マスクしてチャンネルからBANする
+     * @return ngwordActionを返す
+     */
+    public NGWordAction getNgwordAction() {
+        return ngwordAction;
+    }
+
+    /**
+     * コンパイルされたNGワード
+     * @return ngwordCompiledを返す
+     */
+    public List<Pattern> getNgwordCompiled() {
+        return ngwordCompiled;
     }
 
     /**
@@ -365,17 +395,6 @@ public class LunaChatConfig {
      */
     public String getDynmapChannel() {
         return dynmapChannel;
-    }
-
-    /**
-     * NGワードを発言した人に対して実行するアクション<br/>
-     *  mask = マスクするのみ<br/>
-     *  kick = マスクしてチャンネルからキックする<br/>
-     *  ban = マスクしてチャンネルからBANする
-     * @return ngwordActionを返す
-     */
-    public NGWordAction getNgwordAction() {
-        return ngwordAction;
     }
 
     /**

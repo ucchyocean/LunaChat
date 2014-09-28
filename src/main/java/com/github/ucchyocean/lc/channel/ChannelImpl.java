@@ -6,6 +6,8 @@
 package com.github.ucchyocean.lc.channel;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -93,23 +95,24 @@ public class ChannelImpl extends Channel {
             return;
         }
 
-        String preReplaceMessage = message;
+        String preReplaceMessage = new String(message);
+        String maskedMessage = new String(message);
 
         // 一時的にJapanizeスキップ設定かどうかを確認する
         boolean skipJapanize = false;
         String marker = config.getNoneJapanizeMarker();
-        if ( !marker.equals("") && message.startsWith(marker) ) {
+        if ( !marker.equals("") && maskedMessage.startsWith(marker) ) {
             skipJapanize = true;
-            message = message.substring(marker.length());
+            maskedMessage = maskedMessage.substring(marker.length());
         }
 
         // NGワード発言をしたかどうかのチェックとマスク
         boolean isNG = false;
-        String maskedMessage = message;
-        for ( String word : config.getNgword() ) {
-            if ( maskedMessage.contains(word) ) {
-                maskedMessage = maskedMessage.replace(
-                        word, Utility.getAstariskString(word.length()));
+        for ( Pattern pattern : config.getNgwordCompiled() ) {
+            Matcher matcher = pattern.matcher(maskedMessage);
+            if ( matcher.find() ) {
+                maskedMessage = matcher.replaceAll(
+                        Utility.getAstariskString(matcher.group(0).length()));
                 isNG = true;
             }
         }
@@ -236,11 +239,12 @@ public class ChannelImpl extends Channel {
         String name = player + "@" + source;
 
         // NGワード発言のマスク
-        String maskedMessage = message;
-        for ( String word : config.getNgword() ) {
-            if ( maskedMessage.contains(word) ) {
-                maskedMessage = maskedMessage.replace(
-                        word, Utility.getAstariskString(word.length()));
+        String maskedMessage = new String(message);
+        for ( Pattern pattern : config.getNgwordCompiled() ) {
+            Matcher matcher = pattern.matcher(maskedMessage);
+            if ( matcher.find() ) {
+                maskedMessage = matcher.replaceAll(
+                        Utility.getAstariskString(matcher.group(0).length()));
             }
         }
 

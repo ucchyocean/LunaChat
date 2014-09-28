@@ -7,6 +7,8 @@ package com.github.ucchyocean.lc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -181,10 +183,11 @@ public class PlayerListener implements Listener {
 
             String message = event.getMessage();
             // NGワード発言をマスク
-            for ( String word : config.getNgword() ) {
-                if ( message.contains(word) ) {
-                    message = message.replace(
-                            word, Utility.getAstariskString(word.length()));
+            for ( Pattern pattern : config.getNgwordCompiled() ) {
+                Matcher matcher = pattern.matcher(message);
+                if ( matcher.find() ) {
+                    message = matcher.replaceAll(
+                            Utility.getAstariskString(matcher.group(0).length()));
                 }
             }
 
