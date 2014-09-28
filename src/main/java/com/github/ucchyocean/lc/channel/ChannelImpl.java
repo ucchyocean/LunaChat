@@ -351,6 +351,19 @@ public class ChannelImpl extends Channel {
             }
         }
 
+        // opListenAllChannel 設定がある場合は、
+        // パーミッション lunachat-admin.listen-all-channels を持つプレイヤーを
+        // 受信者に加える。
+        if ( config.isOpListenAllChannel() ) {
+            for ( Player p : Bukkit.getOnlinePlayers() ) {
+                ChannelPlayer cp = ChannelPlayer.getChannelPlayer(p);
+                if ( cp.hasPermission("lunachat-admin.listen-all-channels")
+                        && !recipients.contains(cp) ) {
+                    recipients.add(cp);
+                }
+            }
+        }
+
         // フォーマットがある場合は置き換える
         if ( format != null ) {
             message = format.replace("%msg", message);

@@ -58,6 +58,9 @@ formatConstraint: ['%username', '%msg']
 # %msg      : 発言内容（Japanize変換された場合は、Japanize結果を含みます。）
 defaultFormat: '&f[%color%ch&f]%prefix%username%suffix&a:&f %msg'
 
+# OPの画面に、全チャンネルの発言内容を表示する設定。
+opListenAllChannel: false
+
 
 # -------------------- プライベートメッセージ設定 --------------------
 

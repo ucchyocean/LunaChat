@@ -61,6 +61,9 @@ public class LunaChatConfig {
     /** プライベートメッセージを送信するときに、適用されるフォーマット */
     private String defaultFormatForPrivateMessage;
 
+    /** OPの画面に、全チャンネルの発言内容を表示するかどうか */
+    private boolean opListenAllChannel;
+
     /** ブロードキャストチャンネルの発言内容を、dynmapに送信するかどうか。<br/>
      *  dynmapがロードされていない場合は、この設定は無視される（false扱い）。 */
     private boolean sendBroadcastChannelChatToDynmap;
@@ -178,6 +181,8 @@ public class LunaChatConfig {
         defaultFormatForPrivateMessage =
                 config.getString("defaultFormatForPrivateMessage",
                 "&7[%player > %to] %msg");
+
+        opListenAllChannel = config.getBoolean("opListenAllChannel", false);
 
         sendBroadcastChannelChatToDynmap =
             config.getBoolean("sendBroadcastChannelChatToDynmap", true);
@@ -319,6 +324,14 @@ public class LunaChatConfig {
      */
     public String getDefaultFormatForPrivateMessage() {
         return defaultFormatForPrivateMessage;
+    }
+
+    /**
+     * OPの画面に、全チャンネルの発言内容を表示するかどうか
+     * @return opListenAllChannel opListenAllChannelを返す
+     */
+    public boolean isOpListenAllChannel() {
+        return opListenAllChannel;
     }
 
     /**
