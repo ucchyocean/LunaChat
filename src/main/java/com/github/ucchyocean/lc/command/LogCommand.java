@@ -150,6 +150,12 @@ public class LogCommand extends SubCommandAbst {
                 return true;
             }
 
+            // チャンネルのメンバーかどうかを確認する
+            if (!channel.getMembers().contains(cp)) {
+                sendResourceMessage(sender, PREERR, "errmsgNomember");
+                return true;
+            }
+
             logs = channel.getLog(argsPlayer, argsFilter, argsDate, reverse);
         }
 
