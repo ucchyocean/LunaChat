@@ -300,14 +300,14 @@ public class ChannelImpl extends Channel {
 
         // 受信者を設定する
         ArrayList<ChannelPlayer> recipients = new ArrayList<ChannelPlayer>();
-        boolean isRangeChat = false;
+        boolean sendNoRecipientMessage = false;
 
         if ( isBroadcastChannel() ) {
             // ブロードキャストチャンネル
 
             if ( isWorldRange() && player != null &&
                     player.isOnline() && player.getPlayer() != null ) {
-                isRangeChat = true;
+
                 World w = player.getPlayer().getWorld();
 
                 if ( getChatRange() > 0 ) {
@@ -332,6 +332,14 @@ public class ChannelImpl extends Channel {
                             recipients.add(ChannelPlayer.getChannelPlayer(p));
                         }
                     }
+                }
+
+                // 受信者が自分以外いない場合は、メッセージを表示する
+                if ( !MSG_NO_RECIPIENT.equals("") && (
+                        recipients.size() == 0 ||
+                        (recipients.size() == 1 &&
+                         recipients.get(0).getName().equals(player.getName()) ) ) ) {
+                    sendNoRecipientMessage = true;
                 }
 
             } else {
@@ -409,10 +417,7 @@ public class ChannelImpl extends Channel {
         }
 
         // 受信者が自分以外いない場合は、メッセージを表示する
-        if ( !MSG_NO_RECIPIENT.equals("") && isRangeChat && (
-                recipients.size() == 0 ||
-                (recipients.size() == 1 &&
-                 recipients.get(0).getName().equals(player.getName()) ) ) ) {
+        if ( sendNoRecipientMessage ) {
             String msg = replaceKeywordsForSystemMessages(MSG_NO_RECIPIENT, "");
             player.sendMessage(msg);
         }
