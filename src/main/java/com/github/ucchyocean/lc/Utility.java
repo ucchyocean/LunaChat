@@ -19,6 +19,7 @@ import java.util.zip.ZipEntry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 /**
@@ -254,5 +255,15 @@ public class Utility {
             count++;
         }
         return count;
+    }
+
+    /**
+     * 指定された名前のオフラインプレイヤーを取得する
+     * @param name プレイヤー名
+     * @return オフラインプレイヤー
+     */
+    @SuppressWarnings("deprecation")
+    public static OfflinePlayer getOfflinePlayer(String name) {
+        return Bukkit.getOfflinePlayer(name);
     }
 }

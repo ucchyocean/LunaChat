@@ -8,6 +8,7 @@ package com.github.ucchyocean.lc.command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
@@ -80,7 +81,7 @@ public class HideCommand extends SubCommandAbst {
             sendResourceMessage(sender, PREERR, "errmsgIngame");
             return true;
         }
-        Player player = (Player)sender;
+        ChannelPlayer player = ChannelPlayer.getChannelPlayer(sender);
 
         // 引数チェック
         String cname = null;
@@ -96,31 +97,53 @@ public class HideCommand extends SubCommandAbst {
             return true;
         }
 
-        // チャンネルが存在するかどうかをチェックする
-        if ( !api.isExistChannel(cname) ) {
-            sendResourceMessage(sender, PREERR, "errmsgNotExist");
+        // チャンネルかプレイヤーが存在するかどうかをチェックする
+        boolean isChannelCommand = false;
+        if ( api.isExistChannel(cname) ) {
+            isChannelCommand = true;
+        } else if ( Utility.getOfflinePlayer(cname) == null ) {
+            sendResourceMessage(sender, PREERR, "errmsgNotExistChannelAndPlayer");
             return true;
         }
 
-        // 既に非表示になっていないかどうかをチェックする
-        Channel channel = api.getChannel(cname);
-        ChannelPlayer cp = ChannelPlayer.getChannelPlayer(player);
-        if ( channel.getHided().contains(cp) ) {
-            sendResourceMessage(sender, PREERR, "errmsgAlreadyHided");
+        if ( isChannelCommand ) {
+            // チャンネルが対象の場合の処理
+
+            // 既に非表示になっていないかどうかをチェックする
+            Channel channel = api.getChannel(cname);
+            if ( channel.getHided().contains(player) ) {
+                sendResourceMessage(sender, PREERR, "errmsgAlreadyHided");
+                return true;
+            }
+
+            // メンバーかどうかをチェックする
+            if ( !channel.getMembers().contains(player) ) {
+                sendResourceMessage(sender, PREERR, "errmsgNomember");
+                return true;
+            }
+
+            // 設定する
+            channel.getHided().add(player);
+            channel.save();
+            sendResourceMessage(sender, PREINFO, "cmdmsgHided", channel.getName());
+
+            return true;
+
+        } else {
+            // プレイヤーが対象の場合の処理
+
+            // 既に非表示になっていないかどうかをチェックする
+            ChannelPlayer hided = ChannelPlayer.getChannelPlayer(cname);
+            if ( api.getHidelist(hided).contains(player.toString()) ) {
+                sendResourceMessage(sender, PREERR, "errmsgAlreadyHidedPlayer");
+                return true;
+            }
+
+            // 設定する
+            api.addHidelist(player, hided);
+            sendResourceMessage(sender, PREINFO, "cmdmsgHidedPlayer", hided.getDisplayName());
+
             return true;
         }
-
-        // メンバーかどうかをチェックする
-        if ( !channel.getMembers().contains(cp) ) {
-            sendResourceMessage(sender, PREERR, "errmsgNomember");
-            return true;
-        }
-
-        // 設定する
-        channel.getHided().add(cp);
-        channel.save();
-        sendResourceMessage(sender, PREINFO, "cmdmsgHided", channel.getName());
-
-        return true;
     }
 }

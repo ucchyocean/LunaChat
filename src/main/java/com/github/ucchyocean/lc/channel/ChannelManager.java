@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -34,16 +35,19 @@ public class ChannelManager implements LunaChatAPI {
     private static final String FILE_NAME_TEMPLATES = "templates.yml";
     private static final String FILE_NAME_JAPANIZE = "japanize.yml";
     private static final String FILE_NAME_DICTIONARY = "dictionary.yml";
+    private static final String FILE_NAME_HIDELIST = "hidelist.yml";
 
     private File fileDefaults;
     private File fileTemplates;
     private File fileJapanize;
     private File fileDictionary;
+    private File fileHidelist;
     private HashMap<String, Channel> channels;
     private HashMap<String, String> defaultChannels;
     private HashMap<String, String> templates;
     private HashMap<String, Boolean> japanize;
     private HashMap<String, String> dictionary;
+    private HashMap<String, List<ChannelPlayer>> hidelist;
 
     /**
      * コンストラクタ
@@ -124,6 +128,7 @@ public class ChannelManager implements LunaChatAPI {
         // dictionaryのロード
         fileDictionary = new File(
                 LunaChat.getInstance().getDataFolder(), FILE_NAME_DICTIONARY);
+
         if ( !fileDictionary.exists() ) {
             YamlConfiguration conf = new YamlConfiguration();
             try {
@@ -139,6 +144,30 @@ public class ChannelManager implements LunaChatAPI {
         dictionary = new HashMap<String, String>();
         for ( String key : configDictionary.getKeys(false) ) {
             dictionary.put(key, configDictionary.getString(key));
+        }
+
+        // hideリストのロード
+        fileHidelist = new File(
+                LunaChat.getInstance().getDataFolder(), FILE_NAME_HIDELIST);
+
+        if ( !fileHidelist.exists() ) {
+            YamlConfiguration conf = new YamlConfiguration();
+            try {
+                conf.save(fileHidelist);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        YamlConfiguration configHidelist =
+                YamlConfiguration.loadConfiguration(fileHidelist);
+
+        hidelist = new HashMap<String, List<ChannelPlayer>>();
+        for ( String key : configHidelist.getKeys(false) ) {
+            hidelist.put(key, new ArrayList<ChannelPlayer>());
+            for ( String id : configHidelist.getStringList(key) ) {
+                hidelist.get(key).add(ChannelPlayer.getChannelPlayer(id));
+            }
         }
 
         // チャンネル設定のロード
@@ -226,6 +255,25 @@ public class ChannelManager implements LunaChatAPI {
                 config.set(key, dictionary.get(key));
             }
             config.save(fileDictionary);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Hidelist設定を保存する
+     * @return 保存したかどうか
+     */
+    private boolean saveHidelist() {
+
+        try {
+            YamlConfiguration config = new YamlConfiguration();
+            for ( String key : hidelist.keySet() ) {
+                config.set(key, getIdList(hidelist.get(key)));
+            }
+            config.save(fileHidelist);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -505,6 +553,68 @@ public class ChannelManager implements LunaChatAPI {
     }
 
     /**
+     * 該当のプレイヤーに関連するhidelistを取得する。
+     * @param key プレイヤー
+     * @return 指定されたプレイヤーをhideしているプレイヤー(非null)
+     */
+    public List<ChannelPlayer> getHidelist(ChannelPlayer key) {
+        if ( hidelist.containsKey(key.toString()) ) {
+            return hidelist.get(key.toString());
+        }
+        return new ArrayList<ChannelPlayer>();
+    }
+
+    /**
+     * 該当のプレイヤーがhideしているプレイヤーのリストを返す。
+     * @param player プレイヤー
+     * @return 指定したプレイヤーがhideしているプレイヤーのリスト
+     */
+    public ArrayList<ChannelPlayer> getHideinfo(ChannelPlayer player) {
+        ArrayList<ChannelPlayer> info = new ArrayList<ChannelPlayer>();
+        for ( String key : hidelist.keySet() ) {
+            if ( hidelist.get(key).contains(player) ) {
+                info.add(ChannelPlayer.getChannelPlayer(key));
+            }
+        }
+        return info;
+    }
+
+    /**
+     * 指定されたプレイヤーが、指定されたプレイヤーをhideするように設定する。
+     * @param player hideする側のプレイヤー
+     * @param hided hideされる側のプレイヤー
+     */
+    public void addHidelist(ChannelPlayer player, ChannelPlayer hided) {
+        String hidedId = hided.toString();
+        if ( !hidelist.containsKey(hidedId) ) {
+            hidelist.put(hidedId, new ArrayList<ChannelPlayer>());
+        }
+        if ( !hidelist.get(hidedId).contains(player.toString()) ) {
+            hidelist.get(hidedId).add(player);
+            saveHidelist();
+        }
+    }
+
+    /**
+     * 指定されたプレイヤーが、指定されたプレイヤーのhideを解除するように設定する。
+     * @param player hideしていた側のプレイヤー
+     * @param hided hideされていた側のプレイヤー
+     */
+    public void removeHidelist(ChannelPlayer player, ChannelPlayer hided) {
+        String hidedId = hided.toString();
+        if ( !hidelist.containsKey(hidedId) ) {
+            return;
+        }
+        if ( hidelist.get(hidedId).contains(player.toString()) ) {
+            hidelist.get(hidedId).remove(player.toString());
+            if ( hidelist.get(hidedId).size() <= 0 ) {
+                hidelist.remove(hidedId);
+            }
+            saveHidelist();
+        }
+    }
+
+    /**
      * Japanize変換を行う
      * @param message 変換するメッセージ
      * @param type 変換タイプ
@@ -535,5 +645,18 @@ public class ChannelManager implements LunaChatAPI {
     public void setPlayersJapanize(String playerName, boolean doJapanize) {
         japanize.put(playerName, doJapanize);
         saveJapanize();
+    }
+
+    /**
+     * ChannelPlayerのリストを、IDのStringリストに変換して返す
+     * @param players
+     * @return
+     */
+    private List<String> getIdList(List<ChannelPlayer> players) {
+        List<String> results = new ArrayList<String>();
+        for ( ChannelPlayer cp : players ) {
+            results.add(cp.toString());
+        }
+        return results;
     }
 }

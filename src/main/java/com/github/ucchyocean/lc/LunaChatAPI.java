@@ -5,12 +5,15 @@
  */
 package com.github.ucchyocean.lc;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.command.CommandSender;
 
 import com.github.ucchyocean.lc.channel.Channel;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 
 /**
@@ -134,6 +137,34 @@ public interface LunaChatAPI {
      * @param key キー
      */
     public void removeDictionary(String key);
+
+    /**
+     * 該当のプレイヤーに関連するhidelistを取得する。
+     * @param key プレイヤー
+     * @return 指定されたプレイヤーをhideしているプレイヤー(非null)
+     */
+    public List<ChannelPlayer> getHidelist(ChannelPlayer key);
+
+    /**
+     * 該当のプレイヤーがhideしているプレイヤーのリストを返す。
+     * @param player プレイヤー
+     * @return 指定したプレイヤーがhideしているプレイヤーのリスト
+     */
+    public ArrayList<ChannelPlayer> getHideinfo(ChannelPlayer player);
+
+    /**
+     * 指定されたプレイヤーが、指定されたプレイヤーをhideするように設定する。
+     * @param player hideする側のプレイヤー
+     * @param hided hideされる側のプレイヤー
+     */
+    public void addHidelist(ChannelPlayer player, ChannelPlayer hided);
+
+    /**
+     * 指定されたプレイヤーが、指定されたプレイヤーのhideを解除するように設定する。
+     * @param player hideしていた側のプレイヤー
+     * @param hided hideされていた側のプレイヤー
+     */
+    public void removeHidelist(ChannelPlayer player, ChannelPlayer hided);
 
     /**
      * Japanize変換を行う
