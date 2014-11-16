@@ -550,6 +550,7 @@ public class ChannelManager implements LunaChatAPI {
      */
     public void removeDictionary(String key) {
         dictionary.remove(key);
+        saveDictionary();
     }
 
     /**
