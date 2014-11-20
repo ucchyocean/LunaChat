@@ -120,6 +120,7 @@ public class Utility {
      * @return 置き換え後の文字列
      */
     public static String replaceColorCode(String source) {
+        if ( source == null ) return null;
         return ChatColor.translateAlternateColorCodes('&', source);
     }
 
@@ -129,6 +130,7 @@ public class Utility {
      * @return 置き換え後の文字列
      */
     public static String stripColor(String source) {
+        if ( source == null ) return null;
         return ChatColor.stripColor(source);
     }
 

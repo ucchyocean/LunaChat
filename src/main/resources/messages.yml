@@ -119,7 +119,7 @@ errmsgAlreadyMuted: '指定されたプレイヤーは既にMuteリストに含�
 errmsgAlreadyHided: 'このチャンネルは既に非表示になっています。'
 errmsgAlreadyHidedPlayer: 'このプレイヤーは既に非表示になっています。'
 errmsgAlreadyUnhided: 'このチャンネルは非表示になっていません。'
-errmsgAlreadyUnhidedplayer: 'このプレイヤーは非表示になっていません。'
+errmsgAlreadyUnhidedPlayer: 'このプレイヤーは非表示になっていません。'
 errmsgCannotJoinPersonal: '個人チャットチャンネルには参加できません。'
 errmsgNotModerator: 'あなたはモデレーターではないため、そのコマンドを実行できません。'
 errmsgNotBanned: '指定されたプレイヤーはBANリストに含まれていません。'

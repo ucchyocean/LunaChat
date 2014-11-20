@@ -110,7 +110,7 @@ public class HideCommand extends SubCommandAbst {
         }
 
         // 指定されたコマンドが「/ch hide list」なら、リストを表示して終了
-        if ( cname.equals("list") ) {
+        if ( cname != null && cname.equals("list") ) {
             for ( String item : getHideInfoList(player) ) {
                 player.sendMessage(item);
             }

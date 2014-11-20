@@ -54,7 +54,7 @@ public class Resources {
         if ( resources == null ) {
             initialize();
         }
-        String def = defaultMessages.getString(key, "");
+        String def = defaultMessages.getString(key);
         return Utility.replaceColorCode(resources.getString(key, def));
     }
 
