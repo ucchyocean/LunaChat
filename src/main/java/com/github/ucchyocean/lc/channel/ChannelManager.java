@@ -559,6 +559,9 @@ public class ChannelManager implements LunaChatAPI {
      * @return 指定されたプレイヤーをhideしているプレイヤー(非null)
      */
     public List<ChannelPlayer> getHidelist(ChannelPlayer key) {
+        if ( key == null ) {
+            return new ArrayList<ChannelPlayer>();
+        }
         if ( hidelist.containsKey(key.toString()) ) {
             return hidelist.get(key.toString());
         }
@@ -568,9 +571,12 @@ public class ChannelManager implements LunaChatAPI {
     /**
      * 該当のプレイヤーがhideしているプレイヤーのリストを返す。
      * @param player プレイヤー
-     * @return 指定したプレイヤーがhideしているプレイヤーのリスト
+     * @return 指定したプレイヤーがhideしているプレイヤーのリスト(非null)
      */
     public ArrayList<ChannelPlayer> getHideinfo(ChannelPlayer player) {
+        if ( player == null ) {
+            return new ArrayList<ChannelPlayer>();
+        }
         ArrayList<ChannelPlayer> info = new ArrayList<ChannelPlayer>();
         for ( String key : hidelist.keySet() ) {
             if ( hidelist.get(key).contains(player) ) {
@@ -590,7 +596,7 @@ public class ChannelManager implements LunaChatAPI {
         if ( !hidelist.containsKey(hidedId) ) {
             hidelist.put(hidedId, new ArrayList<ChannelPlayer>());
         }
-        if ( !hidelist.get(hidedId).contains(player.toString()) ) {
+        if ( !hidelist.get(hidedId).contains(player) ) {
             hidelist.get(hidedId).add(player);
             saveHidelist();
         }
@@ -606,8 +612,8 @@ public class ChannelManager implements LunaChatAPI {
         if ( !hidelist.containsKey(hidedId) ) {
             return;
         }
-        if ( hidelist.get(hidedId).contains(player.toString()) ) {
-            hidelist.get(hidedId).remove(player.toString());
+        if ( hidelist.get(hidedId).contains(player) ) {
+            hidelist.get(hidedId).remove(player);
             if ( hidelist.get(hidedId).size() <= 0 ) {
                 hidelist.remove(hidedId);
             }

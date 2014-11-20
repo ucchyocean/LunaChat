@@ -20,7 +20,8 @@ public class UnhideCommand extends SubCommandAbst {
 
     private static final String COMMAND_NAME = "unhide";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
-    private static final String USAGE_KEY = "usageUnhide";
+    private static final String USAGE_KEY1 = "usageUnhide";
+    private static final String USAGE_KEY2 = "usageUnhidePlayer";
 
     /**
      * コマンドを取得します。
@@ -61,7 +62,8 @@ public class UnhideCommand extends SubCommandAbst {
     @Override
     public void sendUsageMessage(
             CommandSender sender, String label) {
-        sendResourceMessage(sender, "", USAGE_KEY, label);
+        sendResourceMessage(sender, "", USAGE_KEY1, label);
+        sendResourceMessage(sender, "", USAGE_KEY2, label);
     }
 
     /**
@@ -128,7 +130,7 @@ public class UnhideCommand extends SubCommandAbst {
 
             // 既に表示になっていないかどうかをチェックする
             ChannelPlayer hided = ChannelPlayer.getChannelPlayer(cname);
-            if ( !api.getHidelist(hided).contains(player.toString()) ) {
+            if ( !api.getHidelist(hided).contains(player) ) {
                 sendResourceMessage(sender, PREERR, "errmsgAlreadyUnhidedPlayer");
                 return true;
             }

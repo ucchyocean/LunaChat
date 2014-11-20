@@ -24,7 +24,9 @@ commands:
            /<command> mute (name) [minutes] - 指定した人を指定した分間、Muteします。
            /<command> unmute (name) - 指定した人のMuteを解除します。
            /<command> hide [channel] - 指定したチャンネルの発言内容を非表示にします。指定を省略すると、現在自分が居るチャンネルが非表示になります。
+           /<command> hide (player) - 指定したプレイヤーの発言内容を非表示にします。
            /<command> unhide [channel] - 指定したチャンネルの発言内容を非表示から表示に戻します。
+           /<command> unhide (player) - 指定したプレイヤーの発言内容を非表示から表示に戻します。
            /<command> info [channel] - チャンネルの情報を表示します。
            /<command> log [channel] [key=value...] - チャンネルのログを表示します。
            /<command> create (channel) - チャンネルを作成します。

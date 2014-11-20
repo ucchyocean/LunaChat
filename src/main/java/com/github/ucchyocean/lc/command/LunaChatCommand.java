@@ -8,6 +8,7 @@ package com.github.ucchyocean.lc.command;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -138,8 +139,6 @@ public class LunaChatCommand implements CommandExecutor {
 
         } else if ( args.length == 2 && (
                 args[0].equalsIgnoreCase("join") ||
-                args[0].equalsIgnoreCase("hide") ||
-                args[0].equalsIgnoreCase("unhide") ||
                 args[0].equalsIgnoreCase("info") ) ) {
             // 参加可能チャンネル名で補完する
             String arg = args[1].toLowerCase();
@@ -147,6 +146,24 @@ public class LunaChatCommand implements CommandExecutor {
             for ( String name : getListCanJoin(sender) ) {
                 if ( name.toLowerCase().startsWith(arg) ) {
                     items.add(name);
+                }
+            }
+            return items;
+
+        } else if ( args.length == 2 && (
+                args[0].equalsIgnoreCase("hide") ||
+                args[0].equalsIgnoreCase("unhide") ) ) {
+            // 参加可能チャンネル名とプレイヤー名で補完する
+            String arg = args[1].toLowerCase();
+            ArrayList<String> items = new ArrayList<String>();
+            for ( String name : getListCanJoin(sender) ) {
+                if ( name.toLowerCase().startsWith(arg) ) {
+                    items.add(name);
+                }
+            }
+            for ( Player player : Bukkit.getOnlinePlayers() ) {
+                if ( player.getName().toLowerCase().startsWith(arg) ) {
+                    items.add(player.getName());
                 }
             }
             return items;
