@@ -110,6 +110,10 @@ public class AcceptCommand extends SubCommandAbst {
         channel.addMember(cp);
         sendResourceMessage(sender, PREINFO, "cmdmsgJoin", channel.getName());
 
+        // デフォルトの発言先に設定する
+        api.setDefaultChannel(player.getName(), channelName);
+        sendResourceMessage(sender, PREINFO, "cmdmsgSet", channelName);
+
         return true;
     }
 }
