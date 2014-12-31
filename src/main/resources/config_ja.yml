@@ -31,7 +31,7 @@ showListOnJoin: false
 
 # /ch join コマンドで存在しないチャンネルを指定したときに、
 # チャンネルを新規作成して入室するかどうか
-createChannelOnJoinCommand: true
+createChannelOnJoinCommand: false
 
 # 通常のチャットの代わりに、既定として使用するグローバルチャンネル。
 # グローバルチャンネルを作らず通常のチャットを使用する場合は、

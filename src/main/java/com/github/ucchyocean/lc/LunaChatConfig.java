@@ -155,7 +155,7 @@ public class LunaChatConfig {
         zeroMemberRemove = config.getBoolean("zeroMemberRemove", false);
         showListOnJoin = config.getBoolean("showListOnJoin", false);
         createChannelOnJoinCommand =
-            config.getBoolean("createChannelOnJoinCommand", true);
+            config.getBoolean("createChannelOnJoinCommand", false);
 
         // チャンネルチャット有効のときだけ、globalChannel設定を読み込む
         // (see issue #58)
