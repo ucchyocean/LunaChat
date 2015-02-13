@@ -33,6 +33,8 @@ import com.github.ucchyocean.lc.japanize.JapanizeType;
  */
 public class ChannelImpl extends Channel {
 
+    private static final String PERMISSION_SPEAK_PREFIX = "lunachat.speak";
+
     private static final String INFO_FIRSTLINE = Resources.get("channelInfoFirstLine");
     private static final String INFO_PREFIX = Resources.get("channelInfoPrefix");
     private static final String INFO_GLOBAL = Resources.get("channelInfoGlobal");
@@ -85,6 +87,14 @@ public class ChannelImpl extends Channel {
      */
     @Override
     public void chat(ChannelPlayer player, String message) {
+
+        // 発言権限を確認する
+        if (!player.hasPermission(PERMISSION_SPEAK_PREFIX + ".*")
+                && !player.hasPermission(PERMISSION_SPEAK_PREFIX + "." + getName())) {
+            sendResourceMessage(player, PREERR, "errmsgPermission",
+                    PERMISSION_SPEAK_PREFIX + "." + getName());
+            return;
+        }
 
         LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
         LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
@@ -512,7 +522,8 @@ public class ChannelImpl extends Channel {
         if ( forModerator ) {
 
             // フォーマット情報
-            info.add(INFO_FORMAT + getFormat());
+            info.add(INFO_FORMAT);
+            info.add(INFO_PREFIX + " " + ChatColor.WHITE + getFormat());
 
             // Muteリスト情報、5人ごとに表示する
             if ( getMuted().size() > 0 ) {
@@ -711,5 +722,23 @@ public class ChannelImpl extends Channel {
         if ( config.isLoggingChat() && logger != null ) {
             logger.log(message, player);
         }
+    }
+
+    /**
+     * メッセージリソースのメッセージを、カラーコード置き換えしつつ、senderに送信する
+     * @param player メッセージの送り先
+     * @param pre プレフィックス
+     * @param key リソースキー
+     * @param args リソース内の置き換え対象キーワード
+     */
+    private void sendResourceMessage(
+            ChannelPlayer player, String pre, String key, Object... args) {
+
+        String org = Resources.get(key);
+        if ( org == null || org.equals("") ) {
+            return;
+        }
+        String msg = String.format(pre + org, args);
+        player.sendMessage(msg);
     }
 }

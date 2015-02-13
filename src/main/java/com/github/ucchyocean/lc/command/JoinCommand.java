@@ -20,6 +20,7 @@ public class JoinCommand extends SubCommandAbst {
 
     private static final String COMMAND_NAME = "join";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
+    private static final String PERMISSION_SPEAK_PREFIX = "lunachat.speak";
     private static final String USAGE_KEY = "usageJoin";
 
     /**
@@ -145,6 +146,13 @@ public class JoinCommand extends SubCommandAbst {
             }
         }
 
+        // 入室権限を確認する
+        if (!sender.hasPermission(PERMISSION_NODE + "." + channelName)) {
+            sendResourceMessage(sender, PREERR, "errmsgPermission",
+                    PERMISSION_NODE + "." + channelName);
+            return true;
+        }
+
         // チャンネルを取得する
         Channel channel = api.getChannel(channelName);
 
@@ -163,7 +171,7 @@ public class JoinCommand extends SubCommandAbst {
         if (channel.getMembers().contains(player)) {
 
             // 何かメッセージがあるなら、そのままチャット送信する
-            if (message.length() > 0) {
+            if (message.length() > 0 && hasSpeakPermission(sender, channelName)) {
                 channel.chat(player, message.toString());
                 return true;
             }
@@ -176,7 +184,7 @@ public class JoinCommand extends SubCommandAbst {
 
             // グローバルチャンネルで、何かメッセージがあるなら、そのままチャット送信する
             if (channel.getName().equals(config.getGlobalChannel()) &&
-                    message.length() > 0) {
+                    message.length() > 0 && hasSpeakPermission(sender, channelName)) {
                 channel.chat(player, message.toString());
                 return true;
             }
@@ -213,5 +221,9 @@ public class JoinCommand extends SubCommandAbst {
         }
 
         return true;
+    }
+
+    private boolean hasSpeakPermission(CommandSender sender, String channelName) {
+        return sender.hasPermission(PERMISSION_SPEAK_PREFIX + "." + channelName);
     }
 }

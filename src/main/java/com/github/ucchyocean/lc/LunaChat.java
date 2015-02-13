@@ -8,6 +8,7 @@ package com.github.ucchyocean.lc;
 import java.io.File;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -53,7 +54,6 @@ public class LunaChat extends JavaPlugin {
     public void onEnable() {
 
         // 変数などの初期化
-        instance = this;
         config = new LunaChatConfig();
         manager = new ChannelManager();
         normalChatLogger = new LunaChatLogger("==normalchat");
@@ -152,6 +152,9 @@ public class LunaChat extends JavaPlugin {
      * @return LunaChat
      */
     public static LunaChat getInstance() {
+        if ( instance == null ) {
+            instance = (LunaChat)Bukkit.getPluginManager().getPlugin("LunaChat");
+        }
         return instance;
     }
 
@@ -160,7 +163,7 @@ public class LunaChat extends JavaPlugin {
      * @return Jarファイル
      */
     protected static File getPluginJarFile() {
-        return instance.getFile();
+        return getInstance().getFile();
     }
 
     /**

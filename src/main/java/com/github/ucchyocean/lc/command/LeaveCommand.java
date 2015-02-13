@@ -98,6 +98,14 @@ public class LeaveCommand extends SubCommandAbst {
             sendResourceMessage(sender, PREERR, "errmsgNotExist");
             return true;
         }
+
+        // 退室権限を確認する
+        if (!sender.hasPermission(PERMISSION_NODE + "." + channelName)) {
+            sendResourceMessage(sender, PREERR, "errmsgPermission",
+                    PERMISSION_NODE + "." + channelName);
+            return true;
+        }
+
         Channel channel = api.getChannel(channelName);
 
         // グローバルチャンネルなら退出できない

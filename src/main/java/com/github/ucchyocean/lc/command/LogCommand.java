@@ -121,6 +121,13 @@ public class LogCommand extends SubCommandAbst {
             }
         }
 
+        // 参照権限を確認する
+        if (!sender.hasPermission(PERMISSION_NODE + "." + cname)) {
+            sendResourceMessage(sender, PREERR, "errmsgPermission",
+                    PERMISSION_NODE + "." + cname);
+            return true;
+        }
+
         // ログの取得
         ArrayList<String> logs;
 
