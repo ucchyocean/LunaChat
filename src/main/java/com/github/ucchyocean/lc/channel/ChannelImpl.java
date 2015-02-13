@@ -37,6 +37,7 @@ public class ChannelImpl extends Channel {
 
     private static final String INFO_FIRSTLINE = Resources.get("channelInfoFirstLine");
     private static final String INFO_PREFIX = Resources.get("channelInfoPrefix");
+    private static final String INFO_ALIAS = Resources.get("channelInfoAlias");
     private static final String INFO_GLOBAL = Resources.get("channelInfoGlobal");
     private static final String INFO_BROADCAST = Resources.get("channelInfoBroadcast");
     private static final String INFO_SECRET = Resources.get("channelInfoSecret");
@@ -459,6 +460,13 @@ public class ChannelImpl extends Channel {
         // チャンネル名、参加人数、総人数、チャンネル説明文
         info.add( String.format(
                 LIST_FORMAT, getName(), getOnlineNum(), getTotalNum(), getDescription()) );
+
+        // チャンネル別名
+        String alias = getAlias();
+        if ( alias != null && alias.length() > 0 ) {
+            info.add(INFO_ALIAS + alias);
+        }
+        // INFO_ALIAS
 
         // 参加メンバー一覧
         if ( isGlobalChannel() ) {

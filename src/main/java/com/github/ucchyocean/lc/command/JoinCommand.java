@@ -106,8 +106,11 @@ public class JoinCommand extends SubCommandAbst {
             return true;
         }
 
+        // チャンネルを取得する
+        Channel channel = api.getChannel(channelName);
+
         // チャンネルが存在するかどうかをチェックする
-        if ( !api.isExistChannel(channelName) ) {
+        if ( channel == null ) {
             if ( config.getGlobalChannel().equals("") &&
                     channelName.equals(config.getGlobalMarker()) ) {
                 // グローバルチャンネル設定が無くて、指定チャンネルがマーカーの場合、
@@ -146,15 +149,14 @@ public class JoinCommand extends SubCommandAbst {
             }
         }
 
+        channelName = channel.getName();
+
         // 入室権限を確認する
         if (!sender.hasPermission(PERMISSION_NODE + "." + channelName)) {
             sendResourceMessage(sender, PREERR, "errmsgPermission",
                     PERMISSION_NODE + "." + channelName);
             return true;
         }
-
-        // チャンネルを取得する
-        Channel channel = api.getChannel(channelName);
 
         // BANされていないか確認する
         if (channel.getBanned().contains(player)) {

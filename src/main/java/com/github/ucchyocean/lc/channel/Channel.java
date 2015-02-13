@@ -36,6 +36,7 @@ public abstract class Channel implements ConfigurationSerializable {
     private static final String FOLDER_NAME_CHANNELS = "channels";
 
     private static final String KEY_NAME = "name";
+    private static final String KEY_ALIAS = "alias";
     private static final String KEY_DESC = "desc";
     private static final String KEY_FORMAT = "format";
     private static final String KEY_MEMBERS = "members";
@@ -70,6 +71,9 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /** チャンネルの名称 */
     private String name;
+
+    /** チャンネルの別名 */
+    private String alias;
 
     /** チャンネルの説明文 */
     private String description;
@@ -122,6 +126,7 @@ public abstract class Channel implements ConfigurationSerializable {
     protected Channel(String name) {
 
         this.name = name;
+        this.alias = "";
         this.description = "";
         this.members = new ArrayList<ChannelPlayer>();
         this.banned = new ArrayList<ChannelPlayer>();
@@ -425,6 +430,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
         Map<String, Object> map = new HashMap<String, Object>();
         map.put(KEY_NAME, name);
+        map.put(KEY_ALIAS, alias);
         map.put(KEY_DESC, description);
         map.put(KEY_FORMAT, format);
         map.put(KEY_MEMBERS, getStringList(members));
@@ -458,6 +464,7 @@ public abstract class Channel implements ConfigurationSerializable {
         }
 
         Channel channel = new ChannelImpl(name);
+        channel.alias = castWithDefault(data.get(KEY_ALIAS), "");
         channel.description = castWithDefault(data.get(KEY_DESC), "");
         channel.format = castWithDefault(data.get(KEY_FORMAT), channel.format);
         channel.members = castToChannelPlayerList(data.get(KEY_MEMBERS));
@@ -611,6 +618,22 @@ public abstract class Channel implements ConfigurationSerializable {
         }
 
         return true;
+    }
+
+    /**
+     * チャンネルの別名を返す
+     * @return チャンネルの別名
+     */
+    public String getAlias() {
+        return alias;
+    }
+
+    /**
+     * チャンネルの別名を設定する
+     * @param alias チャンネルの別名
+     */
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
     /**

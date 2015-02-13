@@ -23,6 +23,7 @@ import com.github.ucchyocean.lc.event.LunaChatChannelOptionChangedEvent;
 public class OptionCommand extends SubCommandAbst {
 
     private static final int MAX_LENGTH_DESCRIPTION = 30;
+    private static final int MAX_LENGTH_ALIAS = 15;
     private static final int MAX_LENGTH_PASSWORD = 15;
 
     private static final String COMMAND_NAME = "option";
@@ -110,14 +111,17 @@ public class OptionCommand extends SubCommandAbst {
             return true;
         }
 
+        Channel channel = api.getChannel(cname);
+
         // チャンネルが存在するかどうかをチェックする
-        if ( !api.isExistChannel(cname) ) {
+        if ( channel == null ) {
             sendResourceMessage(sender, PREERR, "errmsgNotExist");
             return true;
         }
 
+        cname = channel.getName();
+
         // モデレーターかどうか確認する
-        Channel channel = api.getChannel(cname);
         if ( !channel.hasModeratorPermission(sender) ) {
             sendResourceMessage(sender, PREERR, "errmsgNotModerator");
             return true;
@@ -163,6 +167,36 @@ public class OptionCommand extends SubCommandAbst {
                     channel.setDescription(desc);
                     sendResourceMessage(sender, PREINFO,
                             "cmdmsgOption", "description", desc);
+                    setOption = true;
+                }
+            }
+        }
+
+        if ( options.containsKey("alias") ) {
+            // チャンネル別名
+
+            String pnode = PERMISSION_NODE + ".alias";
+            if ( !sender.hasPermission(pnode) ) {
+                sendResourceMessage(sender, PREERR,
+                        "errmsgNotPermission", pnode);
+            } else {
+
+                String alias = options.get("alias");
+                if ( alias.length() > MAX_LENGTH_ALIAS ) {
+                    // チャンネル別名が最大文字長を超えている
+                    sendResourceMessage(sender, PREERR,
+                            "errmsgToolongAlias", MAX_LENGTH_ALIAS);
+
+                } else if (api.getChannel(alias) != null) {
+                    // 別のチャンネル名またはチャンネル別名と重複する
+                    sendResourceMessage(sender, PREERR,
+                            "errmsgDuplicatedAlias",
+                            alias, api.getChannel(alias).getName());
+
+                } else {
+                    channel.setAlias(alias);
+                    sendResourceMessage(sender, PREINFO,
+                            "cmdmsgOption", "alias", alias);
                     setOption = true;
                 }
             }

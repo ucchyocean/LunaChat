@@ -31,6 +31,7 @@ listPlainPrefix: '&7| '
 
 channelInfoFirstLine: '&7---------- &bチャンネル情報 &7----------'
 channelInfoPrefix: '&7| '
+channelInfoAlias: '&7| &cチャンネル別名：&f'
 channelInfoGlobal: '&7| &cグローバルチャンネル'
 channelInfoBroadcast: '&7| &cブロードキャストチャンネル'
 channelInfoSecret: '&7| &cシークレットチャンネル'
@@ -143,6 +144,7 @@ errmsgCannotUseForGlobal: '%s はグローバルチャンネル名に使用で�
 errmsgInvalidColorCode: '%s はカラーコードとして正しくありません。'
 errmsgInvalidTemplateNumber: 'テンプレート番号は、0から9までの数字を指定してください。'
 errmsgToolongDescription: '説明文は %d 文字以下にしてください。'
+errmsgToolongAlias: 'チャンネル別名は %d 文字以下にしてください。'
 errmsgToolongPassword: 'パスワードは %d 文字以下にしてください。'
 errmsgInvalidBooleanOption: '%s は true/false で指定してください。'
 errmsgInvalidRangeOption: 'range に正しくない値が指定されました。'
@@ -152,6 +154,7 @@ errmsgInvalidBanExpireParameter: 'BAN期限(分)の指定が正しくありま�
 errmsgInvalidMuteExpireParameter: 'Mute期限(分)の指定が正しくありません。1 から 43200 の間の数値を指定してください。'
 errmsgNotInCheckRemoveConfirm: 'あなたはクリーンアップモードに入っていません。先に、/%s check を実行してください。'
 errmsgCannotHideSelf: '自分の発言を非表示にすることはできません。'
+errmsgDuplicatedAlias: '指定されたチャンネル別名 %s は、チャンネル %s と重複するので設定できません。'
 
 errmsgNotPermission: '権限がありません&7(%s)'
 errmsgChannelChatDisabled: 'このサーバーでは、チャンネルチャットは動作しません。'

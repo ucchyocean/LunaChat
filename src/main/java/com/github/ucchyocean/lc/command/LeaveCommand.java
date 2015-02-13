@@ -93,11 +93,15 @@ public class LeaveCommand extends SubCommandAbst {
             channelName = args[1];
         }
 
+        Channel channel = api.getChannel(channelName);
+
         // チャンネルが存在するかどうかをチェックする
-        if ( !api.isExistChannel(channelName) ) {
+        if ( channel == null ) {
             sendResourceMessage(sender, PREERR, "errmsgNotExist");
             return true;
         }
+
+        channelName = channel.getName();
 
         // 退室権限を確認する
         if (!sender.hasPermission(PERMISSION_NODE + "." + channelName)) {
@@ -105,8 +109,6 @@ public class LeaveCommand extends SubCommandAbst {
                     PERMISSION_NODE + "." + channelName);
             return true;
         }
-
-        Channel channel = api.getChannel(channelName);
 
         // グローバルチャンネルなら退出できない
         if ( channel.isGlobalChannel() ) {

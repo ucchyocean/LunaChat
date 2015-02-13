@@ -101,7 +101,8 @@ public class UnhideCommand extends SubCommandAbst {
 
         // チャンネルかプレイヤーが存在するかどうかをチェックする
         boolean isChannelCommand = false;
-        if ( api.isExistChannel(cname) ) {
+        Channel channel = api.getChannel(cname);
+        if ( channel != null ) {
             isChannelCommand = true;
         } else if ( Utility.getOfflinePlayer(cname) == null ) {
             sendResourceMessage(sender, PREERR, "errmsgNotExistChannelAndPlayer");
@@ -112,7 +113,6 @@ public class UnhideCommand extends SubCommandAbst {
             // チャンネルが対象の場合の処理
 
             // 非表示になっているかどうかをチェックする
-            Channel channel = api.getChannel(cname);
             if ( !channel.getHided().contains(player) ) {
                 sendResourceMessage(sender, PREERR, "errmsgAlreadyUnhided");
                 return true;

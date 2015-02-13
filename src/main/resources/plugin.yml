@@ -185,6 +185,9 @@ permissions:
   lunachat.option.description:
     description: descriptionオプション設定コマンドの使用権限
     default: true
+  lunachat.option.alias:
+    description: aliasオプション設定コマンドの使用権限
+    default: true
   lunachat.option.color:
     description: colorオプション設定コマンドの使用権限
     default: true
@@ -206,6 +209,7 @@ permissions:
   lunachat.option.*:
     children:
       lunachat.option.description: true
+      lunachat.option.alias: true
       lunachat.option.color: true
       lunachat.option.broadcast: true
       lunachat.option.range: true

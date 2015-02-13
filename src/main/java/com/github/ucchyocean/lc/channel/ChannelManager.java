@@ -396,14 +396,23 @@ public class ChannelManager implements LunaChatAPI {
 
     /**
      * チャンネルを取得する
-     * @param channelName チャンネル名
+     * @param channelName チャンネル名、または、チャンネルの別名
      * @return チャンネル
      * @see com.github.ucchyocean.lc.LunaChatAPI#getChannel(java.lang.String)
      */
     @Override
     public Channel getChannel(String channelName) {
         if ( channelName == null ) return null;
-        return channels.get(channelName.toLowerCase());
+        Channel channel = channels.get(channelName.toLowerCase());
+        if ( channel != null ) return channel;
+        for ( Channel ch : channels.values() ) {
+            String alias = ch.getAlias();
+            if ( alias != null && alias.length() > 0
+                    && channelName.equalsIgnoreCase(ch.getAlias()) ) {
+                return ch;
+            }
+        }
+        return null;
     }
 
     /**

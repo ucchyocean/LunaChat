@@ -104,14 +104,17 @@ public class ModeratorCommand extends SubCommandAbst {
             return true;
         }
 
+        Channel channel = api.getChannel(cname);
+
         // チャンネルが存在するかどうかをチェックする
-        if ( !api.isExistChannel(cname) ) {
+        if ( channel == null ) {
             sendResourceMessage(sender, PREERR, "errmsgNotExist");
             return true;
         }
 
+        cname = channel.getName();
+
         // モデレーターかどうか確認する
-        Channel channel = api.getChannel(cname);
         if ( !channel.hasModeratorPermission(sender) ) {
             sendResourceMessage(sender, PREERR, "errmsgNotModerator");
             return true;

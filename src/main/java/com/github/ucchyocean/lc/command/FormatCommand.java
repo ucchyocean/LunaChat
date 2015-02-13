@@ -105,13 +105,13 @@ public class FormatCommand extends SubCommandAbst {
         format = format.trim();
 
         // チャンネルが存在するかどうかをチェックする
-        if ( !api.isExistChannel(cname) ) {
+        Channel channel = api.getChannel(cname);
+        if ( channel == null ) {
             sendResourceMessage(sender, PREERR, "errmsgNotExist");
             return true;
         }
 
         // モデレーターかどうか確認する
-        Channel channel = api.getChannel(cname);
         if ( !channel.hasModeratorPermission(sender) ) {
             sendResourceMessage(sender, PREERR, "errmsgNotModerator");
             return true;

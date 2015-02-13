@@ -119,7 +119,8 @@ public class HideCommand extends SubCommandAbst {
 
         // チャンネルかプレイヤーが存在するかどうかをチェックする
         boolean isChannelCommand = false;
-        if ( api.isExistChannel(cname) ) {
+        Channel channel = api.getChannel(cname);
+        if ( channel != null ) {
             isChannelCommand = true;
         } else if ( Utility.getOfflinePlayer(cname) == null ) {
             sendResourceMessage(sender, PREERR, "errmsgNotExistChannelAndPlayer");
@@ -130,7 +131,6 @@ public class HideCommand extends SubCommandAbst {
             // チャンネルが対象の場合の処理
 
             // 既に非表示になっていないかどうかをチェックする
-            Channel channel = api.getChannel(cname);
             if ( channel.getHided().contains(player) ) {
                 sendResourceMessage(sender, PREERR, "errmsgAlreadyHided");
                 return true;
