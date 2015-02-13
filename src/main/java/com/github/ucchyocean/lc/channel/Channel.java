@@ -687,7 +687,7 @@ public abstract class Channel implements ConfigurationSerializable {
         // 現在サーバーに接続している全プレイヤーをメンバーとして返す
         if ( isBroadcastChannel() ) {
             List<ChannelPlayer> mem = new ArrayList<ChannelPlayer>();
-            for ( Player p : Bukkit.getOnlinePlayers() ) {
+            for ( Player p : Utility.getOnlinePlayers() ) {
                 mem.add(ChannelPlayer.getChannelPlayer(p));
             }
             return mem;

@@ -8,7 +8,6 @@ package com.github.ucchyocean.lc.command;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -16,6 +15,7 @@ import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.Resources;
+import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
@@ -161,7 +161,7 @@ public class LunaChatCommand implements CommandExecutor {
                     items.add(name);
                 }
             }
-            for ( Player player : Bukkit.getOnlinePlayers() ) {
+            for ( Player player : Utility.getOnlinePlayers() ) {
                 if ( player.getName().toLowerCase().startsWith(arg) ) {
                     items.add(player.getName());
                 }

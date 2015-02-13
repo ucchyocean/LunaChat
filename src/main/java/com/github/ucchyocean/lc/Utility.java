@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
@@ -46,7 +49,7 @@ public class Utility {
         BufferedWriter writer = null;
 
         File parent = targetFile.getParentFile();
-        if ( !parent.exists() ) {
+        if (!parent.exists()) {
             parent.mkdirs();
         }
 
@@ -57,10 +60,10 @@ public class Utility {
 
             fos = new FileOutputStream(targetFile);
 
-            if ( isBinary ) {
+            if (isBinary) {
                 byte[] buf = new byte[8192];
                 int len;
-                while ( (len = is.read(buf)) != -1 ) {
+                while ((len = is.read(buf)) != -1) {
                     fos.write(buf, 0, len);
                 }
 
@@ -81,7 +84,7 @@ public class Utility {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if ( writer != null ) {
+            if (writer != null) {
                 try {
                     writer.flush();
                     writer.close();
@@ -89,14 +92,14 @@ public class Utility {
                     // do nothing.
                 }
             }
-            if ( reader != null ) {
+            if (reader != null) {
                 try {
                     reader.close();
                 } catch (IOException e) {
                     // do nothing.
                 }
             }
-            if ( fos != null ) {
+            if (fos != null) {
                 try {
                     fos.flush();
                     fos.close();
@@ -104,7 +107,7 @@ public class Utility {
                     // do nothing.
                 }
             }
-            if ( is != null ) {
+            if (is != null) {
                 try {
                     is.close();
                 } catch (IOException e) {
@@ -120,7 +123,8 @@ public class Utility {
      * @return 置き換え後の文字列
      */
     public static String replaceColorCode(String source) {
-        if ( source == null ) return null;
+        if (source == null)
+            return null;
         return ChatColor.translateAlternateColorCodes('&', source);
     }
 
@@ -130,7 +134,8 @@ public class Utility {
      * @return 置き換え後の文字列
      */
     public static String stripColor(String source) {
-        if ( source == null ) return null;
+        if (source == null)
+            return null;
         return ChatColor.stripColor(source);
     }
 
@@ -141,7 +146,7 @@ public class Utility {
      */
     public static String getAstariskString(int length) {
         StringBuilder buf = new StringBuilder();
-        for ( int i=0; i<length; i++ ) {
+        for (int i = 0; i < length; i++) {
             buf.append("*");
         }
         return buf.toString();
@@ -154,7 +159,7 @@ public class Utility {
      */
     public static ChatColor changeToChatColor(String color) {
 
-        if ( isValidColor(color) ) {
+        if (isValidColor(color)) {
             return ChatColor.valueOf(color.toUpperCase());
         }
         return ChatColor.WHITE;
@@ -177,8 +182,8 @@ public class Utility {
      */
     public static boolean isValidColor(String color) {
 
-        for ( ChatColor c : ChatColor.values() ) {
-            if ( c.name().equals(color.toUpperCase()) ) {
+        for (ChatColor c : ChatColor.values()) {
+            if (c.name().equals(color.toUpperCase())) {
                 return true;
             }
         }
@@ -192,7 +197,7 @@ public class Utility {
      */
     public static boolean isValidColorCode(String code) {
 
-        if ( code == null ) {
+        if (code == null) {
             return false;
         }
         return code.matches("&[0-9a-f]");
@@ -204,22 +209,22 @@ public class Utility {
      */
     public static boolean isCB178orLater() {
 
-        if ( isCB178orLaterCache != null ) {
+        if (isCB178orLaterCache != null) {
             return isCB178orLaterCache;
         }
 
-        int[] borderNumbers = {1, 7, 8};
+        int[] borderNumbers = { 1, 7, 8 };
 
         String version = Bukkit.getBukkitVersion();
         int hyphen = version.indexOf("-");
-        if ( hyphen > 0 ) {
+        if (hyphen > 0) {
             version = version.substring(0, hyphen);
         }
 
         String[] versionArray = version.split("\\.");
         int[] versionNumbers = new int[versionArray.length];
-        for ( int i=0; i<versionArray.length; i++ ) {
-            if ( !versionArray[i].matches("[0-9]+") ) {
+        for (int i = 0; i < versionArray.length; i++) {
+            if (!versionArray[i].matches("[0-9]+")) {
                 isCB178orLaterCache = false;
                 return false;
             }
@@ -227,17 +232,17 @@ public class Utility {
         }
 
         int index = 0;
-        while ( (versionNumbers.length > index) && (borderNumbers.length > index) ) {
-            if ( versionNumbers[index] > borderNumbers[index] ) {
+        while ((versionNumbers.length > index) && (borderNumbers.length > index)) {
+            if (versionNumbers[index] > borderNumbers[index]) {
                 isCB178orLaterCache = true;
                 return true;
-            } else if ( versionNumbers[index] < borderNumbers[index] ) {
+            } else if (versionNumbers[index] < borderNumbers[index]) {
                 isCB178orLaterCache = false;
                 return false;
             }
             index++;
         }
-        if ( borderNumbers.length == index ) {
+        if (borderNumbers.length == index) {
             isCB178orLaterCache = true;
             return true;
         } else {
@@ -247,16 +252,41 @@ public class Utility {
     }
 
     /**
+     * 現在接続中のプレイヤーを全て取得する
+     * @return 接続中の全てのプレイヤー
+     */
+    @SuppressWarnings("unchecked")
+    public static ArrayList<Player> getOnlinePlayers() {
+        // CB179以前と、CB1710以降で戻り値が異なるため、
+        // リフレクションを使って互換性を（無理やり）保つ。
+        try {
+            if (Bukkit.class.getMethod("getOnlinePlayers", new Class<?>[0]).getReturnType() == Collection.class) {
+                Collection<?> temp =
+                        ((Collection<?>) Bukkit.class.getMethod("getOnlinePlayers", new Class<?>[0])
+                                .invoke(null, new Object[0]));
+                return new ArrayList<Player>((Collection<? extends Player>) temp);
+            } else {
+                Player[] temp =
+                        ((Player[]) Bukkit.class.getMethod("getOnlinePlayers", new Class<?>[0])
+                                .invoke(null, new Object[0]));
+                ArrayList<Player> players = new ArrayList<Player>();
+                for (Player t : temp) {
+                    players.add(t);
+                }
+                return players;
+            }
+        } catch (NoSuchMethodException ex) {} // never happen
+        catch (InvocationTargetException ex) {} // never happen
+        catch (IllegalAccessException ex) {} // never happen
+        return new ArrayList<Player>();
+    }
+
+    /**
      * 現在のサーバー接続人数を返します。
      * @return サーバー接続人数
      */
     public static int getOnlinePlayersCount() {
-        int count = 0;
-        for ( @SuppressWarnings("unused")
-                Player player : Bukkit.getOnlinePlayers() ) {
-            count++;
-        }
-        return count;
+        return getOnlinePlayers().size();
     }
 
     /**
@@ -266,6 +296,9 @@ public class Utility {
      */
     @SuppressWarnings("deprecation")
     public static OfflinePlayer getOfflinePlayer(String name) {
-        return Bukkit.getOfflinePlayer(name);
+        OfflinePlayer player = Bukkit.getOfflinePlayer(name);
+        if (player == null || (!player.hasPlayedBefore() && !player.isOnline()))
+            return null;
+        return player;
     }
 }
