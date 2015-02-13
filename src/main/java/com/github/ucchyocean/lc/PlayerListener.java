@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,6 +25,7 @@ import com.github.ucchyocean.lc.channel.ChannelPlayer;
 import com.github.ucchyocean.lc.channel.ChannelPlayerName;
 import com.github.ucchyocean.lc.channel.ChannelPlayerUUID;
 import com.github.ucchyocean.lc.channel.DelayedJapanizeConvertTask;
+import com.github.ucchyocean.lc.event.LunaChatPreChatEvent;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 
 /**
@@ -76,8 +78,22 @@ public class PlayerListener implements Listener {
             }
         }
 
+        // LunaChatPreChatEvent イベントコール
+        LunaChatPreChatEvent preChatEvent = new LunaChatPreChatEvent(
+                channel.getName(), player, event.getMessage());
+        Bukkit.getPluginManager().callEvent(preChatEvent);
+        if ( preChatEvent.isCancelled() ) {
+            event.setCancelled(true);
+            return;
+        }
+        Channel alt = preChatEvent.getChannel();
+        if ( alt != null ) {
+            channel = alt;
+        }
+        String message = preChatEvent.getMessage();
+
         // チャンネルチャット発言
-        channel.chat(player, event.getMessage());
+        channel.chat(player, message);
 
         // もとのイベントをキャンセル
         event.setCancelled(true);
@@ -164,6 +180,20 @@ public class PlayerListener implements Listener {
                 global = api.createChannel(config.getGlobalChannel());
             }
 
+            // LunaChatPreChatEvent イベントコール
+            LunaChatPreChatEvent preChatEvent = new LunaChatPreChatEvent(
+                    global.getName(), player, event.getMessage());
+            Bukkit.getPluginManager().callEvent(preChatEvent);
+            if ( preChatEvent.isCancelled() ) {
+                event.setCancelled(true);
+                return;
+            }
+            Channel alt = preChatEvent.getChannel();
+            if ( alt != null ) {
+                global = alt;
+            }
+            String message = preChatEvent.getMessage();
+
             // デフォルト発言先が無いなら、グローバルチャンネルに設定する
             Channel dchannel = api.getDefaultChannel(player.getName());
             if ( dchannel == null ) {
@@ -171,7 +201,7 @@ public class PlayerListener implements Listener {
             }
 
             // チャンネルチャット発言
-            global.chat(player, event.getMessage());
+            global.chat(player, message);
 
             // もとのイベントをキャンセル
             event.setCancelled(true);

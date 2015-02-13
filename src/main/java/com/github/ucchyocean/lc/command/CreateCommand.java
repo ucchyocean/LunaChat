@@ -95,7 +95,7 @@ public class CreateCommand extends SubCommandAbst {
 
         // 使用可能なチャンネル名かどうかをチェックする
         if ( !LunaChat.checkForChannelName(name) ) {
-            sendResourceMessage(sender, PREINFO, "errmsgCannotUseForChannel", name);
+            sendResourceMessage(sender, PREERR, "errmsgCannotUseForChannel", name);
             return true;
         }
 
