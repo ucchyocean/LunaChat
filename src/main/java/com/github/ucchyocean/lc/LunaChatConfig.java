@@ -65,6 +65,12 @@ public class LunaChatConfig {
     /** OPの画面に、全チャンネルの発言内容を表示するかどうか */
     private boolean opListenAllChannel;
 
+    /** チャンネルを新規作成するときに、チャンネル名が満たさなければならない、最低文字列長 */
+    private int minChannelNameLength;
+
+    /** チャンネルを新規作成するときに、チャンネル名が満たさなければならない、最大文字列長 */
+    private int maxChannelNameLength;
+
     /** ブロードキャストチャンネルの発言内容を、dynmapに送信するかどうか。<br/>
      *  dynmapがロードされていない場合は、この設定は無視される（false扱い）。 */
     private boolean sendBroadcastChannelChatToDynmap;
@@ -188,6 +194,9 @@ public class LunaChatConfig {
 
         opListenAllChannel = config.getBoolean("opListenAllChannel", false);
 
+        minChannelNameLength = config.getInt("minChannelNameLength", 4);
+        maxChannelNameLength = config.getInt("maxChannelNameLength", 20);
+
         sendBroadcastChannelChatToDynmap =
             config.getBoolean("sendBroadcastChannelChatToDynmap", true);
         sendFormattedMessageToDynmap =
@@ -221,7 +230,7 @@ public class LunaChatConfig {
 
         // globalチャンネルが、使用可能なチャンネル名かどうかを調べる
         if ( !globalChannel.equals("") &&
-                !LunaChat.checkForChannelName(globalChannel) ) {
+                !globalChannel.matches("[0-9a-zA-Z\\-_]{1,20}") ) {
             String msg = String.format(
                     Resources.get("errmsgCannotUseForGlobal"), globalChannel);
             LunaChat.getInstance().getLogger().warning(msg);
@@ -341,6 +350,22 @@ public class LunaChatConfig {
      */
     public boolean isOpListenAllChannel() {
         return opListenAllChannel;
+    }
+
+    /**
+     * チャンネルを新規作成するときに、チャンネル名が満たさなければならない、最低文字列長
+     * @return minChannelNameLength
+     */
+    public int getMinChannelNameLength() {
+        return minChannelNameLength;
+    }
+
+    /**
+     * チャンネルを新規作成するときに、チャンネル名が満たさなければならない、最大文字列長
+     * @return maxChannelNameLength
+     */
+    public int getMaxChannelNameLength() {
+        return maxChannelNameLength;
     }
 
     /**

@@ -8,7 +8,6 @@ package com.github.ucchyocean.lc.command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
@@ -127,9 +126,25 @@ public class JoinCommand extends SubCommandAbst {
                 // 存在しないチャットには、チャンネルを作って入る設定の場合
 
                 // 使用可能なチャンネル名かどうかをチェックする
-                if ( !LunaChat.checkForChannelName(channelName) ) {
-                    sendResourceMessage(sender, PREINFO,
+                if ( !channelName.matches("[0-9a-zA-Z\\-_]+") ) {
+                    sendResourceMessage(sender, PREERR,
                             "errmsgCannotUseForChannel", channelName);
+                    return true;
+                }
+
+                // 最低文字列長を上回っているかをチェックする
+                if ( channelName.length() < config.getMinChannelNameLength() ) {
+                    sendResourceMessage(sender, PREERR,
+                            "errmsgCannotUseForChannelTooShort",
+                            channelName, config.getMinChannelNameLength());
+                    return true;
+                }
+
+                // 最大文字列長を下回っているかをチェックする
+                if ( channelName.length() > config.getMaxChannelNameLength() ) {
+                    sendResourceMessage(sender, PREERR,
+                            "errmsgCannotUseForChannelTooLong",
+                            channelName, config.getMaxChannelNameLength());
                     return true;
                 }
 

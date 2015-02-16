@@ -7,7 +7,6 @@ package com.github.ucchyocean.lc.command;
 
 import org.bukkit.command.CommandSender;
 
-import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.channel.Channel;
 
 /**
@@ -88,14 +87,32 @@ public class CreateCommand extends SubCommandAbst {
         }
 
         // チャンネルが存在するかどうかをチェックする
-        if ( api.isExistChannel(name) ) {
+        Channel other = api.getChannel(name);
+        if ( other != null ) {
             sendResourceMessage(sender, PREERR, "errmsgExist");
             return true;
         }
 
         // 使用可能なチャンネル名かどうかをチェックする
-        if ( !LunaChat.checkForChannelName(name) ) {
-            sendResourceMessage(sender, PREERR, "errmsgCannotUseForChannel", name);
+        if ( !name.matches("[0-9a-zA-Z\\-_]+") ) {
+            sendResourceMessage(sender, PREERR,
+                    "errmsgCannotUseForChannel", name);
+            return true;
+        }
+
+        // 最低文字列長を上回っているかをチェックする
+        if ( name.length() < config.getMinChannelNameLength() ) {
+            sendResourceMessage(sender, PREERR,
+                    "errmsgCannotUseForChannelTooShort",
+                    name, config.getMinChannelNameLength());
+            return true;
+        }
+
+        // 最大文字列長を下回っているかをチェックする
+        if ( name.length() > config.getMaxChannelNameLength() ) {
+            sendResourceMessage(sender, PREERR,
+                    "errmsgCannotUseForChannelTooLong",
+                    name, config.getMaxChannelNameLength());
             return true;
         }
 
@@ -108,5 +125,4 @@ public class CreateCommand extends SubCommandAbst {
         }
         return true;
     }
-
 }

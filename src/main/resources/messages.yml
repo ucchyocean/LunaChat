@@ -140,6 +140,8 @@ errmsgCannotLeaveForceJoin: 'チャンネル %s は強制参加チャンネル�
 errmsgNotfoundPM: 'あなたが受信したプライベートメッセージがありません。'
 errmsgCannotSendPMSelf: '自分自身にプライベートメッセージを送ることはできません。'
 errmsgCannotUseForChannel: '%s はチャンネル名に使用できない文字を含んでいます。'
+errmsgCannotUseForChannelTooShort: '%s は短すぎてチャンネル名に使用できません。%d 文字以上にしてください。'
+errmsgCannotUseForChannelTooLong: '%s は長すぎてチャンネル名に使用できません。%d 文字以下にしてください。'
 errmsgCannotUseForGlobal: '%s はグローバルチャンネル名に使用できない文字を含んでいます。'
 errmsgInvalidColorCode: '%s はカラーコードとして正しくありません。'
 errmsgInvalidTemplateNumber: 'テンプレート番号は、0から9までの数字を指定してください。'
