@@ -199,6 +199,6 @@ usageReply: '&6/%s [message] &7- 受信した個人チャットに返信しま�
 usageJapanize: '&6/%s on|off &7- Turn on/off the Japanize conversion of your chat.'
 usageJapanizeOther: '&6/%s (player) on|off &7- Turn on/off the Japanize conversion of other player''s chat.'
 
-usageTop: '&e----- &6Chat command - %s (&c%d&6/&c%d&6) &e-----'
+usageTop: '&e----- &6LunaChat %s command (&c%d&6/&c%d&6) &e-----'
 usageFoot: '&e-----------------------------------------'
 usageNoticeNextPage: '&6次のページを見るには、&c/ch help %s %d&6 と実行してください。'
