@@ -167,7 +167,8 @@ public class JoinCommand extends SubCommandAbst {
         channelName = channel.getName();
 
         // 入室権限を確認する
-        if (!sender.hasPermission(PERMISSION_NODE + "." + channelName)) {
+        String node = PERMISSION_NODE + "." + channelName;
+        if (sender.isPermissionSet(node) && !sender.hasPermission(node)) {
             sendResourceMessage(sender, PREERR, "errmsgPermission",
                     PERMISSION_NODE + "." + channelName);
             return true;
@@ -241,6 +242,7 @@ public class JoinCommand extends SubCommandAbst {
     }
 
     private boolean hasSpeakPermission(CommandSender sender, String channelName) {
-        return sender.hasPermission(PERMISSION_SPEAK_PREFIX + "." + channelName);
+        String node = PERMISSION_SPEAK_PREFIX + "." + channelName;
+        return sender.isPermissionSet(node) && sender.hasPermission(node);
     }
 }

@@ -74,6 +74,13 @@ public abstract class ChannelPlayer implements Comparable<ChannelPlayer> {
     public abstract boolean hasPermission(String node);
 
     /**
+     * 指定されたパーミッションノードが定義されているかどうかを取得する
+     * @param node パーミッションノード
+     * @return 定義を持っているかどうか
+     */
+    public abstract boolean isPermissionSet(String node);
+
+    /**
      * 指定されたCommandSenderと同一かどうかを返す
      * @param sender
      * @return 同一かどうか

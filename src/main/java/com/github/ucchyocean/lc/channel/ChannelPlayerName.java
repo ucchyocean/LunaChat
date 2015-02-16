@@ -153,6 +153,22 @@ public class ChannelPlayerName extends ChannelPlayer {
     }
 
     /**
+     * 指定されたパーミッションノードが定義されているかどうかを取得する
+     * @param node パーミッションノード
+     * @return 定義を持っているかどうか
+     * @see com.github.ucchyocean.lc.channel.ChannelPlayer#isPermissionSet(java.lang.String)
+     */
+    @Override
+    public boolean isPermissionSet(String node) {
+        Player player = getPlayer();
+        if ( player == null ) {
+            return false;
+        } else {
+            return player.isPermissionSet(node);
+        }
+    }
+
+    /**
      * 指定されたCommandSenderと同一かどうかを返す
      * @param sender
      * @return 同一かどうか

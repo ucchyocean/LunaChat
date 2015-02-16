@@ -104,7 +104,8 @@ public class LeaveCommand extends SubCommandAbst {
         channelName = channel.getName();
 
         // 退室権限を確認する
-        if (!sender.hasPermission(PERMISSION_NODE + "." + channelName)) {
+        String node = PERMISSION_NODE + "." + channelName;
+        if (sender.isPermissionSet(node) && !sender.hasPermission(node)) {
             sendResourceMessage(sender, PREERR, "errmsgPermission",
                     PERMISSION_NODE + "." + channelName);
             return true;

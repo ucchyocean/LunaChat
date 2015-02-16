@@ -90,8 +90,8 @@ public class ChannelImpl extends Channel {
     public void chat(ChannelPlayer player, String message) {
 
         // 発言権限を確認する
-        if (!player.hasPermission(PERMISSION_SPEAK_PREFIX + ".*")
-                && !player.hasPermission(PERMISSION_SPEAK_PREFIX + "." + getName())) {
+        String node = PERMISSION_SPEAK_PREFIX + "." + getName();
+        if ( player.isPermissionSet(node) && !player.hasPermission(node) ) {
             sendResourceMessage(player, PREERR, "errmsgPermission",
                     PERMISSION_SPEAK_PREFIX + "." + getName());
             return;

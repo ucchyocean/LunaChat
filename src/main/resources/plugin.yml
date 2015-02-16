@@ -65,13 +65,7 @@ permissions:
   lunachat.join:
     description: joinコマンドの使用権限
     default: true
-  lunachat.join.*:
-    description: joinコマンドの使用権限
-    default: true
   lunachat.leave:
-    description: leaveコマンドの使用権限
-    default: true
-  lunachat.leave.*:
     description: leaveコマンドの使用権限
     default: true
   lunachat.list:
@@ -113,9 +107,6 @@ permissions:
   lunachat.log:
     description: logコマンドの使用権限
     default: true
-  lunachat.log.*:
-    description: logコマンドの使用権限
-    default: true
   lunachat.create:
     description: createコマンドの使用権限
     default: true
@@ -146,15 +137,10 @@ permissions:
   lunachat.allowcc:
     description: チャットにおけるカラーコードの使用権限
     default: true
-  lunachat.speak.*:
-    description: チャンネルにおける発言権限
-    default: true
   lunachat.*:
     children:
       lunachat.join: true
-      lunachat.join.*: true
       lunachat.leave: true
-      lunachat.leave.*: true
       lunachat.list: true
       lunachat.invite: true
       lunachat.accept: true
@@ -168,7 +154,6 @@ permissions:
       lunachat.unhide: true
       lunachat.info: true
       lunachat.log: true
-      lunachat.log.*: true
       lunachat.create: true
       lunachat.remove: true
       lunachat.format: true
@@ -179,7 +164,6 @@ permissions:
       lunachat.help: true
       lunachat.japanize: true
       lunachat.allowcc: true
-      lunachat.speak.*: true
     description: 一般ユーザー向けの全コマンドの使用権限
 
   lunachat.option.description:
