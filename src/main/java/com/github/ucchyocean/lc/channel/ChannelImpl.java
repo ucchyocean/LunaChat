@@ -435,6 +435,11 @@ public class ChannelImpl extends Channel {
             p.sendMessage(message);
         }
 
+        // 設定に応じて、コンソールに出力する
+        if ( config.isDisplayChatOnConsole() ) {
+            Bukkit.getLogger().info(ChatColor.stripColor(message));
+        }
+
         // 受信者が自分以外いない場合は、メッセージを表示する
         if ( sendNoRecipientMessage ) {
             String msg = replaceKeywordsForSystemMessages(MSG_NO_RECIPIENT, "");
@@ -721,12 +726,7 @@ public class ChannelImpl extends Channel {
      * @param message 記録するメッセージ
      */
     private void log(String message, String player) {
-
         LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
-
-        if ( config.isDisplayChatOnConsole() ) {
-            Bukkit.getLogger().info(ChatColor.stripColor(message));
-        }
         if ( config.isLoggingChat() && logger != null ) {
             logger.log(message, player);
         }
