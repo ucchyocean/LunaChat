@@ -25,6 +25,7 @@ import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.LunaChatConfig;
 import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.event.LunaChatChannelMemberChangedEvent;
+import com.github.ucchyocean.lc.japanize.JapanizeType;
 
 /**
  * チャンネル
@@ -53,6 +54,7 @@ public abstract class Channel implements ConfigurationSerializable {
     private static final String KEY_BAN_EXPIRES = "ban_expires";
     private static final String KEY_MUTE_EXPIRES = "mute_expires";
     private static final String KEY_ALLOWCC = "allowcc";
+    private static final String KEY_JAPANIZE = "japanize";
 
     /** 参加者 */
     private List<ChannelPlayer> members;
@@ -119,6 +121,9 @@ public abstract class Channel implements ConfigurationSerializable {
     /** カラーコードの使用可否 */
     private boolean allowcc;
 
+    /** チャンネルごとのjapanize変換設定 */
+    private JapanizeType japanizeType;
+
     /**
      * コンストラクタ
      * @param name チャンネルの名称
@@ -143,6 +148,7 @@ public abstract class Channel implements ConfigurationSerializable {
         this.muteExpires = new HashMap<ChannelPlayer, Long>();
         this.privateMessageTo = "";
         this.allowcc = true;
+        this.japanizeType = null;
 
         LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
         if ( isPersonalChat() ) {
@@ -447,6 +453,7 @@ public abstract class Channel implements ConfigurationSerializable {
         map.put(KEY_BAN_EXPIRES, getStringLongMap(banExpires));
         map.put(KEY_MUTE_EXPIRES, getStringLongMap(muteExpires));
         map.put(KEY_ALLOWCC, allowcc);
+        map.put(KEY_JAPANIZE, japanizeType == null ? null : japanizeType.toString());
         return map;
     }
 
@@ -481,6 +488,7 @@ public abstract class Channel implements ConfigurationSerializable {
         channel.banExpires = castToChannelPlayerLongMap(data.get(KEY_BAN_EXPIRES));
         channel.muteExpires = castToChannelPlayerLongMap(data.get(KEY_MUTE_EXPIRES));
         channel.allowcc = castWithDefault(data.get(KEY_ALLOWCC), true);
+        channel.japanizeType = JapanizeType.fromID(data.get(KEY_JAPANIZE) + "", null);
         return channel;
     }
 
@@ -861,6 +869,22 @@ public abstract class Channel implements ConfigurationSerializable {
      */
     public void setAllowCC(boolean allowcc) {
         this.allowcc = allowcc;
+    }
+
+    /**
+     * Japanize変換設定を取得する
+     * @return japanize
+     */
+    public JapanizeType getJapanizeType() {
+        return japanizeType;
+    }
+
+    /**
+     * Japanize変換設定を再設定する
+     * @param japanize japanize
+     */
+    public void setJapanizeType(JapanizeType japanize) {
+        this.japanizeType = japanize;
     }
 
     /**

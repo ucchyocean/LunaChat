@@ -150,6 +150,7 @@ errmsgToolongAlias: 'チャンネル別名は %d 文字以下にしてくださ�
 errmsgToolongPassword: 'パスワードは %d 文字以下にしてください。'
 errmsgInvalidBooleanOption: '%s は true/false で指定してください。'
 errmsgInvalidRangeOption: 'range に正しくない値が指定されました。'
+errmsgInvalidJapanizeOption: '%s に指定された %s は、Japanize変換タイプとして正しくありません。'
 errmsgCannotOffGlobalBroadcast: 'このチャンネルはグローバルチャンネルのため、ブロードキャストをオフにできません。'
 errmsgFormatConstraint: '必須キーワード %s が指定されていません。'
 errmsgInvalidBanExpireParameter: 'BAN期限(分)の指定が正しくありません。1 から 43200 の間の数値を指定してください。'

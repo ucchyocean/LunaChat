@@ -190,6 +190,9 @@ permissions:
   lunachat.option.allowcc:
     description: allowccオプション設定コマンドの使用権限
     default: true
+  lunachat.option.japanize:
+    description: japanizeオプション設定コマンドの使用権限
+    default: true
   lunachat.option.*:
     children:
       lunachat.option.description: true
@@ -200,6 +203,7 @@ permissions:
       lunachat.option.password: true
       lunachat.option.visible: true
       lunachat.option.allowcc: true
+      lunachat.option.japanize: true
     description: オプション設定の全コマンドの使用権限
 
   lunachat-admin.mod-all-channels:

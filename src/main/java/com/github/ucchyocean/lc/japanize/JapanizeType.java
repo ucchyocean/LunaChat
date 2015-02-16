@@ -38,15 +38,17 @@ public enum JapanizeType {
 
     /**
      * 文字列表記からJapanizeTypeを作成して返す
-     * @param id
+     * @param id ID
+     * @param def デフォルト
      * @return
      */
-    public static JapanizeType fromID(String id) {
+    public static JapanizeType fromID(String id, JapanizeType def) {
+        if ( id == null ) return def;
         for ( JapanizeType type : values() ) {
             if ( type.id.equalsIgnoreCase(id) ) {
                 return type;
             }
         }
-        return NONE;
+        return def;
     }
 }

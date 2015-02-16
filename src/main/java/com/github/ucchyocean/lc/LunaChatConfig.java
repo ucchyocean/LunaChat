@@ -217,7 +217,7 @@ public class LunaChatConfig {
         enableNormalChatColorCode =
                 config.getBoolean("enableNormalChatColorCode", true);
 
-        japanizeType = JapanizeType.fromID(config.getString("japanizeType", "kana"));
+        japanizeType = JapanizeType.fromID(config.getString("japanizeType"), JapanizeType.KANA);
         japanizeDisplayLine = config.getInt("japanizeDisplayLine", 2);
         if ( japanizeDisplayLine != 1 && japanizeDisplayLine != 2 ) {
             japanizeDisplayLine = 2;

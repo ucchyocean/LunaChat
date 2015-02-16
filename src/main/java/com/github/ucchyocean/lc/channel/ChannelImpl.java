@@ -159,10 +159,12 @@ public class ChannelImpl extends Channel {
         // Japanize変換タスクを作成する
         boolean isIncludeSyncChat = true;
         DelayedJapanizeConvertTask delayedTask = null;
+        JapanizeType japanizeType = (getJapanizeType() == null)
+                ? config.getJapanizeType() : getJapanizeType();
 
         if ( !skipJapanize &&
                 api.isPlayerJapanize(player.getName()) &&
-                config.getJapanizeType() != JapanizeType.NONE ) {
+                japanizeType != JapanizeType.NONE ) {
 
             int lineType = config.getJapanizeDisplayLine();
             String jpFormat;
@@ -177,8 +179,7 @@ public class ChannelImpl extends Channel {
 
             // タスクを作成しておく
             delayedTask = new DelayedJapanizeConvertTask(maskedMessage,
-                            config.getJapanizeType(),
-                            this, player, jpFormat, messageFormat);
+                    japanizeType, this, player, jpFormat, messageFormat);
         }
 
         if ( isIncludeSyncChat ) {

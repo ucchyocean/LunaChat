@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.event.LunaChatChannelOptionChangedEvent;
+import com.github.ucchyocean.lc.japanize.JapanizeType;
 
 /**
  * optionコマンドの実行クラス
@@ -320,6 +321,37 @@ public class OptionCommand extends SubCommandAbst {
                 } else {
                     sendResourceMessage(sender, PREERR,
                             "errmsgInvalidBooleanOption", "allowcc");
+                }
+            }
+        }
+
+        if ( options.containsKey("japanize") ) {
+            // Japanize変換設定
+
+            String pnode = PERMISSION_NODE + ".japanize";
+            if ( !sender.hasPermission(pnode) ) {
+                sendResourceMessage(sender, PREERR,
+                        "errmsgNotPermission", pnode);
+            } else {
+
+                String value = options.get("japanize");
+
+                if ( value.equals("") ) {
+                    channel.setJapanizeType(null);
+                    sendResourceMessage(sender, PREINFO,
+                            "cmdmsgOption", "japanize", "デフォルト");
+                    setOption = true;
+                } else {
+                    JapanizeType type = JapanizeType.fromID(value, null);
+                    if ( type == null ) {
+                        sendResourceMessage(sender, PREERR,
+                                "errmsgInvalidJapanizeOption", "japanize", value);
+                    } else {
+                        channel.setJapanizeType(type);
+                        sendResourceMessage(sender, PREINFO,
+                                "cmdmsgOption", "japanize", type.toString());
+                        setOption = true;
+                    }
                 }
             }
         }
