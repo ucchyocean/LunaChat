@@ -150,7 +150,7 @@ public class LunaChatConfig {
         enableChannelChat = config.getBoolean("enableChannelChat", true);
         noJoinAsGlobal = config.getBoolean("noJoinAsGlobal", true);
         loggingChat = config.getBoolean("loggingChat", true);
-        displayChatOnConsole = config.getBoolean("displayChatOnConsole", false);
+        displayChatOnConsole = config.getBoolean("displayChatOnConsole", true);
         globalMarker = config.getString("globalMarker", "!");
         zeroMemberRemove = config.getBoolean("zeroMemberRemove", false);
         showListOnJoin = config.getBoolean("showListOnJoin", false);
@@ -184,7 +184,7 @@ public class LunaChatConfig {
                 "&f[%color%ch&f]%prefix%username%suffix&a:&f %msg");
         defaultFormatForPrivateMessage =
                 config.getString("defaultFormatForPrivateMessage",
-                "&7[%player > %to] %msg");
+                "&7[%player -> %to]&f %msg");
 
         opListenAllChannel = config.getBoolean("opListenAllChannel", false);
 
@@ -204,7 +204,7 @@ public class LunaChatConfig {
         enableNormalChatMessageFormat =
                 config.getBoolean("enableNormalChatMessageFormat", true);
         normalChatMessageFormat =
-                config.getString("normalChatMessageFormat", "&f<%prefix%username%suffix&f> %msg");
+                config.getString("normalChatMessageFormat", "&f%prefix%username%suffix&a:&f %msg");
         enableNormalChatColorCode =
                 config.getBoolean("enableNormalChatColorCode", true);
 
@@ -213,7 +213,7 @@ public class LunaChatConfig {
         if ( japanizeDisplayLine != 1 && japanizeDisplayLine != 2 ) {
             japanizeDisplayLine = 2;
         }
-        japanizeLine1Format = config.getString("japanizeLine1Format", "%msg &7(%japanize)");
+        japanizeLine1Format = config.getString("japanizeLine1Format", "%msg &6(%japanize)");
         japanizeLine2Format = config.getString("japanizeLine2Format", "&6[JP] %japanize");
         japanizeIgnorePlayerName = config.getBoolean("japanizeIgnorePlayerName", true);
         noneJapanizeMarker = config.getString("noneJapanizeMarker", "#");

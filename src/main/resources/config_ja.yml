@@ -17,7 +17,7 @@ noJoinAsGlobal: true
 loggingChat: true
 
 # チャンネルチャットの発言内容を、サーバーコンソールに表示するかどうか
-displayChatOnConsole: false
+displayChatOnConsole: true
 
 # グローバルマーカー。
 # これが発言の頭に入っている場合は、一時的にグローバル発言になる。
@@ -75,7 +75,7 @@ opListenAllChannel: false
 # %prefix   : プレフィックス（VaultとPermissionsExが導入されている場合に置き換えられます）
 # %suffix   : サフィックス（VaultとPermissionsExが導入されている場合に置き換えられます）
 # %msg      : 発言内容（Japanize変換された場合は、Japanize結果を含みます。）
-defaultFormatForPrivateMessage: '&7[%player > %to] %msg'
+defaultFormatForPrivateMessage: '&7[%player -> %to]&f %msg'
 
 
 # -------------------- dynmap連携設定 --------------------
@@ -129,7 +129,7 @@ enableNormalChatMessageFormat: true
 # %prefix   : プレフィックス（VaultとPermissionsExが導入されている場合に置き換えられます）
 # %suffix   : サフィックス（VaultとPermissionsExが導入されている場合に置き換えられます）
 # %msg      : 発言内容（Japanize変換された場合は、Japanize結果を含みます。）
-normalChatMessageFormat: '%prefix&f<%username>%suffix&f %msg'
+normalChatMessageFormat: '&f%prefix%username%suffix&a:&f %msg'
 
 # 通常チャット（非チャンネルチャット）で、カラーコード（&aや&bなど）を
 # 使用可能にするかどうか。falseに設定すると、カラーコードは変換されません。
@@ -161,7 +161,7 @@ japanizeDisplayLine: 1
 # フォーマット設定には、下記のキーワードが使用できます。
 # %msg      : 元の発言内容
 # %japanize : Japanize変換された発言内容
-japanizeLine1Format: '%msg &7(%japanize)'
+japanizeLine1Format: '%msg &6(%japanize)'
 
 # japanizeDisplayLine が 2 のときの、2行目の表示フォーマットを設定する。
 # フォーマット設定には、下記のキーワードが使用できます。
