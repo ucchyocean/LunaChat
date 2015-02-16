@@ -471,7 +471,6 @@ public class ChannelImpl extends Channel {
         if ( alias != null && alias.length() > 0 ) {
             info.add(INFO_ALIAS + alias);
         }
-        // INFO_ALIAS
 
         // 参加メンバー一覧
         if ( isGlobalChannel() ) {
