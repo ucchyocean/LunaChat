@@ -180,7 +180,7 @@ usageHidePlayer: '&6/%s hide (player) &7- 指定したプレイヤーの発言�
 usageUnhide: '&6/%s unhide [channel] &7- 指定したチャンネルの発言内容を非表示から表示に戻します。'
 usageUnhidePlayer: '&6/%s unhide (player) &7- 指定したプレイヤーの発言内容を非表示から表示に戻します。'
 usageInfo: '&6/%s info [channel] &7- チャンネルの情報を表示します。'
-usageLog: '&6/%s log [channel] [p=player] [f=filter] [f=date] [r] &7- チャンネルの発言ログを表示します。'
+usageLog: '&6/%s log [channel] [p=player] [f=filter] [d=date] [r] &7- チャンネルの発言ログを表示します。'
 
 usageCreate: '&6/%s create (channel) [description] &7- チャンネルを作成します。'
 usageRemove: '&6/%s remove [channel] &7- チャンネルを削除します。'
