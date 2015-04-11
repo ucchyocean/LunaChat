@@ -28,6 +28,7 @@ public class LunaChatCommand implements CommandExecutor {
     private static final String PREERR = Resources.get("errorPrefix");
 
     private ArrayList<SubCommandAbst> commands;
+    private ArrayList<SubCommandAbst> commonCommands;
     private JoinCommand joinCommand;
     private HelpCommand helpCommand;
 
@@ -49,8 +50,6 @@ public class LunaChatCommand implements CommandExecutor {
         commands.add(new PardonCommand());
         commands.add(new MuteCommand());
         commands.add(new UnmuteCommand());
-        commands.add(new HideCommand());
-        commands.add(new UnhideCommand());
         commands.add(new InfoCommand());
         commands.add(new LogCommand());
         commands.add(new CreateCommand());
@@ -58,14 +57,18 @@ public class LunaChatCommand implements CommandExecutor {
         commands.add(new FormatCommand());
         commands.add(new ModeratorCommand());
         commands.add(new ModCommand());
-        commands.add(new DictionaryCommand());
-        commands.add(new DicCommand());
         commands.add(new OptionCommand());
         commands.add(new TemplateCommand());
         commands.add(new CheckCommand());
-        commands.add(new ReloadCommand());
         helpCommand = new HelpCommand(commands);
         commands.add(helpCommand);
+
+        commonCommands = new ArrayList<SubCommandAbst>();
+        commonCommands.add(new HideCommand());
+        commonCommands.add(new UnhideCommand());
+        commonCommands.add(new DictionaryCommand());
+        commonCommands.add(new DicCommand());
+        commonCommands.add(new ReloadCommand());
     }
 
     /**
@@ -74,6 +77,25 @@ public class LunaChatCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command,
             String label, String[] args) {
+
+        // チャンネルチャットが無効でも利用できるコマンドはここで処理する
+        // （hide, unhide, dic, dictionary, reload）
+        if ( args.length >= 1 ) {
+            for ( SubCommandAbst c : commonCommands ) {
+                if ( c.getCommandName().equalsIgnoreCase(args[0]) ) {
+
+                    // パーミッションの確認
+                    String node = c.getPermissionNode();
+                    if ( !sender.hasPermission(node) ) {
+                        sendResourceMessage(sender, PREERR, "errmsgPermission", node);
+                        return true;
+                    }
+
+                    // 実行
+                    return c.runCommand(sender, label, args);
+                }
+            }
+        }
 
         // チャンネルチャット機能が無効になっている場合は、メッセージを表示して終了
         if ( !LunaChat.getInstance().getLunaChatConfig().isEnableChannelChat()

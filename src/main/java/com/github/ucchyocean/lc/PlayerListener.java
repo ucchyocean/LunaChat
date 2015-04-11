@@ -25,7 +25,7 @@ import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.channel.ChannelPlayer;
 import com.github.ucchyocean.lc.channel.ChannelPlayerName;
 import com.github.ucchyocean.lc.channel.ChannelPlayerUUID;
-import com.github.ucchyocean.lc.channel.DelayedJapanizeConvertTask;
+import com.github.ucchyocean.lc.channel.DelayedJapanizeNormalChatTask;
 import com.github.ucchyocean.lc.event.LunaChatPreChatEvent;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 
@@ -236,6 +236,14 @@ public class PlayerListener implements Listener {
                 message = Utility.replaceColorCode(message);
             }
 
+            // hideされているプレイヤーを、recipientから抜く
+            for ( ChannelPlayer cp : api.getHidelist(player) ) {
+                Player p = cp.getPlayer();
+                if ( p != null ) {
+                    event.getRecipients().remove(p);
+                }
+            }
+
 
             // 一時的にJapanizeスキップ設定かどうかを確認する
             boolean skipJapanize = false;
@@ -275,8 +283,8 @@ public class PlayerListener implements Listener {
 
                     String taskFormat = Utility.replaceColorCode(config.getJapanizeLine2Format());
 
-                    DelayedJapanizeConvertTask task = new DelayedJapanizeConvertTask(message,
-                            config.getJapanizeType(), null, player, taskFormat, null);
+                    DelayedJapanizeNormalChatTask task = new DelayedJapanizeNormalChatTask(
+                            message, config.getJapanizeType(), player, taskFormat, event);
 
                     // 発言処理を必ず先に実施させるため、遅延を入れてタスクを実行する。
                     int wait = config.getJapanizeWait();

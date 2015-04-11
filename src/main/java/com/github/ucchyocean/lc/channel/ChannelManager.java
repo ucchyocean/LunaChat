@@ -645,7 +645,7 @@ public class ChannelManager implements LunaChatAPI {
 
         // Japanize変換タスクを作成して、同期で実行する。
         DelayedJapanizeConvertTask task = new DelayedJapanizeConvertTask(
-                message, type, null, null, "%japanize", null);
+                message, type, null, null, "%japanize");
         if ( task.runSync() ) {
             return task.getResult();
         }

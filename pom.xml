@@ -97,9 +97,9 @@
       <url>http://repo.mikeprimm.com/</url>
     </repository>
     <repository>
-      <id>rasagne-repo</id>
-      <name>Craft Bukkit Alternate Nexus Repository</name>
-      <url>http://lasagne.tgnmc.com:8081/nexus/content/groups/public</url>
+      <id>spigot-repo</id>
+      <name>Spigot Maven Repository</name>
+      <url>https://hub.spigotmc.org/nexus/content/groups/public</url>
     </repository>
   </repositories>
 
@@ -107,7 +107,7 @@
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>bukkit</artifactId>
-      <version>1.8-R0.1-SNAPSHOT</version>
+      <version>1.8.3-R0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>net.milkbowl.vault</groupId>

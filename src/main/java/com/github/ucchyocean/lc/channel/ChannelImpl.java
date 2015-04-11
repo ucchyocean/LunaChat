@@ -178,7 +178,7 @@ public class ChannelImpl extends Channel {
             }
 
             // タスクを作成しておく
-            delayedTask = new DelayedJapanizeConvertTask(maskedMessage,
+            delayedTask = new DelayedJapanizeChannelChatTask(maskedMessage,
                     japanizeType, this, player, jpFormat, messageFormat);
         }
 
