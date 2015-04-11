@@ -14,6 +14,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -42,7 +43,7 @@ public class PlayerListener implements Listener {
      * プレイヤーのチャットごとに呼び出されるメソッド
      * @param event チャットイベント
      */
-    @EventHandler
+    @EventHandler(priority=EventPriority.HIGH, ignoreCancelled=true)
     public void onChat(AsyncPlayerChatEvent event) {
 
         LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
