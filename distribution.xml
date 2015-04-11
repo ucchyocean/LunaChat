@@ -13,6 +13,7 @@
   <files>
     <file>
       <source>target/LunaChat.jar</source>
+      <destName>plugins/LunaChat.jar</destName>
     </file>
   </files>
 
