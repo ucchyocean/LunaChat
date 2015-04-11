@@ -13,7 +13,7 @@ commands:
            /<command> join (channel) - チャンネルに参加します。
            /<command> leave - 参加しているチャンネルから退出します。
            /<command> list - チャンネルのリストを表示します。
-           /<command> invite (name) - 指定した人をチャンネルチャットに招待します。
+           /<command> invite (name) [force] - 指定した人をチャンネルチャットに招待します。
            /<command> accept - 招待を受けてチャンネルチャットに入室します。
            /<command> deny - 招待を拒否します。
            /<command> kick (name) - 指定した人をチャンネルチャットからキックします。
@@ -227,6 +227,9 @@ permissions:
   lunachat-admin.japanize-other:
     description: 他者のjapanizeオンオフ設定コマンドの使用権限
     default: op
+  lunachat-admin.force-invite:
+    description: 強制入室コマンドの使用権限
+    default: op
   lunachat-admin.*:
     children:
       lunachat-admin.mod-all-channels: true
@@ -236,4 +239,5 @@ permissions:
       lunachat-admin.check: true
       lunachat-admin.reload: true
       lunachat-admin.japanize-other: true
+      lunachat-admin.force-invite: true
     description: 管理者向けの全コマンドの使用権限

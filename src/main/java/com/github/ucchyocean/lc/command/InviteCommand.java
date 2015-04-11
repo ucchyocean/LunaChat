@@ -21,6 +21,9 @@ public class InviteCommand extends SubCommandAbst {
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
     private static final String USAGE_KEY = "usageInvite";
 
+    private static final String PERMISSION_NODE_FORCE_INVITE
+            = "lunachat-admin.force-invite";
+
     /**
      * コマンドを取得します。
      * @return コマンド
@@ -73,6 +76,22 @@ public class InviteCommand extends SubCommandAbst {
      */
     @Override
     public boolean runCommand(CommandSender sender, String label, String[] args) {
+
+        if ( args.length >= 3 && args[2].equalsIgnoreCase("force") ) {
+            return runForceInviteCommand(sender, label, args);
+        }
+
+        return runNormalInviteCommand(sender, label, args);
+    }
+
+    /**
+     * 通常のinviteコマンドを処理する
+     * @param sender
+     * @param label
+     * @param args
+     * @return
+     */
+    private boolean runNormalInviteCommand(CommandSender sender, String label, String[] args) {
 
         // プレイヤーでなければ終了する
         if (!(sender instanceof Player)) {
@@ -127,6 +146,76 @@ public class InviteCommand extends SubCommandAbst {
         sendResourceMessage(invited, PREINFO,
                 "cmdmsgInvited1", inviter.getName(), channel.getName());
         sendResourceMessage(invited, PREINFO, "cmdmsgInvited2");
+        return true;
+    }
+
+    /**
+     * 強制入室コマンドを処理する
+     * @param sender
+     * @param label
+     * @param args
+     * @return
+     */
+    private boolean runForceInviteCommand(CommandSender sender, String label, String[] args) {
+
+        // パーミッションチェック
+        if ( !sender.hasPermission(PERMISSION_NODE_FORCE_INVITE) ) {
+            sendResourceMessage(sender, PREERR, "errmsgPermission",
+                    PERMISSION_NODE_FORCE_INVITE);
+            return true;
+        }
+
+        Player player = null;
+        if (sender instanceof Player) {
+            player = (Player) sender;
+        }
+
+        // 引数チェック
+        // このコマンドは、コンソールでも実行できるが、その場合はチャンネル名を指定する必要がある
+        String cname = null;
+        if ( player != null && args.length <= 3 ) {
+            Channel def = api.getDefaultChannel(player.getName());
+            if ( def != null ) {
+                cname = def.getName();
+            }
+        } else if ( args.length >= 4 ) {
+            cname = args[3];
+        } else {
+            sendResourceMessage(sender, PREERR, "errmsgCommand");
+            return true;
+        }
+
+        // チャンネルが存在するかどうか確認する
+        Channel channel = api.getChannel(cname);
+        if ( channel == null ) {
+            sendResourceMessage(sender, PREERR, "errmsgNotExist");
+            return true;
+        }
+
+        // 招待相手が存在するかどうかを確認する
+        String invitedName = args[1];
+        ChannelPlayer invited = ChannelPlayer.getChannelPlayer(invitedName);
+        if ( invited == null || !invited.isOnline() ) {
+            sendResourceMessage(sender, PREERR,
+                    "errmsgNotfoundPlayer", invitedName);
+            return true;
+        }
+
+        // 招待相手が既にチャンネルに参加しているかどうかを確認する
+        if (channel.getMembers().contains(invited)) {
+            sendResourceMessage(sender, PREERR,
+                    "errmsgInvitedAlreadyExist", invitedName);
+            return true;
+        }
+
+        // 参加する
+        channel.addMember(invited);
+        api.setDefaultChannel(invitedName, cname);
+        sendResourceMessage(sender, PREINFO,
+                "cmdmsgInvite", invitedName, channel.getName());
+        sendResourceMessage(invited, PREINFO,
+                "cmdmsgJoin", channel.getName());
+
         return true;
     }
 }
