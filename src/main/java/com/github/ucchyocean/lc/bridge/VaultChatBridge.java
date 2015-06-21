@@ -5,7 +5,6 @@
  */
 package com.github.ucchyocean.lc.bridge;
 
-import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.chat.Chat;
 
 import org.bukkit.Bukkit;
@@ -33,14 +32,12 @@ public class VaultChatBridge {
      */
     public static VaultChatBridge load(Plugin plugin) {
 
-        if ( plugin instanceof Vault ) {
-            RegisteredServiceProvider<Chat> chatProvider =
-                    Bukkit.getServicesManager().getRegistration(Chat.class);
-            if ( chatProvider != null ) {
-                VaultChatBridge bridge = new VaultChatBridge();
-                bridge.chatPlugin = chatProvider.getProvider();
-                return bridge;
-            }
+        RegisteredServiceProvider<Chat> chatProvider =
+                Bukkit.getServicesManager().getRegistration(Chat.class);
+        if ( chatProvider != null ) {
+            VaultChatBridge bridge = new VaultChatBridge();
+            bridge.chatPlugin = chatProvider.getProvider();
+            return bridge;
         }
 
         return null;

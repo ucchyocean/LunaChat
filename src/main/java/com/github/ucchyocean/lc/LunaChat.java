@@ -11,13 +11,12 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.ucchyocean.lc.bridge.DynmapBridge;
+import com.github.ucchyocean.lc.bridge.HawkEyeBridge;
 import com.github.ucchyocean.lc.bridge.VaultChatBridge;
-import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.channel.ChannelManager;
 import com.github.ucchyocean.lc.command.LunaChatCommand;
 import com.github.ucchyocean.lc.command.LunaChatJapanizeCommand;
@@ -37,6 +36,7 @@ public class LunaChat extends JavaPlugin {
 
     private VaultChatBridge vaultchat;
     private DynmapBridge dynmap;
+    private HawkEyeBridge hawkeye;
 
     private ExpireCheckTask expireCheckerTask;
     private LunaChatLogger normalChatLogger;
@@ -78,6 +78,11 @@ public class LunaChat extends JavaPlugin {
             }
         }
 
+        // HawkEye のロード
+        if ( getServer().getPluginManager().isPluginEnabled("HawkEye") ) {
+            hawkeye = new HawkEyeBridge(this);
+        }
+
         // リスナーの登録
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
 
@@ -86,9 +91,6 @@ public class LunaChat extends JavaPlugin {
         messageCommand = new LunaChatMessageCommand();
         replyCommand = new LunaChatReplyCommand();
         lcjapanizeCommand = new LunaChatJapanizeCommand();
-
-        // シリアル化可能オブジェクトの登録
-        ConfigurationSerialization.registerClass(Channel.class, "Channel");
 
         // 期限チェッカータスクの起動
         expireCheckerTask = new ExpireCheckTask();
@@ -196,6 +198,14 @@ public class LunaChat extends JavaPlugin {
      */
     public DynmapBridge getDynmap() {
         return dynmap;
+    }
+
+    /**
+     * HawkEye連携クラスを返す
+     * @return HawkEyeBridge
+     */
+    public HawkEyeBridge getHawkEye() {
+        return hawkeye;
     }
 
     /**

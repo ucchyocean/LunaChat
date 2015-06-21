@@ -29,6 +29,9 @@ public class LunaChatConfig {
     /** チャンネルチャットの発言内容を、ログに残すかどうか */
     private boolean loggingChat;
 
+    /** チャンネルチャットの発言内容を、HawkEyeに記録するかどうか */
+    private boolean loggingChatToHawkEye;
+
     /** チャンネルチャットの発言内容を、コンソールに表示するかどうか */
     private boolean displayChatOnConsole;
 
@@ -156,6 +159,7 @@ public class LunaChatConfig {
         enableChannelChat = config.getBoolean("enableChannelChat", true);
         noJoinAsGlobal = config.getBoolean("noJoinAsGlobal", true);
         loggingChat = config.getBoolean("loggingChat", true);
+        loggingChatToHawkEye = config.getBoolean("loggingChatToHawkEye", true);
         displayChatOnConsole = config.getBoolean("displayChatOnConsole", true);
         globalMarker = config.getString("globalMarker", "!");
         zeroMemberRemove = config.getBoolean("zeroMemberRemove", false);
@@ -260,6 +264,14 @@ public class LunaChatConfig {
      */
     public boolean isLoggingChat() {
         return loggingChat;
+    }
+
+    /**
+     * チャンネルチャットの発言内容を、HawkEyeに記録するかどうか
+     * @return loggingChatToHawkEye
+     */
+    public boolean isLoggingChatToHawkEye() {
+        return loggingChatToHawkEye;
     }
 
     /**

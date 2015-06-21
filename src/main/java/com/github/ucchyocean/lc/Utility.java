@@ -301,4 +301,14 @@ public class Utility {
             return null;
         return player;
     }
+
+    /**
+     * 指定された名前のプレイヤーを取得する
+     * @param name プレイヤー名
+     * @return プレイヤー
+     */
+    @SuppressWarnings("deprecation")
+    public static Player getPlayerExact(String name) {
+        return Bukkit.getPlayer(name);
+    }
 }

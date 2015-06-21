@@ -3,7 +3,7 @@ main: com.github.ucchyocean.lc.LunaChat
 version: ${project.version}
 author: ucchy
 description: ${project.description}
-softdepend: [Vault, dynmap]
+softdepend: [Vault, dynmap, HawkEye]
 
 commands:
   lunachat:
