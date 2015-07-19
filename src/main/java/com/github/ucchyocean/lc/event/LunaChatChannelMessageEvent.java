@@ -19,13 +19,18 @@ public class LunaChatChannelMessageEvent extends LunaChatBaseEvent {
     private ChannelPlayer player;
     private String message;
     private ArrayList<ChannelPlayer> recipients;
+    private String displayName;
+    private String originalMessage;
 
     public LunaChatChannelMessageEvent(String channelName,
-            ChannelPlayer player, String message, ArrayList<ChannelPlayer> recipients) {
+            ChannelPlayer player, String message, ArrayList<ChannelPlayer> recipients,
+            String displayName, String originalMessage) {
         super(channelName);
         this.player = player;
         this.message = message;
         this.recipients = recipients;
+        this.displayName = displayName;
+        this.originalMessage = originalMessage;
     }
 
     /**
@@ -50,6 +55,22 @@ public class LunaChatChannelMessageEvent extends LunaChatBaseEvent {
      */
     public ArrayList<ChannelPlayer> getRecipients() {
         return recipients;
+    }
+
+    /**
+     * 発言者の表示名を取得する
+     * @return 発言者の表示名
+     */
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    /**
+     * オリジナルメッセージ（チャットフォーマットを適用していない状態のメッセージ）を取得する
+     * @return オリジナルメッセージ
+     */
+    public String getOriginalMessage() {
+        return originalMessage;
     }
 
     /**

@@ -96,6 +96,7 @@ public class DynmapBridge implements Listener {
             channel.chatFromOtherSource(
                     event.getName(), event.getSource(), event.getMessage());
             event.setProcessed();
+            dynmap.sendBroadcastToWeb(null, event.getMessage());
         }
     }
 }

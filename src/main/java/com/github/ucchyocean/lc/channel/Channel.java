@@ -364,9 +364,10 @@ public abstract class Channel implements ConfigurationSerializable {
      * @param message メッセージ
      * @param format フォーマット
      * @param sendDynmap dynmapへ送信するかどうか
+     * @param displayName 発言者の表示名（APIに使用されます）
      */
     public abstract void sendMessage(
-            ChannelPlayer player, String message, String format, boolean sendDynmap);
+            ChannelPlayer player, String message, String format, boolean sendDynmap, String displayName);
 
     /**
      * チャンネル情報を返す

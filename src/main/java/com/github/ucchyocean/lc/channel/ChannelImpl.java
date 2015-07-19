@@ -101,7 +101,7 @@ public class ChannelImpl extends Channel {
         LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
 
         // Muteされているかどうかを確認する
-        if ( player != null && getMuted().contains(player) ) {
+        if ( getMuted().contains(player) ) {
             player.sendMessage( PREERR + ERRMSG_MUTED );
             return;
         }
@@ -184,7 +184,7 @@ public class ChannelImpl extends Channel {
 
         if ( isIncludeSyncChat ) {
             // メッセージの送信
-            sendMessage(player, maskedMessage, msgFormat, true);
+            sendMessage(player, maskedMessage, msgFormat, true, player.getDisplayName());
         }
 
         // 非同期実行タスクがある場合、追加で実行する
@@ -204,7 +204,7 @@ public class ChannelImpl extends Channel {
                         String m = replaceKeywordsForSystemMessages(
                                 MSG_BAN_NGWORD, player.getName());
                         player.sendMessage(m);
-                        sendMessage(null, m, null, true);
+                        sendMessage(null, m, null, true, "system");
                     }
                 }
 
@@ -217,7 +217,7 @@ public class ChannelImpl extends Channel {
                         String m = replaceKeywordsForSystemMessages(
                                 MSG_KICK_NGWORD, player.getName());
                         player.sendMessage(m);
-                        sendMessage(null, m, null, true);
+                        sendMessage(null, m, null, true, "system");
                     }
                 }
 
@@ -230,7 +230,7 @@ public class ChannelImpl extends Channel {
                     String m = replaceKeywordsForSystemMessages(
                             MSG_MUTE_NGWORD, player.getName());
                     player.sendMessage(m);
-                    sendMessage(null, m, null, true);
+                    sendMessage(null, m, null, true, "system");
                 }
             }
         }
@@ -271,7 +271,8 @@ public class ChannelImpl extends Channel {
         }
 
         // メッセージの送信
-        sendMessage(null, maskedMessage, msgFormat, false);
+        boolean sendDynmap = source == null || !source.equals("web");
+        sendMessage(null, maskedMessage, msgFormat, sendDynmap, name);
     }
 
     /**
@@ -292,7 +293,7 @@ public class ChannelImpl extends Channel {
             return;
         }
         msg = replaceKeywordsForSystemMessages(msg, player.getName());
-        sendMessage(null, msg, null, false);
+        sendMessage(null, msg, null, false, "system");
     }
 
     /**
@@ -301,10 +302,11 @@ public class ChannelImpl extends Channel {
      * @param message メッセージ
      * @param format フォーマット
      * @param sendDynmap dynmapへ送信するかどうか
+     * @param name 発言者名
      */
     @Override
     public void sendMessage(ChannelPlayer player, String message,
-            String format, boolean sendDynmap) {
+            String format, boolean sendDynmap, String name) {
 
         LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
 
@@ -404,7 +406,7 @@ public class ChannelImpl extends Channel {
         // イベントコール
         LunaChatChannelMessageEvent event =
                 new LunaChatChannelMessageEvent(
-                        getName(), player, message, recipients);
+                        getName(), player, message, recipients, name, originalMessage);
         Bukkit.getPluginManager().callEvent(event);
         message = event.getMessage();
         recipients = event.getRecipients();
@@ -448,8 +450,7 @@ public class ChannelImpl extends Channel {
         }
 
         // ロギング
-        String p = (player != null) ? player.getName() : "";
-        log(originalMessage, p);
+        log(originalMessage, name);
     }
 
     /**
@@ -615,7 +616,7 @@ public class ChannelImpl extends Channel {
                     // メッセージ通知を流す
                     if ( !MSG_BAN_EXPIRED.equals("") ) {
                         String msg = replaceKeywords(MSG_BAN_EXPIRED, cp);
-                        sendMessage(null, msg, null, false);
+                        sendMessage(null, msg, null, false, "system");
                     }
 
                     if ( cp.isOnline() && !MSG_BAN_EXPIRED_PLAYER.equals("") ) {
@@ -639,7 +640,7 @@ public class ChannelImpl extends Channel {
                     // メッセージ通知を流す
                     if ( !MSG_MUTE_EXPIRED.equals("") ) {
                         String msg = replaceKeywords(MSG_MUTE_EXPIRED, cp);
-                        sendMessage(null, msg, null, false);
+                        sendMessage(null, msg, null, false, "system");
                     }
 
                     if ( cp.isOnline() && !MSG_MUTE_EXPIRED_PLAYER.equals("") ) {
