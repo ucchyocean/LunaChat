@@ -47,16 +47,20 @@ public class IMEConverter {
     // 変換の実行
     private static String conv(String org, boolean isGoogleIME) {
 
+        if ( org.length() == 0 ) {
+            return "";
+        }
+
         HttpURLConnection urlconn = null;
         BufferedReader reader = null;
         try {
             String baseurl;
             String encode;
             if ( isGoogleIME ) {
-                baseurl = GOOGLE_IME_URL + URLEncoder.encode(org , "UTF-8");;
+                baseurl = GOOGLE_IME_URL + URLEncoder.encode(org , "UTF-8");
                 encode = "UTF-8";
             } else {
-                baseurl = SOCIAL_IME_URL + URLEncoder.encode(org , "UTF-8");;
+                baseurl = SOCIAL_IME_URL + URLEncoder.encode(org , "UTF-8");
                 encode = "EUC_JP";
             }
             URL url = new URL(baseurl);
