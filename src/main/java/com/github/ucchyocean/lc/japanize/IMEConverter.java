@@ -151,4 +151,12 @@ public class IMEConverter {
         }
         return buf.toString();
     }
+
+    // デバッグ用エントリ
+    public static void main(String[] args) {
+        String testee = "\"";
+        System.out.println("kana : " + KanaConverter.conv(testee));
+        System.out.println("GoogleIME : " + convByGoogleIME(KanaConverter.conv(testee)));
+        System.out.println("SocialIME : " + convBySocialIME(KanaConverter.conv(testee)));
+    }
 }
