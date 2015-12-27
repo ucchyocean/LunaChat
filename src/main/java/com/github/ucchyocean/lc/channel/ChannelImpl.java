@@ -5,7 +5,9 @@
  */
 package com.github.ucchyocean.lc.channel;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -67,6 +69,9 @@ public class ChannelImpl extends Channel {
 
     private static final String ERRMSG_MUTED = Resources.get("errmsgMuted");
 
+    private SimpleDateFormat dateFormat;
+    private SimpleDateFormat timeFormat;
+
     /** ロガー */
     private LunaChatLogger logger;
 
@@ -79,6 +84,8 @@ public class ChannelImpl extends Channel {
         super(name);
 
         logger = new LunaChatLogger(name.replace(">", "-"));
+        dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        timeFormat = new SimpleDateFormat("HH:mm:ss");
     }
 
     /**
@@ -679,6 +686,13 @@ public class ChannelImpl extends Channel {
         //msg = msg.replace("%msg", message);
         msg = msg.replace("%color", getColorCode());
         msg = msg.replace("%to", getPrivateMessageTo());
+
+        if ( msg.contains("%date") ) {
+            msg = msg.replace("%date", dateFormat.format(new Date()));
+        }
+        if ( msg.contains("%time") ) {
+            msg = msg.replace("%time", timeFormat.format(new Date()));
+        }
 
         if ( player != null ) {
             msg = msg.replace("%username", player.getDisplayName());

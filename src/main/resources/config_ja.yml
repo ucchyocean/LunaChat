@@ -59,6 +59,8 @@ formatConstraint: ['%username', '%msg']
 # %world    : 発言したワールド名
 # %prefix   : プレフィックス（VaultとPermissionsExが導入されている場合に置き換えられます）
 # %suffix   : サフィックス（VaultとPermissionsExが導入されている場合に置き換えられます）
+# %date     : 日付
+# %time     : 時刻
 # %msg      : 発言内容（Japanize変換された場合は、Japanize結果を含みます。）
 defaultFormat: '&f[%color%ch&f]%prefix%username%suffix&a:&f %msg'
 
@@ -86,6 +88,8 @@ maxChannelNameLength: 20
 # %world    : 発言したワールド名
 # %prefix   : プレフィックス（VaultとPermissionsExが導入されている場合に置き換えられます）
 # %suffix   : サフィックス（VaultとPermissionsExが導入されている場合に置き換えられます）
+# %date     : 日付
+# %time     : 時刻
 # %msg      : 発言内容（Japanize変換された場合は、Japanize結果を含みます。）
 defaultFormatForPrivateMessage: '&7[%player -> %to]&f %msg'
 
@@ -140,6 +144,8 @@ enableNormalChatMessageFormat: true
 # %world    : 発言したワールド名
 # %prefix   : プレフィックス（VaultとPermissionsExが導入されている場合に置き換えられます）
 # %suffix   : サフィックス（VaultとPermissionsExが導入されている場合に置き換えられます）
+# %date     : 日付
+# %time     : 時刻
 # %msg      : 発言内容（Japanize変換された場合は、Japanize結果を含みます。）
 normalChatMessageFormat: '&f%prefix%username%suffix&a:&f %msg'
 

@@ -5,7 +5,9 @@
  */
 package com.github.ucchyocean.lc;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,6 +40,17 @@ public class PlayerListener implements Listener {
     private static final String MOTD_FIRSTLINE = Resources.get("motdFirstLine");
     private static final String LIST_ENDLINE = Resources.get("listEndLine");
     private static final String LIST_FORMAT = Resources.get("listFormat");
+
+    private SimpleDateFormat dateFormat;
+    private SimpleDateFormat timeFormat;
+
+    /**
+     * コンストラクタ
+     */
+    public PlayerListener() {
+        dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        timeFormat = new SimpleDateFormat("HH:mm:ss");
+    }
 
     /**
      * プレイヤーのチャットごとに呼び出されるメソッド
@@ -373,6 +386,13 @@ public class PlayerListener implements Listener {
         String format = org;
         format = format.replace("%username", "%1$s");
         format = format.replace("%msg", "%2$s");
+
+        if ( format.contains("%date") ) {
+            format = format.replace("%date", dateFormat.format(new Date()));
+        }
+        if ( format.contains("%time") ) {
+            format = format.replace("%time", timeFormat.format(new Date()));
+        }
 
         if ( format.contains("%prefix") || format.contains("%suffix") ) {
 
