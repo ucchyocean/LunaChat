@@ -703,8 +703,16 @@ public class ChannelImpl extends Channel {
                 msg = msg.replace("%suffix", player.getSuffix());
             }
 
-            if ( msg.contains("%world") ) {
-                msg = msg.replace("%world", player.getWorldName());
+            if ( format.contains("%world") ) {
+
+                String worldname = null;
+                if ( LunaChat.getInstance().getMultiverseCore() != null ) {
+                    worldname = LunaChat.getInstance().getMultiverseCore().getWorldAlias(player.getWorldName());
+                }
+                if ( worldname == null || worldname.equals("") ) {
+                    worldname = player.getWorldName();
+                }
+                format = format.replace("%world", worldname);
             }
 
         } else {

@@ -16,6 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.ucchyocean.lc.bridge.DynmapBridge;
 import com.github.ucchyocean.lc.bridge.HawkEyeBridge;
+import com.github.ucchyocean.lc.bridge.MultiverseCoreBridge;
 import com.github.ucchyocean.lc.bridge.VaultChatBridge;
 import com.github.ucchyocean.lc.channel.ChannelManager;
 import com.github.ucchyocean.lc.command.LunaChatCommand;
@@ -37,6 +38,7 @@ public class LunaChat extends JavaPlugin {
     private VaultChatBridge vaultchat;
     private DynmapBridge dynmap;
     private HawkEyeBridge hawkeye;
+    private MultiverseCoreBridge multiverse;
 
     private ExpireCheckTask expireCheckerTask;
     private LunaChatLogger normalChatLogger;
@@ -81,6 +83,12 @@ public class LunaChat extends JavaPlugin {
         // HawkEye のロード
         if ( getServer().getPluginManager().isPluginEnabled("HawkEye") ) {
             hawkeye = new HawkEyeBridge(this);
+        }
+
+        // MultiverseCore のロード
+        temp = getServer().getPluginManager().getPlugin("Multiverse-Core");
+        if ( temp != null ) {
+            multiverse = MultiverseCoreBridge.load(temp);
         }
 
         // リスナーの登録
@@ -206,6 +214,14 @@ public class LunaChat extends JavaPlugin {
      */
     public HawkEyeBridge getHawkEye() {
         return hawkeye;
+    }
+
+    /**
+     * MultiverseCore連携クラスを返す
+     * @return MultiverseCoreBridge
+     */
+    public MultiverseCoreBridge getMultiverseCore() {
+        return multiverse;
     }
 
     /**

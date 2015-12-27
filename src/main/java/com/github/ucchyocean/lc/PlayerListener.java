@@ -408,7 +408,15 @@ public class PlayerListener implements Listener {
         }
 
         if ( format.contains("%world") ) {
-            format = format.replace("%world", player.getWorld().getName());
+
+            String worldname = null;
+            if ( LunaChat.getInstance().getMultiverseCore() != null ) {
+                worldname = LunaChat.getInstance().getMultiverseCore().getWorldAlias(player.getWorld());
+            }
+            if ( worldname == null || worldname.equals("") ) {
+                worldname = player.getWorld().getName();
+            }
+            format = format.replace("%world", worldname);
         }
 
         return Utility.replaceColorCode(format);

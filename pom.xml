@@ -92,10 +92,16 @@
       <url>http://nexus.theyeticave.net/content/repositories/pub_releases</url>
     </repository>
     <repository>
-      <id>dynmap-repo</id>
-      <name>mikeprimm repository</name>
+      <id>mikeprimm-repo</id>
+      <name>Dynmap repository</name>
       <url>http://repo.mikeprimm.com/</url>
     </repository>
+    <repository>
+      <id>onarandombox-repo</id>
+      <name>Multiverse repository</name>
+      <url>http://repo.onarandombox.com/content/groups/public</url>
+    </repository>
+
     <repository>
       <id>spigot-repo</id>
       <name>Spigot Maven Repository</name>
@@ -125,6 +131,11 @@
       <version>1.5.5</version>
       <scope>system</scope>
       <systemPath>${basedir}/lib/HawkEye.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>com.onarandombox.multiversecore</groupId>
+      <artifactId>Multiverse-Core</artifactId>
+      <version>2.5</version>
     </dependency>
   </dependencies>
 </project>
