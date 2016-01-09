@@ -4,9 +4,18 @@
 # @copyright  Copyright ucchy 2013
 
 
+# -------------------- 全般設定 --------------------
+
 # チャンネルチャット機能を利用可能にするかどうか
 # Japanize機能のみを利用したい場合は、falseにしてください。
 enableChannelChat: true
+
+# イベント処理の優先度を設定できます。
+# 他のプラグインとの組み合わせでうまく動かないときに使用してください。
+# LOWEST, LOW, NORMAL, HIGH, HIGHEST のどれかを指定できます。
+# よくわからない場合は、デフォルトのHIGHのままにしてください。
+playerChatEventListenerPriority: 'HIGH'
+
 
 # -------------------- チャンネルチャット設定 --------------------
 

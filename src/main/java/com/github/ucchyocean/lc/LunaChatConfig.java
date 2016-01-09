@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.event.EventPriority;
 
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 
@@ -22,6 +23,9 @@ public class LunaChatConfig {
 
     /** チャンネルチャット機能を利用可能にするかどうか */
     private boolean enableChannelChat;
+
+    /** チャットイベントの処理優先度 */
+    private EventPriority playerChatEventListenerPriority;
 
     /** チャンネルチャットに入っていない人の発言を、グローバルとして扱うかどうか */
     private boolean noJoinAsGlobal;
@@ -157,6 +161,8 @@ public class LunaChatConfig {
         FileConfiguration config = LunaChat.getInstance().getConfig();
 
         enableChannelChat = config.getBoolean("enableChannelChat", true);
+        playerChatEventListenerPriority
+            = getEventPriority(config.getString("playerChatEventListenerPriority"), EventPriority.HIGH);
         noJoinAsGlobal = config.getBoolean("noJoinAsGlobal", true);
         loggingChat = config.getBoolean("loggingChat", true);
         loggingChatToHawkEye = config.getBoolean("loggingChatToHawkEye", true);
@@ -248,6 +254,14 @@ public class LunaChatConfig {
      */
     public boolean isEnableChannelChat() {
         return enableChannelChat;
+    }
+
+    /**
+     * チャットイベントの処理優先度
+     * @return playerChatEventListenerPriorityを返す
+     */
+    public EventPriority getPlayerChatEventListenerPriority() {
+        return playerChatEventListenerPriority;
     }
 
     /**
@@ -518,5 +532,30 @@ public class LunaChatConfig {
      */
     public boolean isEnableNormalChatColorCode() {
         return enableNormalChatColorCode;
+    }
+
+    /**
+     * 指定された文字列から、対応するEventPriorityを返す。
+     * @param value 文字列
+     * @param def デフォルト
+     * @return EventPriority
+     */
+    private static EventPriority getEventPriority(String value, EventPriority def) {
+
+        if ( value == null ) return def;
+
+        if ( value.equalsIgnoreCase("LOWEST") ) {
+            return EventPriority.LOWEST;
+        } else if ( value.equalsIgnoreCase("LOW") ) {
+            return EventPriority.LOW;
+        } else if ( value.equalsIgnoreCase("NORMAL") ) {
+            return EventPriority.NORMAL;
+        } else if ( value.equalsIgnoreCase("HIGH") ) {
+            return EventPriority.HIGH;
+        } else if ( value.equalsIgnoreCase("HIGHEST") ) {
+            return EventPriority.HIGHEST;
+        }
+
+        return def;
     }
 }

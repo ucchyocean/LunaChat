@@ -53,64 +53,58 @@ public class PlayerListener implements Listener {
     }
 
     /**
-     * プレイヤーのチャットごとに呼び出されるメソッド
-     * @param event チャットイベント
+     * プレイヤーがチャット発言したときに呼び出されるメソッド
+     * @param event
+     */
+    @EventHandler(priority=EventPriority.LOWEST, ignoreCancelled=true)
+    public void onAsyncPlayerChatLowest(AsyncPlayerChatEvent event) {
+        if ( LunaChat.getInstance().getLunaChatConfig().getPlayerChatEventListenerPriority() == EventPriority.LOWEST ) {
+            processChatEvent(event);
+        }
+    }
+
+    /**
+     * プレイヤーがチャット発言したときに呼び出されるメソッド
+     * @param event
+     */
+    @EventHandler(priority=EventPriority.LOW, ignoreCancelled=true)
+    public void onAsyncPlayerChatLow(AsyncPlayerChatEvent event) {
+        if ( LunaChat.getInstance().getLunaChatConfig().getPlayerChatEventListenerPriority() == EventPriority.LOW ) {
+            processChatEvent(event);
+        }
+    }
+
+    /**
+     * プレイヤーがチャット発言したときに呼び出されるメソッド
+     * @param event
+     */
+    @EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
+    public void onAsyncPlayerChatNormal(AsyncPlayerChatEvent event) {
+        if ( LunaChat.getInstance().getLunaChatConfig().getPlayerChatEventListenerPriority() == EventPriority.NORMAL ) {
+            processChatEvent(event);
+        }
+    }
+
+    /**
+     * プレイヤーがチャット発言したときに呼び出されるメソッド
+     * @param event
      */
     @EventHandler(priority=EventPriority.HIGH, ignoreCancelled=true)
-    public void onChat(AsyncPlayerChatEvent event) {
-
-        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
-        LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
-
-        // 頭にglobalMarkerが付いている場合は、グローバル発言にする
-        if ( config.getGlobalMarker() != null &&
-                !config.getGlobalMarker().equals("") &&
-                event.getMessage().startsWith(config.getGlobalMarker()) &&
-                event.getMessage().length() > config.getGlobalMarker().length() ) {
-
-            int offset = config.getGlobalMarker().length();
-            event.setMessage( event.getMessage().substring(offset) );
-            chatGlobal(event);
-            return;
+    public void onAsyncPlayerChatHigh(AsyncPlayerChatEvent event) {
+        if ( LunaChat.getInstance().getLunaChatConfig().getPlayerChatEventListenerPriority() == EventPriority.HIGH ) {
+            processChatEvent(event);
         }
+    }
 
-        ChannelPlayer player =
-                ChannelPlayer.getChannelPlayer(event.getPlayer());
-        Channel channel = api.getDefaultChannel(player.getName());
-
-        // デフォルトの発言先が無い場合
-        if ( channel == null ) {
-            if ( config.isNoJoinAsGlobal() ) {
-                // グローバル発言にする
-                chatGlobal(event);
-                return;
-
-            } else {
-                // 発言をキャンセルして終了する
-                event.setCancelled(true);
-                return;
-            }
+    /**
+     * プレイヤーがチャット発言したときに呼び出されるメソッド
+     * @param event
+     */
+    @EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
+    public void onAsyncPlayerChatHighest(AsyncPlayerChatEvent event) {
+        if ( LunaChat.getInstance().getLunaChatConfig().getPlayerChatEventListenerPriority() == EventPriority.HIGHEST ) {
+            processChatEvent(event);
         }
-
-        // LunaChatPreChatEvent イベントコール
-        LunaChatPreChatEvent preChatEvent = new LunaChatPreChatEvent(
-                channel.getName(), player, event.getMessage());
-        Bukkit.getPluginManager().callEvent(preChatEvent);
-        if ( preChatEvent.isCancelled() ) {
-            event.setCancelled(true);
-            return;
-        }
-        Channel alt = preChatEvent.getChannel();
-        if ( alt != null ) {
-            channel = alt;
-        }
-        String message = preChatEvent.getMessage();
-
-        // チャンネルチャット発言
-        channel.chat(player, message);
-
-        // もとのイベントをキャンセル
-        event.setCancelled(true);
     }
 
     /**
@@ -172,6 +166,66 @@ public class PlayerListener implements Listener {
         for ( Channel channel : deleteList ) {
             LunaChat.getInstance().getLunaChatAPI().removeChannel(channel.getName());
         }
+    }
+
+    /**
+     * プレイヤーのチャットごとに呼び出されるメソッド
+     * @param event チャットイベント
+     */
+    private void processChatEvent(AsyncPlayerChatEvent event) {
+
+        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
+        LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
+
+        // 頭にglobalMarkerが付いている場合は、グローバル発言にする
+        if ( config.getGlobalMarker() != null &&
+                !config.getGlobalMarker().equals("") &&
+                event.getMessage().startsWith(config.getGlobalMarker()) &&
+                event.getMessage().length() > config.getGlobalMarker().length() ) {
+
+            int offset = config.getGlobalMarker().length();
+            event.setMessage( event.getMessage().substring(offset) );
+            chatGlobal(event);
+            return;
+        }
+
+        ChannelPlayer player =
+                ChannelPlayer.getChannelPlayer(event.getPlayer());
+        Channel channel = api.getDefaultChannel(player.getName());
+
+        // デフォルトの発言先が無い場合
+        if ( channel == null ) {
+            if ( config.isNoJoinAsGlobal() ) {
+                // グローバル発言にする
+                chatGlobal(event);
+                return;
+
+            } else {
+                // 発言をキャンセルして終了する
+                event.setCancelled(true);
+                return;
+            }
+        }
+
+        // LunaChatPreChatEvent イベントコール
+        LunaChatPreChatEvent preChatEvent = new LunaChatPreChatEvent(
+                channel.getName(), player, event.getMessage());
+        Bukkit.getPluginManager().callEvent(preChatEvent);
+        if ( preChatEvent.isCancelled() ) {
+            event.setCancelled(true);
+            return;
+        }
+        Channel alt = preChatEvent.getChannel();
+        if ( alt != null ) {
+            channel = alt;
+        }
+        String message = preChatEvent.getMessage();
+
+        // チャンネルチャット発言
+        channel.chat(player, message);
+
+        // もとのイベントをキャンセル
+        event.setCancelled(true);
     }
 
     /**
