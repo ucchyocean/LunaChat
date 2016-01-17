@@ -104,7 +104,7 @@
     <repository>
       <id>drtshock-releases</id>
       <name>mcMMO repository</name>
-      <url>https://ci.drtshock.net/plugin/repository/everything/com/gmail/nossr50/mcMMO</url>
+      <url>https://ci.drtshock.net/plugin/repository/everything</url>
     </repository>
     <repository>
       <id>spigot-repo</id>
