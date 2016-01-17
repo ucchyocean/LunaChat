@@ -311,7 +311,6 @@ public class PlayerListener implements Listener {
                 }
             }
 
-
             // 一時的にJapanizeスキップ設定かどうかを確認する
             boolean skipJapanize = false;
             String marker = config.getNoneJapanizeMarker();

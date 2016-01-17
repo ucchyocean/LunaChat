@@ -13,7 +13,7 @@ import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 
 /**
- *
+ * Japanize2行表示のときに、変換結果を遅延して通常チャットに表示するためのタスク
  * @author ucchy
  */
 public class DelayedJapanizeNormalChatTask extends DelayedJapanizeConvertTask {

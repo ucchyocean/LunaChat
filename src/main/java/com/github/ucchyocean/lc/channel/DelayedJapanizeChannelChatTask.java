@@ -8,7 +8,7 @@ package com.github.ucchyocean.lc.channel;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 
 /**
- *
+ * Japanize2行表示のときに、変換結果を遅延してチャンネルに表示するためのタスク
  * @author ucchy
  */
 public class DelayedJapanizeChannelChatTask extends DelayedJapanizeConvertTask {

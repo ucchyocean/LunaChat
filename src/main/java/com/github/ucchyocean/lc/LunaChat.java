@@ -16,6 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.ucchyocean.lc.bridge.DynmapBridge;
 import com.github.ucchyocean.lc.bridge.HawkEyeBridge;
+import com.github.ucchyocean.lc.bridge.McMMOBridge;
 import com.github.ucchyocean.lc.bridge.MultiverseCoreBridge;
 import com.github.ucchyocean.lc.bridge.VaultChatBridge;
 import com.github.ucchyocean.lc.channel.ChannelManager;
@@ -65,7 +66,7 @@ public class LunaChat extends JavaPlugin {
             manager.removeAllDefaultChannels();
         }
 
-        // Chat Plugin のロード
+        // Vault のロード
         Plugin temp = getServer().getPluginManager().getPlugin("Vault");
         if ( temp != null ) {
             vaultchat = VaultChatBridge.load(temp);
@@ -89,6 +90,11 @@ public class LunaChat extends JavaPlugin {
         temp = getServer().getPluginManager().getPlugin("Multiverse-Core");
         if ( temp != null ) {
             multiverse = MultiverseCoreBridge.load(temp);
+        }
+
+        // mcMMOのロード
+        if ( getServer().getPluginManager().isPluginEnabled("mcMMO") ) {
+            getServer().getPluginManager().registerEvents(new McMMOBridge(), this);
         }
 
         // リスナーの登録
