@@ -50,7 +50,7 @@ public class MultiverseCoreBridge {
 
         MultiverseWorld mvworld = mvc.getMVWorldManager().getMVWorld(worldName);
         if ( mvworld != null ) {
-            return mvworld.getAlias();
+            return mvworld.getColoredWorldString();
         } else {
             return null;
         }
@@ -65,7 +65,7 @@ public class MultiverseCoreBridge {
 
         MultiverseWorld mvworld = mvc.getMVWorldManager().getMVWorld(world);
         if ( mvworld != null ) {
-            return mvworld.getAlias();
+            return mvworld.getColoredWorldString();
         } else {
             return null;
         }
