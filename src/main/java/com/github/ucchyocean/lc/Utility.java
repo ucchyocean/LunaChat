@@ -337,6 +337,6 @@ public class Utility {
      */
     @SuppressWarnings("deprecation")
     public static Player getPlayerExact(String name) {
-        return Bukkit.getPlayer(name);
+        return Bukkit.getPlayer(stripColor(name));
     }
 }

@@ -5,6 +5,7 @@
  */
 package com.github.ucchyocean.lc.channel;
 
+import org.bukkit.Location;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -65,6 +66,12 @@ public abstract class ChannelPlayer implements Comparable<ChannelPlayer> {
      * @return ワールド名
      */
     public abstract String getWorldName();
+
+    /**
+     * 発言者が今いる位置を取得する
+     * @return 発言者の位置
+     */
+    public abstract Location getLocation();
 
     /**
      * 指定されたパーミッションノードの権限を持っているかどうかを取得する

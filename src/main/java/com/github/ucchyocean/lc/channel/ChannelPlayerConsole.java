@@ -5,6 +5,7 @@
  */
 package com.github.ucchyocean.lc.channel;
 
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -103,6 +104,16 @@ public class ChannelPlayerConsole extends ChannelPlayer {
     @Override
     public String getWorldName() {
         return "-";
+    }
+
+    /**
+     * 発言者が今いる位置を取得する
+     * @return 常にnullが返される
+     * @see com.github.ucchyocean.lc.channel.ChannelPlayer#getLocation()
+     */
+    @Override
+    public Location getLocation() {
+        return null;
     }
 
     /**

@@ -457,7 +457,7 @@ public class ChannelImpl extends Channel {
         }
 
         // ロギング
-        log(originalMessage, name);
+        log(originalMessage, name, player);
     }
 
     /**
@@ -745,22 +745,19 @@ public class ChannelImpl extends Channel {
 
     /**
      * ログを記録する
-     * @param player 発言者
+     * @param name 発言者
      * @param message 記録するメッセージ
+     * @param player プレイヤー
      */
-    private void log(String message, String player) {
+    private void log(String message, String name, ChannelPlayer player) {
         LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
         if ( config.isLoggingChat() && logger != null ) {
-            logger.log(message, player);
+            logger.log(message, name);
         }
-        if ( config.isLoggingChatToHawkEye() && LunaChat.getInstance().getHawkEye() != null ) {
-            Location location = null;
-            Player pl = Utility.getPlayerExact(player);
-            if ( pl != null ) {
-                location = pl.getLocation();
-            }
-            String data = Utility.stripColor(message);
-            LunaChat.getInstance().getHawkEye().writeLog("channel(" + getName() + ")", player, location, data);
+        if ( config.isLoggingChatToHawkEye() && LunaChat.getInstance().getHawkEye() != null
+                && player != null && player.getLocation() != null ) {
+            LunaChat.getInstance().getHawkEye().writeLog("channel(" + getName() + ")", name,
+                    player.getLocation(), Utility.stripColor(message));
         }
     }
 

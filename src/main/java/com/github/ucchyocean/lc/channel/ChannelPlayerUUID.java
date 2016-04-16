@@ -8,6 +8,7 @@ package com.github.ucchyocean.lc.channel;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -184,6 +185,20 @@ public class ChannelPlayerUUID extends ChannelPlayer {
             return player.getWorld().getName();
         }
         return "-";
+    }
+
+    /**
+     * 発言者が今いる位置を取得する
+     * @return 発言者の位置
+     * @see com.github.ucchyocean.lc.channel.ChannelPlayer#getLocation()
+     */
+    @Override
+    public Location getLocation() {
+        Player player = getPlayer();
+        if ( player != null ) {
+            return player.getLocation();
+        }
+        return null;
     }
 
     /**

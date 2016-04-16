@@ -83,7 +83,7 @@ public class LunaChat extends JavaPlugin {
 
         // HawkEye のロード
         if ( getServer().getPluginManager().isPluginEnabled("HawkEye") ) {
-            hawkeye = new HawkEyeBridge(this);
+            hawkeye = new HawkEyeBridge();
         }
 
         // MultiverseCore のロード
