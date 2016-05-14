@@ -5,12 +5,12 @@
  */
 package com.github.ucchyocean.lc.bridge;
 
-import net.milkbowl.vault.chat.Chat;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
+
+import net.milkbowl.vault.chat.Chat;
 
 /**
  * Vault-Chat連携クラス
@@ -28,7 +28,7 @@ public class VaultChatBridge {
     /**
      * vault-chatをロードする
      * @param plugin vaultのプラグインインスタンス
-     * @param ロードしたかどうか
+     * @return ロードしたブリッジのインスタンス
      */
     public static VaultChatBridge load(Plugin plugin) {
 

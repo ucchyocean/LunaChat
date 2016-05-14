@@ -240,7 +240,7 @@ public class Utility {
      * ただし、無効なバージョン番号（数値でないなど）が指定された場合はfalseに、
      * 2つのバージョンが完全一致した場合はtrueになる。
      */
-    private static boolean isUpperVersion(String version, String border) {
+    public static boolean isUpperVersion(String version, String border) {
 
         int hyphen = version.indexOf("-");
         if ( hyphen > 0 ) {

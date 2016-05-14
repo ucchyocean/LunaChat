@@ -6,7 +6,10 @@
 package com.github.ucchyocean.lc.bridge;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+
+import com.github.ucchyocean.lc.LunaChat;
+import com.github.ucchyocean.lc.Utility;
 
 import uk.co.oliwali.HawkEye.DataType;
 import uk.co.oliwali.HawkEye.entry.DataEntry;
@@ -18,25 +21,38 @@ import uk.co.oliwali.HawkEye.util.HawkEyeAPI;
  */
 public class HawkEyeBridge {
 
+    private boolean isV162orLater;
+
+    /** コンストラクタは使用不可 */
+    private HawkEyeBridge() {
+    }
+
     /**
-     * HawkEyeにCHATログを書き出す
-     * @param action アクション
-     * @param player プレイヤー
-     * @param location 場所
-     * @param data データ
+     * HawkEye Reloaded をロードする
+     * @param plugin HawkEye Reloaded のプラグインインスタンス
+     * @return ロードしたブリッジのインスタンス
      */
-    public void writeLog(String action, Player player, Location location, String data) {
-        HawkEyeAPI.addEntry(new DataEntry(player, DataType.CHAT, location, data));
+    public static HawkEyeBridge load(Plugin plugin) {
+
+        String version = plugin.getDescription().getVersion();
+        HawkEyeBridge instance = new HawkEyeBridge();
+        instance.isV162orLater = Utility.isUpperVersion(version, "1.6.2");
+        return instance;
     }
 
     /**
      * HawkEyeにCHATログを書き出す
-     * @param action アクション
      * @param player プレイヤー名
      * @param location 場所
      * @param data データ
      */
-    public void writeLog(String action, String player, Location location, String data) {
-        HawkEyeAPI.addEntry(new DataEntry(player, DataType.CHAT, location, data));
+    @SuppressWarnings("deprecation")
+    public void writeLog(String player, Location location, String data) {
+        DataEntry entry = new DataEntry(player, DataType.CHAT, location, data);
+        if ( isV162orLater ) {
+            HawkEyeAPI.addEntry(entry);
+        } else {
+            HawkEyeAPI.addEntry(LunaChat.getInstance(), entry);
+        }
     }
 }

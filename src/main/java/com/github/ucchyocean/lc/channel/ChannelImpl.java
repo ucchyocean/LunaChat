@@ -756,8 +756,8 @@ public class ChannelImpl extends Channel {
         }
         if ( config.isLoggingChatToHawkEye() && LunaChat.getInstance().getHawkEye() != null
                 && player != null && player.getLocation() != null ) {
-            LunaChat.getInstance().getHawkEye().writeLog("channel(" + getName() + ")", name,
-                    player.getLocation(), Utility.stripColor(message));
+            LunaChat.getInstance().getHawkEye().writeLog(name, player.getLocation(),
+                    "channel(" + getName() + ")-" + Utility.stripColor(message));
         }
     }
 

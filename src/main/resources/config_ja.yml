@@ -26,7 +26,7 @@ noJoinAsGlobal: true
 loggingChat: true
 
 # チャンネルチャットの発言内容を、HawkEyeに記録するかどうか
-# この設定を利用する場合は、HawkEyeのconfig.ymlで、log: セクションの other の設定を true にしてください。
+# この設定を利用する場合は、HawkEyeのconfig.ymlで、log: セクションの chat の設定を true にしてください。
 loggingChatToHawkEye: true
 
 # チャンネルチャットの発言内容を、サーバーコンソールに表示するかどうか
