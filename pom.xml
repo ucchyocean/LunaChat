@@ -138,6 +138,8 @@
       <groupId>uk.co.oliwali</groupId>
       <artifactId>HawkEye</artifactId>
       <version>1.7.2</version>
+      <scope>system</scope>
+      <systemPath>${basedir}/lib/HawkEye.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>com.onarandombox.multiversecore</groupId>
