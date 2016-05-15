@@ -78,6 +78,12 @@ public class LunaChatConfig {
     /** チャンネルを新規作成するときに、チャンネル名が満たさなければならない、最大文字列長 */
     private int maxChannelNameLength;
 
+    /** クイックチャンネルチャット機能を有効化するかどうか */
+    private boolean enableQuickChannelChat;
+
+    /** クイックチャンネルチャット機能に使用する記号 */
+    private String quickChannelChatSeparator;
+
     /** ブロードキャストチャンネルの発言内容を、dynmapに送信するかどうか。<br/>
      *  dynmapがロードされていない場合は、この設定は無視される（false扱い）。 */
     private boolean sendBroadcastChannelChatToDynmap;
@@ -206,6 +212,9 @@ public class LunaChatConfig {
 
         minChannelNameLength = config.getInt("minChannelNameLength", 4);
         maxChannelNameLength = config.getInt("maxChannelNameLength", 20);
+
+        enableQuickChannelChat = config.getBoolean("enableQuickChannelChat", true);
+        quickChannelChatSeparator = config.getString("quickChannelChatSeparator", ":");
 
         sendBroadcastChannelChatToDynmap =
             config.getBoolean("sendBroadcastChannelChatToDynmap", true);
@@ -392,6 +401,22 @@ public class LunaChatConfig {
      */
     public int getMaxChannelNameLength() {
         return maxChannelNameLength;
+    }
+
+    /**
+     * クイックチャンネルチャット機能を有効化するかどうかを取得する
+     * @return enableQuickChannelChat
+     */
+    public boolean isEnableQuickChannelChat() {
+        return enableQuickChannelChat;
+    }
+
+    /**
+     * クイックチャンネルチャット機能に使用する記号
+     * @return quickChannelChatSeparator
+     */
+    public String getQuickChannelChatSeparator() {
+        return quickChannelChatSeparator;
     }
 
     /**

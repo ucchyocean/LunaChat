@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -40,6 +41,7 @@ public class PlayerListener implements Listener {
     private static final String MOTD_FIRSTLINE = Resources.get("motdFirstLine");
     private static final String LIST_ENDLINE = Resources.get("listEndLine");
     private static final String LIST_FORMAT = Resources.get("listFormat");
+    private static final String PREERR = Resources.get("errorPrefix");
 
     private SimpleDateFormat dateFormat;
     private SimpleDateFormat timeFormat;
@@ -187,6 +189,37 @@ public class PlayerListener implements Listener {
             event.setMessage( event.getMessage().substring(offset) );
             chatGlobal(event);
             return;
+        }
+
+        // クイックチャンネルチャット機能が有効で、専用の記号が含まれるなら、
+        // クイックチャンネルチャットとして処理する。
+        if ( config.isEnableQuickChannelChat() ) {
+            String separator = config.getQuickChannelChatSeparator();
+            if ( event.getMessage().contains(separator) ) {
+                String[] temp = event.getMessage().split(separator, 2);
+                String name = temp[0];
+                String value = "";
+                if ( temp.length > 0 ) {
+                    value = temp[1];
+                }
+
+                Channel channel = api.getChannel(name);
+                if ( channel != null && !channel.isPersonalChat() ) {
+                    ChannelPlayer player =
+                            ChannelPlayer.getChannelPlayer(event.getPlayer());
+                    if ( !channel.getMembers().contains(player) ) {
+                        // 指定されたチャンネルに参加していないなら、エラーを表示して何も発言せずに終了する。
+                        sendResourceMessage(event.getPlayer(), PREERR, "errmsgNomember");
+                        event.setCancelled(true);
+                        return;
+                    }
+
+                    // 指定されたチャンネルに発言して終了する。
+                    channel.chat(player, value);
+                    event.setCancelled(true);
+                    return;
+                }
+            }
         }
 
         ChannelPlayer player =
@@ -534,5 +567,23 @@ public class PlayerListener implements Listener {
     private void logNormalChat(String message, String player) {
 
         LunaChat.getInstance().getNormalChatLogger().log(message, player);
+    }
+
+    /**
+     * メッセージリソースのメッセージを、カラーコード置き換えしつつ、senderに送信する
+     * @param sender メッセージの送り先
+     * @param pre プレフィックス
+     * @param key リソースキー
+     * @param args リソース内の置き換え対象キーワード
+     */
+    protected void sendResourceMessage(
+            CommandSender sender, String pre, String key, Object... args) {
+
+        String org = Resources.get(key);
+        if ( org == null || org.equals("") ) {
+            return;
+        }
+        String msg = String.format(pre + org, args);
+        sender.sendMessage(msg);
     }
 }
