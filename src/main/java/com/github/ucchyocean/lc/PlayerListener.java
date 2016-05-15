@@ -215,7 +215,7 @@ public class PlayerListener implements Listener {
                     }
 
                     // 指定されたチャンネルに発言して終了する。
-                    channel.chat(player, value);
+                    chatToChannelWithEvent(player, channel, value);
                     event.setCancelled(true);
                     return;
                 }
@@ -240,22 +240,7 @@ public class PlayerListener implements Listener {
             }
         }
 
-        // LunaChatPreChatEvent イベントコール
-        LunaChatPreChatEvent preChatEvent = new LunaChatPreChatEvent(
-                channel.getName(), player, event.getMessage());
-        Bukkit.getPluginManager().callEvent(preChatEvent);
-        if ( preChatEvent.isCancelled() ) {
-            event.setCancelled(true);
-            return;
-        }
-        Channel alt = preChatEvent.getChannel();
-        if ( alt != null ) {
-            channel = alt;
-        }
-        String message = preChatEvent.getMessage();
-
-        // チャンネルチャット発言
-        channel.chat(player, message);
+        chatToChannelWithEvent(player, channel, event.getMessage());
 
         // もとのイベントをキャンセル
         event.setCancelled(true);
@@ -302,7 +287,7 @@ public class PlayerListener implements Listener {
             }
 
             // チャンネルチャット発言
-            global.chat(player, message);
+            chatToChannelWithEvent(player, global, message);
 
             // もとのイベントをキャンセル
             event.setCancelled(true);
@@ -560,6 +545,34 @@ public class PlayerListener implements Listener {
     }
 
     /**
+     * チャンネルに発言処理を行う
+     * @param player プレイヤー
+     * @param channel チャンネル
+     * @param message 発言内容
+     * @return イベントでキャンセルされたかどうか
+     */
+    private boolean chatToChannelWithEvent(ChannelPlayer player, Channel channel, String message) {
+
+        // LunaChatPreChatEvent イベントコール
+        LunaChatPreChatEvent preChatEvent = new LunaChatPreChatEvent(
+                channel.getName(), player, message);
+        Bukkit.getPluginManager().callEvent(preChatEvent);
+        if ( preChatEvent.isCancelled() ) {
+            return true;
+        }
+        Channel alt = preChatEvent.getChannel();
+        if ( alt != null ) {
+            channel = alt;
+        }
+        message = preChatEvent.getMessage();
+
+        // チャンネルチャット発言
+        channel.chat(player, message);
+
+        return false;
+    }
+
+    /**
      * 通常チャットの発言をログファイルへ記録する
      * @param message
      * @param player
@@ -576,7 +589,7 @@ public class PlayerListener implements Listener {
      * @param key リソースキー
      * @param args リソース内の置き換え対象キーワード
      */
-    protected void sendResourceMessage(
+    private void sendResourceMessage(
             CommandSender sender, String pre, String key, Object... args) {
 
         String org = Resources.get(key);
