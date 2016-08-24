@@ -177,7 +177,7 @@ enableNormalChatColorCode: true
 # -------------------- Japanize変換設定 --------------------
 
 # ローマ字をかな文字や漢字に変換する設定。
-# none/kana/GoogleIME/SocialIME の3つのいずれかが設定可能。
+# none/kana/GoogleIME の3つのいずれかが設定可能。
 # none      : 変換なし。
 # kana      : かな変換のみ。
 # GoogleIME : かな変換したのち、GoogleIMEを使って漢字変換する。
