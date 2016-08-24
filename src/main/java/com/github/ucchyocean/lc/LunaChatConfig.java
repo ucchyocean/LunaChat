@@ -118,8 +118,7 @@ public class LunaChatConfig {
     /** Japanize変換のタイプ<br/>
      *  none = 日本語変換をしない<br/>
      *  kana = カナ変換のみする<br/>
-     *  googleime = カナ変換後、GoogleIMEで漢字変換する<br/>
-     *  socialime = カナ変換後、SocialIMEで漢字変換する */
+     *  googleime = カナ変換後、GoogleIMEで漢字変換する */
     private JapanizeType japanizeType;
 
     /** Japanize変換の1行表示と2行表示の切り替え<br/>
@@ -493,8 +492,7 @@ public class LunaChatConfig {
      * Japanize変換のタイプ<br/>
      *  none = 日本語変換をしない<br/>
      *  kana = カナ変換のみする<br/>
-     *  googleime = カナ変換後、GoogleIMEで漢字変換する<br/>
-     *  socialime = カナ変換後、SocialIMEで漢字変換する
+     *  googleime = カナ変換後、GoogleIMEで漢字変換する
      * @return japanizeTypeを返す
      */
     public JapanizeType getJapanizeType() {

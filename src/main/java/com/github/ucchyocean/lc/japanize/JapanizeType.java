@@ -13,10 +13,7 @@ public enum JapanizeType {
     KANA("kana"),
 
     /** カナ変換後、GoogleIMEで漢字変換 */
-    GOOGLE_IME("googleime"),
-
-    /** カナ変換後、SocialIMEで漢字変換 */
-    SOCIAL_IME("socialime");
+    GOOGLE_IME("googleime");
 
     private String id;
 

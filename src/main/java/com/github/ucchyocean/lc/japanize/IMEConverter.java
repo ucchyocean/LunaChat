@@ -39,7 +39,9 @@ public class IMEConverter {
      * SocialIMEを使って変換する
      * @param org 変換元
      * @return 変換後
+     * @deprecated SocialIMEが2016年9月1日にサービス終了するため、このAPIは今後呼び出してはならない。
      */
+    @Deprecated
     public static String convBySocialIME(String org) {
         return conv(org, false);
     }
