@@ -7,6 +7,7 @@ package com.github.ucchyocean.lc.bridge;
 
 import org.bukkit.Location;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.Utility;
@@ -48,11 +49,15 @@ public class HawkEyeBridge {
      */
     @SuppressWarnings("deprecation")
     public void writeLog(String player, Location location, String data) {
-        DataEntry entry = new DataEntry(player, DataType.CHAT, location, data);
-        if ( isV162orLater ) {
-            HawkEyeAPI.addEntry(entry);
-        } else {
-            HawkEyeAPI.addEntry(LunaChat.getInstance(), entry);
-        }
+        final DataEntry entry = new DataEntry(player, DataType.CHAT, location, data);
+        new BukkitRunnable() {
+            public void run() {
+                if ( isV162orLater ) {
+                    HawkEyeAPI.addEntry(entry);
+                } else {
+                    HawkEyeAPI.addEntry(LunaChat.getInstance(), entry);
+                }
+            }
+        }.runTaskAsynchronously(LunaChat.getInstance());
     }
 }

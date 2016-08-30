@@ -18,6 +18,7 @@ import com.github.ucchyocean.lc.bridge.DynmapBridge;
 import com.github.ucchyocean.lc.bridge.HawkEyeBridge;
 import com.github.ucchyocean.lc.bridge.McMMOBridge;
 import com.github.ucchyocean.lc.bridge.MultiverseCoreBridge;
+import com.github.ucchyocean.lc.bridge.PrismBridge;
 import com.github.ucchyocean.lc.bridge.VaultChatBridge;
 import com.github.ucchyocean.lc.channel.ChannelManager;
 import com.github.ucchyocean.lc.command.LunaChatCommand;
@@ -40,6 +41,7 @@ public class LunaChat extends JavaPlugin {
     private DynmapBridge dynmap;
     private HawkEyeBridge hawkeye;
     private MultiverseCoreBridge multiverse;
+    private PrismBridge prism;
 
     private ExpireCheckTask expireCheckerTask;
     private LunaChatLogger normalChatLogger;
@@ -96,6 +98,11 @@ public class LunaChat extends JavaPlugin {
         // mcMMOのロード
         if ( getServer().getPluginManager().isPluginEnabled("mcMMO") ) {
             getServer().getPluginManager().registerEvents(new McMMOBridge(), this);
+        }
+
+        // Prismのロード
+        if ( getServer().getPluginManager().isPluginEnabled("Prism") ) {
+            prism = PrismBridge.load();
         }
 
         // リスナーの登録
@@ -229,6 +236,14 @@ public class LunaChat extends JavaPlugin {
      */
     public MultiverseCoreBridge getMultiverseCore() {
         return multiverse;
+    }
+
+    /**
+     * Prism連携クラスを返す
+     * @return MultiverseCoreBridge
+     */
+    public PrismBridge getPrism() {
+        return prism;
     }
 
     /**
