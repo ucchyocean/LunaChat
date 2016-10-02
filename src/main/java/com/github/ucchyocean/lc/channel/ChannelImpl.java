@@ -766,7 +766,7 @@ public class ChannelImpl extends Channel {
 
         // Prism のチャットログへ記録
         if ( config.isLoggingChatToPrism() && LunaChat.getInstance().getPrism() != null
-                && player.getPlayer() != null ) {
+                && player != null && player.getPlayer() != null ) {
             LunaChat.getInstance().getPrism().writeLog(player.getPlayer(),
                     "channel(" + getName() + ")-" + Utility.stripColor(message));
         }
