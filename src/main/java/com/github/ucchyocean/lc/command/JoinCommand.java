@@ -233,6 +233,11 @@ public class JoinCommand extends SubCommandAbst {
             sendResourceMessage(sender, PREINFO, "cmdmsgSet", channelName);
         }
 
+        // チャンネル説明文があるなら、説明文を表示する
+        if ( !channel.getDescription().trim().equals("") ) {
+            sendResourceMessage(sender, PREINFO, "cmdmsgSetTopic", channel.getDescription().trim());
+        }
+
         // 非表示に設定しているなら、注意を流す
         if ( channel.getHided().contains(player) ) {
             sendResourceMessage(sender, PREINFO, "cmdmsgSetHide");
