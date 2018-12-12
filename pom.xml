@@ -105,19 +105,9 @@
       <url>http://repo.onarandombox.com/content/groups/public</url>
     </repository>
     <repository>
-      <id>minebuilders-repo</id>
-      <name>HawkEye Reloaded repository</name>
-      <url>http://minebuilders.me:8080/plugin/repository/everything</url>
-    </repository>
-    <repository>
       <id>md5-repo</id>
       <name>MD5 repository</name>
       <url>http://repo.md-5.net/content/repositories/releases</url>
-    </repository>
-    <repository>
-      <id>dhmc-rep</id>
-      <name>Prism repository</name>
-      <url>http://dhmc.us:8081/nexus/content/repositories/releases/</url>
     </repository>
   </repositories>
 
@@ -140,18 +130,6 @@
       <optional>true</optional>
     </dependency>
     <dependency>
-      <groupId>uk.co.oliwali</groupId>
-      <artifactId>HawkEye</artifactId>
-      <version>1.7.2</version>
-      <optional>true</optional>
-      <exclusions>
-        <exclusion>
-          <groupId>com.dthielke.herochat</groupId>
-          <artifactId>Herochat</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
       <groupId>com.onarandombox.multiversecore</groupId>
       <artifactId>Multiverse-Core</artifactId>
       <version>2.5</version>
@@ -161,12 +139,6 @@
       <groupId>com.gmail.nossr50.mcMMO</groupId>
       <artifactId>mcMMO</artifactId>
       <version>1.5.00</version>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>me.botsko</groupId>
-      <artifactId>prism</artifactId>
-      <version>2.0.6</version>
       <optional>true</optional>
     </dependency>
   </dependencies>

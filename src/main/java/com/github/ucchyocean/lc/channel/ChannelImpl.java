@@ -756,20 +756,6 @@ public class ChannelImpl extends Channel {
         if ( config.isLoggingChat() && logger != null ) {
             logger.log(message, name);
         }
-
-        // Hawkeye Reloaded のチャットログへ記録
-        if ( config.isLoggingChatToHawkEye() && LunaChat.getInstance().getHawkEye() != null
-                && player != null && player.getLocation() != null ) {
-            LunaChat.getInstance().getHawkEye().writeLog(name, player.getLocation(),
-                    "channel(" + getName() + ")-" + Utility.stripColor(message));
-        }
-
-        // Prism のチャットログへ記録
-        if ( config.isLoggingChatToPrism() && LunaChat.getInstance().getPrism() != null
-                && player != null && player.getPlayer() != null ) {
-            LunaChat.getInstance().getPrism().writeLog(player.getPlayer(),
-                    "channel(" + getName() + ")-" + Utility.stripColor(message));
-        }
     }
 
     /**
