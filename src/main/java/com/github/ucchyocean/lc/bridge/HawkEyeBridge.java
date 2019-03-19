@@ -53,7 +53,10 @@ public class HawkEyeBridge {
         new BukkitRunnable() {
             public void run() {
                 if ( isV162orLater ) {
-                    HawkEyeAPI.addEntry(entry);
+                    //TODO reason:なんか怒られてビルドできなかったので変更しています
+                    // APIの仕様変更が原因でしょうけどどこから変更されたのか不明(1.6以前を参照しても怒られる)ので諦めました
+                    //HawkEyeAPI.addEntry(entry);
+                    HawkEyeAPI.addEntry(LunaChat.getInstance(), entry);
                 } else {
                     HawkEyeAPI.addEntry(LunaChat.getInstance(), entry);
                 }

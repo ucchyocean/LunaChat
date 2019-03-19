@@ -51,7 +51,7 @@ public class TemplateCommand extends SubCommandAbst {
      * 使用方法に関するメッセージをsenderに送信します。
      * @param sender コマンド実行者
      * @param label 実行ラベル
-     * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage()
+     * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(org.bukkit.command.CommandSender, java.lang.String)
      */
     @Override
     public void sendUsageMessage(
@@ -65,7 +65,7 @@ public class TemplateCommand extends SubCommandAbst {
      * @param label 実行ラベル
      * @param args 実行時の引数
      * @return コマンドが実行されたかどうか
-     * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(java.lang.String[])
+     * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(org.bukkit.command.CommandSender, java.lang.String, java.lang.String[])
      */
     @Override
     public boolean runCommand(

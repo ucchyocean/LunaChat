@@ -30,7 +30,7 @@ public class ModCommand extends ModeratorCommand {
      * 使用方法に関するメッセージをsenderに送信します。
      * @param sender コマンド実行者
      * @param label 実行ラベル
-     * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage()
+     * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage(org.bukkit.command.CommandSender, java.lang.String)
      */
     @Override
     public void sendUsageMessage(

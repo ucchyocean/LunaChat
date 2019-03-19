@@ -127,7 +127,7 @@ public abstract class SubCommandAbst {
 
     /**
      * メッセージリソースのメッセージを、カラーコード置き換えしつつ、ChannelPlayerに送信する
-     * @param sender メッセージの送り先
+     * @param cp メッセージの送り先
      * @param pre プレフィックス
      * @param key リソースキー
      * @param args リソース内の置き換え対象キーワード
