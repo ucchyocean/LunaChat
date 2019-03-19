@@ -17,6 +17,7 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.UUID;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
@@ -199,7 +200,7 @@ public class Utility {
 
     /**
      * カラーコードかどうかを判断する
-     * @param color カラー表記の文字列
+     * @param code カラー表記の文字列
      * @return 指定可能かどうか
      */
     public static boolean isValidColorCode(String code) {
@@ -324,7 +325,17 @@ public class Utility {
      */
     @SuppressWarnings("deprecation")
     public static OfflinePlayer getOfflinePlayer(String name) {
-        OfflinePlayer player = Bukkit.getOfflinePlayer(name);
+        OfflinePlayer player;
+        if(name.startsWith("$")){
+            try{
+                UUID uuid = UUID.fromString(name.substring(1));
+                player = Bukkit.getOfflinePlayer(uuid);
+            }catch(IllegalArgumentException ex){
+                return null;
+            }
+        }else{
+            player = Bukkit.getOfflinePlayer(name);
+        }
         if (player == null || (!player.hasPlayedBefore() && !player.isOnline()))
             return null;
         return player;

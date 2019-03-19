@@ -102,11 +102,8 @@ public class HideCommand extends SubCommandAbst {
             if ( def != null ) {
                 cname = def.getName();
             }
-        } else if ( args.length >= 2 ) {
-            cname = args[1];
         } else {
-            sendResourceMessage(sender, PREERR, "errmsgCommand");
-            return true;
+            cname = args[1];
         }
 
         // 指定されたコマンドが「/ch hide list」なら、リストを表示して終了
