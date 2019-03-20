@@ -17,6 +17,7 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.UUID;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
@@ -33,6 +34,7 @@ import org.bukkit.entity.Player;
 public class Utility {
 
     private static Boolean isCB178orLaterCache;
+    private static Boolean isCB18orLaterCache;
     private static Boolean isCB19orLaterCache;
 
     /**
@@ -223,6 +225,17 @@ public class Utility {
     }
 
     /**
+     * 現在動作中のCraftBukkitがv1.8以上かどうかを確認する
+     * @return v1.9以上ならtrue、そうでないならfalse
+     */
+    public static boolean isCB18orLater(){
+        if( isCB18orLaterCache == null ){
+            isCB18orLaterCache = isUpperVersion(Bukkit.getBukkitVersion(), "1.8");
+        }
+        return isCB18orLaterCache;
+    }
+
+    /**
      * 現在動作中のCraftBukkitが、v1.9 以上かどうかを確認する
      * @return v1.9以上ならtrue、そうでないならfalse
      */
@@ -273,11 +286,7 @@ public class Utility {
             }
             index++;
         }
-        if ( borderNumbers.length == index ) {
-            return true;
-        } else {
-            return false;
-        }
+        return borderNumbers.length == index;
     }
 
     /**
@@ -289,24 +298,22 @@ public class Utility {
         // CB179以前と、CB1710以降で戻り値が異なるため、
         // リフレクションを使って互換性を（無理やり）保つ。
         try {
-            if (Bukkit.class.getMethod("getOnlinePlayers", new Class<?>[0]).getReturnType() == Collection.class) {
+            if (Bukkit.class.getMethod("getOnlinePlayers").getReturnType() == Collection.class) {
                 Collection<?> temp =
-                        ((Collection<?>) Bukkit.class.getMethod("getOnlinePlayers", new Class<?>[0])
+                        ((Collection<?>) Bukkit.class.getMethod("getOnlinePlayers")
                                 .invoke(null, new Object[0]));
                 return new ArrayList<Player>((Collection<? extends Player>) temp);
             } else {
                 Player[] temp =
-                        ((Player[]) Bukkit.class.getMethod("getOnlinePlayers", new Class<?>[0])
+                        ((Player[]) Bukkit.class.getMethod("getOnlinePlayers")
                                 .invoke(null, new Object[0]));
                 ArrayList<Player> players = new ArrayList<Player>();
-                for (Player t : temp) {
-                    players.add(t);
-                }
+                Collections.addAll(players, temp);
                 return players;
             }
-        } catch (NoSuchMethodException ex) {} // never happen
-        catch (InvocationTargetException ex) {} // never happen
-        catch (IllegalAccessException ex) {} // never happen
+        } catch (NoSuchMethodException ignore) {} // never happen
+        catch (InvocationTargetException ignore) {} // never happen
+        catch (IllegalAccessException ignore) {} // never happen
         return new ArrayList<Player>();
     }
 
@@ -327,10 +334,14 @@ public class Utility {
     public static OfflinePlayer getOfflinePlayer(String name) {
         OfflinePlayer player;
         if(name.startsWith("$")){
-            try{
-                UUID uuid = UUID.fromString(name.substring(1));
-                player = Bukkit.getOfflinePlayer(uuid);
-            }catch(IllegalArgumentException ex){
+            if(isCB18orLater()){
+                try{
+                    UUID uuid = UUID.fromString(name.substring(1));
+                    player = Bukkit.getOfflinePlayer(uuid);
+                }catch(IllegalArgumentException ex){
+                    return null;
+                }
+            }else{
                 return null;
             }
         }else{
