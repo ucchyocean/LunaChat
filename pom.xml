@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.ucchyocean</groupId>
   <artifactId>LunaChat</artifactId>
-  <version>2.8.9</version>
+  <version>2.8.10</version>
   <description>A powerfull chat channel plugin with IME (Kana-Kanji conversion) support</description>
 
   <licenses>
@@ -21,7 +21,7 @@
     <repository>
       <id>internal.repo</id>
       <name>Temporary Staging Repository</name>
-      <url>file://${basedir}/../mvn-repo</url>
+      <url>file://${project.basedir}/../mvn-repo</url>
     </repository>
   </distributionManagement>
 
@@ -38,25 +38,25 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.5.1</version>
+        <version>3.8.1</version>
         <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
+          <source>1.8</source>
+          <target>1.8</target>
         </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.10.4</version>
+        <version>3.1.0</version>
         <configuration>
-          <source>1.6</source>
+          <source>1.8</source>
           <encoding>UTF-8</encoding>
           <docencoding>UTF-8</docencoding>
           <charset>UTF-8</charset>
           <show>public</show>
           <nohelp>true</nohelp>
           <links>
-            <link>http://docs.oracle.com/javase/6/docs/api/</link>
+            <link>https://docs.oracle.com/javase/8/docs/api/</link>
             <link>https://hub.spigotmc.org/javadocs/bukkit/</link>
           </links>
         </configuration>
@@ -64,7 +64,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.6</version>
+        <version>3.1.1</version>
         <configuration>
           <finalName>${project.artifactId}-${project.version}</finalName>
           <descriptors>
@@ -87,37 +87,27 @@
     <repository>
       <id>spigot-repo</id>
       <name>Spigot Maven Repository</name>
-      <url>https://hub.spigotmc.org/nexus/content/groups/public</url>
+      <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
     </repository>
     <repository>
       <id>vault-repo</id>
       <name>Vault Repository</name>
-      <url>http://nexus.hc.to/content/repositories/pub_releases</url>
+      <url>http://nexus.hc.to/content/repositories/pub_releases/</url>
     </repository>
     <repository>
       <id>mikeprimm-repo</id>
       <name>Dynmap repository</name>
-      <url>http://repo.mikeprimm.com/</url>
+      <url>https://repo.mikeprimm.com/</url>
     </repository>
     <repository>
       <id>onarandombox-repo</id>
       <name>Multiverse repository</name>
-      <url>http://repo.onarandombox.com/content/groups/public</url>
-    </repository>
-    <repository>
-      <id>minebuilders-repo</id>
-      <name>HawkEye Reloaded repository</name>
-      <url>http://minebuilders.me:8080/plugin/repository/everything</url>
+      <url>http://repo.onarandombox.com/content/groups/public/</url>
     </repository>
     <repository>
       <id>md5-repo</id>
       <name>MD5 repository</name>
-      <url>http://repo.md-5.net/content/repositories/releases</url>
-    </repository>
-    <repository>
-      <id>dhmc-rep</id>
-      <name>Prism repository</name>
-      <url>http://dhmc.us:8081/nexus/content/repositories/releases/</url>
+      <url>https://repo.md-5.net/content/repositories/releases/</url>
     </repository>
   </repositories>
 
@@ -144,6 +134,8 @@
       <artifactId>HawkEye</artifactId>
       <version>1.7.2</version>
       <optional>true</optional>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/lib/HawkEye.jar</systemPath>
       <exclusions>
         <exclusion>
           <groupId>com.dthielke.herochat</groupId>
@@ -168,6 +160,8 @@
       <artifactId>prism</artifactId>
       <version>2.0.6</version>
       <optional>true</optional>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/lib/prism-2.0.6.jar</systemPath>
     </dependency>
   </dependencies>
 </project>

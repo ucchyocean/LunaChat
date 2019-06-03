@@ -19,7 +19,7 @@ import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.event.LunaChatPostJapanizeEvent;
 import com.github.ucchyocean.lc.japanize.IMEConverter;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
-import com.github.ucchyocean.lc.japanize.KanaConverter;
+import com.github.ucchyocean.lc.japanize.YukiKanaConverter;
 
 /**
  * Japanize変換を実行して、実行後に発言を行うタスク
@@ -99,7 +99,7 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
         }
 
         // カナ変換
-        String japanized = KanaConverter.conv(keywordLocked);
+        String japanized = YukiKanaConverter.conv(keywordLocked);
 
         // IME変換
         if ( type == JapanizeType.GOOGLE_IME ) {
