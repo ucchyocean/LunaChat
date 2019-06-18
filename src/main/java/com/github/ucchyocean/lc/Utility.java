@@ -351,8 +351,10 @@ public class Utility {
 
     /**
      * イベントを同期処理で呼び出します
+     *
      * @param event 対象のイベント
      * @return タスクのID (登録に失敗した場合は-1)
+     * @since 2.8.10
      */
     public static int callEventSync(final Event event) {
         return Bukkit.getScheduler().scheduleSyncDelayedTask(LunaChat.getInstance(), () -> {
