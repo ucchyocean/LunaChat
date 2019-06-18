@@ -24,6 +24,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 
 /**
  * ユーティリティクラス
@@ -346,5 +347,16 @@ public class Utility {
     @SuppressWarnings("deprecation")
     public static Player getPlayerExact(String name) {
         return Bukkit.getPlayer(stripColor(name));
+    }
+
+    /**
+     * イベントを同期処理で呼び出します
+     * @param event 対象のイベント
+     * @return タスクのID (登録に失敗した場合は-1)
+     */
+    public static int callEventSync(final Event event) {
+        return Bukkit.getScheduler().scheduleSyncDelayedTask(LunaChat.getInstance(), () -> {
+            Bukkit.getPluginManager().callEvent(event);
+        });
     }
 }

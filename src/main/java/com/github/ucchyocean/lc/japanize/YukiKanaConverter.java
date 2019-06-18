@@ -339,7 +339,7 @@ public class YukiKanaConverter {
 		builder.put("<", "＜").put(">", "＞");
 		builder.put("&", "＆");
 		builder.put("\"", "”");
-		builder.put("(", "(").put(")", "）");
+		builder.put("(", "（").put(")", "）");
 
 		MAP = builder.build();
 
@@ -375,6 +375,7 @@ public class YukiKanaConverter {
 	 *
 	 * @param text 変換元のテキスト
 	 * @return 全角カッコが半角カッコになったテキスト
+	 * @since 2.8.10
 	 */
 	public static String fixBrackets(String text) {
 		String[] full = new String[] { "（", "）" };
