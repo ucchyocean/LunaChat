@@ -13,7 +13,9 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.stream.Collectors;
+
+import com.github.ucchyocean.lc.Utility;
+import com.google.common.io.CharStreams;
 
 /**
  * ひらがなのみの文章を、IMEを使用して変換します。
@@ -76,8 +78,11 @@ public class IMEConverter {
             reader = new BufferedReader(
                     new InputStreamReader(urlconn.getInputStream(), encode));
 
-            String parsed = GoogleIME.parseJson(reader.lines().collect(Collectors.joining()));
-            parsed = YukiKanaConverter.fixBrackets(parsed);
+            String json = CharStreams.toString(reader);
+            String parsed = GoogleIME.parseJson(json);
+            if ( !Utility.isCB19orLater() ) {
+                parsed = YukiKanaConverter.fixBrackets(parsed);
+            }
 
             return parsed;
 

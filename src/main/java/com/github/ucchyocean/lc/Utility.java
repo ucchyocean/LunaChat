@@ -357,8 +357,12 @@ public class Utility {
      * @since 2.8.10
      */
     public static int callEventSync(final Event event) {
-        return Bukkit.getScheduler().scheduleSyncDelayedTask(LunaChat.getInstance(), () -> {
-            Bukkit.getPluginManager().callEvent(event);
+        return Bukkit.getScheduler().scheduleSyncDelayedTask(LunaChat.getInstance(), new Runnable() {
+
+            @Override
+            public void run() {
+                Bukkit.getPluginManager().callEvent(event);
+            }
         });
     }
 }
