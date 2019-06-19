@@ -2,7 +2,7 @@ package com.github.ucchyocean.lc.japanize;
 
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSortedMap;
@@ -352,7 +352,7 @@ public class YukiKanaConverter {
      * @since 2.8.10
      */
     private static boolean canStartFromSokuon(String romaji) {
-        return !StringUtils.startsWithAny(romaji, new String[] { "a", "i", "u", "e", "o", "n" });
+        return !StringUtils.startsWithAny(romaji, "a", "i", "u", "e", "o", "n");
     }
 
     /**
