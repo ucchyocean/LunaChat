@@ -12,13 +12,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.Resources;
+import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.event.LunaChatChannelCreateEvent;
 import com.github.ucchyocean.lc.event.LunaChatChannelRemoveEvent;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
@@ -438,7 +438,7 @@ public class ChannelManager implements LunaChatAPI {
         // イベントコール
         LunaChatChannelCreateEvent event =
                 new LunaChatChannelCreateEvent(channelName, sender);
-        Bukkit.getServer().getPluginManager().callEvent(event);
+        Utility.callEventSync(event);
         if ( event.isCancelled() ) {
             return null;
         }
@@ -475,7 +475,7 @@ public class ChannelManager implements LunaChatAPI {
         // イベントコール
         LunaChatChannelRemoveEvent event =
                 new LunaChatChannelRemoveEvent(channelName, sender);
-        Bukkit.getServer().getPluginManager().callEvent(event);
+        Utility.callEventSync(event);
         if ( event.isCancelled() ) {
             return false;
         }

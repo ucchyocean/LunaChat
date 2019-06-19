@@ -24,6 +24,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 
 /**
  * ユーティリティクラス
@@ -44,6 +45,7 @@ public class Utility {
     public static void copyFileFromJar(
             File jarFile, File targetFile, String sourceFilePath, boolean isBinary) {
 
+        JarFile jar = null;
         InputStream is = null;
         FileOutputStream fos = null;
         BufferedReader reader = null;
@@ -55,7 +57,7 @@ public class Utility {
         }
 
         try {
-            JarFile jar = new JarFile(jarFile);
+            jar = new JarFile(jarFile);
             ZipEntry zipEntry = jar.getEntry(sourceFilePath);
             is = jar.getInputStream(zipEntry);
 
@@ -91,6 +93,13 @@ public class Utility {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
+            if (jar != null) {
+                try {
+                    jar.close();
+                } catch (IOException e) {
+                    // do nothing.
+                }
+            }
             if (writer != null) {
                 try {
                     writer.flush();
@@ -338,5 +347,22 @@ public class Utility {
     @SuppressWarnings("deprecation")
     public static Player getPlayerExact(String name) {
         return Bukkit.getPlayer(stripColor(name));
+    }
+
+    /**
+     * イベントを同期処理で呼び出します
+     *
+     * @param event 対象のイベント
+     * @return タスクのID (登録に失敗した場合は-1)
+     * @since 2.8.10
+     */
+    public static int callEventSync(final Event event) {
+        return Bukkit.getScheduler().scheduleSyncDelayedTask(LunaChat.getInstance(), new Runnable() {
+
+            @Override
+            public void run() {
+                Bukkit.getPluginManager().callEvent(event);
+            }
+        });
     }
 }

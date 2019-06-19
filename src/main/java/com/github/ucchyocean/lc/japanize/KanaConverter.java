@@ -10,7 +10,9 @@ import java.util.HashMap;
 /**
  * ローマ字からかな文字へ変換するクラス
  * @author ucchy
+ * @deprecated {@link YukiKanaConverter} を使用してください
  */
+@Deprecated
 public class KanaConverter {
 
     private static final HashMap<String, String[]> TABLE;
