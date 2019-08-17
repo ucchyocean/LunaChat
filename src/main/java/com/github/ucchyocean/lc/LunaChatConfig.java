@@ -251,7 +251,7 @@ public class LunaChatConfig {
         japanizeWait = config.getInt("japanizeWait", 1);
 
         // globalチャンネルが、使用可能なチャンネル名かどうかを調べる
-        if ( !globalChannel.equals("") &&
+        if ( globalChannel != null && !globalChannel.equals("") &&
                 !globalChannel.matches("[0-9a-zA-Z\\-_]{1,20}") ) {
             String msg = String.format(
                     Resources.get("errmsgCannotUseForGlobal"), globalChannel);

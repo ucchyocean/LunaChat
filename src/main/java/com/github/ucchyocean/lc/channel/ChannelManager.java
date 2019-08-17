@@ -80,7 +80,10 @@ public class ChannelManager implements LunaChatAPI {
 
         defaultChannels = new HashMap<String, String>();
         for ( String key : config.getKeys(false) ) {
-            defaultChannels.put(key, config.getString(key).toLowerCase());
+            String value = config.getString(key);
+            if ( value != null) {
+                defaultChannels.put(key, value.toLowerCase());
+            }
         }
 
         // テンプレート設定のロード

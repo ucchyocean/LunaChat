@@ -200,7 +200,7 @@ public class ChannelImpl extends Channel {
         }
 
         // NGワード発言者に、NGワードアクションを実行する
-        if ( isNG && player != null ) {
+        if ( isNG ) {
             if ( config.getNgwordAction() == NGWordAction.BAN ) {
                 // BANする
 

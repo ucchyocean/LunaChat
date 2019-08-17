@@ -184,7 +184,9 @@ public class LunaChatCommand implements CommandExecutor {
                 }
             }
             for ( Player player : Utility.getOnlinePlayers() ) {
-                if ( player.getName().toLowerCase().startsWith(arg) ) {
+                String pname = player.getName();
+                pname = pname == null ? "" : pname.toLowerCase();
+                if ( pname.startsWith(arg) ) {
                     items.add(player.getName());
                 }
             }

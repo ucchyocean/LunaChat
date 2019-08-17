@@ -150,7 +150,8 @@ public class PlayerListener implements Listener {
 
         for ( Channel channel : LunaChat.getInstance().getLunaChatAPI().getChannels() ) {
             String cname = channel.getName();
-            if ( channel.isPersonalChat() && cname.contains(player.getName()) ) {
+            String pname = player.getName();
+            if ( channel.isPersonalChat() && cname.contains(pname) ) {
                 boolean isAllOffline = true;
                 for ( ChannelPlayer cp : channel.getMembers() ) {
                     if ( !cp.equals(player) && cp.isOnline() &&

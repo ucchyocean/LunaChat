@@ -104,9 +104,6 @@ public class HideCommand extends SubCommandAbst {
             }
         } else if ( args.length >= 2 ) {
             cname = args[1];
-        } else {
-            sendResourceMessage(sender, PREERR, "errmsgCommand");
-            return true;
         }
 
         // 指定されたコマンドが「/ch hide list」なら、リストを表示して終了

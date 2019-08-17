@@ -65,7 +65,9 @@ public class LunaChatLogger {
             @Override
             public void run() {
 
-                String msg = ChatColor.stripColor(message).replace(",", "，");
+                String msg = ChatColor.stripColor(message);
+                if ( msg == null ) msg = "";
+                msg = msg.replace(",", "，");
                 FileWriter writer = null;
                 try {
                     writer = new FileWriter(file, true);

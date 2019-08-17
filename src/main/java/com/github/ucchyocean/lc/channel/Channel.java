@@ -962,6 +962,7 @@ public abstract class Channel implements ConfigurationSerializable {
                 return name.endsWith(".yml");
             }
         });
+        if ( files == null ) files = new File[0];
 
         HashMap<String, Channel> result = new HashMap<String, Channel>();
         for ( File file : files ) {

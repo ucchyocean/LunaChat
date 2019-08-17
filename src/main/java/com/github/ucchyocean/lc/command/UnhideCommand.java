@@ -94,9 +94,6 @@ public class UnhideCommand extends SubCommandAbst {
             }
         } else if ( args.length >= 2 ) {
             cname = args[1];
-        } else {
-            sendResourceMessage(sender, PREERR, "errmsgCommand");
-            return true;
         }
 
         // チャンネルかプレイヤーが存在するかどうかをチェックする
