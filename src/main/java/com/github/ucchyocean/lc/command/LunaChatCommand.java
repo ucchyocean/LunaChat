@@ -157,6 +157,12 @@ public class LunaChatCommand implements CommandExecutor {
                     coms.add(c.getCommandName());
                 }
             }
+            for ( SubCommandAbst c : commonCommands ) {
+                if ( c.getCommandName().startsWith(arg) &&
+                        sender.hasPermission(c.getPermissionNode()) ) {
+                    coms.add(c.getCommandName());
+                }
+            }
             return coms;
 
         } else if ( args.length == 2 && (
@@ -175,7 +181,9 @@ public class LunaChatCommand implements CommandExecutor {
         } else if ( args.length == 2 && (
                 args[0].equalsIgnoreCase("hide") ||
                 args[0].equalsIgnoreCase("unhide") ) ) {
-            // 参加可能チャンネル名とプレイヤー名で補完する
+
+            // 参加可能チャンネル名とプレイヤー名と
+            // 文字列"player", "channel"で補完する
             String arg = args[1].toLowerCase();
             ArrayList<String> items = new ArrayList<String>();
             for ( String name : getListCanJoin(sender) ) {
@@ -188,6 +196,44 @@ public class LunaChatCommand implements CommandExecutor {
                 pname = pname == null ? "" : pname.toLowerCase();
                 if ( pname.startsWith(arg) ) {
                     items.add(player.getName());
+                }
+            }
+            if ( "player".startsWith(arg) ) {
+                items.add("player");
+            }
+            if ( "channel".startsWith(arg) ) {
+                items.add("channel");
+            }
+            return items;
+
+        } else if ( args.length == 3 &&
+                (args[0].equalsIgnoreCase("hide") ||
+                args[0].equalsIgnoreCase("unhide") ) &&
+                args[1].equalsIgnoreCase("player") ) {
+
+            // プレイヤー名で補完する
+            String arg = args[2].toLowerCase();
+            ArrayList<String> items = new ArrayList<String>();
+            for ( Player player : Utility.getOnlinePlayers() ) {
+                String pname = player.getName();
+                pname = pname == null ? "" : pname.toLowerCase();
+                if ( pname.startsWith(arg) ) {
+                    items.add(player.getName());
+                }
+            }
+            return items;
+
+        } else if ( args.length == 3 &&
+                (args[0].equalsIgnoreCase("hide") ||
+                args[0].equalsIgnoreCase("unhide") ) &&
+                args[1].equalsIgnoreCase("channel") ) {
+
+            // チャンネル名で補完する
+            String arg = args[2].toLowerCase();
+            ArrayList<String> items = new ArrayList<String>();
+            for ( String name : getListCanJoin(sender) ) {
+                if ( name.toLowerCase().startsWith(arg) ) {
+                    items.add(name);
                 }
             }
             return items;

@@ -97,27 +97,43 @@ public class HideCommand extends SubCommandAbst {
 
         // 引数チェック
         String cname = null;
+        boolean isPlayerCommand = false;
+        boolean isChannelCommand = false;
         if ( args.length <= 1 ) {
             Channel def = api.getDefaultChannel(player.getName());
             if ( def != null ) {
                 cname = def.getName();
             }
         } else if ( args.length >= 2 ) {
-            cname = args[1];
-        }
 
-        // 指定されたコマンドが「/ch hide list」なら、リストを表示して終了
-        if ( cname != null && cname.equals("list") ) {
-            for ( String item : getHideInfoList(player) ) {
-                player.sendMessage(item);
+            if ( args[1].equals("list") ) {
+                // 指定されたコマンドが「/ch hide list」なら、リストを表示して終了
+                for ( String item : getHideInfoList(player) ) {
+                    player.sendMessage(item);
+                }
+                return true;
+
+            } else if ( args.length >= 3 && args[1].equalsIgnoreCase("player") ) {
+                // 指定されたコマンドが「/ch hide player (player名)」なら、対象をプレイヤーとする。
+                isPlayerCommand = true;
+                isChannelCommand = false;
+                cname = args[2];
+
+            } else if ( args.length >= 3 && args[1].equalsIgnoreCase("channel") ) {
+                // 指定されたコマンドが「/ch hide channel (channel名)」なら、対象をチャンネルとする。
+                isPlayerCommand = false;
+                isChannelCommand = true;
+                cname = args[2];
+
+            } else {
+                // 「/ch hide (player名 または channel名)」
+                cname = args[1];
             }
-            return true;
         }
 
         // チャンネルかプレイヤーが存在するかどうかをチェックする
-        boolean isChannelCommand = false;
         Channel channel = api.getChannel(cname);
-        if ( channel != null ) {
+        if ( !isPlayerCommand && channel != null ) {
             isChannelCommand = true;
         } else if ( Utility.getOfflinePlayer(cname) == null ) {
             sendResourceMessage(sender, PREERR, "errmsgNotExistChannelAndPlayer");
