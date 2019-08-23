@@ -38,6 +38,7 @@ commands:
            /<command> template (number) (template...) - メッセージフォーマットのテンプレートを登録します。
            /<command> check - モデレータがいないチャンネルを一覧します。
            /<command> check remove - /<command> check で一覧されたチャンネルを全て削除します。
+           /<command> set default (player) [channel] - 指定したプレイヤーの発言先チャンネルを、指定したチャンネルに設定します。
            /<command> reload - config.ymlの再読み込みをします。
            /<command> help [user|mod|admin] [page] - ヘルプを表示します。
   tell:
@@ -220,6 +221,9 @@ permissions:
     default: op
   lunachat-admin.check:
     description: checkコマンドの使用権限
+    default: op
+  lunachat-admin.set:
+    description: setコマンドの使用権限
     default: op
   lunachat-admin.reload:
     description: reloadコマンドの使用権限

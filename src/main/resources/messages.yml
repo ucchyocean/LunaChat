@@ -94,6 +94,7 @@ cmdmsgTemplateRemove: 'テンプレート %s番を削除しました。'
 cmdmsgCheck: '削除対象のチャンネルは %d 個です。'
 cmdmsgCheckConfirm: '全て削除する場合は、/%s check remove を実行してください。'
 cmdmsgCheckRemove: '%d 個のチャンネルを削除しました。'
+cmdmsgSetDefault: '%s さんの発言先を %s に設定しました。'
 
 cmdmsgPlayerJapanize: 'Your chat''s Japanize conversion was turned %s.'
 cmdmsgPlayerJapanizeOther: '%s さんのJapanize変換を %s にしました。'
@@ -105,6 +106,7 @@ errmsgIngame: 'このコマンドはゲーム内からしか実行できませ�
 errmsgCommand: 'コマンドの指定が正しくありません。'
 errmsgNotExist: '指定されたチャンネルが存在しません。'
 errmsgNotExistChannelAndPlayer: '指定されたチャンネルもプレイヤーも存在しません。'
+errmsgNotExistOrNotSpecified: '指定されたチャンネルが存在しないか、チャンネルが指定されませんでした。'
 errmsgExist: '指定されたチャンネル名が既に存在します。'
 errmsgNomember: '指定されたチャンネルに参加していません。'
 errmsgNomemberOther: '指定されたプレイヤーはチャンネルに参加していません。'
@@ -196,6 +198,7 @@ usageCheck1: '&6/%s check &7- モデレーターがいないチャンネルを�
 usageCheck2: '&6/%s check remove &7- /ch check で一覧されたチャンネルを全て削除します。'
 usageReload: '&6/%s reload &7- config.ymlの再読み込みをします。'
 usageHelp: '&6/%s help [user|mod|admin] [page] &7- ヘルプを表示します。'
+usageSet1: '&6/%s set default (player) [channel] &7- 指定したプレイヤーの発言先チャンネルを、指定したチャンネルに設定します。'
 
 usageMessage: '&6/%s (name) [message] &7- 指定したプレイヤーとの個人チャットを開始します。'
 usageReply: '&6/%s [message] &7- 受信した個人チャットに返信します。'
