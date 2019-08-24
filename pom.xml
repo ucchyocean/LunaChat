@@ -74,9 +74,6 @@
         <executions>
           <execution>
             <phase>deploy</phase>
-            <goals>
-              <goal>assembly</goal>
-            </goals>
           </execution>
         </executions>
       </plugin>
