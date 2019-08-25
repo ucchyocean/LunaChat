@@ -16,17 +16,21 @@ commands:
            /<command> invite (name) [force] - 指定した人をチャンネルチャットに招待します。
            /<command> accept - 招待を受けてチャンネルチャットに入室します。
            /<command> deny - 招待を拒否します。
-           /<command> kick (name) - 指定した人をチャンネルチャットからキックします。
-           /<command> ban (name) - 指定した人をチャンネルチャットからBANします。
+           /<command> kick (name) [channel] - 指定した人をチャンネルチャットからキックします。
+           /<command> ban (name) [channel] - 指定した人をチャンネルチャットからBANします。
            /<command> ban (name) [minutes] - 指定した人を指定した分間、BANします。
-           /<command> pardon (name) - 指定した人のBANを解除します。
-           /<command> mute (name) - 指定した人をチャンネルチャットからMuteします。
+           /<command> pardon (name) [channel] - 指定した人のBANを解除します。
+           /<command> mute (name) [channel] - 指定した人をチャンネルチャットからMuteします。
            /<command> mute (name) [minutes] - 指定した人を指定した分間、Muteします。
-           /<command> unmute (name) - 指定した人のMuteを解除します。
-           /<command> hide [channel] - 指定したチャンネルの発言内容を非表示にします。指定を省略すると、現在自分が居るチャンネルが非表示になります。
+           /<command> unmute (name) [channel] - 指定した人のMuteを解除します。
+           /<command> hide (channel) - 指定したチャンネルの発言内容を非表示にします。
+           /<command> hide channel (channel) - 指定したチャンネルの発言内容を非表示にします。
            /<command> hide (player) - 指定したプレイヤーの発言内容を非表示にします。
-           /<command> unhide [channel] - 指定したチャンネルの発言内容を非表示から表示に戻します。
+           /<command> hide player (player) - 指定したプレイヤーの発言内容を非表示にします。
+           /<command> unhide (channel) - 指定したチャンネルの発言内容を非表示から表示に戻します。
+           /<command> unhide channel (channel) - 指定したチャンネルの発言内容を非表示から表示に戻します。
            /<command> unhide (player) - 指定したプレイヤーの発言内容を非表示から表示に戻します。
+           /<command> unhide player (player) - 指定したプレイヤーの発言内容を非表示から表示に戻します。
            /<command> info [channel] - チャンネルの情報を表示します。
            /<command> log [channel] [key=value...] - チャンネルのログを表示します。
            /<command> create (channel) - チャンネルを作成します。
@@ -241,6 +245,7 @@ permissions:
       lunachat-admin.template: true
       lunachat-admin.dictionary: true
       lunachat-admin.check: true
+      lunachat-admin.set: true
       lunachat-admin.reload: true
       lunachat-admin.japanize-other: true
       lunachat-admin.force-invite: true
