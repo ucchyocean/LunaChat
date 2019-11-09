@@ -5,6 +5,7 @@
  */
 package com.github.ucchyocean.lc.event;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
@@ -25,6 +26,7 @@ public abstract class LunaChatBaseEvent extends Event {
      * @param channelName チャンネル名
      */
     public LunaChatBaseEvent(String channelName) {
+        super(!Bukkit.isPrimaryThread());
         this.channelName = channelName;
     }
 
