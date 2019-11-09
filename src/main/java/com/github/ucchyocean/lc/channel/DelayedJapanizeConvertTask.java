@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -124,7 +125,7 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
         String channelName = (channel == null) ? "" : channel.getName();
         LunaChatPostJapanizeEvent event =
                 new LunaChatPostJapanizeEvent(channelName, player, org, japanized);
-        Utility.callEventSync(event);
+        Bukkit.getPluginManager().callEvent(event);
         if ( event.isCancelled() ) {
             return false;
         }

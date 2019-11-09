@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -269,7 +270,7 @@ public class PlayerListener implements Listener {
             // LunaChatPreChatEvent イベントコール
             LunaChatPreChatEvent preChatEvent = new LunaChatPreChatEvent(
                     global.getName(), player, event.getMessage());
-            Utility.callEventSync(preChatEvent);
+            Bukkit.getPluginManager().callEvent(preChatEvent);
             if ( preChatEvent.isCancelled() ) {
                 event.setCancelled(true);
                 return;
@@ -556,7 +557,7 @@ public class PlayerListener implements Listener {
         // LunaChatPreChatEvent イベントコール
         LunaChatPreChatEvent preChatEvent = new LunaChatPreChatEvent(
                 channel.getName(), player, message);
-        Utility.callEventSync(preChatEvent);
+        Bukkit.getPluginManager().callEvent(preChatEvent);
         if ( preChatEvent.isCancelled() ) {
             return true;
         }

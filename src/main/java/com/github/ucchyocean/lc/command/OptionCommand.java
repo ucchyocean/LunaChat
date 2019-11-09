@@ -8,6 +8,7 @@ package com.github.ucchyocean.lc.command;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -140,7 +141,7 @@ public class OptionCommand extends SubCommandAbst {
         // イベントコール
         LunaChatChannelOptionChangedEvent event =
                 new LunaChatChannelOptionChangedEvent(cname, sender, options);
-        Utility.callEventSync(event);
+        Bukkit.getPluginManager().callEvent(event);
         if ( event.isCancelled() ) {
             return true;
         }
