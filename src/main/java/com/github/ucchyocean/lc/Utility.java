@@ -333,6 +333,7 @@ public class Utility {
      */
     @SuppressWarnings("deprecation")
     public static OfflinePlayer getOfflinePlayer(String name) {
+        if (name == null) return null;
         OfflinePlayer player = Bukkit.getOfflinePlayer(name);
         if (player == null || (!player.hasPlayedBefore() && !player.isOnline()))
             return null;
