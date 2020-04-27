@@ -6,6 +6,8 @@
 package com.github.ucchyocean.lc.command;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -22,12 +24,15 @@ import com.github.ucchyocean.lc.channel.ChannelPlayer;
 public class ListCommand extends SubCommandAbst {
 
     private static final String LIST_FIRSTLINE = Resources.get("listFirstLine");
+    private static final String LIST_FIRSTLINE_PAGING = Resources.get("listFirstLinePaging");
     private static final String LIST_ENDLINE = Resources.get("listEndLine");
     private static final String LIST_FORMAT = Resources.get("listFormat");
 
     private static final String COMMAND_NAME = "list";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
     private static final String USAGE_KEY = "usageList";
+
+    private static final int PAGE_SIZE = 8;
 
     /**
      * コマンドを取得します。
@@ -88,8 +93,13 @@ public class ListCommand extends SubCommandAbst {
             player = (Player) sender;
         }
 
+        int page = 0;
+        if ( args.length >= 2 && args[1].matches("[0-9]") ) {
+            page = Integer.parseInt(args[1]);
+        }
+
         // リストを取得して表示する
-        ArrayList<String> list = getList(player);
+        ArrayList<String> list = getList(player, page);
         for (String msg : list) {
             sender.sendMessage(msg);
         }
@@ -99,9 +109,39 @@ public class ListCommand extends SubCommandAbst {
     /**
      * リスト表示用のリストを返す
      * @param player プレイヤー、指定しない場合はnullにする
+     * @param page 表示するページ、0を指定した場合は全表示
      * @return リスト
      */
-    private ArrayList<String> getList(Player player) {
+    private ArrayList<String> getList(Player player, int page) {
+
+        ArrayList<String> list = getPlayerList(player);
+        int size = list.size();
+        int maxPage = (int)(size / PAGE_SIZE) + 1;
+
+        if ( page < 0 ) page = 0;
+        if ( page > maxPage ) page = maxPage;
+
+        ArrayList<String> items = new ArrayList<>();
+        if ( page == 0 ) { // 全表示
+            items.add(LIST_FIRSTLINE);
+            items.addAll(list);
+            items.add(LIST_ENDLINE);
+        } else { // ページ表示
+            items.add(String.format(LIST_FIRSTLINE_PAGING, page, maxPage));
+            int endIndex = (page * PAGE_SIZE > size) ? size : page * PAGE_SIZE;
+            items.addAll(list.subList((page - 1) * PAGE_SIZE, endIndex));
+            items.add(LIST_ENDLINE);
+        }
+
+        return items;
+    }
+
+    /**
+     * 指定されたプレイヤーに対するチャンネルリストを返す
+     * @param player プレイヤー
+     * @return チャンネルリスト
+     */
+    private ArrayList<String> getPlayerList(Player player) {
 
         ArrayList<String> items = new ArrayList<String>();
         String dchannel = "";
@@ -117,8 +157,16 @@ public class ListCommand extends SubCommandAbst {
         }
         ChannelPlayer cp = ChannelPlayer.getChannelPlayer(player);
 
-        items.add(LIST_FIRSTLINE);
-        for ( Channel channel : api.getChannels() ) {
+        // チャンネルを取得して、チャンネル名でソートする
+        ArrayList<Channel> channels = new ArrayList<>(api.getChannels());
+        Collections.sort(channels, new Comparator<Channel>() {
+            public int compare(Channel c1, Channel c2) {
+                return c1.getName().compareTo(c2.getName());
+            }
+        });
+
+        // 指定されたプレイヤー名に合うように、フィルタ＆表示用整形する。
+        for ( Channel channel : channels ) {
 
             // BANされているチャンネルは表示しない
             if ( channel.getBanned().contains(cp) ) {
@@ -155,7 +203,6 @@ public class ListCommand extends SubCommandAbst {
                     LIST_FORMAT, disp, onlineNum, memberNum, desc);
             items.add(item);
         }
-        items.add(LIST_ENDLINE);
 
         return items;
     }

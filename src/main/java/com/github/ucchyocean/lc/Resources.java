@@ -66,12 +66,12 @@ public class Resources {
 
         YamlConfiguration messages = new YamlConfiguration();
         JarFile jarFile = null;
+        BufferedReader reader = null;
         try {
             jarFile = new JarFile(LunaChat.getPluginJarFile());
             ZipEntry zipEntry = jarFile.getEntry(FILE_NAME);
             InputStream inputStream = jarFile.getInputStream(zipEntry);
-            BufferedReader reader =
-                    new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+            reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
             String line;
             while ( (line = reader.readLine()) != null ) {
                 if ( line.contains(":") && !line.startsWith("#") ) {
@@ -85,6 +85,13 @@ public class Resources {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
+            if ( reader != null ) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    // do nothing.
+                }
+            }
             if ( jarFile != null ) {
                 try {
                     jarFile.close();

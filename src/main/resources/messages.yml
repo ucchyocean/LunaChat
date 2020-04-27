@@ -25,6 +25,7 @@ removeModeratorMessage: '&f[%color%ch&f]&7%player さんがチャンネルのモ
 noRecipientMessage: '&f[%color%ch&f]&7あなたの発言は、誰にも届きませんでした。'
 
 listFirstLine: '&7---------- &bチャンネルリスト &7----------'
+listFirstLinePaging: '&7---------- &bチャンネルリスト&7(&c%d&7/&c%d&7) ----------'
 listEndLine: '&7----------------------------------'
 listFormat: '&7| &f%s&7(&c%d&7/&c%d&7) &a%s'
 listPlainPrefix: '&7| '
