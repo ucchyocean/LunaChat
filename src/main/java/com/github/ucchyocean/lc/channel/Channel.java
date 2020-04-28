@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -238,7 +239,7 @@ public abstract class Channel implements ConfigurationSerializable {
         // イベントコール
         LunaChatChannelMemberChangedEvent event =
                 new LunaChatChannelMemberChangedEvent(this.name, this.members, after);
-        Utility.callEventSync(event);
+        Bukkit.getPluginManager().callEvent(event);
         if ( event.isCancelled() ) {
             return;
         }
@@ -272,7 +273,7 @@ public abstract class Channel implements ConfigurationSerializable {
         // イベントコール
         LunaChatChannelMemberChangedEvent event =
                 new LunaChatChannelMemberChangedEvent(this.name, this.members, after);
-        Utility.callEventSync(event);
+        Bukkit.getPluginManager().callEvent(event);
         if ( event.isCancelled() ) {
             return;
         }
