@@ -344,7 +344,6 @@ public class Utility {
      * @param name プレイヤー名
      * @return プレイヤー
      */
-    @SuppressWarnings("deprecation")
     public static Player getPlayerExact(String name) {
         return Bukkit.getPlayer(stripColor(name));
     }

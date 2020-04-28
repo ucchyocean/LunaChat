@@ -46,7 +46,6 @@ public class ChannelPlayerUUID extends ChannelPlayer {
      * @return ChannelPlayerUUID
      */
     public static ChannelPlayerUUID getChannelPlayerUUIDFromName(String name) {
-        @SuppressWarnings("deprecation")
         Player player = Bukkit.getPlayerExact(name);
         if ( player != null ) {
             return new ChannelPlayerUUID(player.getUniqueId());

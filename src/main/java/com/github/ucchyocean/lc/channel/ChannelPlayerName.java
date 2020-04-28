@@ -117,7 +117,6 @@ public class ChannelPlayerName extends ChannelPlayer {
      * @return Player
      * @see com.github.ucchyocean.lc.channel.ChannelPlayer#getPlayer()
      */
-    @SuppressWarnings("deprecation")
     @Override
     public Player getPlayer() {
         return Bukkit.getPlayerExact(name);
