@@ -165,6 +165,7 @@ enableNormalChatMessageFormat: true
 # チャット装飾のフォーマット設定。
 # フォーマット設定には、下記のキーワードが使用できます。
 # %username : 発言者表示名
+# %player   : 発言者ID
 # %world    : 発言したワールド名
 # %prefix   : プレフィックス（VaultとPermissionsExが導入されている場合に置き換えられます）
 # %suffix   : サフィックス（VaultとPermissionsExが導入されている場合に置き換えられます）

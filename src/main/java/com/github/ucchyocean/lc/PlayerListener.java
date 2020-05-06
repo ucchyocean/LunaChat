@@ -458,6 +458,7 @@ public class PlayerListener implements Listener {
         String format = org;
         format = format.replace("%username", "%1$s");
         format = format.replace("%msg", "%2$s");
+        format = format.replace("%player", player.getName());
 
         if ( format.contains("%date") ) {
             format = format.replace("%date", dateFormat.format(new Date()));
