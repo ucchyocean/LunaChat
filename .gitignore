@@ -5,3 +5,4 @@
 #IntelliJ
 .idea/
 *.iml
+/.sts4-cache
