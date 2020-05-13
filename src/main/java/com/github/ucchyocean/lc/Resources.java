@@ -1,7 +1,7 @@
 /*
  * @author     ucchy
  * @license    LGPLv3
- * @copyright  Copyright ucchy 2013
+ * @copyright  Copyright ucchy 2020
  */
 package com.github.ucchyocean.lc;
 
@@ -15,6 +15,8 @@ import java.util.zip.ZipEntry;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import com.github.ucchyocean.lc.bukkit.LunaChatBukkit;
+
 /**
  * プラグインのリソース管理クラス
  * @author ucchy
@@ -23,8 +25,7 @@ public class Resources {
 
     private static final String FILE_NAME = "messages.yml";
 
-    private static YamlConfiguration defaultMessages;
-    private static YamlConfiguration resources;
+    private static YamlConfiguration resources = new YamlConfiguration();
 
     /**
      * 初期化する
@@ -32,16 +33,15 @@ public class Resources {
     protected static void initialize() {
 
         File file = new File(
-                LunaChat.getInstance().getDataFolder() +
+                LunaChatBukkit.getInstance().getDataFolder() +
                 File.separator + FILE_NAME);
 
         if ( !file.exists() ) {
-            Utility.copyFileFromJar(LunaChat.getPluginJarFile(),
+            Utility.copyFileFromJar(LunaChat.getInstance().getPluginJarFile(),
                     file, FILE_NAME, false);
         }
 
-        defaultMessages = loadDefaultMessages();
-        resources = YamlConfiguration.loadConfiguration(file);
+        resources.addDefaults(loadDefaultMessages());
     }
 
     /**
@@ -54,8 +54,7 @@ public class Resources {
         if ( resources == null ) {
             initialize();
         }
-        String def = defaultMessages.getString(key);
-        return Utility.replaceColorCode(resources.getString(key, def));
+        return Utility.replaceColorCode(resources.getString(key));
     }
 
     /**
@@ -68,7 +67,7 @@ public class Resources {
         JarFile jarFile = null;
         BufferedReader reader = null;
         try {
-            jarFile = new JarFile(LunaChat.getPluginJarFile());
+            jarFile = new JarFile(LunaChat.getInstance().getPluginJarFile());
             ZipEntry zipEntry = jarFile.getEntry(FILE_NAME);
             InputStream inputStream = jarFile.getInputStream(zipEntry);
             reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));

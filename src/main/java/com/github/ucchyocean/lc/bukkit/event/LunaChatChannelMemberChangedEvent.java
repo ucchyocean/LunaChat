@@ -1,13 +1,13 @@
 /*
  * @author     ucchy
  * @license    LGPLv3
- * @copyright  Copyright ucchy 2013
+ * @copyright  Copyright ucchy 2020
  */
-package com.github.ucchyocean.lc.event;
+package com.github.ucchyocean.lc.bukkit.event;
 
 import java.util.List;
 
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * メンバー変更イベント
@@ -15,8 +15,8 @@ import com.github.ucchyocean.lc.channel.ChannelPlayer;
  */
 public class LunaChatChannelMemberChangedEvent extends LunaChatBaseCancellableEvent {
 
-    private List<ChannelPlayer> before;
-    private List<ChannelPlayer> after;
+    private List<ChannelMember> before;
+    private List<ChannelMember> after;
 
     /**
      * コンストラクタ
@@ -25,7 +25,7 @@ public class LunaChatChannelMemberChangedEvent extends LunaChatBaseCancellableEv
      * @param after 変更後のメンバー
      */
     public LunaChatChannelMemberChangedEvent(
-            String channelName, List<ChannelPlayer> before, List<ChannelPlayer> after) {
+            String channelName, List<ChannelMember> before, List<ChannelMember> after) {
         super(channelName);
         this.before = before;
         this.after = after;
@@ -35,7 +35,7 @@ public class LunaChatChannelMemberChangedEvent extends LunaChatBaseCancellableEv
      * 変更前のメンバーリストをかえす
      * @return
      */
-    public List<ChannelPlayer> getMembersBefore() {
+    public List<ChannelMember> getMembersBefore() {
         return before;
     }
 
@@ -43,7 +43,7 @@ public class LunaChatChannelMemberChangedEvent extends LunaChatBaseCancellableEv
      * 変更後のメンバーリストをかえす
      * @return
      */
-    public List<ChannelPlayer> getMembersAfter() {
+    public List<ChannelMember> getMembersAfter() {
         return after;
     }
 }

@@ -1,20 +1,20 @@
 /*
  * @author     ucchy
  * @license    LGPLv3
- * @copyright  Copyright ucchy 2013
+ * @copyright  Copyright ucchy 2020
  */
 package com.github.ucchyocean.lc.command;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.github.ucchyocean.lc.CommandSenderInterface;
+import com.github.ucchyocean.lc.EventResult;
+import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.channel.Channel;
-import com.github.ucchyocean.lc.event.LunaChatChannelOptionChangedEvent;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 
 /**
@@ -69,7 +69,7 @@ public class OptionCommand extends SubCommandAbst {
      */
     @Override
     public void sendUsageMessage(
-            CommandSender sender, String label) {
+            CommandSenderInterface sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -83,7 +83,7 @@ public class OptionCommand extends SubCommandAbst {
      */
     @Override
     public boolean runCommand(
-            CommandSender sender, String label, String[] args) {
+            CommandSenderInterface sender, String label, String[] args) {
 
         Player player = null;
         if (sender instanceof Player) {
@@ -139,13 +139,12 @@ public class OptionCommand extends SubCommandAbst {
         }
 
         // イベントコール
-        LunaChatChannelOptionChangedEvent event =
-                new LunaChatChannelOptionChangedEvent(cname, sender, options);
-        Bukkit.getPluginManager().callEvent(event);
-        if ( event.isCancelled() ) {
+        EventResult result = LunaChat.getEventSender().sendLunaChatChannelOptionChangedEvent(
+                cname, sender, options);
+        if ( result.isCancelled() ) {
             return true;
         }
-        options = event.getOptions();
+        options = result.getValueAsStringMap("options");
 
         // 設定する
         boolean setOption = false;

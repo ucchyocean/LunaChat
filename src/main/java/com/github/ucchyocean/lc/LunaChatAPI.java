@@ -1,20 +1,17 @@
 /*
  * @author     ucchy
  * @license    LGPLv3
- * @copyright  Copyright ucchy 2013
+ * @copyright  Copyright ucchy 2020
  */
 package com.github.ucchyocean.lc;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import org.bukkit.command.CommandSender;
-
 import com.github.ucchyocean.lc.channel.Channel;
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * LunaChat APIクラス
@@ -82,7 +79,7 @@ public interface LunaChatAPI {
      * @param sender チャンネルを作成した人
      * @return 作成されたチャンネル
      */
-    public Channel createChannel(String channelName, CommandSender sender);
+    public Channel createChannel(String channelName, CommandSenderInterface sender);
 
     /**
      * チャンネルを削除する
@@ -97,7 +94,7 @@ public interface LunaChatAPI {
      * @param sender チャンネルを削除した人
      * @return 削除したかどうか
      */
-    public boolean removeChannel(String channelName, CommandSender sender);
+    public boolean removeChannel(String channelName, CommandSenderInterface sender);
 
     /**
      * テンプレートを取得する
@@ -143,28 +140,28 @@ public interface LunaChatAPI {
      * @param key プレイヤー
      * @return 指定されたプレイヤーをhideしているプレイヤー(非null)
      */
-    public List<ChannelPlayer> getHidelist(ChannelPlayer key);
+    public List<ChannelMember> getHidelist(ChannelMember key);
 
     /**
      * 該当のプレイヤーがhideしているプレイヤーのリストを返す。
      * @param player プレイヤー
      * @return 指定したプレイヤーがhideしているプレイヤーのリスト
      */
-    public ArrayList<ChannelPlayer> getHideinfo(ChannelPlayer player);
+    public List<ChannelMember> getHideinfo(ChannelMember player);
 
     /**
      * 指定されたプレイヤーが、指定されたプレイヤーをhideするように設定する。
      * @param player hideする側のプレイヤー
      * @param hided hideされる側のプレイヤー
      */
-    public void addHidelist(ChannelPlayer player, ChannelPlayer hided);
+    public void addHidelist(ChannelMember player, ChannelMember hided);
 
     /**
      * 指定されたプレイヤーが、指定されたプレイヤーのhideを解除するように設定する。
      * @param player hideしていた側のプレイヤー
      * @param hided hideされていた側のプレイヤー
      */
-    public void removeHidelist(ChannelPlayer player, ChannelPlayer hided);
+    public void removeHidelist(ChannelMember player, ChannelMember hided);
 
     /**
      * Japanize変換を行う

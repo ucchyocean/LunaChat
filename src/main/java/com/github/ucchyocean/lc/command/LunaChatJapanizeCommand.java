@@ -1,7 +1,7 @@
 /*
  * @author     ucchy
  * @license    LGPLv3
- * @copyright  Copyright ucchy 2013
+ * @copyright  Copyright ucchy 2020
  */
 package com.github.ucchyocean.lc.command;
 
@@ -10,10 +10,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.Resources;
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import com.github.ucchyocean.lc.bukkit.LunaChatBukkit;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * Japanize変換設定コマンド
@@ -46,7 +46,7 @@ public class LunaChatJapanizeCommand implements CommandExecutor {
 
             // Japanize設定をon/offにする
             boolean value = args[0].equalsIgnoreCase("on");
-            LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
+            LunaChatAPI api = LunaChatBukkit.getInstance().getLunaChatAPI();
             api.setPlayersJapanize(player.getName(), value);
 
             sendResourceMessage(sender, PREINFO,
@@ -65,7 +65,7 @@ public class LunaChatJapanizeCommand implements CommandExecutor {
             }
 
             // 指定されたプレイヤーが存在するかチェック
-            ChannelPlayer target = ChannelPlayer.getChannelPlayer(args[0]);
+            ChannelMember target = ChannelMember.getChannelMember(args[0]);
             if ( target == null || !target.isOnline() ) {
                 sendResourceMessage(sender, PREERR,
                         "errmsgNotfoundPlayer", args[0]);
@@ -74,7 +74,7 @@ public class LunaChatJapanizeCommand implements CommandExecutor {
 
             // Japanize設定をon/offにする
             boolean value = args[1].equalsIgnoreCase("on");
-            LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
+            LunaChatAPI api = LunaChatBukkit.getInstance().getLunaChatAPI();
             api.setPlayersJapanize(target.getName(), value);
 
             sendResourceMessage(target, PREINFO,
@@ -126,7 +126,7 @@ public class LunaChatJapanizeCommand implements CommandExecutor {
      * @param key リソースキー
      * @param args リソース内の置き換え対象キーワード
      */
-    protected void sendResourceMessage(ChannelPlayer cp, String pre,
+    protected void sendResourceMessage(ChannelMember cp, String pre,
             String key, Object... args) {
 
         String org = Resources.get(key);

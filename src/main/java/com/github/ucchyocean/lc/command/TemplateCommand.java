@@ -1,11 +1,11 @@
 /*
  * @author     ucchy
  * @license    LGPLv3
- * @copyright  Copyright ucchy 2013
+ * @copyright  Copyright ucchy 2020
  */
 package com.github.ucchyocean.lc.command;
 
-import org.bukkit.command.CommandSender;
+import com.github.ucchyocean.lc.CommandSenderInterface;
 
 /**
  * templateコマンドの実行クラス
@@ -55,7 +55,7 @@ public class TemplateCommand extends SubCommandAbst {
      */
     @Override
     public void sendUsageMessage(
-            CommandSender sender, String label) {
+            CommandSenderInterface sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -69,7 +69,7 @@ public class TemplateCommand extends SubCommandAbst {
      */
     @Override
     public boolean runCommand(
-            CommandSender sender, String label, String[] args) {
+            CommandSenderInterface sender, String label, String[] args) {
 
         // 引数チェック
         // このコマンドは、コンソールでも実行できる

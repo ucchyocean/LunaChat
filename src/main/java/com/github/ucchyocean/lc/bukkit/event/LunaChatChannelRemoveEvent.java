@@ -1,9 +1,9 @@
 /*
  * @author     ucchy
  * @license    LGPLv3
- * @copyright  Copyright ucchy 2013
+ * @copyright  Copyright ucchy 2020
  */
-package com.github.ucchyocean.lc.event;
+package com.github.ucchyocean.lc.bukkit.event;
 
 import org.bukkit.command.CommandSender;
 

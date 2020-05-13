@@ -1,7 +1,7 @@
 /*
  * @author     ucchy
  * @license    LGPLv3
- * @copyright  Copyright ucchy 2013
+ * @copyright  Copyright ucchy 2020
  */
 package com.github.ucchyocean.lc;
 
@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventPriority;
 
+import com.github.ucchyocean.lc.bukkit.LunaChatBukkit;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 
 /**
@@ -148,7 +149,7 @@ public class LunaChatConfig {
     /**
      * コンストラクタ
      */
-    protected LunaChatConfig() {
+    public LunaChatConfig() {
         reloadConfig();
     }
 
@@ -158,15 +159,15 @@ public class LunaChatConfig {
     public void reloadConfig() {
 
         File configFile = new File(
-                LunaChat.getInstance().getDataFolder(), "config.yml");
+                LunaChatBukkit.getInstance().getDataFolder(), "config.yml");
         if ( !configFile.exists() ) {
             //LunaChat.instance.saveDefaultConfig();
-            Utility.copyFileFromJar(LunaChat.getPluginJarFile(),
+            Utility.copyFileFromJar(LunaChat.getInstance().getPluginJarFile(),
                     configFile, "config_ja.yml", false);
         }
 
-        LunaChat.getInstance().reloadConfig();
-        FileConfiguration config = LunaChat.getInstance().getConfig();
+        LunaChatBukkit.getInstance().reloadConfig();
+        FileConfiguration config = LunaChatBukkit.getInstance().getConfig();
 
         enableChannelChat = config.getBoolean("enableChannelChat", true);
         playerChatEventListenerPriority
@@ -255,7 +256,7 @@ public class LunaChatConfig {
                 !globalChannel.matches("[0-9a-zA-Z\\-_]{1,20}") ) {
             String msg = String.format(
                     Resources.get("errmsgCannotUseForGlobal"), globalChannel);
-            LunaChat.getInstance().getLogger().warning(msg);
+            LunaChatBukkit.getInstance().getLogger().warning(msg);
             globalChannel = "";
         }
     }

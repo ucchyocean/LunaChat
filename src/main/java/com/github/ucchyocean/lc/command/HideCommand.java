@@ -1,19 +1,19 @@
 /*
  * @author     ucchy
  * @license    LGPLv3
- * @copyright  Copyright ucchy 2013
+ * @copyright  Copyright ucchy 2020
  */
 package com.github.ucchyocean.lc.command;
 
 import java.util.ArrayList;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.github.ucchyocean.lc.CommandSenderInterface;
 import com.github.ucchyocean.lc.Resources;
 import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.channel.Channel;
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * hideコマンドの実行クラス
@@ -71,7 +71,7 @@ public class HideCommand extends SubCommandAbst {
      */
     @Override
     public void sendUsageMessage(
-            CommandSender sender, String label) {
+            CommandSenderInterface sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY1, label);
         sendResourceMessage(sender, "", USAGE_KEY2, label);
     }
@@ -86,14 +86,14 @@ public class HideCommand extends SubCommandAbst {
      */
     @Override
     public boolean runCommand(
-            CommandSender sender, String label, String[] args) {
+            CommandSenderInterface sender, String label, String[] args) {
 
         // プレイヤーでなければ終了する
         if (!(sender instanceof Player)) {
             sendResourceMessage(sender, PREERR, "errmsgIngame");
             return true;
         }
-        ChannelPlayer player = ChannelPlayer.getChannelPlayer(sender);
+        ChannelMember player = ChannelMember.getChannelMember(sender);
 
         // 引数チェック
         String cname = null;
@@ -166,7 +166,7 @@ public class HideCommand extends SubCommandAbst {
             // プレイヤーが対象の場合の処理
 
             // 既に非表示になっていないかどうかをチェックする
-            ChannelPlayer hided = ChannelPlayer.getChannelPlayer(cname);
+            ChannelMember hided = ChannelMember.getChannelMember(cname);
             if ( api.getHidelist(hided).contains(player) ) {
                 sendResourceMessage(sender, PREERR, "errmsgAlreadyHidedPlayer");
                 return true;
@@ -191,7 +191,7 @@ public class HideCommand extends SubCommandAbst {
      * @param player 対象となるプレイヤー
      * @return メッセージ
      */
-    private ArrayList<String> getHideInfoList(ChannelPlayer player) {
+    private ArrayList<String> getHideInfoList(ChannelMember player) {
 
         ArrayList<String> items = new ArrayList<String>();
         items.add(HIDE_CHANNEL_FIRSTLINE);
@@ -199,7 +199,7 @@ public class HideCommand extends SubCommandAbst {
             items.add(LIST_PREFIX + channel);
         }
         items.add(HIDE_PLAYER_FIRSTLINE);
-        for ( ChannelPlayer p : api.getHideinfo(player) ) {
+        for ( ChannelMember p : api.getHideinfo(player) ) {
             items.add(LIST_PREFIX + p.getDisplayName());
         }
         items.add(LIST_ENDLINE);
@@ -212,7 +212,7 @@ public class HideCommand extends SubCommandAbst {
      * @param player プレイヤー
      * @return 指定したプレイヤーが非表示にしているチャンネルのリスト
      */
-    private ArrayList<String> getHideChannelNameList(ChannelPlayer player) {
+    private ArrayList<String> getHideChannelNameList(ChannelMember player) {
 
         ArrayList<String> names = new ArrayList<String>();
         for ( Channel channel : api.getChannels() ) {

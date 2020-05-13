@@ -1,7 +1,7 @@
 /*
  * @author     ucchy
  * @license    LGPLv3
- * @copyright  Copyright ucchy 2016
+ * @copyright  Copyright ucchy 2020
  */
 package com.github.ucchyocean.lc.channel;
 
@@ -11,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.japanize.JapanizeType;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * Japanize2行表示のときに、変換結果を遅延して指定した受信者に表示するためのタスク。
@@ -29,7 +30,7 @@ public class DelayedJapanizeRecipientChatTask extends DelayedJapanizeConvertTask
      * @param japanizeFormat 変換後に発言するときの、発言フォーマット
      * @param recipients メッセージ受信者
      */
-    public DelayedJapanizeRecipientChatTask(String org, JapanizeType type, ChannelPlayer player,
+    public DelayedJapanizeRecipientChatTask(String org, JapanizeType type, ChannelMember player,
             String japanizeFormat, List<Player> recipients) {
         super(org, type, null, player, japanizeFormat);
         this.recipients = recipients;

@@ -1,15 +1,16 @@
 /*
  * @author     ucchy
  * @license    LGPLv3
- * @copyright  Copyright ucchy 2013
+ * @copyright  Copyright ucchy 2020
  */
 package com.github.ucchyocean.lc.command;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.github.ucchyocean.lc.CommandSenderInterface;
 import com.github.ucchyocean.lc.channel.Channel;
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import com.github.ucchyocean.lc.member.ChannelMember;
+import com.github.ucchyocean.lc.member.ChannelMemberBukkit;
 
 /**
  * joinコマンドの実行クラス
@@ -60,7 +61,7 @@ public class JoinCommand extends SubCommandAbst {
      */
     @Override
     public void sendUsageMessage(
-            CommandSender sender, String label) {
+            CommandSenderInterface sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -74,14 +75,14 @@ public class JoinCommand extends SubCommandAbst {
      */
     @Override
     public boolean runCommand(
-            CommandSender sender, String label, String[] args) {
+            CommandSenderInterface sender, String label, String[] args) {
 
         // プレイヤーでなければ終了する
         if (!(sender instanceof Player)) {
             sendResourceMessage(sender, PREERR, "errmsgIngame");
             return true;
         }
-        ChannelPlayer player = ChannelPlayer.getChannelPlayer(sender);
+        ChannelMember player = ChannelMember.getChannelMember(sender);
 
         // 実行引数から、参加するチャンネルを取得する
         String channelName = "";
@@ -117,8 +118,12 @@ public class JoinCommand extends SubCommandAbst {
 
                 api.removeDefaultChannel(player.getName());
                 sendResourceMessage(sender, PREINFO, "cmdmsgSet", "グローバル");
-                if ( message.length() > 0 && player.getPlayer() != null ) {
-                    player.getPlayer().chat(config.getGlobalMarker() + message.toString());
+
+                Player p = null;
+                if ( player instanceof ChannelMemberBukkit ) p = ((ChannelMemberBukkit)player).getPlayer();
+
+                if ( message.length() > 0 && p != null ) {
+                    p.chat(config.getGlobalMarker() + message.toString());
                 }
                 return true;
             }
@@ -246,7 +251,7 @@ public class JoinCommand extends SubCommandAbst {
         return true;
     }
 
-    private boolean hasSpeakPermission(CommandSender sender, String channelName) {
+    private boolean hasSpeakPermission(CommandSenderInterface sender, String channelName) {
         String node = PERMISSION_SPEAK_PREFIX + "." + channelName;
         return sender.isPermissionSet(node) && sender.hasPermission(node);
     }

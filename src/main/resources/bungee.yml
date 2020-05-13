@@ -1,0 +1,5 @@
+name: ${project.name}
+main: com.github.ucchyocean.lc.bungee.LunaChat
+version: ${project.version}
+author: ucchy
+description: ${project.description}

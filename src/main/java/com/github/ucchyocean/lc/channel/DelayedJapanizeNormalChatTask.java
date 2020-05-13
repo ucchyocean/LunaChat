@@ -1,7 +1,7 @@
 /*
  * @author     ucchy
  * @license    LGPLv3
- * @copyright  Copyright ucchy 2015
+ * @copyright  Copyright ucchy 2020
  */
 package com.github.ucchyocean.lc.channel;
 
@@ -9,8 +9,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import com.github.ucchyocean.lc.LunaChat;
+import com.github.ucchyocean.lc.bukkit.LunaChatBukkit;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
+import com.github.ucchyocean.lc.member.ChannelMember;
+import com.github.ucchyocean.lc.member.ChannelMemberBukkit;
 
 /**
  * Japanize2行表示のときに、変換結果を遅延して通常チャットに表示するためのタスク
@@ -18,7 +20,7 @@ import com.github.ucchyocean.lc.japanize.JapanizeType;
  */
 public class DelayedJapanizeNormalChatTask extends DelayedJapanizeConvertTask {
 
-    private ChannelPlayer player;
+    private ChannelMember player;
     private AsyncPlayerChatEvent event;
 
     /**
@@ -30,7 +32,7 @@ public class DelayedJapanizeNormalChatTask extends DelayedJapanizeConvertTask {
      * @param event イベント
      */
     public DelayedJapanizeNormalChatTask(String org, JapanizeType type,
-            ChannelPlayer player, String japanizeFormat, final AsyncPlayerChatEvent event) {
+            ChannelMember player, String japanizeFormat, final AsyncPlayerChatEvent event) {
         super(org, type, null, player, japanizeFormat);
         this.player = player;
         this.event = event;
@@ -53,13 +55,17 @@ public class DelayedJapanizeNormalChatTask extends DelayedJapanizeConvertTask {
             Bukkit.getConsoleSender().sendMessage(result);
 
             // 設定に応じてdynmapへ送信する
-            if ( LunaChat.getInstance().getLunaChatConfig().
+            if ( LunaChatBukkit.getInstance().getLunaChatConfig().
                     isSendBroadcastChannelChatToDynmap() &&
-                    LunaChat.getInstance().getDynmap() != null ) {
-                if ( player != null && player.getPlayer() != null )
-                    LunaChat.getInstance().getDynmap().chat(player.getPlayer(), result);
-                else
-                    LunaChat.getInstance().getDynmap().broadcast(result);
+                    LunaChatBukkit.getInstance().getDynmap() != null ) {
+                if ( player != null && player instanceof ChannelMemberBukkit ) {
+                    ChannelMemberBukkit member = (ChannelMemberBukkit)player;
+                    if ( member.getPlayer() != null ) {
+                        LunaChatBukkit.getInstance().getDynmap().chat(member.getPlayer(), result);
+                    }
+                } else {
+                    LunaChatBukkit.getInstance().getDynmap().broadcast(result);
+                }
             }
         }
     }

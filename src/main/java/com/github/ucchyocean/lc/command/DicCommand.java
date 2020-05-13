@@ -1,11 +1,11 @@
 /*
  * @author     ucchy
  * @license    LGPLv3
- * @copyright  Copyright ucchy 2014
+ * @copyright  Copyright ucchy 2020
  */
 package com.github.ucchyocean.lc.command;
 
-import org.bukkit.command.CommandSender;
+import com.github.ucchyocean.lc.CommandSenderInterface;
 
 /**
  * dictionaryコマンドのエイリアス実行クラス、名前のみが異なるが、他は全て一緒。
@@ -34,7 +34,7 @@ public class DicCommand extends DictionaryCommand {
      */
     @Override
     public void sendUsageMessage(
-            CommandSender sender, String label) {
+            CommandSenderInterface sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 }

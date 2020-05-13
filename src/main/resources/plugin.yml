@@ -1,9 +1,9 @@
 name: ${project.name}
-main: com.github.ucchyocean.lc.LunaChat
+main: com.github.ucchyocean.lc.bukkit.LunaChat
 version: ${project.version}
 authors: [ucchy, YukiLeafX, LazyGon]
 description: ${project.description}
-softdepend: [Vault, dynmap, HawkEye, Multiverse-Core, mcMMO, Prism]
+softdepend: [Vault, dynmap, Multiverse-Core, mcMMO]
 
 commands:
   lunachat:

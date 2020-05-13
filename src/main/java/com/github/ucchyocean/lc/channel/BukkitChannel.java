@@ -1,7 +1,7 @@
 /*
  * @author     ucchy
  * @license    LGPLv3
- * @copyright  Copyright ucchy 2014
+ * @copyright  Copyright ucchy 2020
  */
 package com.github.ucchyocean.lc.channel;
 
@@ -17,7 +17,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.LunaChat;
+import com.github.ucchyocean.lc.CommandSenderInterface;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.LunaChatConfig;
 import com.github.ucchyocean.lc.LunaChatLogger;
@@ -25,15 +25,18 @@ import com.github.ucchyocean.lc.NGWordAction;
 import com.github.ucchyocean.lc.Resources;
 import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.bridge.DynmapBridge;
-import com.github.ucchyocean.lc.event.LunaChatChannelChatEvent;
-import com.github.ucchyocean.lc.event.LunaChatChannelMessageEvent;
+import com.github.ucchyocean.lc.bukkit.LunaChatBukkit;
+import com.github.ucchyocean.lc.bukkit.event.LunaChatChannelChatEvent;
+import com.github.ucchyocean.lc.bukkit.event.LunaChatChannelMessageEvent;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
+import com.github.ucchyocean.lc.member.ChannelMember;
+import com.github.ucchyocean.lc.member.ChannelMemberBukkit;
 
 /**
- * チャンネルの実装クラス
+ * チャンネルのBukkit実装クラス
  * @author ucchy
  */
-public class ChannelImpl extends Channel {
+public class BukkitChannel extends Channel {
 
     private static final String PERMISSION_SPEAK_PREFIX = "lunachat.speak";
 
@@ -79,7 +82,7 @@ public class ChannelImpl extends Channel {
      * コンストラクタ
      * @param name チャンネル名
      */
-    protected ChannelImpl(String name) {
+    protected BukkitChannel(String name) {
 
         super(name);
 
@@ -89,12 +92,30 @@ public class ChannelImpl extends Channel {
     }
 
     /**
+     * @return
+     * @see com.github.ucchyocean.lc.channel.Channel#isPersonalChat()
+     */
+    @Override
+    public boolean isPersonalChat() {
+        return true;
+    }
+
+    /**
+     * @return
+     * @see com.github.ucchyocean.lc.channel.Channel#isBroadcastChannel()
+     */
+    @Override
+    public boolean isBroadcastChannel() {
+        return isGlobalChannel();
+    }
+
+    /**
      * このチャットに発言をする
      * @param player 発言をするプレイヤー
      * @param message 発言をするメッセージ
      */
     @Override
-    public void chat(ChannelPlayer player, String message) {
+    public void chat(ChannelMember player, String message) {
 
         // 発言権限を確認する
         String node = PERMISSION_SPEAK_PREFIX + "." + getName();
@@ -104,8 +125,8 @@ public class ChannelImpl extends Channel {
             return;
         }
 
-        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
-        LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
+        LunaChatConfig config = LunaChatBukkit.getInstance().getLunaChatConfig();
+        LunaChatAPI api = LunaChatBukkit.getInstance().getLunaChatAPI();
 
         // Muteされているかどうかを確認する
         if ( getMuted().contains(player) ) {
@@ -196,7 +217,7 @@ public class ChannelImpl extends Channel {
 
         // 非同期実行タスクがある場合、追加で実行する
         if ( delayedTask != null ) {
-            delayedTask.runTaskAsynchronously(LunaChat.getInstance());
+            delayedTask.runTaskAsynchronously(LunaChatBukkit.getInstance());
         }
 
         // NGワード発言者に、NGワードアクションを実行する
@@ -252,7 +273,7 @@ public class ChannelImpl extends Channel {
     @Override
     public void chatFromOtherSource(String player, String source, String message) {
 
-        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
+        LunaChatConfig config = LunaChatBukkit.getInstance().getLunaChatConfig();
 
         // 表示名
         String name = player + "@" + source;
@@ -288,7 +309,7 @@ public class ChannelImpl extends Channel {
      * @param player プレイヤー
      */
     @Override
-    protected void sendSystemMessage(String key, ChannelPlayer player) {
+    protected void sendSystemMessage(String key, ChannelMember player) {
 
         // プライベートチャットならシステムメッセージを流さない
         if ( isPersonalChat() ) {
@@ -305,42 +326,42 @@ public class ChannelImpl extends Channel {
 
     /**
      * メッセージを表示します。指定したプレイヤーの発言として処理されます。
-     * @param player プレイヤー（ワールドチャット、範囲チャットの場合は必須です）
+     * @param member プレイヤー（ワールドチャット、範囲チャットの場合は必須です）
      * @param message メッセージ
      * @param format フォーマット
      * @param sendDynmap dynmapへ送信するかどうか
      * @param name 発言者名
      */
     @Override
-    public void sendMessage(ChannelPlayer player, String message,
+    public void sendMessage(ChannelMember member, String message,
             String format, boolean sendDynmap, String name) {
 
-        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
+        LunaChatConfig config = LunaChatBukkit.getInstance().getLunaChatConfig();
 
         String originalMessage = new String(message);
 
         // 受信者を設定する
-        ArrayList<ChannelPlayer> recipients = new ArrayList<ChannelPlayer>();
+        ArrayList<ChannelMember> recipients = new ArrayList<ChannelMember>();
         boolean sendNoRecipientMessage = false;
 
         if ( isBroadcastChannel() ) {
             // ブロードキャストチャンネル
 
-            if ( isWorldRange() && player != null &&
-                    player.isOnline() && player.getPlayer() != null ) {
+            if ( isWorldRange() && member != null && member.isOnline()
+                    && (member instanceof ChannelMemberBukkit) ) {
 
-                World w = player.getPlayer().getWorld();
+                World w = ((ChannelMemberBukkit)member).getWorld();
 
                 if ( getChatRange() > 0 ) {
                     // 範囲チャット
 
-                    Location origin = player.getPlayer().getLocation();
+                    Location origin = ((ChannelMemberBukkit)member).getLocation();
                     for ( Player p : Utility.getOnlinePlayers() ) {
-                        ChannelPlayer cp = ChannelPlayer.getChannelPlayer(p);
+                        ChannelMember cp = ChannelMemberBukkit.getChannelMember(p);
                         if ( p.getWorld().equals(w) &&
                                 origin.distance(p.getLocation()) <= getChatRange() &&
                                 !getHided().contains(cp) ) {
-                            recipients.add(ChannelPlayer.getChannelPlayer(p));
+                            recipients.add(ChannelMemberBukkit.getChannelMember(p));
                         }
                     }
 
@@ -348,9 +369,9 @@ public class ChannelImpl extends Channel {
                     // ワールドチャット
 
                     for ( Player p : Utility.getOnlinePlayers() ) {
-                        ChannelPlayer cp = ChannelPlayer.getChannelPlayer(p);
+                        ChannelMember cp = ChannelMemberBukkit.getChannelMember(p);
                         if ( p.getWorld().equals(w) && !getHided().contains(cp) ) {
-                            recipients.add(ChannelPlayer.getChannelPlayer(p));
+                            recipients.add(ChannelMemberBukkit.getChannelMember(p));
                         }
                     }
                 }
@@ -359,7 +380,7 @@ public class ChannelImpl extends Channel {
                 if ( !MSG_NO_RECIPIENT.equals("") && (
                         recipients.size() == 0 ||
                         (recipients.size() == 1 &&
-                         recipients.get(0).getName().equals(player.getName()) ) ) ) {
+                         recipients.get(0).getName().equals(member.getName()) ) ) ) {
                     sendNoRecipientMessage = true;
                 }
 
@@ -367,7 +388,7 @@ public class ChannelImpl extends Channel {
                 // 通常ブロードキャスト（全員へ送信）
 
                 for ( Player p : Utility.getOnlinePlayers() ) {
-                    ChannelPlayer cp = ChannelPlayer.getChannelPlayer(p);
+                    ChannelMember cp = ChannelMemberBukkit.getChannelMember(p);
                     if ( !getHided().contains(cp) ) {
                         recipients.add(cp);
                     }
@@ -377,7 +398,7 @@ public class ChannelImpl extends Channel {
         } else {
             // 通常チャンネル
 
-            for ( ChannelPlayer mem : getMembers() ) {
+            for ( ChannelMember mem : getMembers() ) {
                 if ( mem != null && mem.isOnline() && !getHided().contains(mem) ) {
                     recipients.add(mem);
                 }
@@ -389,7 +410,7 @@ public class ChannelImpl extends Channel {
         // 受信者に加える。
         if ( config.isOpListenAllChannel() ) {
             for ( Player p : Utility.getOnlinePlayers() ) {
-                ChannelPlayer cp = ChannelPlayer.getChannelPlayer(p);
+                ChannelMember cp = ChannelMemberBukkit.getChannelMember(p);
                 if ( cp.hasPermission("lunachat-admin.listen-all-channels")
                         && !recipients.contains(cp) ) {
                     recipients.add(cp);
@@ -398,8 +419,8 @@ public class ChannelImpl extends Channel {
         }
 
         // hideされている場合は、受信対象者から抜く。
-        LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
-        for ( ChannelPlayer cp : api.getHidelist(player) )  {
+        LunaChatAPI api = LunaChatBukkit.getInstance().getLunaChatAPI();
+        for ( ChannelMember cp : api.getHidelist(member) )  {
             if ( recipients.contains(cp) ) {
                 recipients.remove(cp);
             }
@@ -413,27 +434,28 @@ public class ChannelImpl extends Channel {
         // イベントコール
         LunaChatChannelMessageEvent event =
                 new LunaChatChannelMessageEvent(
-                        getName(), player, message, recipients, name, originalMessage);
+                        getName(), member, message, recipients, name, originalMessage);
         Bukkit.getPluginManager().callEvent(event);
         message = event.getMessage();
         recipients = event.getRecipients();
 
         // 通常ブロードキャストなら、設定に応じてdynmapへ送信する
-        DynmapBridge dynmap = LunaChat.getInstance().getDynmap();
+        DynmapBridge dynmap = LunaChatBukkit.getInstance().getDynmap();
         if ( config.isSendBroadcastChannelChatToDynmap() &&
                 sendDynmap &&
                 dynmap != null &&
                 isBroadcastChannel() &&
                 !isWorldRange() ) {
+            Player player = ((ChannelMemberBukkit)member).getPlayer();
             if ( config.isSendFormattedMessageToDynmap() ) {
-                if ( player != null && player.getPlayer() != null ) {
-                    dynmap.chat(player.getPlayer(), message);
+                if ( member != null && player != null ) {
+                    dynmap.chat(player, message);
                 } else {
                     dynmap.broadcast(message);
                 }
             } else {
-                if ( player != null && player.getPlayer() != null ) {
-                    dynmap.chat(player.getPlayer(), originalMessage);
+                if ( member != null && player != null ) {
+                    dynmap.chat(player, originalMessage);
                 } else {
                     dynmap.broadcast(originalMessage);
                 }
@@ -441,7 +463,7 @@ public class ChannelImpl extends Channel {
         }
 
         // 送信する
-        for ( ChannelPlayer p : recipients ) {
+        for ( ChannelMember p : recipients ) {
             p.sendMessage(message);
         }
 
@@ -453,11 +475,11 @@ public class ChannelImpl extends Channel {
         // 受信者が自分以外いない場合は、メッセージを表示する
         if ( sendNoRecipientMessage ) {
             String msg = replaceKeywordsForSystemMessages(MSG_NO_RECIPIENT, "");
-            player.sendMessage(msg);
+            member.sendMessage(msg);
         }
 
         // ロギング
-        log(originalMessage, name, player);
+        log(originalMessage, name, member);
     }
 
     /**
@@ -499,7 +521,7 @@ public class ChannelImpl extends Channel {
                     buf.append(INFO_PREFIX);
                 }
 
-                ChannelPlayer cp = getMembers().get(i);
+                ChannelMember cp = getMembers().get(i);
                 String name = cp.getName();
                 String disp;
                 if ( getModerator().contains(cp) ) {
@@ -611,7 +633,7 @@ public class ChannelImpl extends Channel {
         long now = System.currentTimeMillis();
 
         // 期限付きBANのチェック
-        for ( ChannelPlayer cp : getBanExpires().keySet() ) {
+        for ( ChannelMember cp : getBanExpires().keySet() ) {
             if ( getBanExpires().get(cp) <= now ) {
 
                 // 期限マップから削除し、BANを解除
@@ -635,7 +657,7 @@ public class ChannelImpl extends Channel {
         }
 
         // 期限付きMuteのチェック
-        for ( ChannelPlayer cp : getMuteExpires().keySet() ) {
+        for ( ChannelMember cp : getMuteExpires().keySet() ) {
             if ( getMuteExpires().get(cp) <= now ) {
 
                 // 期限マップから削除し、Muteを解除
@@ -665,9 +687,9 @@ public class ChannelImpl extends Channel {
      * @param player プレイヤー
      * @return 置き換え結果
      */
-    private String replaceKeywords(String format, ChannelPlayer player) {
+    private String replaceKeywords(String format, ChannelMember player) {
 
-        LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
+        LunaChatAPI api = LunaChatBukkit.getInstance().getLunaChatAPI();
 
         String msg = format;
 
@@ -706,8 +728,8 @@ public class ChannelImpl extends Channel {
             if ( msg.contains("%world") ) {
 
                 String worldname = null;
-                if ( LunaChat.getInstance().getMultiverseCore() != null ) {
-                    worldname = LunaChat.getInstance().getMultiverseCore().getWorldAlias(player.getWorldName());
+                if ( LunaChatBukkit.getInstance().getMultiverseCore() != null ) {
+                    worldname = LunaChatBukkit.getInstance().getMultiverseCore().getWorldAlias(player.getWorldName());
                 }
                 if ( worldname == null || worldname.equals("") ) {
                     worldname = player.getWorldName();
@@ -749,27 +771,29 @@ public class ChannelImpl extends Channel {
      * @param message 記録するメッセージ
      * @param player プレイヤー
      */
-    private void log(String message, String name, ChannelPlayer player) {
+    private void log(String message, String name, ChannelMember player) {
 
         // LunaChatのチャットログへ記録
-        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
+        LunaChatConfig config = LunaChatBukkit.getInstance().getLunaChatConfig();
         if ( config.isLoggingChat() && logger != null ) {
             logger.log(message, name);
         }
 
-        // Hawkeye Reloaded のチャットログへ記録
-        if ( config.isLoggingChatToHawkEye() && LunaChat.getInstance().getHawkEye() != null
-                && player != null && player.getLocation() != null ) {
-            LunaChat.getInstance().getHawkEye().writeLog(name, player.getLocation(),
-                    "channel(" + getName() + ")-" + Utility.stripColor(message));
-        }
+        // TODO 連携先のログ記録プラグインへログ記録する
 
-        // Prism のチャットログへ記録
-        if ( config.isLoggingChatToPrism() && LunaChat.getInstance().getPrism() != null
-                && player != null && player.getPlayer() != null ) {
-            LunaChat.getInstance().getPrism().writeLog(player.getPlayer(),
-                    "channel(" + getName() + ")-" + Utility.stripColor(message));
-        }
+//        // Hawkeye Reloaded のチャットログへ記録
+//        if ( config.isLoggingChatToHawkEye() && LunaChatBukkit.getInstance().getHawkEye() != null
+//                && player != null && player.getLocation() != null ) {
+//            LunaChatBukkit.getInstance().getHawkEye().writeLog(name, player.getLocation(),
+//                    "channel(" + getName() + ")-" + Utility.stripColor(message));
+//        }
+//
+//        // Prism のチャットログへ記録
+//        if ( config.isLoggingChatToPrism() && LunaChatBukkit.getInstance().getPrism() != null
+//                && player != null && player.getPlayer() != null ) {
+//            LunaChatBukkit.getInstance().getPrism().writeLog(player.getPlayer(),
+//                    "channel(" + getName() + ")-" + Utility.stripColor(message));
+//        }
     }
 
     /**
@@ -780,7 +804,7 @@ public class ChannelImpl extends Channel {
      * @param args リソース内の置き換え対象キーワード
      */
     private void sendResourceMessage(
-            ChannelPlayer player, String pre, String key, Object... args) {
+            ChannelMember player, String pre, String key, Object... args) {
 
         String org = Resources.get(key);
         if ( org == null || org.equals("") ) {
@@ -788,5 +812,19 @@ public class ChannelImpl extends Channel {
         }
         String msg = String.format(pre + org, args);
         player.sendMessage(msg);
+    }
+
+    /**
+     * このチャンネルのモデレータ権限を持っているかどうかを確認する
+     * @param sender 権限を確認する対象
+     * @return チャンネルのモデレータ権限を持っているかどうか
+     */
+    public boolean hasModeratorPermission(CommandSenderInterface sender) {
+        if (sender.isOp() ||
+                sender.hasPermission("lunachat-admin.mod-all-channels")) {
+            return true;
+        }
+        ChannelMember player = ChannelMemberBukkit.getChannelMember(sender);
+        return getModerator().contains(player);
     }
 }

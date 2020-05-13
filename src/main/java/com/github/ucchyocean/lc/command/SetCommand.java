@@ -1,9 +1,10 @@
 package com.github.ucchyocean.lc.command;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.github.ucchyocean.lc.CommandSenderInterface;
 import com.github.ucchyocean.lc.Utility;
+import com.github.ucchyocean.lc.bukkit.CommandSenderBukkit;
 import com.github.ucchyocean.lc.channel.Channel;
 
 public class SetCommand extends SubCommandAbst {
@@ -49,7 +50,7 @@ public class SetCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage()
      */
     @Override
-    public void sendUsageMessage(CommandSender sender, String label) {
+    public void sendUsageMessage(CommandSenderInterface sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY1, label);
     }
 
@@ -62,7 +63,7 @@ public class SetCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(java.lang.String[])
      */
     @Override
-    public boolean runCommand(CommandSender sender, String label, String[] args) {
+    public boolean runCommand(CommandSenderInterface sender, String label, String[] args) {
 
         // 引数チェック
         // このコマンドは、コンソールでも実行できる
@@ -93,7 +94,7 @@ public class SetCommand extends SubCommandAbst {
 
             Player target = Utility.getPlayerExact(targetPlayer);
             if ( target != null ) {
-                sendResourceMessage(target, PREINFO, "cmdmsgSet", targetChannel.getName());
+                sendResourceMessage(new CommandSenderBukkit(target), PREINFO, "cmdmsgSet", targetChannel.getName());
             }
 
             return true;

@@ -1,7 +1,7 @@
 /*
  * @author     ucchy
  * @license    LGPLv3
- * @copyright  Copyright ucchy 2016
+ * @copyright  Copyright ucchy 2020
  */
 package com.github.ucchyocean.lc.bridge;
 
@@ -13,13 +13,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.LunaChatConfig;
 import com.github.ucchyocean.lc.Utility;
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import com.github.ucchyocean.lc.bukkit.LunaChatBukkit;
 import com.github.ucchyocean.lc.channel.DelayedJapanizeRecipientChatTask;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
+import com.github.ucchyocean.lc.member.ChannelMember;
 import com.gmail.nossr50.api.PartyAPI;
 import com.gmail.nossr50.events.chat.McMMOPartyChatEvent;
 
@@ -40,9 +40,9 @@ public class McMMOBridge implements Listener {
         List<Player> recipients = PartyAPI.getOnlineMembers(event.getParty());
 
         String message = event.getMessage();
-        ChannelPlayer player = ChannelPlayer.getChannelPlayer(event.getSender());
-        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
-        LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
+        ChannelMember player = ChannelMember.getChannelMember(event.getSender());
+        LunaChatConfig config = LunaChatBukkit.getInstance().getLunaChatConfig();
+        LunaChatAPI api = LunaChatBukkit.getInstance().getLunaChatAPI();
 
         // NGワード発言をマスク
         for ( Pattern pattern : config.getNgwordCompiled() ) {
@@ -78,7 +78,7 @@ public class McMMOBridge implements Listener {
 
         // Japanize変換と、発言処理
         if ( !skipJapanize &&
-                LunaChat.getInstance().getLunaChatAPI().isPlayerJapanize(player.getName()) &&
+                LunaChatBukkit.getInstance().getLunaChatAPI().isPlayerJapanize(player.getName()) &&
                 config.getJapanizeType() != JapanizeType.NONE ) {
 
             int lineType = config.getJapanizeDisplayLine();
@@ -103,7 +103,7 @@ public class McMMOBridge implements Listener {
 
                 // 発言処理を必ず先に実施させるため、遅延を入れてタスクを実行する。
                 int wait = config.getJapanizeWait();
-                task.runTaskLater(LunaChat.getInstance(), wait);
+                task.runTaskLater(LunaChatBukkit.getInstance(), wait);
             }
         }
 

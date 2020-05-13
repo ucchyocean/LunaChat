@@ -1,7 +1,7 @@
 /*
  * @author     ucchy
  * @license    LGPLv3
- * @copyright  Copyright ucchy 2013
+ * @copyright  Copyright ucchy 2020
  */
 package com.github.ucchyocean.lc.command;
 
@@ -10,12 +10,12 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.github.ucchyocean.lc.CommandSenderInterface;
 import com.github.ucchyocean.lc.Resources;
 import com.github.ucchyocean.lc.channel.Channel;
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * listコマンドの実行クラス
@@ -72,7 +72,7 @@ public class ListCommand extends SubCommandAbst {
      */
     @Override
     public void sendUsageMessage(
-            CommandSender sender, String label) {
+            CommandSenderInterface sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -86,7 +86,7 @@ public class ListCommand extends SubCommandAbst {
      */
     @Override
     public boolean runCommand(
-            CommandSender sender, String label, String[] args) {
+            CommandSenderInterface sender, String label, String[] args) {
 
         Player player = null;
         if (sender instanceof Player) {
@@ -155,7 +155,7 @@ public class ListCommand extends SubCommandAbst {
                 dchannel = def.getName();
             }
         }
-        ChannelPlayer cp = ChannelPlayer.getChannelPlayer(player);
+        ChannelMember cp = ChannelMember.getChannelMember(player);
 
         // チャンネルを取得して、チャンネル名でソートする
         ArrayList<Channel> channels = new ArrayList<>(api.getChannels());

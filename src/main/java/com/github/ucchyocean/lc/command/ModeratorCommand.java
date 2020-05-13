@@ -1,17 +1,17 @@
 /*
  * @author     ucchy
  * @license    LGPLv3
- * @copyright  Copyright ucchy 2013
+ * @copyright  Copyright ucchy 2020
  */
 package com.github.ucchyocean.lc.command;
 
 import java.util.ArrayList;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.github.ucchyocean.lc.CommandSenderInterface;
 import com.github.ucchyocean.lc.channel.Channel;
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * moderatorコマンドの実行クラス
@@ -61,7 +61,7 @@ public class ModeratorCommand extends SubCommandAbst {
      */
     @Override
     public void sendUsageMessage(
-            CommandSender sender, String label) {
+            CommandSenderInterface sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -75,7 +75,7 @@ public class ModeratorCommand extends SubCommandAbst {
      */
     @Override
     public boolean runCommand(
-            CommandSender sender, String label, String[] args) {
+            CommandSenderInterface sender, String label, String[] args) {
 
         Player player = null;
         if (sender instanceof Player) {
@@ -131,12 +131,12 @@ public class ModeratorCommand extends SubCommandAbst {
         for ( String mod : moderator ) {
             if ( mod.startsWith("-") ) {
                 String name = mod.substring(1);
-                ChannelPlayer cp = ChannelPlayer.getChannelPlayer(name);
+                ChannelMember cp = ChannelMember.getChannelMember(name);
                 channel.removeModerator(cp);
                 sendResourceMessage(sender, PREINFO,
                         "cmdmsgModeratorMinus", name, cname);
             } else {
-                ChannelPlayer cp = ChannelPlayer.getChannelPlayer(mod);
+                ChannelMember cp = ChannelMember.getChannelMember(mod);
                 channel.addModerator(cp);
                 sendResourceMessage(sender, PREINFO,
                         "cmdmsgModerator", mod, cname);

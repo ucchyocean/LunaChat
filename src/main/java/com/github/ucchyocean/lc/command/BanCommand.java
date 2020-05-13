@@ -1,15 +1,15 @@
 /*
  * @author     ucchy
  * @license    LGPLv3
- * @copyright  Copyright ucchy 2013
+ * @copyright  Copyright ucchy 2020
  */
 package com.github.ucchyocean.lc.command;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.github.ucchyocean.lc.CommandSenderInterface;
 import com.github.ucchyocean.lc.channel.Channel;
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * banコマンドの実行クラス
@@ -60,7 +60,7 @@ public class BanCommand extends SubCommandAbst {
      */
     @Override
     public void sendUsageMessage(
-            CommandSender sender, String label) {
+            CommandSenderInterface sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY1, label);
         sendResourceMessage(sender, "", USAGE_KEY2, label);
     }
@@ -75,7 +75,7 @@ public class BanCommand extends SubCommandAbst {
      */
     @Override
     public boolean runCommand(
-            CommandSender sender, String label, String[] args) {
+            CommandSenderInterface sender, String label, String[] args) {
 
         // 実行引数から、BANするユーザーを取得する
         String kickedName = "";
@@ -114,7 +114,7 @@ public class BanCommand extends SubCommandAbst {
         }
 
         // BANされるプレイヤーがメンバーかどうかチェックする
-        ChannelPlayer kicked = ChannelPlayer.getChannelPlayer(kickedName);
+        ChannelMember kicked = ChannelMember.getChannelMember(kickedName);
         if (!channel.getMembers().contains(kicked)) {
             sendResourceMessage(sender, PREERR, "errmsgNomemberOther");
             return true;

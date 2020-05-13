@@ -1,7 +1,7 @@
 /*
  * @author     ucchy
  * @license    LGPLv3
- * @copyright  Copyright ucchy 2013
+ * @copyright  Copyright ucchy 2020
  */
 package com.github.ucchyocean.lc.channel;
 
@@ -14,12 +14,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.Utility;
-import com.github.ucchyocean.lc.event.LunaChatPostJapanizeEvent;
+import com.github.ucchyocean.lc.bukkit.LunaChatBukkit;
+import com.github.ucchyocean.lc.bukkit.event.LunaChatPostJapanizeEvent;
 import com.github.ucchyocean.lc.japanize.IMEConverter;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 import com.github.ucchyocean.lc.japanize.YukiKanaConverter;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * Japanize変換を実行して、実行後に発言を行うタスク
@@ -32,7 +33,7 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
     private String org;
     private JapanizeType type;
     private Channel channel;
-    private ChannelPlayer player;
+    private ChannelMember player;
     private String format;
     private String result;
 
@@ -45,7 +46,7 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
      * @param japanizeFormat 変換後に発言するときの、発言フォーマット
      */
     public DelayedJapanizeConvertTask(String org, JapanizeType type, Channel channel,
-            ChannelPlayer player, String japanizeFormat) {
+            ChannelMember player, String japanizeFormat) {
         this.org = org;
         this.type = type;
         this.channel = channel;
@@ -67,13 +68,13 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
         // 変換対象外のキーワード
         HashMap<String, String> keywordMap = new HashMap<String, String>();
         ArrayList<String> keywords = new ArrayList<String>();
-        if ( LunaChat.getInstance().getLunaChatConfig().isJapanizeIgnorePlayerName() ) {
+        if ( LunaChatBukkit.getInstance().getLunaChatConfig().isJapanizeIgnorePlayerName() ) {
             for ( Player player : Utility.getOnlinePlayers() ) {
                 keywords.add(player.getName());
             }
         }
         HashMap<String, String> dictionary =
-                LunaChat.getInstance().getLunaChatAPI().getAllDictionary();
+                LunaChatBukkit.getInstance().getLunaChatAPI().getAllDictionary();
 
         // カラーコード削除、URL削除
         String deletedURL = Utility.stripColor(org.replaceAll(REGEX_URL, " "));
@@ -113,7 +114,7 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
 
         // 変換後の文字列にNGワードが含まれている場合は、マスクする
         for ( Pattern pattern :
-                LunaChat.getInstance().getLunaChatConfig().getNgwordCompiled() ) {
+                LunaChatBukkit.getInstance().getLunaChatConfig().getNgwordCompiled() ) {
             Matcher matcher = pattern.matcher(japanized);
             if ( matcher.find() ) {
                 japanized = matcher.replaceAll(

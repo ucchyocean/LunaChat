@@ -1,20 +1,20 @@
 /*
  * @author     ucchy
  * @license    LGPLv3
- * @copyright  Copyright ucchy 2014
+ * @copyright  Copyright ucchy 2020
  */
 package com.github.ucchyocean.lc.command;
 
 import java.util.ArrayList;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.LunaChat;
+import com.github.ucchyocean.lc.CommandSenderInterface;
 import com.github.ucchyocean.lc.LunaChatLogger;
 import com.github.ucchyocean.lc.Resources;
+import com.github.ucchyocean.lc.bukkit.LunaChatBukkit;
 import com.github.ucchyocean.lc.channel.Channel;
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * logコマンドの実行クラス
@@ -68,7 +68,7 @@ public class LogCommand extends SubCommandAbst {
      */
     @Override
     public void sendUsageMessage(
-            CommandSender sender, String label) {
+            CommandSenderInterface sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -81,7 +81,7 @@ public class LogCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(java.lang.String[])
      */
     @Override
-    public boolean runCommand(CommandSender sender, String label, String[] args) {
+    public boolean runCommand(CommandSenderInterface sender, String label, String[] args) {
 
         Player player = null;
         if (sender instanceof Player) {
@@ -137,7 +137,7 @@ public class LogCommand extends SubCommandAbst {
 
             // グローバルチャンネル設定が無くて、指定チャンネルがマーカーの場合、
             // 通常チャットのログを取得する
-            LunaChatLogger logger = LunaChat.getInstance().getNormalChatLogger();
+            LunaChatLogger logger = LunaChatBukkit.getInstance().getNormalChatLogger();
             logs = logger.getLog(argsPlayer, argsFilter, argsDate, reverse);
 
             cname = "グローバルチャット";
@@ -152,7 +152,7 @@ public class LogCommand extends SubCommandAbst {
             }
 
             // BANされていないかどうか確認する
-            ChannelPlayer cp = ChannelPlayer.getChannelPlayer(player);
+            ChannelMember cp = ChannelMember.getChannelMember(player);
             if ( player != null && channel.getBanned().contains(cp) ) {
                 sendResourceMessage(sender, PREERR, "errmsgBanned");
                 return true;

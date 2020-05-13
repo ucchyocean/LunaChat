@@ -1,32 +1,76 @@
 /*
  * @author     ucchy
  * @license    LGPLv3
- * @copyright  Copyright ucchy 2014
+ * @copyright  Copyright ucchy 2020
  */
-package com.github.ucchyocean.lc.channel;
+package com.github.ucchyocean.lc.member;
+
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.LunaChat;
+import com.github.ucchyocean.lc.CommandSenderInterface;
 import com.github.ucchyocean.lc.bridge.VaultChatBridge;
+import com.github.ucchyocean.lc.bukkit.CommandSenderBukkit;
+import com.github.ucchyocean.lc.bukkit.LunaChatBukkit;
 
 /**
- * 名前管理のプレイヤー
+ * ChannelMemberのBukkitPlayer実装
  * @author ucchy
  */
-public class ChannelPlayerName extends ChannelPlayer {
+public class ChannelMemberPlayer extends ChannelMemberBukkit {
 
-    private String name;
+    private UUID id;
 
     /**
      * コンストラクタ
-     * @param name プレイヤー名
+     * @param id プレイヤーID
      */
-    public ChannelPlayerName(String name) {
-        this.name = name;
+    public ChannelMemberPlayer(String id) {
+        this.id = UUID.fromString(id);
+    }
+
+    /**
+     * コンストラクタ
+     * @param id UUID
+     */
+    public ChannelMemberPlayer(UUID id) {
+        this.id = id;
+    }
+
+    /**
+     * プレイヤー名からUUIDを取得してChannelMemberPlayerを作成して返す
+     * @param name プレイヤー名
+     * @return ChannelMemberPlayer
+     */
+    public static ChannelMemberPlayer getChannelMemberPlayerFromName(String name) {
+        Player player = Bukkit.getPlayerExact(name);
+        if ( player != null ) {
+            return new ChannelMemberPlayer(player.getUniqueId());
+        }
+        @SuppressWarnings("deprecation")
+        OfflinePlayer offline = Bukkit.getOfflinePlayer(name);
+        if ( offline != null && offline.getUniqueId() != null ) {
+            return new ChannelMemberPlayer(offline.getUniqueId());
+        }
+        return null;
+    }
+
+    /**
+     * CommandSenderから、ChannelPlayerを作成して返す
+     * @param sender
+     * @return ChannelPlayer
+     */
+    public static ChannelMemberPlayer getChannelPlayer(CommandSender sender) {
+        if ( sender instanceof Player ) {
+            return new ChannelMemberPlayer(((Player)sender).getUniqueId());
+        }
+        return new ChannelMemberPlayer(sender.getName());
     }
 
     /**
@@ -35,8 +79,8 @@ public class ChannelPlayerName extends ChannelPlayer {
      */
     @Override
     public boolean isOnline() {
-        Player player = getPlayer();
-        return (player != null && player.isOnline());
+        Player player = Bukkit.getPlayer(id);
+        return (player != null);
     }
 
     /**
@@ -46,7 +90,16 @@ public class ChannelPlayerName extends ChannelPlayer {
      */
     @Override
     public String getName() {
-        return name;
+        Player player = Bukkit.getPlayer(id);
+        if ( player != null ) {
+            return player.getName();
+        }
+        OfflinePlayer offlineplayer = Bukkit.getOfflinePlayer(id);
+        if ( offlineplayer != null ) {
+            String name = offlineplayer.getName();
+            return name;
+        }
+        return id.toString();
     }
 
     /**
@@ -60,7 +113,7 @@ public class ChannelPlayerName extends ChannelPlayer {
         if ( player != null ) {
             return player.getDisplayName();
         }
-        return name;
+        return getName();
     }
 
     /**
@@ -70,7 +123,7 @@ public class ChannelPlayerName extends ChannelPlayer {
      */
     @Override
     public String getPrefix() {
-        VaultChatBridge vault = LunaChat.getInstance().getVaultChat();
+        VaultChatBridge vault = LunaChatBukkit.getInstance().getVaultChat();
         if ( vault == null ) {
             return "";
         }
@@ -88,7 +141,7 @@ public class ChannelPlayerName extends ChannelPlayer {
      */
     @Override
     public String getSuffix() {
-        VaultChatBridge vault = LunaChat.getInstance().getVaultChat();
+        VaultChatBridge vault = LunaChatBukkit.getInstance().getVaultChat();
         if ( vault == null ) {
             return "";
         }
@@ -119,7 +172,7 @@ public class ChannelPlayerName extends ChannelPlayer {
      */
     @Override
     public Player getPlayer() {
-        return Bukkit.getPlayerExact(name);
+        return Bukkit.getPlayer(id);
     }
 
     /**
@@ -189,21 +242,31 @@ public class ChannelPlayerName extends ChannelPlayer {
      * @see com.github.ucchyocean.lc.channel.ChannelPlayer#equals(org.bukkit.entity.Player)
      */
     @Override
-    public boolean equals(CommandSender sender) {
-        if ( sender == null || !(sender instanceof Player) ) {
+    public boolean equals(CommandSenderInterface sender) {
+        if ( sender == null || !(sender instanceof CommandSenderBukkit) ) {
             return false;
         }
-        Player player = (Player)sender;
-        return name.equals(player.getName());
+        if ( ((CommandSenderBukkit)sender).getSender() instanceof Player ) {
+            return false;
+        }
+        Player player = (Player)((CommandSenderBukkit)sender).getSender();
+        return id.equals(player.getUniqueId());
     }
 
     /**
      * IDを返す
-     * @return 名前をそのまま返す
+     * @return "$" + UUID を返す
      * @see com.github.ucchyocean.lc.channel.ChannelPlayer#getID()
      */
     @Override
     public String toString() {
-        return name;
+        return "$" + id.toString();
+    }
+
+    @Override
+    public World getWorld() {
+        Player player = getPlayer();
+        if ( player != null ) return player.getWorld();
+        return null;
     }
 }

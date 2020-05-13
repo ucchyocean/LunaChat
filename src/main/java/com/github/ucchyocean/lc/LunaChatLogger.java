@@ -1,7 +1,7 @@
 /*
  * @author     ucchy
  * @license    LGPLv3
- * @copyright  Copyright ucchy 2013
+ * @copyright  Copyright ucchy 2020
  */
 package com.github.ucchyocean.lc;
 
@@ -20,6 +20,8 @@ import java.util.Date;
 
 import org.bukkit.ChatColor;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import com.github.ucchyocean.lc.bukkit.LunaChatBukkit;
 
 /**
  * LunaChatロガー
@@ -88,7 +90,7 @@ public class LunaChatLogger {
                 }
 
             }
-        }.runTaskAsynchronously(LunaChat.getInstance());
+        }.runTaskAsynchronously(LunaChatBukkit.getInstance());
     }
 
     /**
@@ -246,7 +248,7 @@ public class LunaChatLogger {
      */
     private String getFolderPath(Date date) {
 
-        return LunaChat.getInstance().getDataFolder() +
+        return LunaChatBukkit.getInstance().getDataFolder() +
                 File.separator + "logs" +
                 File.separator + dformat.format(date);
     }

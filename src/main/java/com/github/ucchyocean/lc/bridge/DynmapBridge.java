@@ -1,7 +1,7 @@
 /*
  * @author     ucchy
  * @license    LGPLv3
- * @copyright  Copyright ucchy 2013
+ * @copyright  Copyright ucchy 2020
  */
 package com.github.ucchyocean.lc.bridge;
 
@@ -12,9 +12,9 @@ import org.bukkit.plugin.Plugin;
 import org.dynmap.DynmapAPI;
 import org.dynmap.DynmapWebChatEvent;
 
-import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.LunaChatConfig;
+import com.github.ucchyocean.lc.bukkit.LunaChatBukkit;
 import com.github.ucchyocean.lc.channel.Channel;
 
 /**
@@ -72,8 +72,8 @@ public class DynmapBridge implements Listener {
     @EventHandler
     public void onDynmapWebChat(DynmapWebChatEvent event) {
 
-        LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
-        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
+        LunaChatAPI api = LunaChatBukkit.getInstance().getLunaChatAPI();
+        LunaChatConfig config = LunaChatBukkit.getInstance().getLunaChatConfig();
         String dchannel = config.getDynmapChannel();
         Channel channel = null;
 

@@ -1,15 +1,15 @@
 /*
  * @author     ucchy
  * @license    LGPLv3
- * @copyright  Copyright ucchy 2013
+ * @copyright  Copyright ucchy 2020
  */
 package com.github.ucchyocean.lc.command;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.github.ucchyocean.lc.CommandSenderInterface;
 import com.github.ucchyocean.lc.channel.Channel;
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * inviteコマンドの実行クラス
@@ -62,7 +62,7 @@ public class InviteCommand extends SubCommandAbst {
      */
     @Override
     public void sendUsageMessage(
-            CommandSender sender, String label) {
+            CommandSenderInterface sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -75,7 +75,7 @@ public class InviteCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(java.lang.String[])
      */
     @Override
-    public boolean runCommand(CommandSender sender, String label, String[] args) {
+    public boolean runCommand(CommandSenderInterface sender, String label, String[] args) {
 
         if ( args.length >= 3 && args[2].equalsIgnoreCase("force") ) {
             return runForceInviteCommand(sender, label, args);
@@ -91,7 +91,7 @@ public class InviteCommand extends SubCommandAbst {
      * @param args
      * @return
      */
-    private boolean runNormalInviteCommand(CommandSender sender, String label, String[] args) {
+    private boolean runNormalInviteCommand(CommandSenderInterface sender, String label, String[] args) {
 
         // プレイヤーでなければ終了する
         if (!(sender instanceof Player)) {
@@ -123,7 +123,7 @@ public class InviteCommand extends SubCommandAbst {
         }
 
         // 招待相手が存在するかどうかを確認する
-        ChannelPlayer invited = ChannelPlayer.getChannelPlayer(invitedName);
+        ChannelMember invited = ChannelMember.getChannelMember(invitedName);
         if ( invited == null || !invited.isOnline() ) {
             sendResourceMessage(sender, PREERR,
                     "errmsgNotfoundPlayer", invitedName);
@@ -156,7 +156,7 @@ public class InviteCommand extends SubCommandAbst {
      * @param args
      * @return
      */
-    private boolean runForceInviteCommand(CommandSender sender, String label, String[] args) {
+    private boolean runForceInviteCommand(CommandSenderInterface sender, String label, String[] args) {
 
         // パーミッションチェック
         if ( !sender.hasPermission(PERMISSION_NODE_FORCE_INVITE) ) {
@@ -194,7 +194,7 @@ public class InviteCommand extends SubCommandAbst {
 
         // 招待相手が存在するかどうかを確認する
         String invitedName = args[1];
-        ChannelPlayer invited = ChannelPlayer.getChannelPlayer(invitedName);
+        ChannelMember invited = ChannelMember.getChannelMember(invitedName);
         if ( invited == null || !invited.isOnline() ) {
             sendResourceMessage(sender, PREERR,
                     "errmsgNotfoundPlayer", invitedName);

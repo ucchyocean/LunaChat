@@ -1,20 +1,23 @@
 /*
  * @author     ucchy
  * @license    LGPLv3
- * @copyright  Copyright ucchy 2014
+ * @copyright  Copyright ucchy 2020
  */
-package com.github.ucchyocean.lc.channel;
+package com.github.ucchyocean.lc.member;
 
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.BlockCommandSender;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.github.ucchyocean.lc.CommandSenderInterface;
+import com.github.ucchyocean.lc.bukkit.CommandSenderBukkit;
+
 /**
- * コマンドブロック
+ * ChannelMemberのBukkit-BlockCommandSender実装
  * @author ucchy
  */
-public class ChannelPlayerBlock extends ChannelPlayer {
+public class ChannelMemberBlock extends ChannelMemberBukkit {
 
     BlockCommandSender sender;
 
@@ -22,7 +25,7 @@ public class ChannelPlayerBlock extends ChannelPlayer {
      * コンストラクタ
      * @param sender コマンドブロック
      */
-    public ChannelPlayerBlock(BlockCommandSender sender) {
+    public ChannelMemberBlock(BlockCommandSender sender) {
         this.sender = sender;
     }
 
@@ -148,8 +151,10 @@ public class ChannelPlayerBlock extends ChannelPlayer {
      * @see com.github.ucchyocean.lc.channel.ChannelPlayer#equals(org.bukkit.entity.Player)
      */
     @Override
-    public boolean equals(CommandSender sender) {
-        return this.sender.equals(sender);
+    public boolean equals(CommandSenderInterface sender) {
+        if ( sender == null ) return false;
+        if ( !(sender instanceof CommandSenderBukkit) ) return false;
+        return ((CommandSenderBukkit)sender).getSender().equals(this.sender);
     }
 
     /**
@@ -160,5 +165,10 @@ public class ChannelPlayerBlock extends ChannelPlayer {
     @Override
     public String toString() {
         return getName();
+    }
+
+    @Override
+    public World getWorld() {
+        return sender.getBlock().getWorld();
     }
 }

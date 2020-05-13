@@ -1,16 +1,16 @@
 /*
  * @author     ucchy
  * @license    LGPLv3
- * @copyright  Copyright ucchy 2013
+ * @copyright  Copyright ucchy 2020
  */
 package com.github.ucchyocean.lc.command;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.github.ucchyocean.lc.CommandSenderInterface;
 import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.channel.Channel;
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * unhideコマンドの実行クラス
@@ -61,7 +61,7 @@ public class UnhideCommand extends SubCommandAbst {
      */
     @Override
     public void sendUsageMessage(
-            CommandSender sender, String label) {
+            CommandSenderInterface sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY1, label);
         sendResourceMessage(sender, "", USAGE_KEY2, label);
     }
@@ -76,14 +76,14 @@ public class UnhideCommand extends SubCommandAbst {
      */
     @Override
     public boolean runCommand(
-            CommandSender sender, String label, String[] args) {
+            CommandSenderInterface sender, String label, String[] args) {
 
         // プレイヤーでなければ終了する
         if (!(sender instanceof Player)) {
             sendResourceMessage(sender, PREERR, "errmsgIngame");
             return true;
         }
-        ChannelPlayer player = ChannelPlayer.getChannelPlayer(sender);
+        ChannelMember player = ChannelMember.getChannelMember(sender);
 
         // 引数チェック
         String cname = null;
@@ -142,7 +142,7 @@ public class UnhideCommand extends SubCommandAbst {
             // プレイヤーが対象の場合の処理
 
             // 既に表示になっていないかどうかをチェックする
-            ChannelPlayer hided = ChannelPlayer.getChannelPlayer(cname);
+            ChannelMember hided = ChannelMember.getChannelMember(cname);
             if ( !api.getHidelist(hided).contains(player) ) {
                 sendResourceMessage(sender, PREERR, "errmsgAlreadyUnhidedPlayer");
                 return true;
