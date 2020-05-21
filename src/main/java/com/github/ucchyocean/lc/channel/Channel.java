@@ -13,15 +13,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.YamlConfiguration;
-
 import com.github.ucchyocean.lc.CommandSenderInterface;
+import com.github.ucchyocean.lc.EventResult;
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.LunaChatConfig;
-import com.github.ucchyocean.lc.Utility;
-import com.github.ucchyocean.lc.bukkit.event.LunaChatChannelMemberChangedEvent;
+import com.github.ucchyocean.lc.YamlConfig;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 import com.github.ucchyocean.lc.member.ChannelMember;
 
@@ -147,7 +144,7 @@ public abstract class Channel {
         this.allowcc = true;
         this.japanizeType = null;
 
-        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
+        LunaChatConfig config = LunaChat.getPlugin().getLunaChatConfig();
         if ( isPersonalChat() ) {
             this.format = config.getDefaultFormatForPrivateMessage();
         } else {
@@ -176,7 +173,7 @@ public abstract class Channel {
      * @return グローバルチャンネルかどうか
      */
     public boolean isGlobalChannel() {
-        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
+        LunaChatConfig config = LunaChat.getPlugin().getLunaChatConfig();
         return getName().equals(config.getGlobalChannel());
     }
 
@@ -185,7 +182,7 @@ public abstract class Channel {
      * @return 強制参加チャンネルかどうか
      */
     public boolean isForceJoinChannel() {
-        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
+        LunaChatConfig config = LunaChat.getPlugin().getLunaChatConfig();
         return config.getForceJoinChannels().contains(getName());
     }
 
@@ -227,10 +224,9 @@ public abstract class Channel {
         after.add(player);
 
         // イベントコール
-        LunaChatChannelMemberChangedEvent event =
-                new LunaChatChannelMemberChangedEvent(this.name, this.members, after);
-        Bukkit.getPluginManager().callEvent(event);
-        if ( event.isCancelled() ) {
+        EventResult result =
+                LunaChat.getEventSender().sendLunaChatChannelMemberChangedEvent(name, members, after);
+        if ( result.isCancelled() ) {
             return;
         }
 
@@ -261,16 +257,15 @@ public abstract class Channel {
         after.remove(player);
 
         // イベントコール
-        LunaChatChannelMemberChangedEvent event =
-                new LunaChatChannelMemberChangedEvent(this.name, this.members, after);
-        Bukkit.getPluginManager().callEvent(event);
-        if ( event.isCancelled() ) {
+        EventResult result =
+                LunaChat.getEventSender().sendLunaChatChannelMemberChangedEvent(name, members, after);
+        if ( result.isCancelled() ) {
             return;
         }
 
         // デフォルト発言先が退出するチャンネルと一致する場合、
         // デフォルト発言先を削除する
-        LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
+        LunaChatAPI api = LunaChat.getPlugin().getLunaChatAPI();
         Channel def = api.getDefaultChannel(player.getName());
         if ( def != null && def.getName().equals(getName()) ) {
             api.removeDefaultChannel(player.getName());
@@ -282,7 +277,7 @@ public abstract class Channel {
         sendSystemMessage("quitMessage", player);
 
         // 0人で削除する設定がオンで、0人になったなら、チャンネルを削除する
-        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
+        LunaChatConfig config = LunaChat.getPlugin().getLunaChatConfig();
         if ( config.isZeroMemberRemove() && members.size() <= 0 ) {
             api.removeChannel(this.name);
             return;
@@ -383,14 +378,9 @@ public abstract class Channel {
      */
     public int getOnlineNum() {
 
-        // ブロードキャストチャンネルならサーバー接続人数を返す
-        if ( isBroadcastChannel() ) {
-            return Utility.getOnlinePlayersCount();
-        }
-
         // メンバーの人数を数える
         int onlineNum = 0;
-        for ( ChannelMember player : members ) {
+        for ( ChannelMember player : getMembers() ) {
             if ( player.isOnline() ) {
                 onlineNum++;
             }
@@ -403,13 +393,7 @@ public abstract class Channel {
      * @return 総参加人数
      */
     public int getTotalNum() {
-
-        // ブロードキャストチャンネルならサーバー接続人数を返す
-        if ( isBroadcastChannel() ) {
-            return Utility.getOnlinePlayersCount();
-        }
-
-        return members.size();
+        return getMembers().size();
     }
 
     /**
@@ -863,7 +847,7 @@ public abstract class Channel {
 
         // フォルダーの取得と、必要に応じて作成
         File folder = new File(
-                LunaChat.getInstance().getDataFolder(), FOLDER_NAME_CHANNELS);
+                LunaChat.getPlugin().getDataFolder(), FOLDER_NAME_CHANNELS);
         if ( !folder.exists() ) {
             folder.mkdirs();
         }
@@ -876,7 +860,7 @@ public abstract class Channel {
         File file = new File(folder, name + ".yml");
 
         // ファイルへ保存する
-        YamlConfiguration conf = new YamlConfiguration();
+        YamlConfig conf = new YamlConfig();
         Map<String, Object> data = this.serialize();
         for ( String key : data.keySet() ) {
             conf.set(key, data.get(key));
@@ -898,7 +882,7 @@ public abstract class Channel {
 
         // フォルダーの取得
         File folder = new File(
-                LunaChat.getInstance().getDataFolder(), FOLDER_NAME_CHANNELS);
+                LunaChat.getPlugin().getDataFolder(), FOLDER_NAME_CHANNELS);
         if ( !folder.exists() ) {
             return false;
         }
@@ -919,7 +903,7 @@ public abstract class Channel {
 
         // フォルダーの取得
         File folder = new File(
-                LunaChat.getInstance().getDataFolder(), FOLDER_NAME_CHANNELS);
+                LunaChat.getPlugin().getDataFolder(), FOLDER_NAME_CHANNELS);
         if ( !folder.exists() ) {
             return new HashMap<String, Channel>();
         }
@@ -934,8 +918,7 @@ public abstract class Channel {
 
         HashMap<String, Channel> result = new HashMap<String, Channel>();
         for ( File file : files ) {
-            YamlConfiguration config =
-                YamlConfiguration.loadConfiguration(file);
+            YamlConfig config = YamlConfig.load(file);
             Map<String, Object> data = new HashMap<String, Object>();
             for ( String key : config.getKeys(false) ) {
                 data.put(key, config.get(key));

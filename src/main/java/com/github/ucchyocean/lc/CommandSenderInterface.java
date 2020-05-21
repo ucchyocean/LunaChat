@@ -18,8 +18,17 @@ public interface CommandSenderInterface {
      */
     public boolean equals(Object other);
 
-    public boolean isOp();
+    /**
+     * OPかどうかを返す
+     * @return OPかどうか
+     */
+    public boolean isOp(); // TODO BungeeCordにはOPの概念が無いようなので、このメソッドは不要かも。
 
+    /**
+     * コマンド実行者が指定のパーミッションについて指定されているかどうかを返す
+     * @param permission パーミッション
+     * @return パーミッションを指定されているかどうか
+     */
     public boolean isPermissionSet(String permission);
 
     /**

@@ -356,7 +356,7 @@ public class BukkitChannel extends Channel {
                     // 範囲チャット
 
                     Location origin = ((ChannelMemberBukkit)member).getLocation();
-                    for ( Player p : Utility.getOnlinePlayers() ) {
+                    for ( Player p : Bukkit.getOnlinePlayers() ) {
                         ChannelMember cp = ChannelMemberBukkit.getChannelMember(p);
                         if ( p.getWorld().equals(w) &&
                                 origin.distance(p.getLocation()) <= getChatRange() &&
@@ -368,7 +368,7 @@ public class BukkitChannel extends Channel {
                 } else {
                     // ワールドチャット
 
-                    for ( Player p : Utility.getOnlinePlayers() ) {
+                    for ( Player p : Bukkit.getOnlinePlayers() ) {
                         ChannelMember cp = ChannelMemberBukkit.getChannelMember(p);
                         if ( p.getWorld().equals(w) && !getHided().contains(cp) ) {
                             recipients.add(ChannelMemberBukkit.getChannelMember(p));
@@ -387,7 +387,7 @@ public class BukkitChannel extends Channel {
             } else {
                 // 通常ブロードキャスト（全員へ送信）
 
-                for ( Player p : Utility.getOnlinePlayers() ) {
+                for ( Player p : Bukkit.getOnlinePlayers() ) {
                     ChannelMember cp = ChannelMemberBukkit.getChannelMember(p);
                     if ( !getHided().contains(cp) ) {
                         recipients.add(cp);
@@ -409,7 +409,7 @@ public class BukkitChannel extends Channel {
         // パーミッション lunachat-admin.listen-all-channels を持つプレイヤーを
         // 受信者に加える。
         if ( config.isOpListenAllChannel() ) {
-            for ( Player p : Utility.getOnlinePlayers() ) {
+            for ( Player p : Bukkit.getOnlinePlayers() ) {
                 ChannelMember cp = ChannelMemberBukkit.getChannelMember(p);
                 if ( cp.hasPermission("lunachat-admin.listen-all-channels")
                         && !recipients.contains(cp) ) {

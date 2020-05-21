@@ -10,6 +10,7 @@ import java.util.UUID;
 import org.jetbrains.annotations.Nullable;
 
 import com.github.ucchyocean.lc.CommandSenderInterface;
+import com.github.ucchyocean.lc.bungee.CommandSenderBungee;
 
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
@@ -184,12 +185,16 @@ public class ChannelMemberProxiedPlayer extends ChannelMember {
      * @return 同一かどうか
      * @see com.github.ucchyocean.lc.channel.ChannelPlayer#equals(org.bukkit.entity.Player)
      */
-    public boolean equals(CommandSender sender) {
-        if ( sender == null || !(sender instanceof ProxiedPlayer) ) {
+    @Override
+    public boolean equals(CommandSenderInterface sender) {
+        if ( sender == null || !(sender instanceof CommandSenderBungee) ) {
             return false;
         }
-        ProxiedPlayer player = (ProxiedPlayer)sender;
-        return id.equals(player.getUniqueId());
+        CommandSender s = ((CommandSenderBungee)sender).getSender();
+        if ( !(s instanceof ProxiedPlayer) ) {
+            return false;
+        }
+        return id.equals(((ProxiedPlayer)s).getUniqueId());
     }
 
     /**
@@ -212,17 +217,16 @@ public class ChannelMemberProxiedPlayer extends ChannelMember {
 
     @Override
     public boolean isPermissionSet(String node) {
-        // TODO 未実装
-        return false;
+        // TODO 要テスト
+        ProxiedPlayer player = getPlayer();
+        if ( player == null ) {
+            return false;
+        } else {
+            return player.getPermissions().contains(node);
+        }
     }
 
-    @Override
-    public boolean equals(CommandSenderInterface sender) {
-        // TODO 未実装
-        return false;
-    }
-
-    public ChannelMemberProxiedPlayer getChannelMemberFromSender(CommandSender sender) {
+    public static ChannelMemberProxiedPlayer getChannelMember(CommandSender sender) {
         if ( sender == null || !(sender instanceof ProxiedPlayer) ) return null;
         return new ChannelMemberProxiedPlayer(((ProxiedPlayer)sender).getUniqueId());
     }

@@ -21,6 +21,10 @@ public class CommandSenderBungee implements CommandSenderInterface {
         this.sender = sender;
     }
 
+    public CommandSender getSender() {
+        return sender;
+    }
+
     @Override
     public boolean isOp() {
         // TODO 要検討

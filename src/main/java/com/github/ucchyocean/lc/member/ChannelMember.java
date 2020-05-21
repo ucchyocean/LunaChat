@@ -115,23 +115,11 @@ public abstract class ChannelMember implements Comparable<ChannelMember> {
      * @return ChannelMember
      */
     public static ChannelMember getChannelMember(String nameOrUuid) {
-        // TODO 未実装
-        return null;
-
-        /*
-        if ( nameOrUuid.startsWith("$") ) {
-            String id = nameOrUuid.substring(1);
-            return new ChannelPlayerUUID(id);
+        if ( LunaChat.isBukkitMode() ) {
+            return ChannelMemberPlayer.getChannelMember(nameOrUuid);
+        } else {
+            return new ChannelMemberProxiedPlayer(nameOrUuid.substring(1));
         }
-        if ( Utility.isCB178orLater() ) {
-            ChannelPlayer player =
-                    ChannelPlayerUUID.getChannelPlayerUUIDFromName(nameOrUuid);
-            if ( player != null ) {
-                return player;
-            }
-        }
-        return new ChannelPlayerName(nameOrUuid);
-        */
     }
 
     /**

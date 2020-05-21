@@ -135,7 +135,7 @@ public class HideCommand extends SubCommandAbst {
         Channel channel = api.getChannel(cname);
         if ( !isPlayerCommand && channel != null ) {
             isChannelCommand = true;
-        } else if ( Utility.getOfflinePlayer(cname) == null ) {
+        } else if ( Utility.existsOfflinePlayer(cname) ) {
             sendResourceMessage(sender, PREERR, "errmsgNotExistChannelAndPlayer");
             return true;
         }

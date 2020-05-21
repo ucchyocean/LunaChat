@@ -8,10 +8,10 @@ package com.github.ucchyocean.lc;
 import java.io.File;
 
 /**
- * LunaChatプラグインのインターフェイス
+ * プラグインインターフェイス
  * @author ucchy
  */
-public interface LunaChatPlugin {
+public interface PluginInterface {
 
     /**
      * このプラグインのJarファイル自身を示すFileクラスを返す。

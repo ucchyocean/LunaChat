@@ -18,7 +18,7 @@ import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.LunaChatConfig;
 import com.github.ucchyocean.lc.LunaChatLogger;
-import com.github.ucchyocean.lc.LunaChatPlugin;
+import com.github.ucchyocean.lc.PluginInterface;
 import com.github.ucchyocean.lc.bridge.DynmapBridge;
 import com.github.ucchyocean.lc.bridge.McMMOBridge;
 import com.github.ucchyocean.lc.bridge.MultiverseCoreBridge;
@@ -33,7 +33,7 @@ import com.github.ucchyocean.lc.command.LunaChatReplyCommand;
  * LunaChat プラグイン
  * @author ucchy
  */
-public class LunaChatBukkit extends JavaPlugin implements LunaChatPlugin {
+public class LunaChatBukkit extends JavaPlugin implements PluginInterface {
 
     private static LunaChatBukkit instance;
 
@@ -58,7 +58,7 @@ public class LunaChatBukkit extends JavaPlugin implements LunaChatPlugin {
     @Override
     public void onEnable() {
 
-        LunaChat.setInstance(this);
+        LunaChat.setPlugin(this);
 
         // 変数などの初期化
         config = new LunaChatConfig();

@@ -269,4 +269,15 @@ public class ChannelMemberPlayer extends ChannelMemberBukkit {
         if ( player != null ) return player.getWorld();
         return null;
     }
+
+    public static ChannelMemberPlayer getChannelMember(String nameOrUuid) {
+        if ( nameOrUuid.startsWith("$") ) {
+            return new ChannelMemberPlayer(nameOrUuid.substring(1));
+        } else {
+            @SuppressWarnings("deprecation")
+            OfflinePlayer op = Bukkit.getOfflinePlayer(nameOrUuid);
+            if ( op == null ) return null;
+            return new ChannelMemberPlayer(op.getUniqueId());
+        }
+    }
 }

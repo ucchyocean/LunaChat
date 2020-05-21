@@ -8,6 +8,7 @@ package com.github.ucchyocean.lc.command;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,7 +16,6 @@ import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.CommandSenderInterface;
 import com.github.ucchyocean.lc.Resources;
-import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.bukkit.CommandSenderBukkit;
 import com.github.ucchyocean.lc.bukkit.LunaChatBukkit;
 import com.github.ucchyocean.lc.channel.Channel;
@@ -201,7 +201,7 @@ public class BukkitLunaChatCommand implements CommandExecutor {
             // プレイヤー名で補完する
             String arg = args[1].toLowerCase();
             ArrayList<String> items = new ArrayList<String>();
-            for ( Player player : Utility.getOnlinePlayers() ) {
+            for ( Player player : Bukkit.getOnlinePlayers() ) {
                 String pname = player.getName();
                 pname = pname == null ? "" : pname.toLowerCase();
                 if ( pname.startsWith(arg) ) {
@@ -239,7 +239,7 @@ public class BukkitLunaChatCommand implements CommandExecutor {
                     items.add(name);
                 }
             }
-            for ( Player player : Utility.getOnlinePlayers() ) {
+            for ( Player player : Bukkit.getOnlinePlayers() ) {
                 String pname = player.getName();
                 pname = pname == null ? "" : pname.toLowerCase();
                 if ( pname.startsWith(arg) ) {
@@ -262,7 +262,7 @@ public class BukkitLunaChatCommand implements CommandExecutor {
             // プレイヤー名で補完する
             String arg = args[2].toLowerCase();
             ArrayList<String> items = new ArrayList<String>();
-            for ( Player player : Utility.getOnlinePlayers() ) {
+            for ( Player player : Bukkit.getOnlinePlayers() ) {
                 String pname = player.getName();
                 pname = pname == null ? "" : pname.toLowerCase();
                 if ( pname.startsWith(arg) ) {
@@ -338,7 +338,7 @@ public class BukkitLunaChatCommand implements CommandExecutor {
             // プレイヤー名で補完する
             String arg = args[2].toLowerCase();
             ArrayList<String> items = new ArrayList<String>();
-            for ( Player player : Utility.getOnlinePlayers() ) {
+            for ( Player player : Bukkit.getOnlinePlayers() ) {
                 String pname = player.getName();
                 pname = pname == null ? "" : pname.toLowerCase();
                 if ( pname.startsWith(arg) ) {

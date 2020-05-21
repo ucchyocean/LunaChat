@@ -14,7 +14,6 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import com.github.ucchyocean.lc.Utility;
 import com.google.common.io.CharStreams;
 
 /**
@@ -80,9 +79,9 @@ public class IMEConverter {
 
             String json = CharStreams.toString(reader);
             String parsed = GoogleIME.parseJson(json);
-            if ( !Utility.isCB19orLater() ) {
-                parsed = YukiKanaConverter.fixBrackets(parsed);
-            }
+//            if ( !Utility.isCB19orLater() ) {
+//                parsed = YukiKanaConverter.fixBrackets(parsed);
+//            }
 
             return parsed;
 

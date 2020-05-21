@@ -46,8 +46,8 @@ public abstract class SubCommandAbst {
      * コンストラクタ
      */
     public SubCommandAbst() {
-        api = LunaChat.getInstance().getLunaChatAPI();
-        config = LunaChat.getInstance().getLunaChatConfig();
+        api = LunaChat.getPlugin().getLunaChatAPI();
+        config = LunaChat.getPlugin().getLunaChatConfig();
     }
 
     /**

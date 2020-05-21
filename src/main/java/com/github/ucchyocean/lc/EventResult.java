@@ -8,6 +8,8 @@ package com.github.ucchyocean.lc;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.github.ucchyocean.lc.channel.Channel;
+
 /**
  * イベントの実行結果を格納するクラス
  * @author ucchy
@@ -26,14 +28,21 @@ public class EventResult {
     }
 
     public String getValueAsString(String key) {
-        return map.get(key).toString();
+        Object obj = map.get(key);
+        return (obj == null) ? null : obj.toString();
     }
 
     @SuppressWarnings("unchecked")
     public HashMap<String, String> getValueAsStringMap(String key) {
         Object obj = map.get(key);
         if ( obj == null || !(obj instanceof HashMap<?, ?>) ) return null;
-        return (HashMap<String, String>)map.get(key);
+        return (HashMap<String, String>)obj;
+    }
+
+    public Channel getValueAsChannel(String key) {
+        Object obj = map.get(key);
+        if ( obj == null || !(obj instanceof Channel) ) return null;
+        return (Channel)obj;
     }
 
     public void setCancelled(boolean cancelled) {

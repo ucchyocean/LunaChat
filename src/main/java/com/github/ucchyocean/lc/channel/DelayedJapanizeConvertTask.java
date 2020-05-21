@@ -69,7 +69,7 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
         HashMap<String, String> keywordMap = new HashMap<String, String>();
         ArrayList<String> keywords = new ArrayList<String>();
         if ( LunaChatBukkit.getInstance().getLunaChatConfig().isJapanizeIgnorePlayerName() ) {
-            for ( Player player : Utility.getOnlinePlayers() ) {
+            for ( Player player : Bukkit.getOnlinePlayers() ) {
                 keywords.add(player.getName());
             }
         }

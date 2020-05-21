@@ -10,9 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.event.EventPriority;
-
 import com.github.ucchyocean.lc.bukkit.LunaChatBukkit;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 
@@ -158,16 +155,16 @@ public class LunaChatConfig {
      */
     public void reloadConfig() {
 
-        File configFile = new File(
-                LunaChatBukkit.getInstance().getDataFolder(), "config.yml");
+        File configFile = new File(LunaChat.getDataFolder(), "config.yml");
         if ( !configFile.exists() ) {
-            //LunaChat.instance.saveDefaultConfig();
-            Utility.copyFileFromJar(LunaChat.getInstance().getPluginJarFile(),
+            // configを多言語化するので、LunaChat.instance.saveDefaultConfig(); はしない。
+            Utility.copyFileFromJar(LunaChat.getPluginJarFile(),
                     configFile, "config_ja.yml", false);
         }
 
-        LunaChatBukkit.getInstance().reloadConfig();
-        FileConfiguration config = LunaChatBukkit.getInstance().getConfig();
+        // TODO LunaChatBukkit.getInstance().reloadConfig();
+        YamlConfig config = YamlConfig.load(configFile);
+
 
         enableChannelChat = config.getBoolean("enableChannelChat", true);
         playerChatEventListenerPriority
