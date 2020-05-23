@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.github.ucchyocean.lc.CommandSenderInterface;
-import com.github.ucchyocean.lc.EventResult;
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.LunaChatConfig;
@@ -224,11 +223,11 @@ public abstract class Channel {
         after.add(player);
 
         // イベントコール
-        EventResult result =
-                LunaChat.getEventSender().sendLunaChatChannelMemberChangedEvent(name, members, after);
-        if ( result.isCancelled() ) {
-            return;
-        }
+//        EventResult result =
+//                LunaChat.getEventSender().sendLunaChatChannelMemberChangedEvent(name, members, after);
+//        if ( result.isCancelled() ) {
+//            return;
+//        }
 
         // メンバー更新
         if ( members.size() == 0 && moderator.size() == 0 ) {
@@ -257,11 +256,11 @@ public abstract class Channel {
         after.remove(player);
 
         // イベントコール
-        EventResult result =
-                LunaChat.getEventSender().sendLunaChatChannelMemberChangedEvent(name, members, after);
-        if ( result.isCancelled() ) {
-            return;
-        }
+//        EventResult result =
+//                LunaChat.getEventSender().sendLunaChatChannelMemberChangedEvent(name, members, after);
+//        if ( result.isCancelled() ) {
+//            return;
+//        }
 
         // デフォルト発言先が退出するチャンネルと一致する場合、
         // デフォルト発言先を削除する

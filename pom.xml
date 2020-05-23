@@ -86,6 +86,10 @@
                   <pattern>org.apache.commons.lang3</pattern>
                   <shadedPattern>com.github.ucchyocean.lc.lib.org.apache.commons.lang3</shadedPattern>
                 </relocation>
+                <relocation>
+                  <pattern>org.jetbrains</pattern>
+                  <shadedPattern>com.github.ucchyocean.lc.lib.org.jetbrains</shadedPattern>
+                </relocation>
               </relocations>
             </configuration>
           </execution>
@@ -167,6 +171,11 @@
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
       <version>3.9</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains</groupId>
+      <artifactId>annotations</artifactId>
+      <version>16.0.2</version>
     </dependency>
   </dependencies>
 </project>

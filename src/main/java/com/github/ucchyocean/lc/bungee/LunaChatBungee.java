@@ -38,6 +38,7 @@ public class LunaChatBungee extends Plugin implements PluginInterface {
     public void onEnable() {
 
         LunaChat.setPlugin(this);
+        LunaChat.setBukkitMode(false);
 
         // 変数などの初期化
         config = new LunaChatConfig();

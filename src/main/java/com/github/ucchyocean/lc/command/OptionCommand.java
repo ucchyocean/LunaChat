@@ -11,8 +11,6 @@ import java.util.HashMap;
 import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.CommandSenderInterface;
-import com.github.ucchyocean.lc.EventResult;
-import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
@@ -139,12 +137,12 @@ public class OptionCommand extends SubCommandAbst {
         }
 
         // イベントコール
-        EventResult result = LunaChat.getEventSender().sendLunaChatChannelOptionChangedEvent(
-                cname, sender, options);
-        if ( result.isCancelled() ) {
-            return true;
-        }
-        options = result.getValueAsStringMap("options");
+//        EventResult result = LunaChat.getEventSender().sendLunaChatChannelOptionChangedEvent(
+//                cname, sender, options);
+//        if ( result.isCancelled() ) {
+//            return true;
+//        }
+//        options = result.getValueAsStringMap("options");
 
         // 設定する
         boolean setOption = false;

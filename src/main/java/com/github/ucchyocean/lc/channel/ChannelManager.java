@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.github.ucchyocean.lc.CommandSenderInterface;
-import com.github.ucchyocean.lc.EventResult;
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.Resources;
@@ -402,16 +401,16 @@ public class ChannelManager implements LunaChatAPI {
     public Channel createChannel(String channelName, CommandSenderInterface sender) {
 
         // イベントコール
-        EventResult result =
-                LunaChat.getEventSender().sendLunaChatChannelCreateEvent(channelName, sender);
+//        EventResult result =
+//                LunaChat.getEventSender().sendLunaChatChannelCreateEvent(channelName, sender);
+//
+//        if ( result.isCancelled() ) {
+//            return null;
+//        }
+//        channelName = result.getValueAsString("channelName");
 
-        if ( result.isCancelled() ) {
-            return null;
-        }
-        String name = result.getValueAsString("name");
-
-        Channel channel = new BukkitChannel(name);
-        channels.put(name.toLowerCase(), channel);
+        Channel channel = new BukkitChannel(channelName);
+        channels.put(channelName.toLowerCase(), channel);
         channel.save();
         return channel;
     }
@@ -439,11 +438,11 @@ public class ChannelManager implements LunaChatAPI {
         channelName = channelName.toLowerCase();
 
         // イベントコール
-        EventResult result =
-                LunaChat.getEventSender().sendLunaChatChannelRemoveEvent(channelName, sender);
-        if ( result.isCancelled() ) {
-            return false;
-        }
+//        EventResult result =
+//                LunaChat.getEventSender().sendLunaChatChannelRemoveEvent(channelName, sender);
+//        if ( result.isCancelled() ) {
+//            return false;
+//        }
 
         Channel channel = getChannel(channelName);
         if ( channel != null ) {
@@ -609,7 +608,8 @@ public class ChannelManager implements LunaChatAPI {
         }
 
         // Japanize変換タスクを作成して、同期で実行する。
-        DelayedJapanizeConvertTask task = new DelayedJapanizeConvertTask(
+        // TODO スレッド作成はサーバーに任せる
+        JapanizeConvertTask task = new JapanizeConvertTask(
                 message, type, null, null, "%japanize");
         if ( task.runSync() ) {
             return task.getResult();

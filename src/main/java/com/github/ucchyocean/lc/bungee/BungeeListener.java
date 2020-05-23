@@ -13,8 +13,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.github.ucchyocean.lc.EventResult;
-import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.LunaChatConfig;
 import com.github.ucchyocean.lc.Resources;
@@ -169,7 +167,7 @@ public class BungeeListener implements Listener {
                 if ( channel != null && !channel.isPersonalChat() ) {
                     ProxiedPlayer pp = (ProxiedPlayer)event.getSender();
                     ChannelMember player =
-                            ChannelMemberProxiedPlayer.getChannelMember(pp);
+                            ChannelMemberProxiedPlayer.getChannelMemberFromSender(pp);
                     if ( !channel.getMembers().contains(player) ) {
                         // 指定されたチャンネルに参加していないなら、エラーを表示して何も発言せずに終了する。
                         sendResourceMessage(pp, PREERR, "errmsgNomember");
@@ -186,7 +184,7 @@ public class BungeeListener implements Listener {
         }
 
         ChannelMember player =
-                ChannelMemberProxiedPlayer.getChannelMember((ProxiedPlayer)event.getSender());
+                ChannelMemberProxiedPlayer.getChannelMemberFromSender((ProxiedPlayer)event.getSender());
         Channel channel = api.getDefaultChannel(player.getName());
 
         // デフォルトの発言先が無い場合
@@ -230,21 +228,22 @@ public class BungeeListener implements Listener {
             }
 
             // LunaChatPreChatEvent イベントコール
-            EventResult result = LunaChat.getEventSender().sendLunaChatPreChatEvent(
-                    global.getName(), player, event.getMessage());
-            if ( result.isCancelled() ) {
-                event.setCancelled(true);
-                return;
-            }
+//            EventResult result = LunaChat.getEventSender().sendLunaChatPreChatEvent(
+//                    global.getName(), player, event.getMessage());
+//            if ( result.isCancelled() ) {
+//                event.setCancelled(true);
+//                return;
+//            }
 
-            String altChannelName = result.getValueAsString("channelName");
-            if ( altChannelName != null ) {
-                Channel alt = api.getChannel(altChannelName);
-                if ( alt != null ) {
-                    global = alt;
-                }
-            }
-            String message = result.getValueAsString("message");
+//            String altChannelName = result.getValueAsString("channelName");
+//            if ( altChannelName != null ) {
+//                Channel alt = api.getChannel(altChannelName);
+//                if ( alt != null ) {
+//                    global = alt;
+//                }
+//            }
+//            String message = result.getValueAsString("message");
+            String message = event.getMessage();
 
             // デフォルト発言先が無いなら、グローバルチャンネルに設定する
             Channel dchannel = api.getDefaultChannel(player.getName());
@@ -404,7 +403,7 @@ public class BungeeListener implements Listener {
             }
 
             // チャンネルのメンバーでないなら、参加する
-            ChannelMember cp = ChannelMemberProxiedPlayer.getChannelMember(player);
+            ChannelMember cp = ChannelMemberProxiedPlayer.getChannelMemberFromSender(player);
             if ( !channel.getMembers().contains(cp) ) {
                 channel.addMember(cp);
             }
@@ -480,7 +479,7 @@ public class BungeeListener implements Listener {
      */
     private ArrayList<String> getListForMotd(ProxiedPlayer player) {
 
-        ChannelMember cp = ChannelMemberProxiedPlayer.getChannelMember(player);
+        ChannelMember cp = ChannelMemberProxiedPlayer.getChannelMemberFromSender(player);
         LunaChatAPI api = LunaChatBungee.getInstance().getLunaChatAPI();
         Channel dc = api.getDefaultChannel(cp.getName());
         String dchannel = "";
@@ -534,20 +533,20 @@ public class BungeeListener implements Listener {
     private boolean chatToChannelWithEvent(ChannelMember player, Channel channel, String message) {
 
         // LunaChatPreChatEvent イベントコール
-        EventResult result = LunaChat.getEventSender().sendLunaChatPreChatEvent(
-                channel.getName(), player, message);
-        if ( result.isCancelled() ) {
-            return true;
-        }
+//        EventResult result = LunaChat.getEventSender().sendLunaChatPreChatEvent(
+//                channel.getName(), player, message);
+//        if ( result.isCancelled() ) {
+//            return true;
+//        }
 
-        String channelName = result.getValueAsString("channelName");
-        if ( channelName != null ) {
-            Channel alt = LunaChatBungee.getInstance().getLunaChatAPI().getChannel(channelName);
-            if ( alt != null ) {
-                channel = alt;
-            }
-        }
-        message = result.getValueAsString("message");
+//        String channelName = result.getValueAsString("channelName");
+//        if ( channelName != null ) {
+//            Channel alt = LunaChatBungee.getInstance().getLunaChatAPI().getChannel(channelName);
+//            if ( alt != null ) {
+//                channel = alt;
+//            }
+//        }
+//        message = result.getValueAsString("message");
 
         // チャンネルチャット発言
         channel.chat(player, message);

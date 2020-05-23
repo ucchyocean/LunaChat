@@ -59,6 +59,7 @@ public class LunaChatBukkit extends JavaPlugin implements PluginInterface {
     public void onEnable() {
 
         LunaChat.setPlugin(this);
+        LunaChat.setBukkitMode(true);
 
         // 変数などの初期化
         config = new LunaChatConfig();

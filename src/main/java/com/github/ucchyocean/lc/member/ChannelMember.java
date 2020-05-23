@@ -131,6 +131,6 @@ public abstract class ChannelMember implements Comparable<ChannelMember> {
         if ( LunaChat.isBukkitMode() ) {
             return ChannelMemberBukkit.getChannelMemberBukkit(obj);
         }
-        return ChannelMemberProxiedPlayer.getChannelMember(obj);
+        return ChannelMemberProxiedPlayer.getChannelMemberFromSender(obj);
     }
 }

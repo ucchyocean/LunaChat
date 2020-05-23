@@ -7,8 +7,6 @@ package com.github.ucchyocean.lc;
 
 import java.io.File;
 
-import com.github.ucchyocean.lc.bukkit.LunaChatBukkit;
-
 /**
  * LunaChat
  * @author ucchy
@@ -16,6 +14,7 @@ import com.github.ucchyocean.lc.bukkit.LunaChatBukkit;
 public class LunaChat {
 
     private static PluginInterface instance;
+    private static boolean isBukkitMode = false;
 
     public static void setPlugin(PluginInterface plugin) {
         instance = plugin;
@@ -26,13 +25,17 @@ public class LunaChat {
     }
 
     public static boolean isBukkitMode() {
-        return instance instanceof LunaChatBukkit;
+        return isBukkitMode;
     }
 
-    public static EventSenderInterface getEventSender() {
-        // TODO 未実装
-        return null;
+    public static void setBukkitMode(boolean mode) {
+        isBukkitMode = mode;
     }
+
+//    public static EventSenderInterface getEventSender() {
+//        // TODO 未実装
+//        return null;
+//    }
 
     public static File getDataFolder() {
         return instance.getDataFolder();
@@ -44,5 +47,9 @@ public class LunaChat {
 
     public static LunaChatConfig getConfig() {
         return instance.getLunaChatConfig();
+    }
+
+    public static LunaChatAPI getAPI() {
+        return instance.getLunaChatAPI();
     }
 }

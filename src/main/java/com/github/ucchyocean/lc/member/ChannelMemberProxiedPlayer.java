@@ -226,8 +226,15 @@ public class ChannelMemberProxiedPlayer extends ChannelMember {
         }
     }
 
-    public static ChannelMemberProxiedPlayer getChannelMember(CommandSender sender) {
-        if ( sender == null || !(sender instanceof ProxiedPlayer) ) return null;
+    public static ChannelMemberProxiedPlayer getChannelMemberFromSender(CommandSender sender) {
+        if ( sender == null ) return null;
+        if ( !(sender instanceof ProxiedPlayer) ) return null;
         return new ChannelMemberProxiedPlayer(((ProxiedPlayer)sender).getUniqueId());
+    }
+
+    public static ChannelMemberProxiedPlayer getChannelMemberFromSender(Object obj) {
+        if ( obj == null ) return null;
+        if ( !(obj instanceof ProxiedPlayer) ) return null;
+        return new ChannelMemberProxiedPlayer(((ProxiedPlayer)obj).getUniqueId());
     }
 }
