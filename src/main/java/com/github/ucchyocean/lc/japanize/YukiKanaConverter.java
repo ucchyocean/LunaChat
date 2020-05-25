@@ -40,9 +40,9 @@ public class YukiKanaConverter {
         builder.put("who", "うぉ");
 
         //
-        builder.put("wyi", "ゐ"); // +
+        builder.put("wyi", "ゐ");
         //
-        builder.put("wye", "ゑ"); // +
+        builder.put("wye", "ゑ");
         //
 
         builder.put("la", "ぁ").put("xa", "ぁ");
@@ -52,7 +52,7 @@ public class YukiKanaConverter {
         builder.put("lo", "ぉ").put("xo", "ぉ");
 
         //
-        builder.put("ye", "いぇ"); // +
+        builder.put("ye", "いぇ");
         //
         //
         //
@@ -79,7 +79,7 @@ public class YukiKanaConverter {
         builder.put("qwi", "くぃ").put("qi", "くぃ").put("qyi", "くぃ");
         builder.put("qwu", "くぅ");
         builder.put("qwe", "くぇ").put("qe", "くぇ").put("qye", "くぇ");
-        builder.put("qwo", "くぉ").put("qo", "くぉ").put("kwo", "くぉ"); // +
+        builder.put("qwo", "くぉ").put("qo", "くぉ").put("kwo", "くぉ");
 
         builder.put("ga", "が");
         builder.put("gi", "ぎ");
@@ -191,7 +191,7 @@ public class YukiKanaConverter {
 
         //
         //
-        builder.put("ltu", "っ").put("xtu", "っ").put("ltsu", "っ").put("xtsu", "っ"); // +
+        builder.put("ltu", "っ").put("xtu", "っ").put("ltsu", "っ").put("xtsu", "っ");
         //
         //
 

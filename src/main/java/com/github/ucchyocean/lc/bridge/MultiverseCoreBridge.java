@@ -1,7 +1,7 @@
 /*
  * @author     ucchy
  * @license    LGPLv3
- * @copyright  Copyright ucchy 2015
+ * @copyright  Copyright ucchy 2020
  */
 package com.github.ucchyocean.lc.bridge;
 

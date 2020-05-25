@@ -1,7 +1,7 @@
 # ${project.name} v${project.version}
 # @author     ucchy
 # @license    LGPLv3
-# @copyright  Copyright ucchy 2013
+# @copyright  Copyright ucchy 2020
 
 joinMessage: '&f[%color%ch&f]&7%player さんがチャンネルに参加しました。'
 quitMessage: '&f[%color%ch&f]&7%player さんがチャンネルから退出しました。'

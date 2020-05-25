@@ -1,7 +1,7 @@
 /*
  * @author     ucchy
  * @license    LGPLv3
- * @copyright  Copyright ucchy 2013
+ * @copyright  Copyright ucchy 2020
  */
 package com.github.ucchyocean.lc.channel;
 
@@ -68,7 +68,7 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
         HashMap<String, String> keywordMap = new HashMap<String, String>();
         ArrayList<String> keywords = new ArrayList<String>();
         if ( LunaChat.getInstance().getLunaChatConfig().isJapanizeIgnorePlayerName() ) {
-            for ( Player player : Utility.getOnlinePlayers() ) {
+            for ( Player player : Bukkit.getOnlinePlayers() ) {
                 keywords.add(player.getName());
             }
         }

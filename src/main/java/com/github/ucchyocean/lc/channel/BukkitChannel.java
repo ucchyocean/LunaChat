@@ -1,7 +1,7 @@
 /*
  * @author     ucchy
  * @license    LGPLv3
- * @copyright  Copyright ucchy 2014
+ * @copyright  Copyright ucchy 2020
  */
 package com.github.ucchyocean.lc.channel;
 
@@ -33,7 +33,7 @@ import com.github.ucchyocean.lc.japanize.JapanizeType;
  * チャンネルの実装クラス
  * @author ucchy
  */
-public class ChannelImpl extends Channel {
+public class BukkitChannel extends Channel {
 
     private static final String PERMISSION_SPEAK_PREFIX = "lunachat.speak";
 
@@ -79,7 +79,7 @@ public class ChannelImpl extends Channel {
      * コンストラクタ
      * @param name チャンネル名
      */
-    protected ChannelImpl(String name) {
+    protected BukkitChannel(String name) {
 
         super(name);
 
@@ -335,7 +335,7 @@ public class ChannelImpl extends Channel {
                     // 範囲チャット
 
                     Location origin = player.getPlayer().getLocation();
-                    for ( Player p : Utility.getOnlinePlayers() ) {
+                    for ( Player p : Bukkit.getOnlinePlayers() ) {
                         ChannelPlayer cp = ChannelPlayer.getChannelPlayer(p);
                         if ( p.getWorld().equals(w) &&
                                 origin.distance(p.getLocation()) <= getChatRange() &&
@@ -347,7 +347,7 @@ public class ChannelImpl extends Channel {
                 } else {
                     // ワールドチャット
 
-                    for ( Player p : Utility.getOnlinePlayers() ) {
+                    for ( Player p : Bukkit.getOnlinePlayers() ) {
                         ChannelPlayer cp = ChannelPlayer.getChannelPlayer(p);
                         if ( p.getWorld().equals(w) && !getHided().contains(cp) ) {
                             recipients.add(ChannelPlayer.getChannelPlayer(p));
@@ -366,7 +366,7 @@ public class ChannelImpl extends Channel {
             } else {
                 // 通常ブロードキャスト（全員へ送信）
 
-                for ( Player p : Utility.getOnlinePlayers() ) {
+                for ( Player p : Bukkit.getOnlinePlayers() ) {
                     ChannelPlayer cp = ChannelPlayer.getChannelPlayer(p);
                     if ( !getHided().contains(cp) ) {
                         recipients.add(cp);
@@ -388,7 +388,7 @@ public class ChannelImpl extends Channel {
         // パーミッション lunachat-admin.listen-all-channels を持つプレイヤーを
         // 受信者に加える。
         if ( config.isOpListenAllChannel() ) {
-            for ( Player p : Utility.getOnlinePlayers() ) {
+            for ( Player p : Bukkit.getOnlinePlayers() ) {
                 ChannelPlayer cp = ChannelPlayer.getChannelPlayer(p);
                 if ( cp.hasPermission("lunachat-admin.listen-all-channels")
                         && !recipients.contains(cp) ) {
@@ -757,19 +757,20 @@ public class ChannelImpl extends Channel {
             logger.log(message, name);
         }
 
-        // Hawkeye Reloaded のチャットログへ記録
-        if ( config.isLoggingChatToHawkEye() && LunaChat.getInstance().getHawkEye() != null
-                && player != null && player.getLocation() != null ) {
-            LunaChat.getInstance().getHawkEye().writeLog(name, player.getLocation(),
-                    "channel(" + getName() + ")-" + Utility.stripColor(message));
-        }
-
-        // Prism のチャットログへ記録
-        if ( config.isLoggingChatToPrism() && LunaChat.getInstance().getPrism() != null
-                && player != null && player.getPlayer() != null ) {
-            LunaChat.getInstance().getPrism().writeLog(player.getPlayer(),
-                    "channel(" + getName() + ")-" + Utility.stripColor(message));
-        }
+        // TODO ログ記録プラグイン連携を検討する
+//        // Hawkeye Reloaded のチャットログへ記録
+//        if ( config.isLoggingChatToHawkEye() && LunaChat.getInstance().getHawkEye() != null
+//                && player != null && player.getLocation() != null ) {
+//            LunaChat.getInstance().getHawkEye().writeLog(name, player.getLocation(),
+//                    "channel(" + getName() + ")-" + Utility.stripColor(message));
+//        }
+//
+//        // Prism のチャットログへ記録
+//        if ( config.isLoggingChatToPrism() && LunaChat.getInstance().getPrism() != null
+//                && player != null && player.getPlayer() != null ) {
+//            LunaChat.getInstance().getPrism().writeLog(player.getPlayer(),
+//                    "channel(" + getName() + ")-" + Utility.stripColor(message));
+//        }
     }
 
     /**
