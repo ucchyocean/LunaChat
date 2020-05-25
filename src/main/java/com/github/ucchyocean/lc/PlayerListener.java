@@ -60,7 +60,7 @@ public class PlayerListener implements Listener {
      */
     @EventHandler(priority=EventPriority.LOWEST, ignoreCancelled=true)
     public void onAsyncPlayerChatLowest(AsyncPlayerChatEvent event) {
-        if ( LunaChat.getInstance().getLunaChatConfig().getPlayerChatEventListenerPriority() == EventPriority.LOWEST ) {
+        if ( matchesEventPriority(EventPriority.LOWEST) ) {
             processChatEvent(event);
         }
     }
@@ -71,7 +71,7 @@ public class PlayerListener implements Listener {
      */
     @EventHandler(priority=EventPriority.LOW, ignoreCancelled=true)
     public void onAsyncPlayerChatLow(AsyncPlayerChatEvent event) {
-        if ( LunaChat.getInstance().getLunaChatConfig().getPlayerChatEventListenerPriority() == EventPriority.LOW ) {
+        if ( matchesEventPriority(EventPriority.LOW) ) {
             processChatEvent(event);
         }
     }
@@ -82,7 +82,7 @@ public class PlayerListener implements Listener {
      */
     @EventHandler(priority=EventPriority.NORMAL, ignoreCancelled=true)
     public void onAsyncPlayerChatNormal(AsyncPlayerChatEvent event) {
-        if ( LunaChat.getInstance().getLunaChatConfig().getPlayerChatEventListenerPriority() == EventPriority.NORMAL ) {
+        if ( matchesEventPriority(EventPriority.NORMAL) ) {
             processChatEvent(event);
         }
     }
@@ -93,7 +93,7 @@ public class PlayerListener implements Listener {
      */
     @EventHandler(priority=EventPriority.HIGH, ignoreCancelled=true)
     public void onAsyncPlayerChatHigh(AsyncPlayerChatEvent event) {
-        if ( LunaChat.getInstance().getLunaChatConfig().getPlayerChatEventListenerPriority() == EventPriority.HIGH ) {
+        if ( matchesEventPriority(EventPriority.HIGH) ) {
             processChatEvent(event);
         }
     }
@@ -104,7 +104,7 @@ public class PlayerListener implements Listener {
      */
     @EventHandler(priority=EventPriority.HIGHEST, ignoreCancelled=true)
     public void onAsyncPlayerChatHighest(AsyncPlayerChatEvent event) {
-        if ( LunaChat.getInstance().getLunaChatConfig().getPlayerChatEventListenerPriority() == EventPriority.HIGHEST ) {
+        if ( matchesEventPriority(EventPriority.HIGHEST) ) {
             processChatEvent(event);
         }
     }
@@ -339,7 +339,7 @@ public class PlayerListener implements Listener {
             }
 
             // 2byteコードを含むなら、Japanize変換は行わない
-            String kanaTemp = Utility.stripColor(message);
+            String kanaTemp = Utility.stripColorCode(message);
             if ( !skipJapanize &&
                     ( kanaTemp.getBytes().length > kanaTemp.length() ||
                             kanaTemp.matches("[ \\uFF61-\\uFF9F]+") ) ) {
@@ -600,5 +600,15 @@ public class PlayerListener implements Listener {
         }
         String msg = String.format(pre + org, args);
         sender.sendMessage(msg);
+    }
+
+    /**
+     * 指定されたEventPriorityが、LunaChatConfigで指定されているEventPriorityと一致するかどうかを調べる
+     * @param priority
+     * @return 一致するかどうか
+     */
+    private boolean matchesEventPriority(EventPriority priority) {
+        String c = LunaChat.getInstance().getLunaChatConfig().getPlayerChatEventListenerPriority().name();
+        return c.equals(priority.name());
     }
 }

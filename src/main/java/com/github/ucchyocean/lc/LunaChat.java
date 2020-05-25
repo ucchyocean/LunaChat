@@ -55,7 +55,7 @@ public class LunaChat extends JavaPlugin {
     public void onEnable() {
 
         // 変数などの初期化
-        config = new LunaChatConfig();
+        config = new LunaChatConfig(getDataFolder(), getFile());
         manager = new ChannelManager();
         normalChatLogger = new LunaChatLogger("==normalchat");
 
@@ -171,7 +171,7 @@ public class LunaChat extends JavaPlugin {
      * このプラグインのJarファイル自身を示すFileクラスを返す。
      * @return Jarファイル
      */
-    protected static File getPluginJarFile() {
+    public static File getPluginJarFile() {
         return getInstance().getFile();
     }
 

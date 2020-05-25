@@ -23,7 +23,7 @@ import org.bukkit.entity.Player;
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.LunaChatConfig;
-import com.github.ucchyocean.lc.Utility;
+import com.github.ucchyocean.lc.UtilityBukkit;
 import com.github.ucchyocean.lc.event.LunaChatChannelMemberChangedEvent;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 
@@ -395,7 +395,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
         // ブロードキャストチャンネルならサーバー接続人数を返す
         if ( isBroadcastChannel() ) {
-            return Utility.getOnlinePlayersCount();
+            return UtilityBukkit.getOnlinePlayersCount();
         }
 
         // メンバーの人数を数える
@@ -416,7 +416,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
         // ブロードキャストチャンネルならサーバー接続人数を返す
         if ( isBroadcastChannel() ) {
-            return Utility.getOnlinePlayersCount();
+            return UtilityBukkit.getOnlinePlayersCount();
         }
 
         return members.size();
@@ -695,7 +695,7 @@ public abstract class Channel implements ConfigurationSerializable {
         // 現在サーバーに接続している全プレイヤーをメンバーとして返す
         if ( isBroadcastChannel() ) {
             List<ChannelPlayer> mem = new ArrayList<ChannelPlayer>();
-            for ( Player p : Utility.getOnlinePlayers() ) {
+            for ( Player p : UtilityBukkit.getOnlinePlayers() ) {
                 mem.add(ChannelPlayer.getChannelPlayer(p));
             }
             return mem;

@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.Resources;
-import com.github.ucchyocean.lc.Utility;
+import com.github.ucchyocean.lc.UtilityBukkit;
 import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
@@ -188,7 +188,7 @@ public class LunaChatCommand implements CommandExecutor {
             // プレイヤー名で補完する
             String arg = args[1].toLowerCase();
             ArrayList<String> items = new ArrayList<String>();
-            for ( Player player : Utility.getOnlinePlayers() ) {
+            for ( Player player : UtilityBukkit.getOnlinePlayers() ) {
                 String pname = player.getName();
                 pname = pname == null ? "" : pname.toLowerCase();
                 if ( pname.startsWith(arg) ) {
@@ -226,7 +226,7 @@ public class LunaChatCommand implements CommandExecutor {
                     items.add(name);
                 }
             }
-            for ( Player player : Utility.getOnlinePlayers() ) {
+            for ( Player player : UtilityBukkit.getOnlinePlayers() ) {
                 String pname = player.getName();
                 pname = pname == null ? "" : pname.toLowerCase();
                 if ( pname.startsWith(arg) ) {
@@ -249,7 +249,7 @@ public class LunaChatCommand implements CommandExecutor {
             // プレイヤー名で補完する
             String arg = args[2].toLowerCase();
             ArrayList<String> items = new ArrayList<String>();
-            for ( Player player : Utility.getOnlinePlayers() ) {
+            for ( Player player : UtilityBukkit.getOnlinePlayers() ) {
                 String pname = player.getName();
                 pname = pname == null ? "" : pname.toLowerCase();
                 if ( pname.startsWith(arg) ) {
@@ -325,7 +325,7 @@ public class LunaChatCommand implements CommandExecutor {
             // プレイヤー名で補完する
             String arg = args[2].toLowerCase();
             ArrayList<String> items = new ArrayList<String>();
-            for ( Player player : Utility.getOnlinePlayers() ) {
+            for ( Player player : UtilityBukkit.getOnlinePlayers() ) {
                 String pname = player.getName();
                 pname = pname == null ? "" : pname.toLowerCase();
                 if ( pname.startsWith(arg) ) {

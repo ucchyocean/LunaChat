@@ -141,7 +141,8 @@ dynmapChannel: ''
 
 # NGワード設定。正規表現が指定可能です。
 # ここに設定されたワードを発言したプレイヤーは、NGワード部分がマスクされます。
-ngword: ['ちん(こ|ぽ|ちん)']
+ngword: 
+- 'ちん(こ|ぽ|ちん)'
 
 # NGワード発言時の動作設定。mask、mute、kick、ban の4つのいずれかが設定可能。
 # mask : NGワードをマスクする
@@ -217,3 +218,43 @@ japanizeIgnorePlayerName: true
 # ノンジャパナイズマーカー。
 # これが発言の頭に入っている場合は、一時的にJapanize変換を実行しない。
 noneJapanizeMarker: '#'
+
+
+# -------------------- BungeeCord用設定 --------------------
+
+# -------------------- tellコマンド設定 --------------------
+
+# /tell や /msg や /r コマンドでプライベートメッセージを送信するときに、
+# 適用されるフォーマット設定。
+# フォーマット設定には、下記のキーワードが使用できます。
+# %sender         : 発言者表示名
+# %senderserver   : 発言者の接続サーバー名
+# %reciever       : 受信者表示名
+# %recieverserver : 受信者の接続サーバー名
+# %msg            : 発言内容（Japanize変換された場合は、Japanize結果を含みます。）
+defaultFormatForPrivateMessage: '&7[%sender@%senderserver > %reciever@%recieverserver] %msg'
+
+
+# -------------------- 広域チャット設定 --------------------
+
+# 通常のチャット発言を、他のサーバーにも送信するかどうか。
+# 注意：LunaChatなどで、サーバーローカルにチャンネルチャットを設定している場合、
+#       チャンネルチャットへの発言内容も、全て他のサーバーに送信されてしまいます。
+broadcastChat: true
+
+# broadcastChat が true のときに、
+# 他のサーバーで表示されるチャットフォーマットの設定。
+# フォーマット設定には、下記のキーワードが使用できます。
+# %sender         : 発言者表示名
+# %senderserver   : 発言者の接続サーバー名
+# %date           : 発言した日付（BungeeCordのProxyサーバーのシステム時刻が使用されます）
+# %time           : 発言した時刻（BungeeCordのProxyサーバーのシステム時刻が使用されます）
+# %msg            : 発言内容（Japanize変換された場合は、Japanize結果を含みます。）
+broadcastChatFormat: '%date %time &d<%sender@%senderserver> &f%msg'
+
+# broadcastChat が true のときに、
+# 発言者のサーバーについても、Japanize変換を行うかどうか。
+# 各サーバーごとで、LunaChatなどのJapanize変換を行うプラグインを使用したい場合は、
+# false にしてください。
+broadcastChatLocalJapanize: true
+

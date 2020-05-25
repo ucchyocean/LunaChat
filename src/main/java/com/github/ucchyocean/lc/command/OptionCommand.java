@@ -13,6 +13,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.Utility;
+import com.github.ucchyocean.lc.UtilityBukkit;
 import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.event.LunaChatChannelOptionChangedEvent;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
@@ -213,10 +214,10 @@ public class OptionCommand extends SubCommandAbst {
             } else {
 
                 String code = options.get("color");
-                if ( Utility.isValidColor(code) ) {
-                    code = Utility.changeToColorCode(code);
+                if ( UtilityBukkit.isValidColor(code) ) {
+                    code = UtilityBukkit.changeToColorCode(code);
                 }
-                if ( Utility.isValidColorCode(code) ) {
+                if ( Utility.isAltColorCode(code) ) {
                     channel.setColorCode(code);
                     sendResourceMessage(sender, PREINFO,
                             "cmdmsgOption", "color", options.get("color"));

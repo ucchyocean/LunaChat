@@ -11,7 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.Resources;
-import com.github.ucchyocean.lc.Utility;
+import com.github.ucchyocean.lc.UtilityBukkit;
 import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
@@ -135,7 +135,7 @@ public class HideCommand extends SubCommandAbst {
         Channel channel = api.getChannel(cname);
         if ( !isPlayerCommand && channel != null ) {
             isChannelCommand = true;
-        } else if ( Utility.getOfflinePlayer(cname) == null ) {
+        } else if ( UtilityBukkit.getOfflinePlayer(cname) == null ) {
             sendResourceMessage(sender, PREERR, "errmsgNotExistChannelAndPlayer");
             return true;
         }

@@ -3,7 +3,7 @@ package com.github.ucchyocean.lc.command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.Utility;
+import com.github.ucchyocean.lc.UtilityBukkit;
 import com.github.ucchyocean.lc.channel.Channel;
 
 public class SetCommand extends SubCommandAbst {
@@ -91,7 +91,7 @@ public class SetCommand extends SubCommandAbst {
 
             sendResourceMessage(sender, PREINFO, "cmdmsgSetDefault", targetPlayer, targetChannel.getName());
 
-            Player target = Utility.getPlayerExact(targetPlayer);
+            Player target = UtilityBukkit.getPlayerExact(targetPlayer);
             if ( target != null ) {
                 sendResourceMessage(target, PREINFO, "cmdmsgSet", targetChannel.getName());
             }

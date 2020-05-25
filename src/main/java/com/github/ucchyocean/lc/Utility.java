@@ -14,7 +14,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.jar.JarFile;
-import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 
 /**
@@ -22,10 +21,6 @@ import java.util.zip.ZipEntry;
  * @author ucchy
  */
 public class Utility {
-
-    public static final char COLOR_CHAR = '\u00A7';
-    private static final Pattern STRIP_COLOR_PATTERN =
-            Pattern.compile("(?i)" + String.valueOf(COLOR_CHAR) + "[0-9A-FK-OR]");
 
     /**
      * jarファイルの中に格納されているファイルを、jarファイルの外にコピーするメソッド
@@ -80,14 +75,7 @@ public class Utility {
      */
     public static String replaceColorCode(String source) {
         if (source == null) return null;
-        char[] b = source.toCharArray();
-        for (int i = 0; i < b.length - 1; i++) {
-            if (b[i] == '&' && "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(b[i + 1]) > -1) {
-                b[i] = COLOR_CHAR;
-                b[i + 1] = Character.toLowerCase(b[i + 1]);
-            }
-        }
-        return new String(b);
+        return source.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
     }
 
     /**
@@ -95,9 +83,9 @@ public class Utility {
      * @param source 置き換え元の文字列
      * @return 置き換え後の文字列
      */
-    public static String stripColor(String source) {
+    public static String stripColorCode(String source) {
         if (source == null) return null;
-        return STRIP_COLOR_PATTERN.matcher(source).replaceAll("");
+        return source.replaceAll("&([0-9a-fk-or])", "");
     }
 
     /**
@@ -107,9 +95,18 @@ public class Utility {
      */
     public static boolean isColorCode(String code) {
         if (code == null) return false;
-        return code.matches(COLOR_CHAR + "[0-9a-fA-F]");
+        return code.matches("\u00A7[0-9a-fk-orA-FK-OR]");
     }
 
+    /**
+     * カラーコード候補（&a）かどうかを判断する
+     * @param color カラーコード候補
+     * @return カラーコード候補かどうか
+     */
+    public static boolean isAltColorCode(String code) {
+        if (code == null) return false;
+        return code.matches("&[0-9a-fk-orA-FK-OR]");
+    }
     /**
      * 指定された文字数のアスタリスクの文字列を返す
      * @param length アスタリスクの個数

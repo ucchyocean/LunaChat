@@ -76,7 +76,7 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
                 LunaChat.getInstance().getLunaChatAPI().getAllDictionary();
 
         // カラーコード削除、URL削除
-        String deletedURL = Utility.stripColor(org.replaceAll(REGEX_URL, " "));
+        String deletedURL = Utility.stripColorCode(org.replaceAll(REGEX_URL, " "));
 
         // キーワードをロック
         int index = 0;

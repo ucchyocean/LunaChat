@@ -7,6 +7,8 @@ package com.github.ucchyocean.lc.command;
 
 import org.bukkit.command.CommandSender;
 
+import com.github.ucchyocean.lc.LunaChat;
+
 /**
  * reloadコマンドの実行クラス
  * @author ucchy
@@ -72,7 +74,7 @@ public class ReloadCommand extends SubCommandAbst {
             CommandSender sender, String label, String[] args) {
 
         api.reloadAllData();
-        config.reloadConfig();
+        config.reloadConfig(LunaChat.getInstance().getDataFolder(), LunaChat.getPluginJarFile());
         sendResourceMessage(sender, PREINFO, "cmdmsgReload");
         return true;
     }
