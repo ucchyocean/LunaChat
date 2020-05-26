@@ -74,7 +74,7 @@ public class ReloadCommand extends SubCommandAbst {
             CommandSender sender, String label, String[] args) {
 
         api.reloadAllData();
-        config.reloadConfig(LunaChat.getInstance().getDataFolder(), LunaChat.getPluginJarFile());
+        config.reloadConfig(LunaChat.getDataFolder(), LunaChat.getPluginJarFile());
         sendResourceMessage(sender, PREINFO, "cmdmsgReload");
         return true;
     }

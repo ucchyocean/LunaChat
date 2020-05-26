@@ -13,26 +13,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.configuration.serialization.SerializableAs;
-import org.bukkit.entity.Player;
-
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.LunaChatConfig;
-import com.github.ucchyocean.lc.UtilityBukkit;
-import com.github.ucchyocean.lc.event.LunaChatChannelMemberChangedEvent;
+import com.github.ucchyocean.lc.YamlConfig;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 
 /**
  * チャンネル
  * @author ucchy
  */
-@SerializableAs("Channel")
-public abstract class Channel implements ConfigurationSerializable {
+public abstract class Channel {
 
     private static final String FOLDER_NAME_CHANNELS = "channels";
 
@@ -150,7 +141,7 @@ public abstract class Channel implements ConfigurationSerializable {
         this.allowcc = true;
         this.japanizeType = null;
 
-        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
+        LunaChatConfig config = LunaChat.getConfig();
         if ( isPersonalChat() ) {
             this.format = config.getDefaultFormatForPrivateMessage();
         } else {
@@ -179,7 +170,7 @@ public abstract class Channel implements ConfigurationSerializable {
      * @return グローバルチャンネルかどうか
      */
     public boolean isGlobalChannel() {
-        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
+        LunaChatConfig config = LunaChat.getConfig();
         return getName().equals(config.getGlobalChannel());
     }
 
@@ -188,22 +179,18 @@ public abstract class Channel implements ConfigurationSerializable {
      * @return 強制参加チャンネルかどうか
      */
     public boolean isForceJoinChannel() {
-        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
+        LunaChatConfig config = LunaChat.getConfig();
         return config.getForceJoinChannels().contains(getName());
     }
 
     /**
      * このチャンネルのモデレータ権限を持っているかどうかを確認する
-     * @param sender 権限を確認する対象
+     * @param player 権限を確認する対象
      * @return チャンネルのモデレータ権限を持っているかどうか
      */
-    public boolean hasModeratorPermission(CommandSender sender) {
-        if (sender.isOp() ||
-                sender.hasPermission("lunachat-admin.mod-all-channels")) {
-            return true;
-        }
-        ChannelPlayer player = ChannelPlayer.getChannelPlayer(sender);
-        return moderator.contains(player);
+    public boolean hasModeratorPermission(ChannelPlayer player) {
+        if ( player == null ) return false;
+        return player.hasPermission("lunachat-admin.mod-all-channels") || moderator.contains(player);
     }
 
     /**
@@ -237,12 +224,12 @@ public abstract class Channel implements ConfigurationSerializable {
         after.add(player);
 
         // イベントコール
-        LunaChatChannelMemberChangedEvent event =
-                new LunaChatChannelMemberChangedEvent(this.name, this.members, after);
-        Bukkit.getPluginManager().callEvent(event);
-        if ( event.isCancelled() ) {
-            return;
-        }
+//        LunaChatChannelMemberChangedEvent event =
+//                new LunaChatChannelMemberChangedEvent(this.name, this.members, after);
+//        Bukkit.getPluginManager().callEvent(event);
+//        if ( event.isCancelled() ) {
+//            return;
+//        }
 
         // メンバー更新
         if ( members.size() == 0 && moderator.size() == 0 ) {
@@ -271,16 +258,16 @@ public abstract class Channel implements ConfigurationSerializable {
         after.remove(player);
 
         // イベントコール
-        LunaChatChannelMemberChangedEvent event =
-                new LunaChatChannelMemberChangedEvent(this.name, this.members, after);
-        Bukkit.getPluginManager().callEvent(event);
-        if ( event.isCancelled() ) {
-            return;
-        }
+//        LunaChatChannelMemberChangedEvent event =
+//                new LunaChatChannelMemberChangedEvent(this.name, this.members, after);
+//        Bukkit.getPluginManager().callEvent(event);
+//        if ( event.isCancelled() ) {
+//            return;
+//        }
 
         // デフォルト発言先が退出するチャンネルと一致する場合、
         // デフォルト発言先を削除する
-        LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
+        LunaChatAPI api = LunaChat.getAPI();
         Channel def = api.getDefaultChannel(player.getName());
         if ( def != null && def.getName().equals(getName()) ) {
             api.removeDefaultChannel(player.getName());
@@ -292,7 +279,7 @@ public abstract class Channel implements ConfigurationSerializable {
         sendSystemMessage("quitMessage", player);
 
         // 0人で削除する設定がオンで、0人になったなら、チャンネルを削除する
-        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
+        LunaChatConfig config = LunaChat.getConfig();
         if ( config.isZeroMemberRemove() && members.size() <= 0 ) {
             api.removeChannel(this.name);
             return;
@@ -393,12 +380,7 @@ public abstract class Channel implements ConfigurationSerializable {
      */
     public int getOnlineNum() {
 
-        // ブロードキャストチャンネルならサーバー接続人数を返す
-        if ( isBroadcastChannel() ) {
-            return UtilityBukkit.getOnlinePlayersCount();
-        }
-
-        // メンバーの人数を数える
+        // オンラインになっているメンバーの人数を数える
         int onlineNum = 0;
         for ( ChannelPlayer player : members ) {
             if ( player.isOnline() ) {
@@ -413,12 +395,6 @@ public abstract class Channel implements ConfigurationSerializable {
      * @return 総参加人数
      */
     public int getTotalNum() {
-
-        // ブロードキャストチャンネルならサーバー接続人数を返す
-        if ( isBroadcastChannel() ) {
-            return UtilityBukkit.getOnlinePlayersCount();
-        }
-
         return members.size();
     }
 
@@ -432,7 +408,6 @@ public abstract class Channel implements ConfigurationSerializable {
      * ConfigurationSerializable互換のための実装。
      * @see org.bukkit.configuration.serialization.ConfigurationSerializable#serialize()
      */
-    @Override
     public Map<String, Object> serialize() {
 
         Map<String, Object> map = new HashMap<String, Object>();
@@ -491,118 +466,6 @@ public abstract class Channel implements ConfigurationSerializable {
         channel.allowcc = castWithDefault(data.get(KEY_ALLOWCC), true);
         channel.japanizeType = JapanizeType.fromID(data.get(KEY_JAPANIZE) + "", null);
         return channel;
-    }
-
-    /**
-     * List&lt;ChannelPlayer&gt;を、List&lt;String&gt;に変換する。
-     * @param org 変換元
-     * @return 変換後
-     */
-    private static List<String> getStringList(List<ChannelPlayer> org) {
-
-        ArrayList<String> result = new ArrayList<String>();
-        for ( ChannelPlayer cp : org ) {
-            result.add(cp.toString());
-        }
-        return result;
-    }
-
-    /**
-     * Map&lt;ChannelPlayer, Long&gt;を、Map&lt;String, Long&gt;に変換する。
-     * @param org 変換元
-     * @return 変換後
-     */
-    private static Map<String, Long> getStringLongMap(Map<ChannelPlayer, Long> org) {
-
-        HashMap<String, Long> result = new HashMap<String, Long>();
-        for ( ChannelPlayer cp : org.keySet() ) {
-            result.put(cp.toString(), org.get(cp));
-        }
-        return result;
-    }
-
-    /**
-     * Objectを、クラスTに変換する。nullならデフォルトを返す。
-     * @param obj 変換元
-     * @param def nullだった場合のデフォルト
-     * @return 変換後
-     */
-    @SuppressWarnings("unchecked")
-    private static <T> T castWithDefault(Object obj, T def) {
-
-        if ( obj == null ) {
-            return def;
-        }
-        return (T)obj;
-    }
-
-    /**
-     * Objectを、List&lt;ChannelPlayer&gt;に変換する。nullなら空のリストを返す。
-     * @param obj 変換元
-     * @return 変換後
-     */
-    private static List<ChannelPlayer> castToChannelPlayerList(Object obj) {
-
-        List<String> entries = castToStringList(obj);
-        ArrayList<ChannelPlayer> players = new ArrayList<ChannelPlayer>();
-
-        for ( String entry : entries ) {
-            players.add(ChannelPlayer.getChannelPlayer(entry));
-        }
-
-        return players;
-    }
-
-    /**
-     * Objectを、List&lt;String&gt;に変換する。nullなら空のリストを返す。
-     * @param obj 変換元
-     * @return 変換後
-     */
-    @SuppressWarnings("unchecked")
-    private static List<String> castToStringList(Object obj) {
-
-        if ( obj == null ) {
-            return new ArrayList<String>();
-        }
-        if ( !(obj instanceof List<?>) ) {
-            return new ArrayList<String>();
-        }
-        return (List<String>)obj;
-    }
-
-    /**
-     * Objectを、Map&lt;ChannelPlayer, Long&gt;に変換する。nullなら空のリストを返す。
-     * @param obj 変換元
-     * @return 変換後
-     */
-    private static Map<ChannelPlayer, Long> castToChannelPlayerLongMap(Object obj) {
-
-        Map<String, Long> entries = castToStringLongMap(obj);
-        HashMap<ChannelPlayer, Long> map = new HashMap<ChannelPlayer, Long>();
-
-        for ( String key : entries.keySet() ) {
-            ChannelPlayer cp = ChannelPlayer.getChannelPlayer(key);
-            map.put(cp, entries.get(key));
-        }
-
-        return map;
-    }
-
-    /**
-     * Objectを、Map&lt;String, Long&gt;に変換する。nullなら空のリストを返す。
-     * @param obj 変換元
-     * @return 変換後
-     */
-    @SuppressWarnings("unchecked")
-    private static Map<String, Long> castToStringLongMap(Object obj) {
-
-        if ( obj == null ) {
-            return new HashMap<String, Long>();
-        }
-        if ( !(obj instanceof HashMap<?, ?>) ) {
-            return new HashMap<String, Long>();
-        }
-        return (Map<String, Long>)obj;
     }
 
     /**
@@ -690,17 +553,6 @@ public abstract class Channel implements ConfigurationSerializable {
      * @return チャンネルのメンバー
      */
     public List<ChannelPlayer> getMembers() {
-
-        // ブロードキャストチャンネルなら、
-        // 現在サーバーに接続している全プレイヤーをメンバーとして返す
-        if ( isBroadcastChannel() ) {
-            List<ChannelPlayer> mem = new ArrayList<ChannelPlayer>();
-            for ( Player p : UtilityBukkit.getOnlinePlayers() ) {
-                mem.add(ChannelPlayer.getChannelPlayer(p));
-            }
-            return mem;
-        }
-
         return members;
     }
 
@@ -872,7 +724,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
         // フォルダーの取得と、必要に応じて作成
         File folder = new File(
-                LunaChat.getInstance().getDataFolder(), FOLDER_NAME_CHANNELS);
+                LunaChat.getDataFolder(), FOLDER_NAME_CHANNELS);
         if ( !folder.exists() ) {
             folder.mkdirs();
         }
@@ -885,7 +737,7 @@ public abstract class Channel implements ConfigurationSerializable {
         File file = new File(folder, name + ".yml");
 
         // ファイルへ保存する
-        YamlConfiguration conf = new YamlConfiguration();
+        YamlConfig conf = new YamlConfig();
         Map<String, Object> data = this.serialize();
         for ( String key : data.keySet() ) {
             conf.set(key, data.get(key));
@@ -907,7 +759,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
         // フォルダーの取得
         File folder = new File(
-                LunaChat.getInstance().getDataFolder(), FOLDER_NAME_CHANNELS);
+                LunaChat.getDataFolder(), FOLDER_NAME_CHANNELS);
         if ( !folder.exists() ) {
             return false;
         }
@@ -928,7 +780,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
         // フォルダーの取得
         File folder = new File(
-                LunaChat.getInstance().getDataFolder(), FOLDER_NAME_CHANNELS);
+                LunaChat.getDataFolder(), FOLDER_NAME_CHANNELS);
         if ( !folder.exists() ) {
             return new HashMap<String, Channel>();
         }
@@ -943,8 +795,7 @@ public abstract class Channel implements ConfigurationSerializable {
 
         HashMap<String, Channel> result = new HashMap<String, Channel>();
         for ( File file : files ) {
-            YamlConfiguration config =
-                YamlConfiguration.loadConfiguration(file);
+            YamlConfig config = YamlConfig.load(file);
             Map<String, Object> data = new HashMap<String, Object>();
             for ( String key : config.getKeys(false) ) {
                 data.put(key, config.get(key));
@@ -954,5 +805,117 @@ public abstract class Channel implements ConfigurationSerializable {
         }
 
         return result;
+    }
+
+    /**
+     * List&lt;ChannelPlayer&gt;を、List&lt;String&gt;に変換する。
+     * @param org 変換元
+     * @return 変換後
+     */
+    private static List<String> getStringList(List<ChannelPlayer> org) {
+
+        ArrayList<String> result = new ArrayList<String>();
+        for ( ChannelPlayer cp : org ) {
+            result.add(cp.toString());
+        }
+        return result;
+    }
+
+    /**
+     * Map&lt;ChannelPlayer, Long&gt;を、Map&lt;String, Long&gt;に変換する。
+     * @param org 変換元
+     * @return 変換後
+     */
+    private static Map<String, Long> getStringLongMap(Map<ChannelPlayer, Long> org) {
+
+        HashMap<String, Long> result = new HashMap<String, Long>();
+        for ( ChannelPlayer cp : org.keySet() ) {
+            result.put(cp.toString(), org.get(cp));
+        }
+        return result;
+    }
+
+    /**
+     * Objectを、クラスTに変換する。nullならデフォルトを返す。
+     * @param obj 変換元
+     * @param def nullだった場合のデフォルト
+     * @return 変換後
+     */
+    @SuppressWarnings("unchecked")
+    private static <T> T castWithDefault(Object obj, T def) {
+
+        if ( obj == null ) {
+            return def;
+        }
+        return (T)obj;
+    }
+
+    /**
+     * Objectを、List&lt;ChannelPlayer&gt;に変換する。nullなら空のリストを返す。
+     * @param obj 変換元
+     * @return 変換後
+     */
+    private static List<ChannelPlayer> castToChannelPlayerList(Object obj) {
+
+        List<String> entries = castToStringList(obj);
+        ArrayList<ChannelPlayer> players = new ArrayList<ChannelPlayer>();
+
+        for ( String entry : entries ) {
+            players.add(ChannelPlayer.getChannelPlayer(entry));
+        }
+
+        return players;
+    }
+
+    /**
+     * Objectを、List&lt;String&gt;に変換する。nullなら空のリストを返す。
+     * @param obj 変換元
+     * @return 変換後
+     */
+    @SuppressWarnings("unchecked")
+    private static List<String> castToStringList(Object obj) {
+
+        if ( obj == null ) {
+            return new ArrayList<String>();
+        }
+        if ( !(obj instanceof List<?>) ) {
+            return new ArrayList<String>();
+        }
+        return (List<String>)obj;
+    }
+
+    /**
+     * Objectを、Map&lt;ChannelPlayer, Long&gt;に変換する。nullなら空のリストを返す。
+     * @param obj 変換元
+     * @return 変換後
+     */
+    private static Map<ChannelPlayer, Long> castToChannelPlayerLongMap(Object obj) {
+
+        Map<String, Long> entries = castToStringLongMap(obj);
+        HashMap<ChannelPlayer, Long> map = new HashMap<ChannelPlayer, Long>();
+
+        for ( String key : entries.keySet() ) {
+            ChannelPlayer cp = ChannelPlayer.getChannelPlayer(key);
+            map.put(cp, entries.get(key));
+        }
+
+        return map;
+    }
+
+    /**
+     * Objectを、Map&lt;String, Long&gt;に変換する。nullなら空のリストを返す。
+     * @param obj 変換元
+     * @return 変換後
+     */
+    @SuppressWarnings("unchecked")
+    private static Map<String, Long> castToStringLongMap(Object obj) {
+
+        if ( obj == null ) {
+            return new HashMap<String, Long>();
+        }
+        if ( !(obj instanceof HashMap<?, ?>) ) {
+            return new HashMap<String, Long>();
+        }
+        return (Map<String, Long>)obj;
     }
 }

@@ -3,7 +3,7 @@
  * @license    LGPLv3
  * @copyright  Copyright ucchy 2020
  */
-package com.github.ucchyocean.lc;
+package com.github.ucchyocean.lc.bukkit;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,6 +23,11 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import com.github.ucchyocean.lc.LunaChat;
+import com.github.ucchyocean.lc.LunaChatAPI;
+import com.github.ucchyocean.lc.LunaChatConfig;
+import com.github.ucchyocean.lc.Resources;
+import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.bridge.VaultChatBridge;
 import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.channel.ChannelPlayer;
@@ -116,7 +121,7 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
 
-        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
+        LunaChatConfig config = LunaChat.getConfig();
         Player player = event.getPlayer();
 
         // 強制参加チャンネル設定を確認し、参加させる
@@ -149,7 +154,7 @@ public class PlayerListener implements Listener {
         // チャンネルをクリアする
         ArrayList<Channel> deleteList = new ArrayList<Channel>();
 
-        for ( Channel channel : LunaChat.getInstance().getLunaChatAPI().getChannels() ) {
+        for ( Channel channel : LunaChat.getAPI().getChannels() ) {
             String cname = channel.getName();
             String pname = player.getName();
             if ( channel.isPersonalChat() && cname.contains(pname) ) {
@@ -167,7 +172,7 @@ public class PlayerListener implements Listener {
         }
 
         for ( Channel channel : deleteList ) {
-            LunaChat.getInstance().getLunaChatAPI().removeChannel(channel.getName());
+            LunaChat.getAPI().removeChannel(channel.getName());
         }
     }
 
@@ -177,8 +182,8 @@ public class PlayerListener implements Listener {
      */
     private void processChatEvent(AsyncPlayerChatEvent event) {
 
-        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
-        LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
+        LunaChatConfig config = LunaChat.getConfig();
+        LunaChatAPI api = LunaChat.getAPI();
 
         // 頭にglobalMarkerが付いている場合は、グローバル発言にする
         if ( config.getGlobalMarker() != null &&
@@ -253,8 +258,8 @@ public class PlayerListener implements Listener {
      */
     private void chatGlobal(AsyncPlayerChatEvent event) {
 
-        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
-        LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
+        LunaChatConfig config = LunaChat.getConfig();
+        LunaChatAPI api = LunaChat.getAPI();
         ChannelPlayer player =
                 ChannelPlayer.getChannelPlayer(event.getPlayer());
 
@@ -348,7 +353,7 @@ public class PlayerListener implements Listener {
 
             // Japanize変換と、発言処理
             if ( !skipJapanize &&
-                    LunaChat.getInstance().getLunaChatAPI().isPlayerJapanize(player.getName()) &&
+                    LunaChat.getAPI().isPlayerJapanize(player.getName()) &&
                     config.getJapanizeType() != JapanizeType.NONE ) {
 
                 int lineType = config.getJapanizeDisplayLine();
@@ -373,7 +378,7 @@ public class PlayerListener implements Listener {
 
                     // 発言処理を必ず先に実施させるため、遅延を入れてタスクを実行する。
                     int wait = config.getJapanizeWait();
-                    task.runTaskLater(LunaChat.getInstance(), wait);
+                    task.runTaskLater(LunaChatBukkit.getInstance(), wait);
                 }
             }
 
@@ -394,8 +399,8 @@ public class PlayerListener implements Listener {
      */
     private boolean tryJoinToGlobalChannel(Player player) {
 
-        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
-        LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
+        LunaChatConfig config = LunaChat.getConfig();
+        LunaChatAPI api = LunaChat.getAPI();
 
         String gcName = config.getGlobalChannel();
 
@@ -420,8 +425,8 @@ public class PlayerListener implements Listener {
      */
     private void forceJoinToForceJoinChannels(Player player) {
 
-        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
-        LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
+        LunaChatConfig config = LunaChat.getConfig();
+        LunaChatAPI api = LunaChat.getAPI();
 
         List<String> forceJoinChannels = config.getForceJoinChannels();
 
@@ -471,7 +476,7 @@ public class PlayerListener implements Listener {
 
             String prefix = "";
             String suffix = "";
-            VaultChatBridge vaultchat = LunaChat.getInstance().getVaultChat();
+            VaultChatBridge vaultchat = LunaChatBukkit.getInstance().getVaultChat();
             if ( vaultchat != null ) {
                 prefix = vaultchat.getPlayerPrefix(player);
                 suffix = vaultchat.getPlayerSuffix(player);
@@ -483,8 +488,8 @@ public class PlayerListener implements Listener {
         if ( format.contains("%world") ) {
 
             String worldname = null;
-            if ( LunaChat.getInstance().getMultiverseCore() != null ) {
-                worldname = LunaChat.getInstance().getMultiverseCore().getWorldAlias(player.getWorld());
+            if ( LunaChatBukkit.getInstance().getMultiverseCore() != null ) {
+                worldname = LunaChatBukkit.getInstance().getMultiverseCore().getWorldAlias(player.getWorld());
             }
             if ( worldname == null || worldname.equals("") ) {
                 worldname = player.getWorld().getName();
@@ -503,7 +508,7 @@ public class PlayerListener implements Listener {
     private ArrayList<String> getListForMotd(Player player) {
 
         ChannelPlayer cp = ChannelPlayer.getChannelPlayer(player);
-        LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
+        LunaChatAPI api = LunaChat.getAPI();
         Channel dc = api.getDefaultChannel(cp.getName());
         String dchannel = "";
         if ( dc != null ) {
@@ -580,8 +585,7 @@ public class PlayerListener implements Listener {
      * @param player
      */
     private void logNormalChat(String message, String player) {
-
-        LunaChat.getInstance().getNormalChatLogger().log(message, player);
+        LunaChat.getNormalChatLogger().log(message, player);
     }
 
     /**
@@ -608,7 +612,7 @@ public class PlayerListener implements Listener {
      * @return 一致するかどうか
      */
     private boolean matchesEventPriority(EventPriority priority) {
-        String c = LunaChat.getInstance().getLunaChatConfig().getPlayerChatEventListenerPriority().name();
+        String c = LunaChat.getConfig().getPlayerChatEventListenerPriority().name();
         return c.equals(priority.name());
     }
 }

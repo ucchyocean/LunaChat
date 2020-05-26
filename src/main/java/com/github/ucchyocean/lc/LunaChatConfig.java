@@ -257,11 +257,9 @@ public class LunaChatConfig {
         japanizeWait = config.getInt("japanizeWait", 1);
 
         broadcastChat = config.getBoolean("broadcastChat", true);
-
         broadcastChatFormat =
                 config.getString("broadcastChatFormat",
                         "%date %time &d<%sender@%senderserver> &f%msg");
-
         broadcastChatLocalJapanize =
                 config.getBoolean("broadcastChatLocalJapanize", true);
 

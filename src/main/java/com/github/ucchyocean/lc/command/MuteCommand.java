@@ -102,7 +102,7 @@ public class MuteCommand extends SubCommandAbst {
         }
 
         // モデレーターかどうか確認する
-        if ( !channel.hasModeratorPermission(sender) ) {
+        if ( !channel.hasModeratorPermission(ChannelPlayer.getChannelPlayer(sender)) ) {
             sendResourceMessage(sender, PREERR, "errmsgNotModerator");
             return true;
         }

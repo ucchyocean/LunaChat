@@ -72,8 +72,8 @@ public class DynmapBridge implements Listener {
     @EventHandler
     public void onDynmapWebChat(DynmapWebChatEvent event) {
 
-        LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
-        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
+        LunaChatAPI api = LunaChat.getAPI();
+        LunaChatConfig config = LunaChat.getConfig();
         String dchannel = config.getDynmapChannel();
         Channel channel = null;
 

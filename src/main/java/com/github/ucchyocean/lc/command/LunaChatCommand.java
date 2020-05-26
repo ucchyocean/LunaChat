@@ -59,7 +59,6 @@ public class LunaChatCommand implements CommandExecutor {
         commands.add(new ModCommand());
         commands.add(new OptionCommand());
         commands.add(new TemplateCommand());
-        commands.add(new CheckCommand());
         commands.add(new SetCommand());
         helpCommand = new HelpCommand(commands);
         commands.add(helpCommand);
@@ -99,7 +98,7 @@ public class LunaChatCommand implements CommandExecutor {
         }
 
         // チャンネルチャット機能が無効になっている場合は、メッセージを表示して終了
-        if ( !LunaChat.getInstance().getLunaChatConfig().isEnableChannelChat()
+        if ( !LunaChat.getConfig().isEnableChannelChat()
                 && !sender.isOp() ) {
             sendResourceMessage(sender, PREERR, "errmsgChannelChatDisabled");
             return true;
@@ -303,7 +302,7 @@ public class LunaChatCommand implements CommandExecutor {
             String arg = args[2].toLowerCase();
             ArrayList<String> items = new ArrayList<String>();
             for ( String name :
-                    LunaChat.getInstance().getLunaChatAPI().getAllDictionary().keySet() ) {
+                    LunaChat.getAPI().getAllDictionary().keySet() ) {
                 if ( name.toLowerCase().startsWith(arg) ) {
                     items.add(name);
                 }
@@ -379,7 +378,7 @@ public class LunaChatCommand implements CommandExecutor {
         ArrayList<String> items = new ArrayList<String>();
         ChannelPlayer cp = ChannelPlayer.getChannelPlayer(sender);
 
-        for ( Channel channel : LunaChat.getInstance().getLunaChatAPI().getChannels() ) {
+        for ( Channel channel : LunaChat.getAPI().getChannels() ) {
 
             // BANされているチャンネルは対象外
             if ( channel.getBanned().contains(cp) ) {
@@ -414,10 +413,10 @@ public class LunaChatCommand implements CommandExecutor {
 
         ArrayList<String> items = new ArrayList<String>();
 
-        for ( Channel channel : LunaChat.getInstance().getLunaChatAPI().getChannels() ) {
+        for ( Channel channel : LunaChat.getAPI().getChannels() ) {
 
             // 実行者がチャンネルモデレーターでない場合は対象外
-            if ( !channel.hasModeratorPermission(sender) ) {
+            if ( !channel.hasModeratorPermission(ChannelPlayer.getChannelPlayer(sender)) ) {
                 continue;
             }
 

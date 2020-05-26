@@ -19,7 +19,6 @@ import java.util.Collections;
 import java.util.Date;
 
 import org.bukkit.ChatColor;
-import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * LunaChatロガー
@@ -61,7 +60,7 @@ public class LunaChatLogger {
         checkDir();
 
         // 以降の処理を、発言処理の負荷軽減のため、非同期実行にする。(see issue #40.)
-        new BukkitRunnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
 
@@ -86,9 +85,8 @@ public class LunaChatLogger {
                         }
                     }
                 }
-
             }
-        }.runTaskAsynchronously(LunaChat.getInstance());
+        }).start();
     }
 
     /**
@@ -246,7 +244,7 @@ public class LunaChatLogger {
      */
     private String getFolderPath(Date date) {
 
-        return LunaChat.getInstance().getDataFolder() +
+        return LunaChat.getDataFolder() +
                 File.separator + "logs" +
                 File.separator + dformat.format(date);
     }

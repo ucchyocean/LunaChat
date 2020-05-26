@@ -137,7 +137,7 @@ public class LogCommand extends SubCommandAbst {
 
             // グローバルチャンネル設定が無くて、指定チャンネルがマーカーの場合、
             // 通常チャットのログを取得する
-            LunaChatLogger logger = LunaChat.getInstance().getNormalChatLogger();
+            LunaChatLogger logger = LunaChat.getNormalChatLogger();
             logs = logger.getLog(argsPlayer, argsFilter, argsDate, reverse);
 
             cname = "グローバルチャット";

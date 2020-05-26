@@ -67,13 +67,13 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
         // 変換対象外のキーワード
         HashMap<String, String> keywordMap = new HashMap<String, String>();
         ArrayList<String> keywords = new ArrayList<String>();
-        if ( LunaChat.getInstance().getLunaChatConfig().isJapanizeIgnorePlayerName() ) {
+        if ( LunaChat.getConfig().isJapanizeIgnorePlayerName() ) {
             for ( Player player : Bukkit.getOnlinePlayers() ) {
                 keywords.add(player.getName());
             }
         }
         HashMap<String, String> dictionary =
-                LunaChat.getInstance().getLunaChatAPI().getAllDictionary();
+                LunaChat.getAPI().getAllDictionary();
 
         // カラーコード削除、URL削除
         String deletedURL = Utility.stripColorCode(org.replaceAll(REGEX_URL, " "));
@@ -113,7 +113,7 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
 
         // 変換後の文字列にNGワードが含まれている場合は、マスクする
         for ( Pattern pattern :
-                LunaChat.getInstance().getLunaChatConfig().getNgwordCompiled() ) {
+                LunaChat.getConfig().getNgwordCompiled() ) {
             Matcher matcher = pattern.matcher(japanized);
             if ( matcher.find() ) {
                 japanized = matcher.replaceAll(

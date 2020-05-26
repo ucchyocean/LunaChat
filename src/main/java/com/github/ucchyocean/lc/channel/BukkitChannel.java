@@ -8,6 +8,7 @@ package com.github.ucchyocean.lc.channel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,7 +25,9 @@ import com.github.ucchyocean.lc.LunaChatLogger;
 import com.github.ucchyocean.lc.NGWordAction;
 import com.github.ucchyocean.lc.Resources;
 import com.github.ucchyocean.lc.Utility;
+import com.github.ucchyocean.lc.UtilityBukkit;
 import com.github.ucchyocean.lc.bridge.DynmapBridge;
+import com.github.ucchyocean.lc.bukkit.LunaChatBukkit;
 import com.github.ucchyocean.lc.event.LunaChatChannelChatEvent;
 import com.github.ucchyocean.lc.event.LunaChatChannelMessageEvent;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
@@ -104,8 +107,8 @@ public class BukkitChannel extends Channel {
             return;
         }
 
-        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
-        LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
+        LunaChatConfig config = LunaChat.getConfig();
+        LunaChatAPI api = LunaChat.getAPI();
 
         // Muteされているかどうかを確認する
         if ( getMuted().contains(player) ) {
@@ -196,7 +199,7 @@ public class BukkitChannel extends Channel {
 
         // 非同期実行タスクがある場合、追加で実行する
         if ( delayedTask != null ) {
-            delayedTask.runTaskAsynchronously(LunaChat.getInstance());
+            delayedTask.runTaskAsynchronously(LunaChatBukkit.getInstance());
         }
 
         // NGワード発言者に、NGワードアクションを実行する
@@ -252,7 +255,7 @@ public class BukkitChannel extends Channel {
     @Override
     public void chatFromOtherSource(String player, String source, String message) {
 
-        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
+        LunaChatConfig config = LunaChat.getConfig();
 
         // 表示名
         String name = player + "@" + source;
@@ -315,7 +318,7 @@ public class BukkitChannel extends Channel {
     public void sendMessage(ChannelPlayer player, String message,
             String format, boolean sendDynmap, String name) {
 
-        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
+        LunaChatConfig config = LunaChat.getConfig();
 
         String originalMessage = new String(message);
 
@@ -398,7 +401,7 @@ public class BukkitChannel extends Channel {
         }
 
         // hideされている場合は、受信対象者から抜く。
-        LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
+        LunaChatAPI api = LunaChat.getAPI();
         for ( ChannelPlayer cp : api.getHidelist(player) )  {
             if ( recipients.contains(cp) ) {
                 recipients.remove(cp);
@@ -419,7 +422,7 @@ public class BukkitChannel extends Channel {
         recipients = event.getRecipients();
 
         // 通常ブロードキャストなら、設定に応じてdynmapへ送信する
-        DynmapBridge dynmap = LunaChat.getInstance().getDynmap();
+        DynmapBridge dynmap = LunaChatBukkit.getInstance().getDynmap();
         if ( config.isSendBroadcastChannelChatToDynmap() &&
                 sendDynmap &&
                 dynmap != null &&
@@ -660,6 +663,59 @@ public class BukkitChannel extends Channel {
     }
 
     /**
+     * チャンネルのオンライン人数を返す
+     * @return オンライン人数
+     * @see com.github.ucchyocean.lc.channel.Channel#getOnlineNum()
+     */
+    @Override
+    public int getOnlineNum() {
+
+        // ブロードキャストチャンネルならサーバー接続人数を返す
+        if ( isBroadcastChannel() ) {
+            return UtilityBukkit.getOnlinePlayersCount();
+        }
+
+        return super.getOnlineNum();
+    }
+
+    /**
+     * チャンネルの総参加人数を返す
+     * @return 総参加人数
+     * @see com.github.ucchyocean.lc.channel.Channel#getTotalNum()
+     */
+    @Override
+    public int getTotalNum() {
+
+        // ブロードキャストチャンネルならサーバー接続人数を返す
+        if ( isBroadcastChannel() ) {
+            return UtilityBukkit.getOnlinePlayersCount();
+        }
+
+        return super.getTotalNum();
+    }
+
+    /**
+     * チャンネルのメンバーを返す
+     * @return チャンネルのメンバー
+     * @see com.github.ucchyocean.lc.channel.Channel#getMembers()
+     */
+    @Override
+    public List<ChannelPlayer> getMembers() {
+
+        // ブロードキャストチャンネルなら、
+        // 現在サーバーに接続している全プレイヤーをメンバーとして返す
+        if ( isBroadcastChannel() ) {
+            List<ChannelPlayer> mem = new ArrayList<ChannelPlayer>();
+            for ( Player p : Bukkit.getOnlinePlayers() ) {
+                mem.add(ChannelPlayer.getChannelPlayer(p));
+            }
+            return mem;
+        }
+
+        return super.getMembers();
+    }
+
+    /**
      * チャットフォーマット内のキーワードを置き換えする
      * @param format チャットフォーマット
      * @param player プレイヤー
@@ -667,7 +723,7 @@ public class BukkitChannel extends Channel {
      */
     private String replaceKeywords(String format, ChannelPlayer player) {
 
-        LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
+        LunaChatAPI api = LunaChat.getAPI();
 
         String msg = format;
 
@@ -706,8 +762,8 @@ public class BukkitChannel extends Channel {
             if ( msg.contains("%world") ) {
 
                 String worldname = null;
-                if ( LunaChat.getInstance().getMultiverseCore() != null ) {
-                    worldname = LunaChat.getInstance().getMultiverseCore().getWorldAlias(player.getWorldName());
+                if ( LunaChatBukkit.getInstance().getMultiverseCore() != null ) {
+                    worldname = LunaChatBukkit.getInstance().getMultiverseCore().getWorldAlias(player.getWorldName());
                 }
                 if ( worldname == null || worldname.equals("") ) {
                     worldname = player.getWorldName();
@@ -752,7 +808,7 @@ public class BukkitChannel extends Channel {
     private void log(String message, String name, ChannelPlayer player) {
 
         // LunaChatのチャットログへ記録
-        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
+        LunaChatConfig config = LunaChat.getConfig();
         if ( config.isLoggingChat() && logger != null ) {
             logger.log(message, name);
         }

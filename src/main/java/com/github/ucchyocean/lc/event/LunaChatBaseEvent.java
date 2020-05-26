@@ -52,6 +52,6 @@ public abstract class LunaChatBaseEvent extends Event {
      * @return チャンネル
      */
     public Channel getChannel() {
-        return LunaChat.getInstance().getLunaChatAPI().getChannel(channelName);
+        return LunaChat.getAPI().getChannel(channelName);
     }
 }

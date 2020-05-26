@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.UtilityBukkit;
 import com.github.ucchyocean.lc.channel.Channel;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 import com.github.ucchyocean.lc.event.LunaChatChannelOptionChangedEvent;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 
@@ -124,7 +125,7 @@ public class OptionCommand extends SubCommandAbst {
         cname = channel.getName();
 
         // モデレーターかどうか確認する
-        if ( !channel.hasModeratorPermission(sender) ) {
+        if ( !channel.hasModeratorPermission(ChannelPlayer.getChannelPlayer(sender)) ) {
             sendResourceMessage(sender, PREERR, "errmsgNotModerator");
             return true;
         }

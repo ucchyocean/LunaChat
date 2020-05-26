@@ -17,6 +17,7 @@ import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.LunaChatConfig;
 import com.github.ucchyocean.lc.Utility;
+import com.github.ucchyocean.lc.bukkit.LunaChatBukkit;
 import com.github.ucchyocean.lc.channel.ChannelPlayer;
 import com.github.ucchyocean.lc.channel.DelayedJapanizeRecipientChatTask;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
@@ -41,8 +42,8 @@ public class McMMOBridge implements Listener {
 
         String message = event.getMessage();
         ChannelPlayer player = ChannelPlayer.getChannelPlayer(event.getSender());
-        LunaChatConfig config = LunaChat.getInstance().getLunaChatConfig();
-        LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
+        LunaChatConfig config = LunaChat.getConfig();
+        LunaChatAPI api = LunaChat.getAPI();
 
         // NGワード発言をマスク
         for ( Pattern pattern : config.getNgwordCompiled() ) {
@@ -78,7 +79,7 @@ public class McMMOBridge implements Listener {
 
         // Japanize変換と、発言処理
         if ( !skipJapanize &&
-                LunaChat.getInstance().getLunaChatAPI().isPlayerJapanize(player.getName()) &&
+                LunaChat.getAPI().isPlayerJapanize(player.getName()) &&
                 config.getJapanizeType() != JapanizeType.NONE ) {
 
             int lineType = config.getJapanizeDisplayLine();
@@ -103,7 +104,7 @@ public class McMMOBridge implements Listener {
 
                 // 発言処理を必ず先に実施させるため、遅延を入れてタスクを実行する。
                 int wait = config.getJapanizeWait();
-                task.runTaskLater(LunaChat.getInstance(), wait);
+                task.runTaskLater(LunaChatBukkit.getInstance(), wait);
             }
         }
 

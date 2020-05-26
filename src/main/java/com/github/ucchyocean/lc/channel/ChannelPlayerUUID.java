@@ -13,8 +13,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.bridge.VaultChatBridge;
+import com.github.ucchyocean.lc.bukkit.LunaChatBukkit;
 
 /**
  * UUID管理のプレイヤー
@@ -120,7 +120,7 @@ public class ChannelPlayerUUID extends ChannelPlayer {
      */
     @Override
     public String getPrefix() {
-        VaultChatBridge vault = LunaChat.getInstance().getVaultChat();
+        VaultChatBridge vault = LunaChatBukkit.getInstance().getVaultChat();
         if ( vault == null ) {
             return "";
         }
@@ -138,7 +138,7 @@ public class ChannelPlayerUUID extends ChannelPlayer {
      */
     @Override
     public String getSuffix() {
-        VaultChatBridge vault = LunaChat.getInstance().getVaultChat();
+        VaultChatBridge vault = LunaChatBukkit.getInstance().getVaultChat();
         if ( vault == null ) {
             return "";
         }

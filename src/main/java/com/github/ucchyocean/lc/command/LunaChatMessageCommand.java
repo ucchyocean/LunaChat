@@ -84,7 +84,7 @@ public class LunaChatMessageCommand implements CommandExecutor {
         }
 
         // チャンネルが存在するかどうかをチェックする
-        LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
+        LunaChatAPI api = LunaChat.getAPI();
         String cname = inviter.getName() + ">" + invited.getName();
         Channel channel = api.getChannel(cname);
         if ( channel == null ) {

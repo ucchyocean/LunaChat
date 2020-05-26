@@ -3,10 +3,11 @@
  * @license    LGPLv3
  * @copyright  Copyright ucchy 2020
  */
-package com.github.ucchyocean.lc;
+package com.github.ucchyocean.lc.bukkit;
 
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.channel.Channel;
 
 /**
@@ -21,8 +22,7 @@ public class ExpireCheckTask extends BukkitRunnable {
      */
     @Override
     public void run() {
-        for ( Channel channel :
-                LunaChat.getInstance().getLunaChatAPI().getChannels() ) {
+        for ( Channel channel : LunaChat.getAPI().getChannels() ) {
             channel.checkExpires();
         }
     }

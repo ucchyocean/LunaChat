@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import com.github.ucchyocean.lc.LunaChat;
+import com.github.ucchyocean.lc.bukkit.LunaChatBukkit;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 
 /**
@@ -53,13 +54,12 @@ public class DelayedJapanizeNormalChatTask extends DelayedJapanizeConvertTask {
             Bukkit.getConsoleSender().sendMessage(result);
 
             // 設定に応じてdynmapへ送信する
-            if ( LunaChat.getInstance().getLunaChatConfig().
-                    isSendBroadcastChannelChatToDynmap() &&
-                    LunaChat.getInstance().getDynmap() != null ) {
+            if ( LunaChat.getConfig().isSendBroadcastChannelChatToDynmap() &&
+                    LunaChatBukkit.getInstance().getDynmap() != null ) {
                 if ( player != null && player.getPlayer() != null )
-                    LunaChat.getInstance().getDynmap().chat(player.getPlayer(), result);
+                    LunaChatBukkit.getInstance().getDynmap().chat(player.getPlayer(), result);
                 else
-                    LunaChat.getInstance().getDynmap().broadcast(result);
+                    LunaChatBukkit.getInstance().getDynmap().broadcast(result);
             }
         }
     }

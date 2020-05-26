@@ -11,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.channel.Channel;
+import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
 /**
  * formatコマンドの実行クラス
@@ -112,7 +113,7 @@ public class FormatCommand extends SubCommandAbst {
         }
 
         // モデレーターかどうか確認する
-        if ( !channel.hasModeratorPermission(sender) ) {
+        if ( !channel.hasModeratorPermission(ChannelPlayer.getChannelPlayer(sender)) ) {
             sendResourceMessage(sender, PREERR, "errmsgNotModerator");
             return true;
         }

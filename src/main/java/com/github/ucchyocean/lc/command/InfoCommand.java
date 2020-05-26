@@ -112,7 +112,7 @@ public class InfoCommand extends SubCommandAbst {
         }
 
         // チャンネルモデレーターかどうか確認する
-        boolean isModerator = channel.hasModeratorPermission(sender);
+        boolean isModerator = channel.hasModeratorPermission(ChannelPlayer.getChannelPlayer(sender));
 
         // 情報を取得して表示する
         ArrayList<String> list = channel.getInfo(isModerator);

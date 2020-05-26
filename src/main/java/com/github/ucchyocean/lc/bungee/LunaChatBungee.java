@@ -5,6 +5,7 @@
  */
 package com.github.ucchyocean.lc.bungee;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,8 +14,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.LunaChatConfig;
+import com.github.ucchyocean.lc.LunaChatLogger;
+import com.github.ucchyocean.lc.PluginInterface;
 import com.github.ucchyocean.lc.Utility;
+import com.github.ucchyocean.lc.channel.ChannelManager;
 import com.github.ucchyocean.lc.japanize.Japanizer;
 
 import net.md_5.bungee.api.CommandSender;
@@ -30,7 +35,7 @@ import net.md_5.bungee.event.EventHandler;
  * LunaChatのBungeeCord実装
  * @author ucchy
  */
-public class LunaChatBungee extends Plugin implements Listener {
+public class LunaChatBungee extends Plugin implements Listener, PluginInterface {
 
     private static final String DATE_FORMAT_PATTERN = "yyyy/MM/dd";
     private static final String TIME_FORMAT_PATTERN = "HH:mm:ss";
@@ -41,6 +46,8 @@ public class LunaChatBungee extends Plugin implements Listener {
     private HashMap<String, String> history;
     private LunaChatConfig config;
     private JapanizeDictionary dictionary;
+    private ChannelManager manager;
+    private LunaChatLogger normalChatLogger;
 
     /**
      * プラグインが有効化されたときに呼び出されるメソッド
@@ -53,6 +60,14 @@ public class LunaChatBungee extends Plugin implements Listener {
         history = new HashMap<String, String>();
         dateFormat = new SimpleDateFormat(DATE_FORMAT_PATTERN);
         timeFormat = new SimpleDateFormat(TIME_FORMAT_PATTERN);
+
+        manager = new ChannelManager();
+        normalChatLogger = new LunaChatLogger("==normalchat");
+
+        // チャンネルチャット無効なら、デフォルト発言先をクリアする
+        if ( !config.isEnableChannelChat() ) {
+            manager.removeAllDefaultChannels();
+        }
 
         // コマンド登録
         for ( String command : new String[]{
@@ -248,5 +263,44 @@ public class LunaChatBungee extends Plugin implements Listener {
     protected void sendMessage(CommandSender reciever, String message) {
         if ( message == null ) return;
         reciever.sendMessage(TextComponent.fromLegacyText(message));
+    }
+
+    /**
+     * このプラグインのJarファイル自身を示すFileクラスを返す。
+     * @return Jarファイル
+     * @see com.github.ucchyocean.lc.PluginInterface#getPluginJarFile()
+     */
+    @Override
+    public File getPluginJarFile() {
+        return getFile();
+    }
+
+    /**
+     * LunaChatConfigを取得する
+     * @return LunaChatConfig
+     * @see com.github.ucchyocean.lc.PluginInterface#getLunaChatConfig()
+     */
+    @Override
+    public LunaChatConfig getLunaChatConfig() {
+        return config;
+    }
+
+    /**
+     * LunaChatAPIを取得する
+     * @return LunaChatAPI
+     * @see com.github.ucchyocean.lc.PluginInterface#getLunaChatAPI()
+     */
+    @Override
+    public LunaChatAPI getLunaChatAPI() {
+        return manager;
+    }
+
+    /**
+     * 通常チャット用のロガーを返す
+     * @return normalChatLogger
+     */
+    @Override
+    public LunaChatLogger getNormalChatLogger() {
+        return normalChatLogger;
     }
 }
