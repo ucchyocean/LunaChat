@@ -14,9 +14,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.LunaChatConfig;
 import com.github.ucchyocean.lc.LunaChatLogger;
+import com.github.ucchyocean.lc.LunaChatMode;
 import com.github.ucchyocean.lc.PluginInterface;
 import com.github.ucchyocean.lc.bridge.DynmapBridge;
 import com.github.ucchyocean.lc.bridge.McMMOBridge;
@@ -57,6 +59,9 @@ public class LunaChatBukkit extends JavaPlugin implements PluginInterface {
      */
     @Override
     public void onEnable() {
+
+        LunaChat.setPlugin(this);
+        LunaChat.setMode(LunaChatMode.BUKKIT);
 
         // 変数などの初期化
         config = new LunaChatConfig(getDataFolder(), getFile());

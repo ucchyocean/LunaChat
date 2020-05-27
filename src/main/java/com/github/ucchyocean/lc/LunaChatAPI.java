@@ -10,8 +10,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import org.bukkit.command.CommandSender;
-
 import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.channel.ChannelPlayer;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
@@ -76,13 +74,13 @@ public interface LunaChatAPI {
      */
     public Channel createChannel(String channelName);
 
-    /**
-     * 新しいチャンネルを作成する
-     * @param channelName チャンネル名
-     * @param sender チャンネルを作成した人
-     * @return 作成されたチャンネル
-     */
-    public Channel createChannel(String channelName, CommandSender sender);
+//    /**
+//     * 新しいチャンネルを作成する
+//     * @param channelName チャンネル名
+//     * @param sender チャンネルを作成した人
+//     * @return 作成されたチャンネル
+//     */
+//    public Channel createChannel(String channelName, CommandSender sender);
 
     /**
      * チャンネルを削除する
@@ -91,13 +89,13 @@ public interface LunaChatAPI {
      */
     public boolean removeChannel(String channelName);
 
-    /**
-     * チャンネルを削除する
-     * @param channelName 削除するチャンネル名
-     * @param sender チャンネルを削除した人
-     * @return 削除したかどうか
-     */
-    public boolean removeChannel(String channelName, CommandSender sender);
+//    /**
+//     * チャンネルを削除する
+//     * @param channelName 削除するチャンネル名
+//     * @param sender チャンネルを削除した人
+//     * @return 削除したかどうか
+//     */
+//    public boolean removeChannel(String channelName, CommandSender sender);
 
     /**
      * テンプレートを取得する

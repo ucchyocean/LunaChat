@@ -14,7 +14,7 @@ import java.io.File;
 public class LunaChat {
 
     private static PluginInterface instance;
-    private static boolean isBukkitMode = false;
+    private static LunaChatMode mode;
 
     public static void setPlugin(PluginInterface plugin) {
         instance = plugin;
@@ -24,13 +24,14 @@ public class LunaChat {
         return instance;
     }
 
-    public static boolean isBukkitMode() {
-        return isBukkitMode;
+    public static void setMode(LunaChatMode _mode) {
+        mode = _mode;
     }
 
-    public static void setBukkitMode(boolean mode) {
-        isBukkitMode = mode;
+    public static LunaChatMode getMode() {
+        return mode;
     }
+
 
 //    public static EventSenderInterface getEventSender() {
 //        // TODO 未実装

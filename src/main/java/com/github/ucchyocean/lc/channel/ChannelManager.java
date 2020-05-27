@@ -12,15 +12,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.YamlConfiguration;
-
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.Resources;
-import com.github.ucchyocean.lc.event.LunaChatChannelCreateEvent;
-import com.github.ucchyocean.lc.event.LunaChatChannelRemoveEvent;
+import com.github.ucchyocean.lc.YamlConfig;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 
 /**
@@ -63,20 +58,13 @@ public class ChannelManager implements LunaChatAPI {
     public void reloadAllData() {
 
         // デフォルトチャンネル設定のロード
-        fileDefaults = new File(
-                LunaChat.getDataFolder(), FILE_NAME_DCHANNELS);
+        fileDefaults = new File(LunaChat.getDataFolder(), FILE_NAME_DCHANNELS);
 
         if ( !fileDefaults.exists() ) {
-            YamlConfiguration conf = new YamlConfiguration();
-            try {
-                conf.save(fileDefaults);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            makeEmptyFile(fileDefaults);
         }
 
-        YamlConfiguration config =
-                YamlConfiguration.loadConfiguration(fileDefaults);
+        YamlConfig config = YamlConfig.load(fileDefaults);
 
         defaultChannels = new HashMap<String, String>();
         for ( String key : config.getKeys(false) ) {
@@ -87,20 +75,13 @@ public class ChannelManager implements LunaChatAPI {
         }
 
         // テンプレート設定のロード
-        fileTemplates = new File(
-                LunaChat.getDataFolder(), FILE_NAME_TEMPLATES);
+        fileTemplates = new File(LunaChat.getDataFolder(), FILE_NAME_TEMPLATES);
 
         if ( !fileTemplates.exists() ) {
-            YamlConfiguration conf = new YamlConfiguration();
-            try {
-                conf.save(fileTemplates);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            makeEmptyFile(fileTemplates);
         }
 
-        YamlConfiguration configTemplates =
-                YamlConfiguration.loadConfiguration(fileTemplates);
+        YamlConfig configTemplates = YamlConfig.load(fileTemplates);
 
         templates = new HashMap<String, String>();
         for ( String key : configTemplates.getKeys(false) ) {
@@ -108,20 +89,13 @@ public class ChannelManager implements LunaChatAPI {
         }
 
         // Japanize設定のロード
-        fileJapanize = new File(
-                LunaChat.getDataFolder(), FILE_NAME_JAPANIZE);
+        fileJapanize = new File(LunaChat.getDataFolder(), FILE_NAME_JAPANIZE);
 
         if ( !fileJapanize.exists() ) {
-            YamlConfiguration conf = new YamlConfiguration();
-            try {
-                conf.save(fileJapanize);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            makeEmptyFile(fileJapanize);
         }
 
-        YamlConfiguration configJapanize =
-                YamlConfiguration.loadConfiguration(fileJapanize);
+        YamlConfig configJapanize = YamlConfig.load(fileJapanize);
 
         japanize = new HashMap<String, Boolean>();
         for ( String key : configJapanize.getKeys(false) ) {
@@ -129,20 +103,13 @@ public class ChannelManager implements LunaChatAPI {
         }
 
         // dictionaryのロード
-        fileDictionary = new File(
-                LunaChat.getDataFolder(), FILE_NAME_DICTIONARY);
+        fileDictionary = new File(LunaChat.getDataFolder(), FILE_NAME_DICTIONARY);
 
         if ( !fileDictionary.exists() ) {
-            YamlConfiguration conf = new YamlConfiguration();
-            try {
-                conf.save(fileDictionary);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            makeEmptyFile(fileDictionary);
         }
 
-        YamlConfiguration configDictionary =
-                YamlConfiguration.loadConfiguration(fileDictionary);
+        YamlConfig configDictionary = YamlConfig.load(fileDictionary);
 
         dictionary = new HashMap<String, String>();
         for ( String key : configDictionary.getKeys(false) ) {
@@ -150,20 +117,13 @@ public class ChannelManager implements LunaChatAPI {
         }
 
         // hideリストのロード
-        fileHidelist = new File(
-                LunaChat.getDataFolder(), FILE_NAME_HIDELIST);
+        fileHidelist = new File(LunaChat.getDataFolder(), FILE_NAME_HIDELIST);
 
         if ( !fileHidelist.exists() ) {
-            YamlConfiguration conf = new YamlConfiguration();
-            try {
-                conf.save(fileHidelist);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            makeEmptyFile(fileHidelist);
         }
 
-        YamlConfiguration configHidelist =
-                YamlConfiguration.loadConfiguration(fileHidelist);
+        YamlConfig configHidelist = YamlConfig.load(fileHidelist);
 
         hidelist = new HashMap<String, List<ChannelPlayer>>();
         for ( String key : configHidelist.getKeys(false) ) {
@@ -196,7 +156,7 @@ public class ChannelManager implements LunaChatAPI {
     private boolean saveDefaults() {
 
         try {
-            YamlConfiguration config = new YamlConfiguration();
+            YamlConfig config = new YamlConfig();
             for ( String key : defaultChannels.keySet() ) {
                 config.set(key, defaultChannels.get(key));
             }
@@ -215,7 +175,7 @@ public class ChannelManager implements LunaChatAPI {
     private boolean saveTemplates() {
 
         try {
-            YamlConfiguration config = new YamlConfiguration();
+            YamlConfig config = new YamlConfig();
             for ( String key : templates.keySet() ) {
                 config.set(key, templates.get(key));
             }
@@ -234,7 +194,7 @@ public class ChannelManager implements LunaChatAPI {
     private boolean saveJapanize() {
 
         try {
-            YamlConfiguration config = new YamlConfiguration();
+            YamlConfig config = new YamlConfig();
             for ( String key : japanize.keySet() ) {
                 config.set(key, japanize.get(key));
             }
@@ -253,7 +213,7 @@ public class ChannelManager implements LunaChatAPI {
     private boolean saveDictionary() {
 
         try {
-            YamlConfiguration config = new YamlConfiguration();
+            YamlConfig config = new YamlConfig();
             for ( String key : dictionary.keySet() ) {
                 config.set(key, dictionary.get(key));
             }
@@ -272,7 +232,7 @@ public class ChannelManager implements LunaChatAPI {
     private boolean saveHidelist() {
 
         try {
-            YamlConfiguration config = new YamlConfiguration();
+            YamlConfig config = new YamlConfig();
             for ( String key : hidelist.keySet() ) {
                 config.set(key, getIdList(hidelist.get(key)));
             }
@@ -426,26 +386,16 @@ public class ChannelManager implements LunaChatAPI {
      */
     @Override
     public Channel createChannel(String channelName) {
-        return createChannel(channelName, null);
-    }
-
-    /**
-     * 新しいチャンネルを作成する
-     * @param channelName チャンネル名
-     * @return 作成されたチャンネル
-     * @see com.github.ucchyocean.lc.LunaChatAPI#createChannel(java.lang.String, org.bukkit.command.CommandSender)
-     */
-    @Override
-    public Channel createChannel(String channelName, CommandSender sender) {
 
         // イベントコール
-        LunaChatChannelCreateEvent event =
-                new LunaChatChannelCreateEvent(channelName, sender);
-        Bukkit.getPluginManager().callEvent(event);
-        if ( event.isCancelled() ) {
-            return null;
-        }
-        String name = event.getChannelName();
+//        LunaChatChannelCreateEvent event =
+//                new LunaChatChannelCreateEvent(channelName, sender);
+//        Bukkit.getPluginManager().callEvent(event);
+//        if ( event.isCancelled() ) {
+//            return null;
+//        }
+//        String name = event.getChannelName();
+        String name = channelName;
 
         Channel channel = new BukkitChannel(name);
         channels.put(name.toLowerCase(), channel);
@@ -461,27 +411,16 @@ public class ChannelManager implements LunaChatAPI {
      */
     @Override
     public boolean removeChannel(String channelName) {
-        return removeChannel(channelName, null);
-    }
-
-    /**
-     * チャンネルを削除する
-     * @param channelName 削除するチャンネル名
-     * @return 削除したかどうか
-     * @see com.github.ucchyocean.lc.LunaChatAPI#removeChannel(java.lang.String, org.bukkit.command.CommandSender)
-     */
-    @Override
-    public boolean removeChannel(String channelName, CommandSender sender) {
 
         channelName = channelName.toLowerCase();
 
         // イベントコール
-        LunaChatChannelRemoveEvent event =
-                new LunaChatChannelRemoveEvent(channelName, sender);
-        Bukkit.getPluginManager().callEvent(event);
-        if ( event.isCancelled() ) {
-            return false;
-        }
+//        LunaChatChannelRemoveEvent event =
+//                new LunaChatChannelRemoveEvent(channelName, sender);
+//        Bukkit.getPluginManager().callEvent(event);
+//        if ( event.isCancelled() ) {
+//            return false;
+//        }
 
         Channel channel = getChannel(channelName);
         if ( channel != null ) {
@@ -647,8 +586,8 @@ public class ChannelManager implements LunaChatAPI {
         }
 
         // Japanize変換タスクを作成して、同期で実行する。
-        DelayedJapanizeConvertTask task = new DelayedJapanizeConvertTask(
-                message, type, null, null, "%japanize");
+        // TODO スレッド作成はサーバーに任せる
+        JapanizeConvertTask task = new JapanizeConvertTask(message, type, "%japanize");
         if ( task.runSync() ) {
             return task.getResult();
         }
@@ -677,5 +616,18 @@ public class ChannelManager implements LunaChatAPI {
             results.add(cp.toString());
         }
         return results;
+    }
+
+    /**
+     * 指定されたファイル出力先に、空のYamlファイルを作成する
+     * @param file 出力先
+     */
+    private void makeEmptyFile(File file) {
+        YamlConfig conf = new YamlConfig();
+        try {
+            conf.save(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

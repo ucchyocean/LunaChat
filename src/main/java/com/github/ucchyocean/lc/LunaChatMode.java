@@ -6,14 +6,11 @@
 package com.github.ucchyocean.lc;
 
 /**
- * Event優先度列挙子（Bukkit用）
+ * LunaChatの動作モード
  * @author ucchy
  */
-public enum EventPriority {
-    LOWEST,
-    LOW,
-    NORMAL,
-    HIGH,
-    HIGHEST,
-    MONITOR,
+public enum LunaChatMode {
+    BUKKIT,
+    BUNGEE,
+    STANDALONE,
 }

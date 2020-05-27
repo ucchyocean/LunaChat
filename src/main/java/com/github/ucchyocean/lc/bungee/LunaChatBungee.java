@@ -14,9 +14,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.LunaChatConfig;
 import com.github.ucchyocean.lc.LunaChatLogger;
+import com.github.ucchyocean.lc.LunaChatMode;
 import com.github.ucchyocean.lc.PluginInterface;
 import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.channel.ChannelManager;
@@ -55,6 +57,9 @@ public class LunaChatBungee extends Plugin implements Listener, PluginInterface 
      */
     @Override
     public void onEnable() {
+
+        LunaChat.setPlugin(this);
+        LunaChat.setMode(LunaChatMode.BUNGEE);
 
         // 初期化
         history = new HashMap<String, String>();
