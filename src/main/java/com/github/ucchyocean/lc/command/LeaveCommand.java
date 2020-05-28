@@ -5,11 +5,8 @@
  */
 package com.github.ucchyocean.lc.command;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.github.ucchyocean.lc.channel.Channel;
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * leaveコマンドの実行クラス
@@ -59,7 +56,7 @@ public class LeaveCommand extends SubCommandAbst {
      */
     @Override
     public void sendUsageMessage(
-            CommandSender sender, String label) {
+            ChannelMember sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -73,18 +70,11 @@ public class LeaveCommand extends SubCommandAbst {
      */
     @Override
     public boolean runCommand(
-            CommandSender sender, String label, String[] args) {
-
-        // プレイヤーでなければ終了する
-        if (!(sender instanceof Player)) {
-            sendResourceMessage(sender, PREERR, "errmsgIngame");
-            return true;
-        }
+            ChannelMember sender, String label, String[] args) {
 
         // 実行引数から退出するチャンネルを取得する
         // 指定が無いならデフォルトの発言先にする
-        ChannelPlayer player = ChannelPlayer.getChannelPlayer(sender);
-        Channel def = api.getDefaultChannel(player.getName());
+        Channel def = api.getDefaultChannel(sender.getName());
         String channelName = null;
         if ( def != null ) {
             channelName = def.getName();
@@ -124,13 +114,13 @@ public class LeaveCommand extends SubCommandAbst {
         }
 
         // チャンネルのメンバーかどうかを確認する
-        if (!channel.getMembers().contains(player)) {
+        if (!channel.getMembers().contains(sender)) {
             sendResourceMessage(sender, PREERR, "errmsgNomember");
             return true;
         }
 
         // チャンネルから退出する
-        channel.removeMember(player);
+        channel.removeMember(sender);
         sendResourceMessage(sender, PREINFO, "cmdmsgLeave", channelName);
         return true;
     }

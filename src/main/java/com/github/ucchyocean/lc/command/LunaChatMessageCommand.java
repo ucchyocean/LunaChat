@@ -9,11 +9,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.Resources;
+import com.github.ucchyocean.lc.bukkit.LunaChatBukkit;
 import com.github.ucchyocean.lc.channel.Channel;
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * 1:1チャット送信コマンド
@@ -30,8 +30,8 @@ public class LunaChatMessageCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command,
             String label, String[] args) {
 
-        // senderからChannelPlayerを作成する
-        ChannelPlayer inviter = ChannelPlayer.getChannelPlayer(sender);
+        // senderからChannelMemberを作成する
+        ChannelMember inviter = ChannelMember.getChannelMember(sender);
 
         // 引数が無ければ、usageを表示して終了する
         if (args.length == 0) {
@@ -66,10 +66,10 @@ public class LunaChatMessageCommand implements CommandExecutor {
      * @param invitedName
      * @param message
      */
-    protected void sendTellMessage(ChannelPlayer inviter, String invitedName, String message) {
+    protected void sendTellMessage(ChannelMember inviter, String invitedName, String message) {
 
         // 招待相手が存在するかどうかを確認する
-        ChannelPlayer invited = ChannelPlayer.getChannelPlayer(invitedName);
+        ChannelMember invited = ChannelMember.getChannelMember(invitedName);
         if ( invited == null || !invited.isOnline() ) {
             sendResourceMessage(inviter, PREERR,
                     "errmsgNotfoundPlayer", invitedName);
@@ -84,7 +84,7 @@ public class LunaChatMessageCommand implements CommandExecutor {
         }
 
         // チャンネルが存在するかどうかをチェックする
-        LunaChatAPI api = LunaChat.getAPI();
+        LunaChatAPI api = LunaChatBukkit.getInstance().getLunaChatAPI();
         String cname = inviter.getName() + ">" + invited.getName();
         Channel channel = api.getChannel(cname);
         if ( channel == null ) {
@@ -144,7 +144,7 @@ public class LunaChatMessageCommand implements CommandExecutor {
      * @param key リソースキー
      * @param args リソース内の置き換え対象キーワード
      */
-    protected void sendResourceMessage(ChannelPlayer cp, String pre,
+    protected void sendResourceMessage(ChannelMember cp, String pre,
             String key, Object... args) {
 
         String org = Resources.get(key);

@@ -3,19 +3,16 @@
  * @license    LGPLv3
  * @copyright  Copyright ucchy 2020
  */
-package com.github.ucchyocean.lc.channel;
+package com.github.ucchyocean.lc.member;
 
-import org.bukkit.Location;
-import org.bukkit.command.BlockCommandSender;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Player;
+import com.github.ucchyocean.lc.LunaChat;
+import com.github.ucchyocean.lc.LunaChatMode;
 
 /**
- * プレイヤーの抽象クラス
+ * チャンネルメンバーの抽象クラス
  * @author ucchy
  */
-public abstract class ChannelPlayer implements Comparable<ChannelPlayer> {
+public abstract class ChannelMember implements Comparable<ChannelMember> {
 
     /**
      * オンラインかどうか
@@ -54,22 +51,10 @@ public abstract class ChannelPlayer implements Comparable<ChannelPlayer> {
     public abstract void sendMessage(String message);
 
     /**
-     * BukkitのPlayerを取得する
-     * @return Player
-     */
-    public abstract Player getPlayer();
-
-    /**
      * 発言者が今いるワールドのワールド名を取得する
      * @return ワールド名
      */
     public abstract String getWorldName();
-
-    /**
-     * 発言者が今いる位置を取得する
-     * @return 発言者の位置
-     */
-    public abstract Location getLocation();
 
     /**
      * 指定されたパーミッションノードの権限を持っているかどうかを取得する
@@ -79,25 +64,18 @@ public abstract class ChannelPlayer implements Comparable<ChannelPlayer> {
     public abstract boolean hasPermission(String node);
 
     /**
-     * 指定されたパーミッションノードが定義されているかどうかを取得する
-     * @param node パーミッションノード
-     * @return 定義を持っているかどうか
-     */
-    public abstract boolean isPermissionSet(String node);
-
-    /**
-     * 指定されたCommandSenderと同一かどうかを返す
-     * @param sender
-     * @return 同一かどうか
-     */
-    public abstract boolean equals(CommandSender sender);
-
-    /**
      * 文字列表現を返す
      * @return 名前管理なら名前、UUID管理なら "$" + UUID を返す
      */
     @Override
     public abstract String toString();
+
+    /**
+     * 指定されたパーミッションノードが定義されているかどうかを取得する
+     * @param node パーミッションノード
+     * @return 定義を持っているかどうか
+     */
+    public abstract boolean isPermissionSet(String node);
 
     /**
      * 同一のオブジェクトかどうかを返す
@@ -106,7 +84,7 @@ public abstract class ChannelPlayer implements Comparable<ChannelPlayer> {
      */
     @Override
     public boolean equals(Object other) {
-        if ( !(other instanceof ChannelPlayer) ) {
+        if ( !(other instanceof ChannelMember) ) {
             return false;
         }
         return this.toString().equals(other.toString());
@@ -120,36 +98,35 @@ public abstract class ChannelPlayer implements Comparable<ChannelPlayer> {
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     @Override
-    public int compareTo(ChannelPlayer other) {
+    public int compareTo(ChannelMember other) {
         return this.toString().compareTo(other.toString());
     }
 
     /**
-     * 名前またはUUIDから、ChannelPlayerを作成して返す
+     * 名前またはUUIDから、ChannelMemberを作成して返す
      * @param nameOrUuid 名前、または、"$" + UUID
-     * @return ChannelPlayer
+     * @return ChannelMember
      */
-    public static ChannelPlayer getChannelPlayer(String nameOrUuid) {
-        if ( nameOrUuid.startsWith("$") ) {
-            String id = nameOrUuid.substring(1);
-            return new ChannelPlayerUUID(id);
+    public static ChannelMember getChannelMember(String nameOrUuid) {
+        if ( LunaChat.getMode() == LunaChatMode.BUKKIT ) {
+            return ChannelMemberPlayer.getChannelMember(nameOrUuid);
+        } else if ( LunaChat.getMode() == LunaChatMode.BUNGEE ) {
+            return ChannelMemberProxiedPlayer.getChannelMember(nameOrUuid);
         }
-        return ChannelPlayerUUID.getChannelPlayerUUIDFromName(nameOrUuid);
+        return null; // TODO standalone用のChannelMemberを返す
     }
 
     /**
-     * CommandSenderから、ChannelPlayerを作成して返す
-     * @param sender
-     * @return ChannelPlayer
+     * オブジェクトから、ChannelMemberを作成して返す
+     * @param obj
+     * @return ChannelMember
      */
-    public static ChannelPlayer getChannelPlayer(CommandSender sender) {
-        if ( sender == null ) {
-            return null;
-        } else if ( sender instanceof BlockCommandSender ) {
-            return new ChannelPlayerBlock((BlockCommandSender)sender);
-        } else if ( sender instanceof ConsoleCommandSender ) {
-            return new ChannelPlayerConsole((ConsoleCommandSender)sender);
+    public static ChannelMember getChannelMember(Object obj) {
+        if ( LunaChat.getMode() == LunaChatMode.BUKKIT ) {
+            return ChannelMemberBukkit.getChannelMemberBukkit(obj);
+        } else if ( LunaChat.getMode() == LunaChatMode.BUNGEE ) {
+            return ChannelMemberProxiedPlayer.getChannelMemberFromSender(obj);
         }
-        return ChannelPlayerUUID.getChannelPlayer(sender);
+        return null; // TODO standalone用のChannelMemberを返す
     }
 }

@@ -5,11 +5,8 @@
  */
 package com.github.ucchyocean.lc.command;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.github.ucchyocean.lc.channel.Channel;
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * acceptコマンドの実行クラス
@@ -59,7 +56,7 @@ public class AcceptCommand extends SubCommandAbst {
      */
     @Override
     public void sendUsageMessage(
-            CommandSender sender, String label) {
+            ChannelMember sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -72,26 +69,19 @@ public class AcceptCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(java.lang.String[])
      */
     @Override
-    public boolean runCommand(CommandSender sender, String label, String[] args) {
-
-        // プレイヤーでなければ終了する
-        if (!(sender instanceof Player)) {
-            sendResourceMessage(sender, PREERR, "errmsgIngame");
-            return true;
-        }
+    public boolean runCommand(ChannelMember sender, String label, String[] args) {
 
         // 招待を受けていないプレイヤーなら、エラーを表示して終了する
-        Player player = (Player) sender;
-        if (!DataMaps.inviteMap.containsKey(player.getName())) {
+        if (!DataMaps.inviteMap.containsKey(sender.getName())) {
             sendResourceMessage(sender, PREERR, "errmsgNotInvited");
             return true;
         }
 
         // チャンネルを取得して、招待記録を消去する
-        String channelName = DataMaps.inviteMap.get(player.getName());
+        String channelName = DataMaps.inviteMap.get(sender.getName());
         Channel channel = api.getChannel(channelName);
-        DataMaps.inviteMap.remove(player.getName());
-        DataMaps.inviterMap.remove(player.getName());
+        DataMaps.inviteMap.remove(sender.getName());
+        DataMaps.inviterMap.remove(sender.getName());
 
         // 取得できなかったらエラー終了する
         if (channel == null) {
@@ -100,18 +90,17 @@ public class AcceptCommand extends SubCommandAbst {
         }
 
         // 既に参加しているなら、エラーを表示して終了する
-        ChannelPlayer cp = ChannelPlayer.getChannelPlayer(player);
-        if (channel.getMembers().contains(cp)) {
+        if (channel.getMembers().contains(sender)) {
             sendResourceMessage(sender, PREERR, "errmsgInvitedAlreadyJoin");
             return true;
         }
 
         // 参加する
-        channel.addMember(cp);
+        channel.addMember(sender);
         sendResourceMessage(sender, PREINFO, "cmdmsgJoin", channel.getName());
 
         // デフォルトの発言先に設定する
-        api.setDefaultChannel(player.getName(), channelName);
+        api.setDefaultChannel(sender.getName(), channelName);
         sendResourceMessage(sender, PREINFO, "cmdmsgSet", channelName);
 
         return true;

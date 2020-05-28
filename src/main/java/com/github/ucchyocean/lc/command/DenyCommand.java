@@ -5,10 +5,7 @@
  */
 package com.github.ucchyocean.lc.command;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * denyコマンドの実行クラス
@@ -58,7 +55,7 @@ public class DenyCommand extends SubCommandAbst {
      */
     @Override
     public void sendUsageMessage(
-            CommandSender sender, String label) {
+            ChannelMember sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -71,29 +68,22 @@ public class DenyCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(java.lang.String[])
      */
     @Override
-    public boolean runCommand(CommandSender sender, String label, String[] args) {
-
-        // プレイヤーでなければ終了する
-        if (!(sender instanceof Player)) {
-            sendResourceMessage(sender, PREERR, "errmsgIngame");
-            return true;
-        }
+    public boolean runCommand(ChannelMember sender, String label, String[] args) {
 
         // 招待を受けていないプレイヤーなら、エラーを表示して終了する
-        Player player = (Player) sender;
-        if (!DataMaps.inviteMap.containsKey(player.getName())) {
+        if (!DataMaps.inviteMap.containsKey(sender.getName())) {
             sendResourceMessage(sender, PREERR, "errmsgNotInvited");
             return true;
         }
 
         // 招待者を取得して、招待記録を消去する
-        String inviterName = DataMaps.inviterMap.get(player.getName());
-        DataMaps.inviteMap.remove(player.getName());
-        DataMaps.inviterMap.remove(player.getName());
+        String inviterName = DataMaps.inviterMap.get(sender.getName());
+        DataMaps.inviteMap.remove(sender.getName());
+        DataMaps.inviterMap.remove(sender.getName());
 
         // メッセージ送信
         sendResourceMessage(sender, PREINFO, "cmdmsgDeny");
-        ChannelPlayer inviter = ChannelPlayer.getChannelPlayer(inviterName);
+        ChannelMember inviter = ChannelMember.getChannelMember(inviterName);
         if (inviter != null) {
             sendResourceMessage(inviter, PREINFO, "cmdmsgDenyed");
         }

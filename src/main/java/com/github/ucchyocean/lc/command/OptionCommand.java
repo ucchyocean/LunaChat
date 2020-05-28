@@ -8,16 +8,11 @@ package com.github.ucchyocean.lc.command;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.UtilityBukkit;
 import com.github.ucchyocean.lc.channel.Channel;
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
-import com.github.ucchyocean.lc.event.LunaChatChannelOptionChangedEvent;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * optionコマンドの実行クラス
@@ -71,7 +66,7 @@ public class OptionCommand extends SubCommandAbst {
      */
     @Override
     public void sendUsageMessage(
-            CommandSender sender, String label) {
+            ChannelMember sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -85,19 +80,14 @@ public class OptionCommand extends SubCommandAbst {
      */
     @Override
     public boolean runCommand(
-            CommandSender sender, String label, String[] args) {
-
-        Player player = null;
-        if (sender instanceof Player) {
-            player = (Player) sender;
-        }
+            ChannelMember sender, String label, String[] args) {
 
         // 引数チェック
-        // このコマンドは、コンソールでも実行できるが、その場合はチャンネル名を指定する必要がある
+        // このコマンドは、デフォルトチャンネルでない人も実行できるが、その場合はチャンネル名を指定する必要がある
         ArrayList<String> optionsTemp = new ArrayList<String>();
         String cname = null;
-        if ( player != null && args.length >= 2 ) {
-            Channel def = api.getDefaultChannel(player.getName());
+        if ( args.length >= 2 ) {
+            Channel def = api.getDefaultChannel(sender.getName());
             if ( def != null ) {
                 cname = def.getName();
             }
@@ -125,7 +115,7 @@ public class OptionCommand extends SubCommandAbst {
         cname = channel.getName();
 
         // モデレーターかどうか確認する
-        if ( !channel.hasModeratorPermission(ChannelPlayer.getChannelPlayer(sender)) ) {
+        if ( !channel.hasModeratorPermission(sender) ) {
             sendResourceMessage(sender, PREERR, "errmsgNotModerator");
             return true;
         }
@@ -141,13 +131,12 @@ public class OptionCommand extends SubCommandAbst {
         }
 
         // イベントコール
-        LunaChatChannelOptionChangedEvent event =
-                new LunaChatChannelOptionChangedEvent(cname, sender, options);
-        Bukkit.getPluginManager().callEvent(event);
-        if ( event.isCancelled() ) {
-            return true;
-        }
-        options = event.getOptions();
+//        EventResult result = LunaChat.getEventSender().sendLunaChatChannelOptionChangedEvent(
+//                cname, sender, options);
+//        if ( result.isCancelled() ) {
+//            return true;
+//        }
+//        options = result.getValueAsStringMap("options");
 
         // 設定する
         boolean setOption = false;
@@ -215,6 +204,8 @@ public class OptionCommand extends SubCommandAbst {
             } else {
 
                 String code = options.get("color");
+
+                // TODO Bukkit依存になってしまっているので、実装修正を検討する
                 if ( UtilityBukkit.isValidColor(code) ) {
                     code = UtilityBukkit.changeToColorCode(code);
                 }

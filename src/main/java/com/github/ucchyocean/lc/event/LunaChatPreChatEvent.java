@@ -6,7 +6,7 @@
 package com.github.ucchyocean.lc.event;
 
 import com.github.ucchyocean.lc.channel.Channel;
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * チャンネルチャットへの発言前に発生するイベント
@@ -14,10 +14,10 @@ import com.github.ucchyocean.lc.channel.ChannelPlayer;
  */
 public class LunaChatPreChatEvent extends LunaChatBaseCancellableEvent {
 
-    private ChannelPlayer player;
+    private ChannelMember player;
     private String message;
 
-    public LunaChatPreChatEvent(String channelName, ChannelPlayer player, String message) {
+    public LunaChatPreChatEvent(String channelName, ChannelMember player, String message) {
         super(channelName);
         this.player = player;
         this.message = message;
@@ -27,7 +27,7 @@ public class LunaChatPreChatEvent extends LunaChatBaseCancellableEvent {
      * 発言を行ったプレイヤーを取得します。
      * @return 発言したプレイヤー
      */
-    public ChannelPlayer getPlayer() {
+    public ChannelMember getPlayer() {
         return player;
     }
 

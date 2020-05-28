@@ -9,9 +9,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
-import net.md_5.bungee.config.Configuration;
-import net.md_5.bungee.config.ConfigurationProvider;
-import net.md_5.bungee.config.YamlConfiguration;
+import com.github.ucchyocean.lc.LunaChat;
+import com.github.ucchyocean.lc.YamlConfig;
 
 /**
  * Japanize変換に使用するユーザー辞書
@@ -19,15 +18,12 @@ import net.md_5.bungee.config.YamlConfiguration;
  */
 public class JapanizeDictionary {
 
-    private LunaChatBungee parent;
     private HashMap<String, String> dictionary;
 
     /**
      * コンストラクタ
-     * @param parent
      */
-    public JapanizeDictionary(LunaChatBungee parent) {
-        this.parent = parent;
+    public JapanizeDictionary() {
         reload();
     }
 
@@ -39,29 +35,15 @@ public class JapanizeDictionary {
         dictionary = new HashMap<String, String>();
 
         // Fileを取得
-        File folder = new File(
-                parent.getProxy().getPluginsFolder(),
-                "BungeeJapanizeMessenger");
-        if ( !folder.exists() ) {
-            return;
-        }
-
-        File file = new File(folder, "dictionary.yml");
+        File file = new File(LunaChat.getDataFolder(), "dictionary.yml");
         if ( !file.exists() ) {
             return;
         }
 
-        ConfigurationProvider provider =
-                ConfigurationProvider.getProvider(YamlConfiguration.class);
-        try {
-            Configuration config = provider.load(file);
+        YamlConfig config = YamlConfig.load(file);
 
-            for ( String key : config.getKeys() ) {
-                dictionary.put(key, config.getString(key));
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        for ( String key : config.getKeys(false) ) {
+            dictionary.put(key, config.getString(key));
         }
     }
 
@@ -70,19 +52,14 @@ public class JapanizeDictionary {
      */
     public void save() {
 
-        Configuration config = new Configuration();
+        YamlConfig config = new YamlConfig();
 
         for ( String key : dictionary.keySet() ) {
             config.set(key, dictionary.get(key));
         }
 
-        File folder = new File(
-                parent.getProxy().getPluginsFolder(),
-                "BungeeJapanizeMessenger");
-        ConfigurationProvider provider =
-                ConfigurationProvider.getProvider(YamlConfiguration.class);
         try {
-            provider.save(config, new File(folder, "dictionary.yml"));
+            config.save(new File(LunaChat.getDataFolder(), "dictionary.yml"));
         } catch (IOException e) {
             e.printStackTrace();
         }

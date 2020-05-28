@@ -5,7 +5,7 @@
  */
 package com.github.ucchyocean.lc.command;
 
-import org.bukkit.command.CommandSender;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * dictionaryコマンドのエイリアス実行クラス、名前のみが異なるが、他は全て一緒。
@@ -34,7 +34,7 @@ public class DicCommand extends DictionaryCommand {
      */
     @Override
     public void sendUsageMessage(
-            CommandSender sender, String label) {
+            ChannelMember sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 }

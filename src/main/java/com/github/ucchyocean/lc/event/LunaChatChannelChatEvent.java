@@ -5,7 +5,7 @@
  */
 package com.github.ucchyocean.lc.event;
 
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * チャンネルチャットのチャットイベント
@@ -13,12 +13,12 @@ import com.github.ucchyocean.lc.channel.ChannelPlayer;
  */
 public class LunaChatChannelChatEvent extends LunaChatBaseCancellableEvent {
 
-    private ChannelPlayer player;
+    private ChannelMember player;
     private String originalMessage;
     private String ngMaskedMessage;
     private String messageFormat;
 
-    public LunaChatChannelChatEvent(String channelName, ChannelPlayer player,
+    public LunaChatChannelChatEvent(String channelName, ChannelMember player,
             String originalMessage, String ngMaskedMessage,
             String messageFormat) {
         super(channelName);
@@ -32,7 +32,7 @@ public class LunaChatChannelChatEvent extends LunaChatBaseCancellableEvent {
      * 発言を行ったプレイヤーを取得します。
      * @return 発言したプレイヤー
      */
-    public ChannelPlayer getPlayer() {
+    public ChannelMember getPlayer() {
         return player;
     }
 

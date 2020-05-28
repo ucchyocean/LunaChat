@@ -7,11 +7,8 @@ package com.github.ucchyocean.lc.command;
 
 import java.util.List;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.github.ucchyocean.lc.channel.Channel;
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * formatコマンドの実行クラス
@@ -61,7 +58,7 @@ public class FormatCommand extends SubCommandAbst {
      */
     @Override
     public void sendUsageMessage(
-            CommandSender sender, String label) {
+            ChannelMember sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -75,19 +72,14 @@ public class FormatCommand extends SubCommandAbst {
      */
     @Override
     public boolean runCommand(
-            CommandSender sender, String label, String[] args) {
-
-        Player player = null;
-        if (sender instanceof Player) {
-            player = (Player) sender;
-        }
+            ChannelMember sender, String label, String[] args) {
 
         // 引数チェック
-        // このコマンドは、コンソールでも実行できるが、その場合はチャンネル名を指定する必要がある
+        // このコマンドは、デフォルトチャンネルでない人も実行できるが、その場合はチャンネル名を指定する必要がある
         String format = "";
         String cname = null;
-        if ( player != null && args.length >= 2 ) {
-            Channel def = api.getDefaultChannel(player.getName());
+        if ( args.length >= 2 ) {
+            Channel def = api.getDefaultChannel(sender.getName());
             if ( def != null ) {
                 cname = def.getName();
             }
@@ -113,7 +105,7 @@ public class FormatCommand extends SubCommandAbst {
         }
 
         // モデレーターかどうか確認する
-        if ( !channel.hasModeratorPermission(ChannelPlayer.getChannelPlayer(sender)) ) {
+        if ( !channel.hasModeratorPermission(sender) ) {
             sendResourceMessage(sender, PREERR, "errmsgNotModerator");
             return true;
         }

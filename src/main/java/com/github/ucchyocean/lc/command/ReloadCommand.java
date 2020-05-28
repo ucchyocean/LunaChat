@@ -5,9 +5,8 @@
  */
 package com.github.ucchyocean.lc.command;
 
-import org.bukkit.command.CommandSender;
-
 import com.github.ucchyocean.lc.LunaChat;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * reloadコマンドの実行クラス
@@ -57,7 +56,7 @@ public class ReloadCommand extends SubCommandAbst {
      */
     @Override
     public void sendUsageMessage(
-            CommandSender sender, String label) {
+            ChannelMember sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -71,7 +70,7 @@ public class ReloadCommand extends SubCommandAbst {
      */
     @Override
     public boolean runCommand(
-            CommandSender sender, String label, String[] args) {
+            ChannelMember sender, String label, String[] args) {
 
         api.reloadAllData();
         config.reloadConfig(LunaChat.getDataFolder(), LunaChat.getPluginJarFile());

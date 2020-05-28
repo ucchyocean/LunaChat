@@ -5,11 +5,10 @@
  */
 package com.github.ucchyocean.lc.command;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.channel.Channel;
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * unmuteコマンドの実行クラス
@@ -59,7 +58,7 @@ public class UnmuteCommand extends SubCommandAbst {
      */
     @Override
     public void sendUsageMessage(
-            CommandSender sender, String label) {
+            ChannelMember sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -73,7 +72,7 @@ public class UnmuteCommand extends SubCommandAbst {
      */
     @Override
     public boolean runCommand(
-            CommandSender sender, String label, String[] args) {
+            ChannelMember sender, String label, String[] args) {
 
         // 実行引数から、Mute解除するユーザーを取得する
         String kickedName = "";
@@ -89,8 +88,7 @@ public class UnmuteCommand extends SubCommandAbst {
         if (args.length >= 3) {
             channel = api.getChannel(args[2]);
         } else if (sender instanceof Player) {
-            Player kicker = (Player) sender;
-            channel = api.getDefaultChannel(kicker.getName());
+            channel = api.getDefaultChannel(sender.getName());
         }
         if (channel == null) {
             sendResourceMessage(sender, PREERR, "errmsgNoJoin");
@@ -98,13 +96,13 @@ public class UnmuteCommand extends SubCommandAbst {
         }
 
         // モデレーターかどうか確認する
-        if ( !channel.hasModeratorPermission(ChannelPlayer.getChannelPlayer(sender)) ) {
+        if ( !channel.hasModeratorPermission(sender) ) {
             sendResourceMessage(sender, PREERR, "errmsgNotModerator");
             return true;
         }
 
         // Mute解除されるプレイヤーがMuteされているかどうかチェックする
-        ChannelPlayer kicked = ChannelPlayer.getChannelPlayer(kickedName);
+        ChannelMember kicked = ChannelMember.getChannelMember(kickedName);
         if (!channel.getMuted().contains(kicked)) {
             sendResourceMessage(sender, PREERR, "errmsgNotMuted");
             return true;

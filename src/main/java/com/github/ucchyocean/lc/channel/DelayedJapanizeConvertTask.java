@@ -20,6 +20,7 @@ import com.github.ucchyocean.lc.event.LunaChatPostJapanizeEvent;
 import com.github.ucchyocean.lc.japanize.IMEConverter;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 import com.github.ucchyocean.lc.japanize.YukiKanaConverter;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * Japanize変換を実行して、実行後に発言を行うタスク
@@ -32,7 +33,7 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
     private String org;
     private JapanizeType type;
     private Channel channel;
-    private ChannelPlayer player;
+    private ChannelMember player;
     private String format;
     private String result;
 
@@ -45,7 +46,7 @@ public class DelayedJapanizeConvertTask extends BukkitRunnable {
      * @param japanizeFormat 変換後に発言するときの、発言フォーマット
      */
     public DelayedJapanizeConvertTask(String org, JapanizeType type, Channel channel,
-            ChannelPlayer player, String japanizeFormat) {
+            ChannelMember player, String japanizeFormat) {
         this.org = org;
         this.type = type;
         this.channel = channel;

@@ -3,13 +3,14 @@
  * @license    LGPLv3
  * @copyright  Copyright ucchy 2020
  */
-package com.github.ucchyocean.lc.channel;
+package com.github.ucchyocean.lc.member;
 
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -17,10 +18,10 @@ import com.github.ucchyocean.lc.bridge.VaultChatBridge;
 import com.github.ucchyocean.lc.bukkit.LunaChatBukkit;
 
 /**
- * UUID管理のプレイヤー
+ * ChannelMemberのBukkitPlayer実装
  * @author ucchy
  */
-public class ChannelPlayerUUID extends ChannelPlayer {
+public class ChannelMemberPlayer extends ChannelMemberBukkit {
 
     private UUID id;
 
@@ -28,7 +29,7 @@ public class ChannelPlayerUUID extends ChannelPlayer {
      * コンストラクタ
      * @param id プレイヤーID
      */
-    public ChannelPlayerUUID(String id) {
+    public ChannelMemberPlayer(String id) {
         this.id = UUID.fromString(id);
     }
 
@@ -36,24 +37,24 @@ public class ChannelPlayerUUID extends ChannelPlayer {
      * コンストラクタ
      * @param id UUID
      */
-    public ChannelPlayerUUID(UUID id) {
+    public ChannelMemberPlayer(UUID id) {
         this.id = id;
     }
 
     /**
-     * プレイヤー名からUUIDを取得してChannelPlayerUUIDを作成して返す
+     * プレイヤー名からUUIDを取得してChannelMemberPlayerを作成して返す
      * @param name プレイヤー名
-     * @return ChannelPlayerUUID
+     * @return ChannelMemberPlayer
      */
-    public static ChannelPlayerUUID getChannelPlayerUUIDFromName(String name) {
+    public static ChannelMemberPlayer getChannelMemberPlayerFromName(String name) {
         Player player = Bukkit.getPlayerExact(name);
         if ( player != null ) {
-            return new ChannelPlayerUUID(player.getUniqueId());
+            return new ChannelMemberPlayer(player.getUniqueId());
         }
         @SuppressWarnings("deprecation")
         OfflinePlayer offline = Bukkit.getOfflinePlayer(name);
         if ( offline != null && offline.getUniqueId() != null ) {
-            return new ChannelPlayerUUID(offline.getUniqueId());
+            return new ChannelMemberPlayer(offline.getUniqueId());
         }
         return null;
     }
@@ -63,11 +64,11 @@ public class ChannelPlayerUUID extends ChannelPlayer {
      * @param sender
      * @return ChannelPlayer
      */
-    public static ChannelPlayer getChannelPlayer(CommandSender sender) {
+    public static ChannelMemberPlayer getChannelPlayer(CommandSender sender) {
         if ( sender instanceof Player ) {
-            return new ChannelPlayerUUID(((Player)sender).getUniqueId());
+            return new ChannelMemberPlayer(((Player)sender).getUniqueId());
         }
-        return new ChannelPlayerName(sender.getName());
+        return new ChannelMemberPlayer(sender.getName());
     }
 
     /**
@@ -233,21 +234,6 @@ public class ChannelPlayerUUID extends ChannelPlayer {
     }
 
     /**
-     * 指定されたCommandSenderと同一かどうかを返す
-     * @param sender
-     * @return 同一かどうか
-     * @see com.github.ucchyocean.lc.channel.ChannelPlayer#equals(org.bukkit.entity.Player)
-     */
-    @Override
-    public boolean equals(CommandSender sender) {
-        if ( sender == null || !(sender instanceof Player) ) {
-            return false;
-        }
-        Player player = (Player)sender;
-        return id.equals(player.getUniqueId());
-    }
-
-    /**
      * IDを返す
      * @return "$" + UUID を返す
      * @see com.github.ucchyocean.lc.channel.ChannelPlayer#getID()
@@ -255,5 +241,23 @@ public class ChannelPlayerUUID extends ChannelPlayer {
     @Override
     public String toString() {
         return "$" + id.toString();
+    }
+
+    @Override
+    public World getWorld() {
+        Player player = getPlayer();
+        if ( player != null ) return player.getWorld();
+        return null;
+    }
+
+    public static ChannelMemberPlayer getChannelMember(String nameOrUuid) {
+        if ( nameOrUuid.startsWith("$") ) {
+            return new ChannelMemberPlayer(nameOrUuid.substring(1));
+        } else {
+            @SuppressWarnings("deprecation")
+            OfflinePlayer op = Bukkit.getOfflinePlayer(nameOrUuid);
+            if ( op == null ) return null;
+            return new ChannelMemberPlayer(op.getUniqueId());
+        }
     }
 }

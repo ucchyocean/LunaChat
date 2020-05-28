@@ -7,6 +7,8 @@ package com.github.ucchyocean.lc.bungee;
 
 import java.util.HashMap;
 
+import com.github.ucchyocean.lc.LunaChat;
+
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -47,21 +49,21 @@ public class DictionaryCommand extends Command {
 
         if ( args.length >= 3 && args[0].equalsIgnoreCase("add") ) {
 
-            parent.getDictionary().put(args[1], args[2]);
+            LunaChat.getAPI().setDictionary(args[1], args[2]);
             String message = String.format("[BJM日本語変換] %s を %s と覚えました。", args[1], args[2]);
             parent.getProxy().broadcast(TextComponent.fromLegacyText(message));
             return;
 
         } else if ( args.length >= 2 && args[0].equalsIgnoreCase("remove") ) {
 
-            parent.getDictionary().remove(args[1]);
+            LunaChat.getAPI().removeDictionary(args[1]);
             String message = String.format("[BJM日本語変換] %s を辞書から削除しました。", args[1]);
             parent.getProxy().broadcast(TextComponent.fromLegacyText(message));
             return;
 
         } else if ( args.length >= 1 && args[0].equalsIgnoreCase("view") ) {
 
-            HashMap<String, String> dictionary = parent.getDictionary().getDictionary();
+            HashMap<String, String> dictionary = LunaChat.getAPI().getAllDictionary();
             for ( String key : dictionary.keySet() ) {
                 String value = dictionary.get(key);
                 sendMessage(sender, key + ChatColor.GRAY + " -> " + ChatColor.WHITE + value);
@@ -83,7 +85,7 @@ public class DictionaryCommand extends Command {
      * @param reciever 送信先
      * @param message メッセージ
      */
-    protected void sendMessage(CommandSender reciever, String message) {
+    private void sendMessage(CommandSender reciever, String message) {
         if ( message == null ) return;
         reciever.sendMessage(TextComponent.fromLegacyText(message));
     }

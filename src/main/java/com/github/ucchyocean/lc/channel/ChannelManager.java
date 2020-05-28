@@ -17,6 +17,7 @@ import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.Resources;
 import com.github.ucchyocean.lc.YamlConfig;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * チャンネルマネージャー
@@ -42,7 +43,7 @@ public class ChannelManager implements LunaChatAPI {
     private HashMap<String, String> templates;
     private HashMap<String, Boolean> japanize;
     private HashMap<String, String> dictionary;
-    private HashMap<String, List<ChannelPlayer>> hidelist;
+    private HashMap<String, List<ChannelMember>> hidelist;
 
     /**
      * コンストラクタ
@@ -125,11 +126,11 @@ public class ChannelManager implements LunaChatAPI {
 
         YamlConfig configHidelist = YamlConfig.load(fileHidelist);
 
-        hidelist = new HashMap<String, List<ChannelPlayer>>();
+        hidelist = new HashMap<String, List<ChannelMember>>();
         for ( String key : configHidelist.getKeys(false) ) {
-            hidelist.put(key, new ArrayList<ChannelPlayer>());
+            hidelist.put(key, new ArrayList<ChannelMember>());
             for ( String id : configHidelist.getStringList(key) ) {
-                hidelist.get(key).add(ChannelPlayer.getChannelPlayer(id));
+                hidelist.get(key).add(ChannelMember.getChannelMember(id));
             }
         }
 
@@ -299,7 +300,7 @@ public class ChannelManager implements LunaChatAPI {
     @Override
     public Collection<Channel> getChannelsByPlayer(String playerName) {
 
-        ChannelPlayer cp = ChannelPlayer.getChannelPlayer(playerName);
+        ChannelMember cp = ChannelMember.getChannelMember(playerName);
         Collection<Channel> result = new ArrayList<Channel>();
         for ( String key : channels.keySet() ) {
             Channel channel = channels.get(key);
@@ -430,7 +431,7 @@ public class ChannelManager implements LunaChatAPI {
                 String message = new String(MSG_BREAKUP);
                 message = message.replace("%ch", channel.getName());
                 message = message.replace("%color", channel.getColorCode());
-                for ( ChannelPlayer cp : channel.getMembers() ) {
+                for ( ChannelMember cp : channel.getMembers() ) {
                     cp.sendMessage(message);
                 }
             }
@@ -509,14 +510,14 @@ public class ChannelManager implements LunaChatAPI {
      * @param key プレイヤー
      * @return 指定されたプレイヤーをhideしているプレイヤー(非null)
      */
-    public List<ChannelPlayer> getHidelist(ChannelPlayer key) {
+    public List<ChannelMember> getHidelist(ChannelMember key) {
         if ( key == null ) {
-            return new ArrayList<ChannelPlayer>();
+            return new ArrayList<ChannelMember>();
         }
         if ( hidelist.containsKey(key.toString()) ) {
             return hidelist.get(key.toString());
         }
-        return new ArrayList<ChannelPlayer>();
+        return new ArrayList<ChannelMember>();
     }
 
     /**
@@ -524,14 +525,14 @@ public class ChannelManager implements LunaChatAPI {
      * @param player プレイヤー
      * @return 指定したプレイヤーがhideしているプレイヤーのリスト(非null)
      */
-    public ArrayList<ChannelPlayer> getHideinfo(ChannelPlayer player) {
+    public ArrayList<ChannelMember> getHideinfo(ChannelMember player) {
         if ( player == null ) {
-            return new ArrayList<ChannelPlayer>();
+            return new ArrayList<ChannelMember>();
         }
-        ArrayList<ChannelPlayer> info = new ArrayList<ChannelPlayer>();
+        ArrayList<ChannelMember> info = new ArrayList<ChannelMember>();
         for ( String key : hidelist.keySet() ) {
             if ( hidelist.get(key).contains(player) ) {
-                info.add(ChannelPlayer.getChannelPlayer(key));
+                info.add(ChannelMember.getChannelMember(key));
             }
         }
         return info;
@@ -542,10 +543,10 @@ public class ChannelManager implements LunaChatAPI {
      * @param player hideする側のプレイヤー
      * @param hided hideされる側のプレイヤー
      */
-    public void addHidelist(ChannelPlayer player, ChannelPlayer hided) {
+    public void addHidelist(ChannelMember player, ChannelMember hided) {
         String hidedId = hided.toString();
         if ( !hidelist.containsKey(hidedId) ) {
-            hidelist.put(hidedId, new ArrayList<ChannelPlayer>());
+            hidelist.put(hidedId, new ArrayList<ChannelMember>());
         }
         if ( !hidelist.get(hidedId).contains(player) ) {
             hidelist.get(hidedId).add(player);
@@ -558,7 +559,7 @@ public class ChannelManager implements LunaChatAPI {
      * @param player hideしていた側のプレイヤー
      * @param hided hideされていた側のプレイヤー
      */
-    public void removeHidelist(ChannelPlayer player, ChannelPlayer hided) {
+    public void removeHidelist(ChannelMember player, ChannelMember hided) {
         String hidedId = hided.toString();
         if ( !hidelist.containsKey(hidedId) ) {
             return;
@@ -585,8 +586,7 @@ public class ChannelManager implements LunaChatAPI {
             return message;
         }
 
-        // Japanize変換タスクを作成して、同期で実行する。
-        // TODO スレッド作成はサーバーに任せる
+        // Japanize変換
         JapanizeConvertTask task = new JapanizeConvertTask(message, type, "%japanize");
         if ( task.runSync() ) {
             return task.getResult();
@@ -606,13 +606,13 @@ public class ChannelManager implements LunaChatAPI {
     }
 
     /**
-     * ChannelPlayerのリストを、IDのStringリストに変換して返す
+     * ChannelMemberのリストを、IDのStringリストに変換して返す
      * @param players
      * @return
      */
-    private List<String> getIdList(List<ChannelPlayer> players) {
+    private List<String> getIdList(List<ChannelMember> players) {
         List<String> results = new ArrayList<String>();
-        for ( ChannelPlayer cp : players ) {
+        for ( ChannelMember cp : players ) {
             results.add(cp.toString());
         }
         return results;
@@ -623,9 +623,8 @@ public class ChannelManager implements LunaChatAPI {
      * @param file 出力先
      */
     private void makeEmptyFile(File file) {
-        YamlConfig conf = new YamlConfig();
         try {
-            conf.save(file);
+            file.createNewFile();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -10,12 +10,10 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.Resources;
 import com.github.ucchyocean.lc.channel.Channel;
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * listコマンドの実行クラス
@@ -72,7 +70,7 @@ public class ListCommand extends SubCommandAbst {
      */
     @Override
     public void sendUsageMessage(
-            CommandSender sender, String label) {
+            ChannelMember sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -86,12 +84,7 @@ public class ListCommand extends SubCommandAbst {
      */
     @Override
     public boolean runCommand(
-            CommandSender sender, String label, String[] args) {
-
-        Player player = null;
-        if (sender instanceof Player) {
-            player = (Player) sender;
-        }
+            ChannelMember sender, String label, String[] args) {
 
         int page = 0;
         if ( args.length >= 2 && args[1].matches("[0-9]") ) {
@@ -99,7 +92,7 @@ public class ListCommand extends SubCommandAbst {
         }
 
         // リストを取得して表示する
-        ArrayList<String> list = getList(player, page);
+        ArrayList<String> list = getList(sender, page);
         for (String msg : list) {
             sender.sendMessage(msg);
         }
@@ -112,7 +105,7 @@ public class ListCommand extends SubCommandAbst {
      * @param page 表示するページ、0を指定した場合は全表示
      * @return リスト
      */
-    private ArrayList<String> getList(Player player, int page) {
+    private ArrayList<String> getList(ChannelMember player, int page) {
 
         ArrayList<String> list = getPlayerList(player);
         int size = list.size();
@@ -141,7 +134,7 @@ public class ListCommand extends SubCommandAbst {
      * @param player プレイヤー
      * @return チャンネルリスト
      */
-    private ArrayList<String> getPlayerList(Player player) {
+    private ArrayList<String> getPlayerList(ChannelMember player) {
 
         ArrayList<String> items = new ArrayList<String>();
         String dchannel = "";
@@ -155,7 +148,6 @@ public class ListCommand extends SubCommandAbst {
                 dchannel = def.getName();
             }
         }
-        ChannelPlayer cp = ChannelPlayer.getChannelPlayer(player);
 
         // チャンネルを取得して、チャンネル名でソートする
         ArrayList<Channel> channels = new ArrayList<>(api.getChannels());
@@ -169,7 +161,7 @@ public class ListCommand extends SubCommandAbst {
         for ( Channel channel : channels ) {
 
             // BANされているチャンネルは表示しない
-            if ( channel.getBanned().contains(cp) ) {
+            if ( channel.getBanned().contains(player) ) {
                 continue;
             }
 
@@ -182,12 +174,11 @@ public class ListCommand extends SubCommandAbst {
             String disp = ChatColor.WHITE + channel.getName();
             if ( channel.getName().equalsIgnoreCase(dchannel) ) {
                 disp = ChatColor.RED + channel.getName();
-            } else if ( channel.getHided().contains(cp) ) {
+            } else if ( channel.getHided().contains(player) ) {
                 disp = ChatColor.DARK_AQUA + channel.getName();
             }
 
-            if ( player != null &&
-                    !channel.getMembers().contains(cp) &&
+            if ( !channel.getMembers().contains(player) &&
                     !channel.isGlobalChannel() ) {
 
                 // 未参加で visible=false のチャンネルは表示しない

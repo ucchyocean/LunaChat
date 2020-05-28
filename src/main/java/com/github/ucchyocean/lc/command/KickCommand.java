@@ -5,11 +5,10 @@
  */
 package com.github.ucchyocean.lc.command;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.channel.Channel;
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * kickコマンドの実行クラス
@@ -59,7 +58,7 @@ public class KickCommand extends SubCommandAbst {
      */
     @Override
     public void sendUsageMessage(
-            CommandSender sender, String label) {
+            ChannelMember sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -73,7 +72,7 @@ public class KickCommand extends SubCommandAbst {
      */
     @Override
     public boolean runCommand(
-            CommandSender sender, String label, String[] args) {
+            ChannelMember sender, String label, String[] args) {
 
         // 実行引数から、キックするユーザーを取得する
         String kickedName = "";
@@ -98,7 +97,7 @@ public class KickCommand extends SubCommandAbst {
         }
 
         // モデレーターかどうか確認する
-        if ( !channel.hasModeratorPermission(ChannelPlayer.getChannelPlayer(sender)) ) {
+        if ( !channel.hasModeratorPermission(sender) ) {
             sendResourceMessage(sender, PREERR, "errmsgNotModerator");
             return true;
         }
@@ -111,7 +110,7 @@ public class KickCommand extends SubCommandAbst {
         }
 
         // キックされるプレイヤーがメンバーかどうかチェックする
-        ChannelPlayer kicked = ChannelPlayer.getChannelPlayer(kickedName);
+        ChannelMember kicked = ChannelMember.getChannelMember(kickedName);
         if (!channel.getMembers().contains(kicked)) {
             sendResourceMessage(sender, PREERR, "errmsgNomemberOther");
             return true;

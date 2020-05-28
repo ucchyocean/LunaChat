@@ -3,18 +3,18 @@
  * @license    LGPLv3
  * @copyright  Copyright ucchy 2020
  */
-package com.github.ucchyocean.lc.channel;
+package com.github.ucchyocean.lc.member;
 
 import org.bukkit.Location;
-import org.bukkit.command.CommandSender;
+import org.bukkit.World;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 /**
- * コンソール
+ * ChannelMemberのBukkit-ConsoleCommandSender実装
  * @author ucchy
  */
-public class ChannelPlayerConsole extends ChannelPlayer {
+public class ChannelMemberConsole extends ChannelMemberBukkit {
 
     ConsoleCommandSender sender;
 
@@ -22,7 +22,7 @@ public class ChannelPlayerConsole extends ChannelPlayer {
      * コンストラクタ
      * @param sender コンソール
      */
-    public ChannelPlayerConsole(ConsoleCommandSender sender) {
+    public ChannelMemberConsole(ConsoleCommandSender sender) {
         this.sender = sender;
     }
 
@@ -139,17 +139,6 @@ public class ChannelPlayerConsole extends ChannelPlayer {
     }
 
     /**
-     * 指定されたCommandSenderと同一かどうかを返す
-     * @param sender
-     * @return 同一かどうか
-     * @see com.github.ucchyocean.lc.channel.ChannelPlayer#equals(org.bukkit.entity.Player)
-     */
-    @Override
-    public boolean equals(CommandSender sender) {
-        return this.sender.equals(sender);
-    }
-
-    /**
      * IDを返す
      * @return 名前をそのまま返す
      * @see com.github.ucchyocean.lc.channel.ChannelPlayer#getID()
@@ -157,5 +146,10 @@ public class ChannelPlayerConsole extends ChannelPlayer {
     @Override
     public String toString() {
         return getName();
+    }
+
+    @Override
+    public World getWorld() {
+        return null;
     }
 }

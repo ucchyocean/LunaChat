@@ -5,11 +5,8 @@
  */
 package com.github.ucchyocean.lc.command;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.github.ucchyocean.lc.channel.Channel;
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * joinコマンドの実行クラス
@@ -60,7 +57,7 @@ public class JoinCommand extends SubCommandAbst {
      */
     @Override
     public void sendUsageMessage(
-            CommandSender sender, String label) {
+            ChannelMember sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -74,14 +71,7 @@ public class JoinCommand extends SubCommandAbst {
      */
     @Override
     public boolean runCommand(
-            CommandSender sender, String label, String[] args) {
-
-        // プレイヤーでなければ終了する
-        if (!(sender instanceof Player)) {
-            sendResourceMessage(sender, PREERR, "errmsgIngame");
-            return true;
-        }
-        ChannelPlayer player = ChannelPlayer.getChannelPlayer(sender);
+            ChannelMember sender, String label, String[] args) {
 
         // 実行引数から、参加するチャンネルを取得する
         String channelName = "";
@@ -115,11 +105,16 @@ public class JoinCommand extends SubCommandAbst {
                 // グローバルチャンネル設定が無くて、指定チャンネルがマーカーの場合、
                 // 発言先を削除して、グローバルチャンネルにする
 
-                api.removeDefaultChannel(player.getName());
+                api.removeDefaultChannel(sender.getName());
                 sendResourceMessage(sender, PREINFO, "cmdmsgSet", "グローバル");
-                if ( message.length() > 0 && player.getPlayer() != null ) {
-                    player.getPlayer().chat(config.getGlobalMarker() + message.toString());
-                }
+
+                // TODO
+//                Player p = null;
+//                if ( sender instanceof ChannelMemberBukkit ) p = ((ChannelMemberBukkit)sender).getPlayer();
+//
+//                if ( message.length() > 0 && p != null ) {
+//                    p.chat(config.getGlobalMarker() + message.toString());
+//                }
                 return true;
             }
             if (config.isCreateChannelOnJoinCommand()) {
@@ -151,7 +146,7 @@ public class JoinCommand extends SubCommandAbst {
                 // チャンネル作成
                 Channel c = api.createChannel(channelName);
                 if ( c != null ) {
-                    c.addMember(player);
+                    c.addMember(sender);
                     sendResourceMessage(sender, PREINFO, "cmdmsgCreate", channelName);
                 }
                 return true;
@@ -175,7 +170,7 @@ public class JoinCommand extends SubCommandAbst {
         }
 
         // BANされていないか確認する
-        if (channel.getBanned().contains(player)) {
+        if (channel.getBanned().contains(sender)) {
             sendResourceMessage(sender, PREERR, "errmsgBanned");
             return true;
         }
@@ -186,16 +181,16 @@ public class JoinCommand extends SubCommandAbst {
             return true;
         }
 
-        if (channel.getMembers().contains(player)) {
+        if (channel.getMembers().contains(sender)) {
 
             // 何かメッセージがあるなら、そのままチャット送信する
             if (message.length() > 0 && hasSpeakPermission(sender, channelName)) {
-                channel.chat(player, message.toString());
+                channel.chat(sender, message.toString());
                 return true;
             }
 
             // デフォルトの発言先に設定する
-            api.setDefaultChannel(player.getName(), channelName);
+            api.setDefaultChannel(sender.getName(), channelName);
             sendResourceMessage(sender, PREINFO, "cmdmsgSet", channelName);
 
         } else {
@@ -203,7 +198,7 @@ public class JoinCommand extends SubCommandAbst {
             // グローバルチャンネルで、何かメッセージがあるなら、そのままチャット送信する
             if (channel.getName().equals(config.getGlobalChannel()) &&
                     message.length() > 0 && hasSpeakPermission(sender, channelName)) {
-                channel.chat(player, message.toString());
+                channel.chat(sender, message.toString());
                 return true;
             }
 
@@ -226,10 +221,10 @@ public class JoinCommand extends SubCommandAbst {
 
             // チャンネルに参加し、デフォルトの発言先に設定する
             if ( !channel.getName().equals(config.getGlobalChannel()) ) {
-                channel.addMember(player);
+                channel.addMember(sender);
                 sendResourceMessage(sender, PREINFO, "cmdmsgJoin", channelName);
             }
-            api.setDefaultChannel(player.getName(), channelName);
+            api.setDefaultChannel(sender.getName(), channelName);
             sendResourceMessage(sender, PREINFO, "cmdmsgSet", channelName);
         }
 
@@ -239,14 +234,14 @@ public class JoinCommand extends SubCommandAbst {
         }
 
         // 非表示に設定しているなら、注意を流す
-        if ( channel.getHided().contains(player) ) {
+        if ( channel.getHided().contains(sender) ) {
             sendResourceMessage(sender, PREINFO, "cmdmsgSetHide");
         }
 
         return true;
     }
 
-    private boolean hasSpeakPermission(CommandSender sender, String channelName) {
+    private boolean hasSpeakPermission(ChannelMember sender, String channelName) {
         String node = PERMISSION_SPEAK_PREFIX + "." + channelName;
         return sender.isPermissionSet(node) && sender.hasPermission(node);
     }

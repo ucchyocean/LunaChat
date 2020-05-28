@@ -7,11 +7,8 @@ package com.github.ucchyocean.lc.command;
 
 import java.util.ArrayList;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.github.ucchyocean.lc.channel.Channel;
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * moderatorコマンドの実行クラス
@@ -61,7 +58,7 @@ public class ModeratorCommand extends SubCommandAbst {
      */
     @Override
     public void sendUsageMessage(
-            CommandSender sender, String label) {
+            ChannelMember sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -75,19 +72,14 @@ public class ModeratorCommand extends SubCommandAbst {
      */
     @Override
     public boolean runCommand(
-            CommandSender sender, String label, String[] args) {
-
-        Player player = null;
-        if (sender instanceof Player) {
-            player = (Player) sender;
-        }
+            ChannelMember sender, String label, String[] args) {
 
         // 引数チェック
-        // このコマンドは、コンソールでも実行できるが、その場合はチャンネル名を指定する必要がある
+        // このコマンドは、デフォルトチャンネルでない人も実行できるが、その場合はチャンネル名を指定する必要がある
         String cname = null;
         ArrayList<String> moderator = new ArrayList<String>();
-        if ( player != null && args.length >= 2 ) {
-            Channel def = api.getDefaultChannel(player.getName());
+        if ( args.length >= 2 ) {
+            Channel def = api.getDefaultChannel(sender.getName());
             if ( def != null ) {
                 cname = def.getName();
             }
@@ -115,7 +107,7 @@ public class ModeratorCommand extends SubCommandAbst {
         cname = channel.getName();
 
         // モデレーターかどうか確認する
-        if ( !channel.hasModeratorPermission(ChannelPlayer.getChannelPlayer(sender)) ) {
+        if ( !channel.hasModeratorPermission(sender) ) {
             sendResourceMessage(sender, PREERR, "errmsgNotModerator");
             return true;
         }
@@ -131,12 +123,12 @@ public class ModeratorCommand extends SubCommandAbst {
         for ( String mod : moderator ) {
             if ( mod.startsWith("-") ) {
                 String name = mod.substring(1);
-                ChannelPlayer cp = ChannelPlayer.getChannelPlayer(name);
+                ChannelMember cp = ChannelMember.getChannelMember(name);
                 channel.removeModerator(cp);
                 sendResourceMessage(sender, PREINFO,
                         "cmdmsgModeratorMinus", name, cname);
             } else {
-                ChannelPlayer cp = ChannelPlayer.getChannelPlayer(mod);
+                ChannelMember cp = ChannelMember.getChannelMember(mod);
                 channel.addModerator(cp);
                 sendResourceMessage(sender, PREINFO,
                         "cmdmsgModerator", mod, cname);

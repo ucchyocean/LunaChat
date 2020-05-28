@@ -1,10 +1,7 @@
 package com.github.ucchyocean.lc.command;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import com.github.ucchyocean.lc.UtilityBukkit;
 import com.github.ucchyocean.lc.channel.Channel;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 public class SetCommand extends SubCommandAbst {
 
@@ -49,7 +46,7 @@ public class SetCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#sendUsageMessage()
      */
     @Override
-    public void sendUsageMessage(CommandSender sender, String label) {
+    public void sendUsageMessage(ChannelMember sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY1, label);
     }
 
@@ -62,7 +59,7 @@ public class SetCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(java.lang.String[])
      */
     @Override
-    public boolean runCommand(CommandSender sender, String label, String[] args) {
+    public boolean runCommand(ChannelMember sender, String label, String[] args) {
 
         // 引数チェック
         // このコマンドは、コンソールでも実行できる
@@ -75,9 +72,8 @@ public class SetCommand extends SubCommandAbst {
             Channel targetChannel = null;
             if ( args.length >= 4 ) {
                 targetChannel = api.getChannel(args[3]);
-            } else if ( sender instanceof Player ) {
-                Player player = (Player)sender;
-                targetChannel = api.getDefaultChannel(player.getName());
+            } else {
+                targetChannel = api.getDefaultChannel(sender.getName());
             }
 
             if ( targetChannel == null ) {
@@ -91,10 +87,11 @@ public class SetCommand extends SubCommandAbst {
 
             sendResourceMessage(sender, PREINFO, "cmdmsgSetDefault", targetPlayer, targetChannel.getName());
 
-            Player target = UtilityBukkit.getPlayerExact(targetPlayer);
-            if ( target != null ) {
-                sendResourceMessage(target, PREINFO, "cmdmsgSet", targetChannel.getName());
-            }
+            // TODO setされる相手のプレイヤーにも通知する
+//            Player target = Utility.getPlayerExact(targetPlayer);
+//            if ( target != null ) {
+//                sendResourceMessage(new CommandSenderBukkit(target), PREINFO, "cmdmsgSet", targetChannel.getName());
+//            }
 
             return true;
         }

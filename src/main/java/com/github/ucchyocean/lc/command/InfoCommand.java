@@ -7,11 +7,8 @@ package com.github.ucchyocean.lc.command;
 
 import java.util.ArrayList;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.github.ucchyocean.lc.channel.Channel;
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * infoコマンドの実行クラス
@@ -61,7 +58,7 @@ public class InfoCommand extends SubCommandAbst {
      */
     @Override
     public void sendUsageMessage(
-            CommandSender sender, String label) {
+            ChannelMember sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -75,18 +72,13 @@ public class InfoCommand extends SubCommandAbst {
      */
     @Override
     public boolean runCommand(
-            CommandSender sender, String label, String[] args) {
-
-        Player player = null;
-        if (sender instanceof Player) {
-            player = (Player) sender;
-        }
+            ChannelMember sender, String label, String[] args) {
 
         // 引数チェック
-        // このコマンドは、コンソールでも実行できるが、その場合はチャンネル名を指定する必要がある
+        // このコマンドは、デフォルトチャンネルでない人も実行できるが、その場合はチャンネル名を指定する必要がある
         String cname = null;
-        if ( player != null && args.length <= 1 ) {
-            Channel def = api.getDefaultChannel(player.getName());
+        if ( args.length <= 1 ) {
+            Channel def = api.getDefaultChannel(sender.getName());
             if ( def != null ) {
                 cname = def.getName();
             }
@@ -105,14 +97,13 @@ public class InfoCommand extends SubCommandAbst {
         }
 
         // BANされていないかどうか確認する
-        ChannelPlayer cp = ChannelPlayer.getChannelPlayer(player);
-        if ( player != null && channel.getBanned().contains(cp) ) {
+        if ( channel.getBanned().contains(sender) ) {
             sendResourceMessage(sender, PREERR, "errmsgBanned");
             return true;
         }
 
         // チャンネルモデレーターかどうか確認する
-        boolean isModerator = channel.hasModeratorPermission(ChannelPlayer.getChannelPlayer(sender));
+        boolean isModerator = channel.hasModeratorPermission(sender);
 
         // 情報を取得して表示する
         ArrayList<String> list = channel.getInfo(isModerator);

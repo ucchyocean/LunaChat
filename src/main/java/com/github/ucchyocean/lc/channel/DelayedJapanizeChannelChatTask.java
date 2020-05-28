@@ -6,6 +6,7 @@
 package com.github.ucchyocean.lc.channel;
 
 import com.github.ucchyocean.lc.japanize.JapanizeType;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * Japanize2行表示のときに、変換結果を遅延してチャンネルに表示するためのタスク
@@ -14,7 +15,7 @@ import com.github.ucchyocean.lc.japanize.JapanizeType;
 public class DelayedJapanizeChannelChatTask extends DelayedJapanizeConvertTask {
 
     private Channel channel;
-    private ChannelPlayer player;
+    private ChannelMember player;
     private String lineFormat;
 
     /**
@@ -27,7 +28,7 @@ public class DelayedJapanizeChannelChatTask extends DelayedJapanizeConvertTask {
      * @param lineFormat
      */
     public DelayedJapanizeChannelChatTask(String org, JapanizeType type, Channel channel,
-            ChannelPlayer player, String japanizeFormat, String lineFormat) {
+            ChannelMember player, String japanizeFormat, String lineFormat) {
         super(org, type, channel, player, japanizeFormat);
         this.channel = channel;
         this.player = player;

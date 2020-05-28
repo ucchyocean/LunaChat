@@ -5,15 +5,13 @@
  */
 package com.github.ucchyocean.lc.command;
 
-import org.bukkit.command.CommandSender;
-
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.LunaChatConfig;
 import com.github.ucchyocean.lc.Resources;
 import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.channel.Channel;
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * サブコマンドの抽象クラス
@@ -47,8 +45,8 @@ public abstract class SubCommandAbst {
      * コンストラクタ
      */
     public SubCommandAbst() {
-        api = LunaChat.getAPI();
-        config = LunaChat.getConfig();
+        api = LunaChat.getPlugin().getLunaChatAPI();
+        config = LunaChat.getPlugin().getLunaChatConfig();
     }
 
     /**
@@ -59,7 +57,7 @@ public abstract class SubCommandAbst {
      * @param player キーワード置き換えに使用するプレイヤー
      */
     protected void sendResourceMessageWithKeyword(
-            Channel channel, String key, ChannelPlayer player) {
+            Channel channel, String key, ChannelMember player) {
 
         String msg = Resources.get(key);
         if ( msg == null || msg.equals("") ) {
@@ -87,7 +85,7 @@ public abstract class SubCommandAbst {
      * @param minutes キーワード置き換えに使用する数値
      */
     protected void sendResourceMessageWithKeyword(
-            Channel channel, String key, ChannelPlayer player, int minutes) {
+            Channel channel, String key, ChannelMember player, int minutes) {
 
         String msg = Resources.get(key);
         if ( msg == null || msg.equals("") ) {
@@ -108,32 +106,14 @@ public abstract class SubCommandAbst {
     }
 
     /**
-     * メッセージリソースのメッセージを、カラーコード置き換えしつつ、senderに送信する
+     * メッセージリソースのメッセージを、カラーコード置き換えしつつ、ChannelMemberに送信する
      * @param sender メッセージの送り先
      * @param pre プレフィックス
      * @param key リソースキー
      * @param args リソース内の置き換え対象キーワード
      */
     protected void sendResourceMessage(
-            CommandSender sender, String pre, String key, Object... args) {
-
-        String org = Resources.get(key);
-        if ( org == null || org.equals("") ) {
-            return;
-        }
-        String msg = String.format(pre + org, args);
-        sender.sendMessage(msg);
-    }
-
-    /**
-     * メッセージリソースのメッセージを、カラーコード置き換えしつつ、ChannelPlayerに送信する
-     * @param sender メッセージの送り先
-     * @param pre プレフィックス
-     * @param key リソースキー
-     * @param args リソース内の置き換え対象キーワード
-     */
-    protected void sendResourceMessage(
-            ChannelPlayer cp, String pre, String key, Object... args) {
+            ChannelMember cp, String pre, String key, Object... args) {
 
         String org = Resources.get(key);
         if ( org == null || org.equals("") ) {
@@ -167,7 +147,7 @@ public abstract class SubCommandAbst {
      * @param label 実行ラベル
      */
     public abstract void sendUsageMessage(
-            CommandSender sender, String label);
+            ChannelMember sender, String label);
 
     /**
      * コマンドを実行します。
@@ -177,5 +157,5 @@ public abstract class SubCommandAbst {
      * @return コマンドが実行されたかどうか
      */
     public abstract boolean runCommand(
-            CommandSender sender, String label, String[] args);
+            ChannelMember sender, String label, String[] args);
 }

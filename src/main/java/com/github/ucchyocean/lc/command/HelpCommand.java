@@ -7,7 +7,7 @@ package com.github.ucchyocean.lc.command;
 
 import java.util.ArrayList;
 
-import org.bukkit.command.CommandSender;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * helpコマンドの実行クラス
@@ -70,7 +70,7 @@ public class HelpCommand extends SubCommandAbst {
      */
     @Override
     public void sendUsageMessage(
-            CommandSender sender, String label) {
+            ChannelMember sender, String label) {
         sendResourceMessage(sender, "", USAGE_KEY, label);
     }
 
@@ -83,7 +83,7 @@ public class HelpCommand extends SubCommandAbst {
      * @see com.github.ucchyocean.lc.command.SubCommandAbst#runCommand(java.lang.String[])
      */
     @Override
-    public boolean runCommand(CommandSender sender, String label, String[] args) {
+    public boolean runCommand(ChannelMember sender, String label, String[] args) {
 
         CommandType type = CommandType.USER;
         int page = 1;
@@ -114,7 +114,7 @@ public class HelpCommand extends SubCommandAbst {
      * @param type コマンド種別
      * @param page ページ
      */
-    private void printUsage(CommandSender sender, String label,
+    private void printUsage(ChannelMember sender, String label,
             CommandType type, int page) {
 
         String typeDesc;

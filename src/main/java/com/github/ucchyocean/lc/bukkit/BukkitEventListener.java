@@ -30,18 +30,17 @@ import com.github.ucchyocean.lc.Resources;
 import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.bridge.VaultChatBridge;
 import com.github.ucchyocean.lc.channel.Channel;
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
-import com.github.ucchyocean.lc.channel.ChannelPlayerName;
-import com.github.ucchyocean.lc.channel.ChannelPlayerUUID;
 import com.github.ucchyocean.lc.channel.DelayedJapanizeNormalChatTask;
 import com.github.ucchyocean.lc.event.LunaChatPreChatEvent;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
+import com.github.ucchyocean.lc.member.ChannelMember;
+import com.github.ucchyocean.lc.member.ChannelMemberBukkit;
 
 /**
- * プレイヤーの行動を監視するリスナ
+ * Bukkit関連のイベントを監視するリスナ
  * @author ucchy
  */
-public class PlayerListener implements Listener {
+public class BukkitEventListener implements Listener {
 
     private static final String MOTD_FIRSTLINE = Resources.get("motdFirstLine");
     private static final String LIST_ENDLINE = Resources.get("listEndLine");
@@ -54,7 +53,7 @@ public class PlayerListener implements Listener {
     /**
      * コンストラクタ
      */
-    public PlayerListener() {
+    public BukkitEventListener() {
         dateFormat = new SimpleDateFormat("yyyy/MM/dd");
         timeFormat = new SimpleDateFormat("HH:mm:ss");
     }
@@ -149,6 +148,7 @@ public class PlayerListener implements Listener {
     public void onQuit(PlayerQuitEvent event) {
 
         Player player = event.getPlayer();
+        String pname = player.getName();
 
         // お互いがオフラインになるPMチャンネルがある場合は
         // チャンネルをクリアする
@@ -156,12 +156,11 @@ public class PlayerListener implements Listener {
 
         for ( Channel channel : LunaChat.getAPI().getChannels() ) {
             String cname = channel.getName();
-            String pname = player.getName();
             if ( channel.isPersonalChat() && cname.contains(pname) ) {
                 boolean isAllOffline = true;
-                for ( ChannelPlayer cp : channel.getMembers() ) {
-                    if ( !cp.equals(player) && cp.isOnline() &&
-                            (cp instanceof ChannelPlayerName || cp instanceof ChannelPlayerUUID) ) {
+                for ( ChannelMember cp : channel.getMembers() ) {
+                    // TODO
+                    if ( cp.isOnline() ) {
                         isAllOffline = false;
                     }
                 }
@@ -211,8 +210,8 @@ public class PlayerListener implements Listener {
 
                 Channel channel = api.getChannel(name);
                 if ( channel != null && !channel.isPersonalChat() ) {
-                    ChannelPlayer player =
-                            ChannelPlayer.getChannelPlayer(event.getPlayer());
+                    ChannelMember player =
+                            ChannelMember.getChannelMember(event.getPlayer());
                     if ( !channel.getMembers().contains(player) ) {
                         // 指定されたチャンネルに参加していないなら、エラーを表示して何も発言せずに終了する。
                         sendResourceMessage(event.getPlayer(), PREERR, "errmsgNomember");
@@ -228,8 +227,8 @@ public class PlayerListener implements Listener {
             }
         }
 
-        ChannelPlayer player =
-                ChannelPlayer.getChannelPlayer(event.getPlayer());
+        ChannelMember player =
+                ChannelMember.getChannelMember(event.getPlayer());
         Channel channel = api.getDefaultChannel(player.getName());
 
         // デフォルトの発言先が無い場合
@@ -260,8 +259,8 @@ public class PlayerListener implements Listener {
 
         LunaChatConfig config = LunaChat.getConfig();
         LunaChatAPI api = LunaChat.getAPI();
-        ChannelPlayer player =
-                ChannelPlayer.getChannelPlayer(event.getPlayer());
+        ChannelMember player =
+                ChannelMember.getChannelMember(event.getPlayer());
 
         if ( !config.getGlobalChannel().equals("") ) {
             // グローバルチャンネル設定がある場合
@@ -328,8 +327,8 @@ public class PlayerListener implements Listener {
             }
 
             // hideされているプレイヤーを、recipientから抜く
-            for ( ChannelPlayer cp : api.getHidelist(player) ) {
-                Player p = cp.getPlayer();
+            for ( ChannelMember cp : api.getHidelist(player) ) {
+                Player p = ((ChannelMemberBukkit)cp).getPlayer();
                 if ( p != null ) {
                     event.getRecipients().remove(p);
                 }
@@ -439,7 +438,7 @@ public class PlayerListener implements Listener {
             }
 
             // チャンネルのメンバーでないなら、参加する
-            ChannelPlayer cp = ChannelPlayer.getChannelPlayer(player);
+            ChannelMember cp = ChannelMember.getChannelMember(player);
             if ( !channel.getMembers().contains(cp) ) {
                 channel.addMember(cp);
             }
@@ -507,7 +506,7 @@ public class PlayerListener implements Listener {
      */
     private ArrayList<String> getListForMotd(Player player) {
 
-        ChannelPlayer cp = ChannelPlayer.getChannelPlayer(player);
+        ChannelMember cp = ChannelMember.getChannelMember(player);
         LunaChatAPI api = LunaChat.getAPI();
         Channel dc = api.getDefaultChannel(cp.getName());
         String dchannel = "";
@@ -558,7 +557,7 @@ public class PlayerListener implements Listener {
      * @param message 発言内容
      * @return イベントでキャンセルされたかどうか
      */
-    private boolean chatToChannelWithEvent(ChannelPlayer player, Channel channel, String message) {
+    private boolean chatToChannelWithEvent(ChannelMember player, Channel channel, String message) {
 
         // LunaChatPreChatEvent イベントコール
         LunaChatPreChatEvent preChatEvent = new LunaChatPreChatEvent(

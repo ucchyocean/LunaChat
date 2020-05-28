@@ -5,7 +5,7 @@
  */
 package com.github.ucchyocean.lc.event;
 
-import com.github.ucchyocean.lc.channel.ChannelPlayer;
+import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
  * Japanize変換が行われた後に呼び出されるイベント
@@ -13,7 +13,7 @@ import com.github.ucchyocean.lc.channel.ChannelPlayer;
  */
 public class LunaChatPostJapanizeEvent extends LunaChatBaseCancellableEvent {
 
-    private ChannelPlayer player;
+    private ChannelMember player;
     private String original;
     private String japanized;
 
@@ -24,7 +24,7 @@ public class LunaChatPostJapanizeEvent extends LunaChatBaseCancellableEvent {
      * @param original 変換前の文字列
      * @param japanized 変換後の文字列
      */
-    public LunaChatPostJapanizeEvent(String channelName, ChannelPlayer player,
+    public LunaChatPostJapanizeEvent(String channelName, ChannelMember player,
             String original, String japanized) {
         super(channelName);
         this.player = player;
@@ -36,7 +36,7 @@ public class LunaChatPostJapanizeEvent extends LunaChatBaseCancellableEvent {
      * 発言を行ったプレイヤーを取得します。
      * @return 発言したプレイヤー
      */
-    public ChannelPlayer getPlayer() {
+    public ChannelMember getPlayer() {
         return player;
     }
 

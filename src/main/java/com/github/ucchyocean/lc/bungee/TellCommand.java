@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatConfig;
 import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.japanize.Japanizer;
@@ -100,7 +101,7 @@ public class TellCommand extends Command {
         } else {
 
             String japanize = Japanizer.japanize(message, config.getJapanizeType(),
-                    parent.getDictionary().getDictionary());
+                    LunaChat.getAPI().getAllDictionary());
             if ( japanize.length() > 0 ) {
 
                 // NGワードのマスク
