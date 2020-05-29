@@ -27,7 +27,8 @@ public class LunaChatCommandBungee extends LunaChatCommand {
      * @see net.md_5.bungee.api.plugin.Command#execute(net.md_5.bungee.api.CommandSender, java.lang.String[])
      */
     public void execute(CommandSender sender, String[] args) {
-        execute(ChannelMember.getChannelMember(sender), "", args);
+        String label = args.length >= 1 ? args[0] : "lunachat";
+        execute(ChannelMember.getChannelMember(sender), label, args);
     }
 
     /**

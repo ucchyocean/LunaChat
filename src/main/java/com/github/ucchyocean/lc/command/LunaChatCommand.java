@@ -8,8 +8,8 @@ package com.github.ucchyocean.lc.command;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.Messages;
-import com.github.ucchyocean.lc.bukkit.LunaChatBukkit;
 import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.member.ChannelMember;
 
@@ -94,7 +94,7 @@ public abstract class LunaChatCommand {
         }
 
         // チャンネルチャット機能が無効になっている場合は、メッセージを表示して終了
-        if ( !LunaChatBukkit.getInstance().getLunaChatConfig().isEnableChannelChat()
+        if ( !LunaChat.getConfig().isEnableChannelChat()
                 && !sender.hasPermission("lunachat-admin") ) {
             sendResourceMessage(sender, PREERR, "errmsgChannelChatDisabled");
             return true;
@@ -267,7 +267,7 @@ public abstract class LunaChatCommand {
             String arg = args[2].toLowerCase();
             ArrayList<String> items = new ArrayList<String>();
             for ( String name :
-                    LunaChatBukkit.getInstance().getLunaChatAPI().getAllDictionary().keySet() ) {
+                    LunaChat.getAPI().getAllDictionary().keySet() ) {
                 if ( name.toLowerCase().startsWith(arg) ) {
                     items.add(name);
                 }
@@ -334,7 +334,7 @@ public abstract class LunaChatCommand {
 
         ArrayList<String> items = new ArrayList<String>();
 
-        for ( Channel channel : LunaChatBukkit.getInstance().getLunaChatAPI().getChannels() ) {
+        for ( Channel channel : LunaChat.getAPI().getChannels() ) {
 
             // BANされているチャンネルは対象外
             if ( channel.getBanned().contains(sender) ) {
@@ -367,7 +367,7 @@ public abstract class LunaChatCommand {
 
         ArrayList<String> items = new ArrayList<String>();
 
-        for ( Channel channel : LunaChatBukkit.getInstance().getLunaChatAPI().getChannels() ) {
+        for ( Channel channel : LunaChat.getAPI().getChannels() ) {
 
             // 実行者がチャンネルモデレーターでない場合は対象外
             if ( !channel.hasModeratorPermission(sender) ) {

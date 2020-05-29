@@ -13,12 +13,13 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.connection.Server;
 
 /**
  * ChannelMemberのBungeeCord-ProxiedPlayer実装
  * @author ucchy
  */
-public class ChannelMemberProxiedPlayer extends ChannelMember {
+public class ChannelMemberProxiedPlayer extends ChannelMemberBungee {
 
     private UUID id;
 
@@ -159,10 +160,6 @@ public class ChannelMemberProxiedPlayer extends ChannelMember {
      */
     @Override
     public String getWorldName() {
-        ProxiedPlayer player = getPlayer();
-        if ( player != null ) {
-            // TODO 未実装。方法を検討する
-        }
         return "-";
     }
 
@@ -196,30 +193,38 @@ public class ChannelMemberProxiedPlayer extends ChannelMember {
      * ProxiedPlayerを取得して返す
      * @return ProxiedPlayer
      */
-    private @Nullable ProxiedPlayer getPlayer() {
+    @Override
+    public @Nullable ProxiedPlayer getPlayer() {
         return ProxyServer.getInstance().getPlayer(id);
     }
 
+    /**
+     * 発言者が今いるサーバーを取得する
+     * @return サーバー
+     * @see com.github.ucchyocean.lc.member.ChannelMemberBungee#getServer()
+     */
+    @Override
+    public @Nullable Server getServer() {
+        ProxiedPlayer player = getPlayer();
+        if ( player != null ) {
+            return player.getServer();
+        }
+        return null;
+    }
+
+    /**
+     * 指定されたパーミッションノードが定義されているかどうかを取得する
+     * @param node パーミッションノード
+     * @return 定義を持っているかどうか
+     * @see com.github.ucchyocean.lc.member.ChannelMember#isPermissionSet(java.lang.String)
+     */
     @Override
     public boolean isPermissionSet(String node) {
         // TODO 要テスト
         ProxiedPlayer player = getPlayer();
-        if ( player == null ) {
-            return false;
-        } else {
+        if ( player != null ) {
             return player.getPermissions().contains(node);
         }
-    }
-
-    public static ChannelMemberProxiedPlayer getChannelMemberFromSender(CommandSender sender) {
-        if ( sender == null ) return null;
-        if ( !(sender instanceof ProxiedPlayer) ) return null;
-        return new ChannelMemberProxiedPlayer(((ProxiedPlayer)sender).getUniqueId());
-    }
-
-    public static ChannelMemberProxiedPlayer getChannelMemberFromSender(Object obj) {
-        if ( obj == null ) return null;
-        if ( !(obj instanceof ProxiedPlayer) ) return null;
-        return new ChannelMemberProxiedPlayer(((ProxiedPlayer)obj).getUniqueId());
+        return false;
     }
 }

@@ -46,7 +46,7 @@ public abstract class ChannelMemberBukkit extends ChannelMember {
         if ( sender instanceof BlockCommandSender ) {
             return new ChannelMemberBlock((BlockCommandSender)sender);
         } else if ( sender instanceof ConsoleCommandSender ) {
-            return new ChannelMemberConsole((ConsoleCommandSender)sender);
+            return new ChannelMemberBukkitConsole((ConsoleCommandSender)sender);
         } else {
             return ChannelMemberPlayer.getChannelPlayer((CommandSender)sender);
         }

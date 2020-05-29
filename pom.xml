@@ -119,6 +119,11 @@
       <name>MD5 repository</name>
       <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
     </repository>
+    <repository>
+      <id>BungeeCord-repo</id>
+      <name>sonatype repository</name>
+      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+    </repository>
   </repositories>
 
   <dependencies>

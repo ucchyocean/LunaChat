@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
  * ChannelMemberのBukkit-ConsoleCommandSender実装
  * @author ucchy
  */
-public class ChannelMemberConsole extends ChannelMemberBukkit {
+public class ChannelMemberBukkitConsole extends ChannelMemberBukkit {
 
     ConsoleCommandSender sender;
 
@@ -22,7 +22,7 @@ public class ChannelMemberConsole extends ChannelMemberBukkit {
      * コンストラクタ
      * @param sender コンソール
      */
-    public ChannelMemberConsole(ConsoleCommandSender sender) {
+    public ChannelMemberBukkitConsole(ConsoleCommandSender sender) {
         this.sender = sender;
     }
 

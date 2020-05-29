@@ -8,36 +8,36 @@ package com.github.ucchyocean.lc.channel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.LunaChatConfig;
+import com.github.ucchyocean.lc.LunaChatLogger;
 import com.github.ucchyocean.lc.Messages;
 import com.github.ucchyocean.lc.NGWordAction;
 import com.github.ucchyocean.lc.Utility;
-import com.github.ucchyocean.lc.UtilityBukkit;
-import com.github.ucchyocean.lc.bridge.DynmapBridge;
-import com.github.ucchyocean.lc.bukkit.LunaChatBukkit;
-import com.github.ucchyocean.lc.event.LunaChatChannelChatEvent;
-import com.github.ucchyocean.lc.event.LunaChatChannelMessageEvent;
+import com.github.ucchyocean.lc.bungee.LunaChatBungee;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 import com.github.ucchyocean.lc.member.ChannelMember;
-import com.github.ucchyocean.lc.member.ChannelMemberBukkit;
+import com.github.ucchyocean.lc.member.ChannelMemberProxiedPlayer;
+
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 /**
- * チャンネルの実装クラス
+ * チャンネルのBungee実装クラス
  * @author ucchy
  */
-public class BukkitChannel extends Channel {
+public class BungeeChannel extends Channel {
 
     private static final String PERMISSION_SPEAK_PREFIX = "lunachat.speak";
 
@@ -47,19 +47,23 @@ public class BukkitChannel extends Channel {
 
     private static final String PREERR = Messages.get("errorPrefix");
 
-    private static final String MSG_NO_RECIPIENT = Messages.get("noRecipientMessage");
-
     private static final String ERRMSG_MUTED = Messages.get("errmsgMuted");
 
     private SimpleDateFormat dateFormat;
     private SimpleDateFormat timeFormat;
 
+    /** ロガー */
+    private LunaChatLogger logger;
+
     /**
      * コンストラクタ
      * @param name チャンネル名
      */
-    protected BukkitChannel(String name) {
+    protected BungeeChannel(String name) {
+
         super(name);
+
+        logger = new LunaChatLogger(name.replace(">", "-"));
         dateFormat = new SimpleDateFormat("yyyy/MM/dd");
         timeFormat = new SimpleDateFormat("HH:mm:ss");
     }
@@ -89,7 +93,7 @@ public class BukkitChannel extends Channel {
             return;
         }
 
-        String preReplaceMessage = new String(message);
+//        String preReplaceMessage = new String(message);
         String maskedMessage = new String(message);
 
         // 一時的にJapanizeスキップ設定かどうかを確認する
@@ -121,15 +125,15 @@ public class BukkitChannel extends Channel {
         }
 
         // イベントコール
-        LunaChatChannelChatEvent event =
-                new LunaChatChannelChatEvent(getName(), player,
-                        preReplaceMessage, maskedMessage, msgFormat);
-        Bukkit.getPluginManager().callEvent(event);
-        if ( event.isCancelled() ) {
-            return;
-        }
-        msgFormat = event.getMessageFormat();
-        maskedMessage = event.getNgMaskedMessage();
+//        LunaChatChannelChatEvent event =
+//                new LunaChatChannelChatEvent(getName(), player,
+//                        preReplaceMessage, maskedMessage, msgFormat);
+//        Bukkit.getPluginManager().callEvent(event);
+//        if ( event.isCancelled() ) {
+//            return;
+//        }
+//        msgFormat = event.getMessageFormat();
+//        maskedMessage = event.getNgMaskedMessage();
 
         // 2byteコードを含むか、半角カタカナのみなら、Japanize変換は行わない
         String kanaTemp = Utility.stripColorCode(maskedMessage);
@@ -141,7 +145,7 @@ public class BukkitChannel extends Channel {
 
         // Japanize変換タスクを作成する
         boolean isIncludeSyncChat = true;
-        DelayedJapanizeConvertTask delayedTask = null;
+        JapanizeChannelChatTask delayedTask = null;
         JapanizeType japanizeType = (getJapanizeType() == null)
                 ? config.getJapanizeType() : getJapanizeType();
 
@@ -161,7 +165,7 @@ public class BukkitChannel extends Channel {
             }
 
             // タスクを作成しておく
-            delayedTask = new DelayedJapanizeChannelChatTask(maskedMessage,
+            delayedTask = new JapanizeChannelChatTask(maskedMessage,
                     japanizeType, this, player, jpFormat, messageFormat);
         }
 
@@ -172,7 +176,8 @@ public class BukkitChannel extends Channel {
 
         // 非同期実行タスクがある場合、追加で実行する
         if ( delayedTask != null ) {
-            delayedTask.runTaskAsynchronously(LunaChatBukkit.getInstance());
+            ProxyServer.getInstance().getScheduler().runAsync(
+                    LunaChatBungee.getInstance(), delayedTask);
         }
 
         // NGワード発言者に、NGワードアクションを実行する
@@ -296,60 +301,18 @@ public class BukkitChannel extends Channel {
         String originalMessage = new String(message);
 
         // 受信者を設定する
-        ArrayList<ChannelMember> recipients = new ArrayList<ChannelMember>();
-        boolean sendNoRecipientMessage = false;
+        Set<ChannelMember> recipients = new HashSet<ChannelMember>();
 
         if ( isBroadcastChannel() ) {
             // ブロードキャストチャンネル
 
-            if ( isWorldRange() && player.isOnline() && player.getWorldName() != null ) {
+            // NOTE: BungeeChannelは範囲チャットやワールドチャットをサポートしない
 
-                World w = Bukkit.getWorld(player.getWorldName());
-
-                if ( getChatRange() > 0 ) {
-                    // 範囲チャット
-
-                    if ( player instanceof ChannelMemberBukkit ) {
-                        Location origin = ((ChannelMemberBukkit)player).getLocation();
-                        for ( Player p : Bukkit.getOnlinePlayers() ) {
-                            ChannelMember cp = ChannelMember.getChannelMember(p);
-                            if ( p.getWorld().equals(w) &&
-                                    origin.distance(p.getLocation()) <= getChatRange() &&
-                                    !getHided().contains(cp) ) {
-                                recipients.add(ChannelMember.getChannelMember(p));
-                            }
-                        }
-                    } else {
-                        // TODO 何かするか？検討する
-                    }
-
-                } else {
-                    // ワールドチャット
-
-                    for ( Player p : Bukkit.getOnlinePlayers() ) {
-                        ChannelMember cp = ChannelMember.getChannelMember(p);
-                        if ( p.getWorld().equals(w) && !getHided().contains(cp) ) {
-                            recipients.add(ChannelMember.getChannelMember(p));
-                        }
-                    }
-                }
-
-                // 受信者が自分以外いない場合は、メッセージを表示する
-                if ( !MSG_NO_RECIPIENT.equals("") && (
-                        recipients.size() == 0 ||
-                        (recipients.size() == 1 &&
-                         recipients.get(0).getName().equals(player.getName()) ) ) ) {
-                    sendNoRecipientMessage = true;
-                }
-
-            } else {
-                // 通常ブロードキャスト（全員へ送信）
-
-                for ( Player p : Bukkit.getOnlinePlayers() ) {
-                    ChannelMember cp = ChannelMember.getChannelMember(p);
-                    if ( !getHided().contains(cp) ) {
-                        recipients.add(cp);
-                    }
+            // 通常ブロードキャスト（全員へ送信）
+            for ( ProxiedPlayer p : ProxyServer.getInstance().getPlayers() ) {
+                ChannelMember cp = ChannelMember.getChannelMember(p);
+                if ( !getHided().contains(cp) ) {
+                    recipients.add(cp);
                 }
             }
 
@@ -390,29 +353,12 @@ public class BukkitChannel extends Channel {
         }
 
         // イベントコール
-        LunaChatChannelMessageEvent event =
-                new LunaChatChannelMessageEvent(
-                        getName(), player, message, recipients, name, originalMessage);
-        Bukkit.getPluginManager().callEvent(event);
-        message = event.getMessage();
-        recipients = event.getRecipients();
-
-        // 通常ブロードキャストなら、設定に応じてdynmapへ送信する
-        DynmapBridge dynmap = LunaChatBukkit.getInstance().getDynmap();
-        if ( config.isSendBroadcastChannelChatToDynmap() &&
-                sendDynmap &&
-                dynmap != null &&
-                isBroadcastChannel() &&
-                !isWorldRange() ) {
-
-            String msg = config.isSendFormattedMessageToDynmap() ? message : originalMessage;
-            if ( player != null && player instanceof ChannelMemberBukkit
-                    && ((ChannelMemberBukkit)player).getPlayer() != null ) {
-                dynmap.chat(((ChannelMemberBukkit)player).getPlayer(), msg);
-            } else {
-                dynmap.broadcast(msg);
-            }
-        }
+//        LunaChatChannelMessageEvent event =
+//                new LunaChatChannelMessageEvent(
+//                        getName(), player, message, recipients, name, originalMessage);
+//        Bukkit.getPluginManager().callEvent(event);
+//        message = event.getMessage();
+//        recipients = event.getRecipients();
 
         // 送信する
         for ( ChannelMember p : recipients ) {
@@ -422,12 +368,6 @@ public class BukkitChannel extends Channel {
         // 設定に応じて、コンソールに出力する
         if ( config.isDisplayChatOnConsole() ) {
             Bukkit.getLogger().info(ChatColor.stripColor(message));
-        }
-
-        // 受信者が自分以外いない場合は、メッセージを表示する
-        if ( sendNoRecipientMessage ) {
-            String msg = replaceKeywordsForSystemMessages(MSG_NO_RECIPIENT, "");
-            player.sendMessage(msg);
         }
 
         // ロギング
@@ -444,7 +384,7 @@ public class BukkitChannel extends Channel {
 
         // ブロードキャストチャンネルならサーバー接続人数を返す
         if ( isBroadcastChannel() ) {
-            return UtilityBukkit.getOnlinePlayersCount();
+            return ProxyServer.getInstance().getOnlineCount();
         }
 
         return super.getOnlineNum();
@@ -460,7 +400,7 @@ public class BukkitChannel extends Channel {
 
         // ブロードキャストチャンネルならサーバー接続人数を返す
         if ( isBroadcastChannel() ) {
-            return UtilityBukkit.getOnlinePlayersCount();
+            return ProxyServer.getInstance().getOnlineCount();
         }
 
         return super.getTotalNum();
@@ -478,7 +418,7 @@ public class BukkitChannel extends Channel {
         // 現在サーバーに接続している全プレイヤーをメンバーとして返す
         if ( isBroadcastChannel() ) {
             List<ChannelMember> mem = new ArrayList<ChannelMember>();
-            for ( Player p : Bukkit.getOnlinePlayers() ) {
+            for ( ProxiedPlayer p : ProxyServer.getInstance().getPlayers() ) {
                 mem.add(ChannelMember.getChannelMember(p));
             }
             return mem;
@@ -532,19 +472,15 @@ public class BukkitChannel extends Channel {
                 msg = msg.replace("%suffix", player.getSuffix());
             }
 
-            if ( msg.contains("%world") ) {
+            msg = msg.replace("%world", "");
 
-                String worldname = null;
-                if ( LunaChatBukkit.getInstance().getMultiverseCore() != null ) {
-                    worldname = LunaChatBukkit.getInstance().getMultiverseCore().getWorldAlias(player.getWorldName());
+            if ( msg.contains("%server") ) {
+                if ( player instanceof ChannelMemberProxiedPlayer ) {
+                    String serverName = ((ChannelMemberProxiedPlayer)player).getServer().getInfo().getName();
+                    msg = msg.replace("%server", serverName);
                 }
-                if ( worldname == null || worldname.equals("") ) {
-                    worldname = player.getWorldName();
-                }
-                msg = msg.replace("%world", worldname);
+                msg = msg.replace("%server", "");
             }
-
-            msg = msg.replace("%server", "");
 
         } else {
             msg = msg.replace("%username", "");
@@ -590,18 +526,5 @@ public class BukkitChannel extends Channel {
         }
 
         // TODO ログ記録プラグイン連携を検討する
-//        // Hawkeye Reloaded のチャットログへ記録
-//        if ( config.isLoggingChatToHawkEye() && LunaChat.getInstance().getHawkEye() != null
-//                && player != null && player.getLocation() != null ) {
-//            LunaChat.getInstance().getHawkEye().writeLog(name, player.getLocation(),
-//                    "channel(" + getName() + ")-" + Utility.stripColor(message));
-//        }
-//
-//        // Prism のチャットログへ記録
-//        if ( config.isLoggingChatToPrism() && LunaChat.getInstance().getPrism() != null
-//                && player != null && player.getPlayer() != null ) {
-//            LunaChat.getInstance().getPrism().writeLog(player.getPlayer(),
-//                    "channel(" + getName() + ")-" + Utility.stripColor(message));
-//        }
     }
 }

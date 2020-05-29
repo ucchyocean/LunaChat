@@ -5,7 +5,7 @@
  */
 package com.github.ucchyocean.lc.command;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.member.ChannelMember;
@@ -106,7 +106,7 @@ public class InfoCommand extends SubCommandAbst {
         boolean isModerator = channel.hasModeratorPermission(sender);
 
         // 情報を取得して表示する
-        ArrayList<String> list = channel.getInfo(isModerator);
+        List<String> list = channel.getInfo(isModerator);
         for (String msg : list) {
             sender.sendMessage(msg);
         }

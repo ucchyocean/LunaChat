@@ -14,6 +14,7 @@ import java.util.List;
 
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
+import com.github.ucchyocean.lc.LunaChatMode;
 import com.github.ucchyocean.lc.Messages;
 import com.github.ucchyocean.lc.YamlConfig;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
@@ -398,7 +399,14 @@ public class ChannelManager implements LunaChatAPI {
 //        String name = event.getChannelName();
         String name = channelName;
 
-        Channel channel = new BukkitChannel(name);
+        Channel channel = null;
+        if ( LunaChat.getMode() == LunaChatMode.BUKKIT ) {
+            channel = new BukkitChannel(name);
+        } else if ( LunaChat.getMode() == LunaChatMode.BUNGEE ) {
+            channel = new BungeeChannel(name);
+        }
+        // TODO Standalone のチャンネル作成
+
         channels.put(name.toLowerCase(), channel);
         channel.save();
         return channel;
