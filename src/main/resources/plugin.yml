@@ -1,5 +1,5 @@
 name: ${project.name}
-main: com.github.ucchyocean.lc.LunaChat
+main: com.github.ucchyocean.lc3.LunaChat
 version: ${project.version}
 authors: [ucchy, YukiLeafX, LazyGon]
 description: ${project.description}
@@ -45,6 +45,8 @@ commands:
            /<command> set default (player) [channel] - 指定したプレイヤーの発言先チャンネルを、指定したチャンネルに設定します。
            /<command> reload - config.ymlの再読み込みをします。
            /<command> help [user|mod|admin] [page] - ヘルプを表示します。
+    permission: lunachat.command
+    permission-message: パーミッション "<permission>" が無いため、実行できません。
   tell:
     description: 1:1チャット送信コマンド
     aliases: [msg, message, m, t, w]
@@ -67,6 +69,9 @@ commands:
     permission-message: You don't have the permission "<permission>".
 
 permissions:
+  lunachat.command:
+    description: lunachatコマンドの使用権限
+    default: true
   lunachat.join:
     description: joinコマンドの使用権限
     default: true
@@ -144,6 +149,7 @@ permissions:
     default: true
   lunachat.*:
     children:
+      lunachat.command: true
       lunachat.join: true
       lunachat.leave: true
       lunachat.list: true
@@ -223,9 +229,6 @@ permissions:
   lunachat-admin.dictionary:
     description: dictionaryコマンドの使用権限
     default: op
-  lunachat-admin.check:
-    description: checkコマンドの使用権限
-    default: op
   lunachat-admin.set:
     description: setコマンドの使用権限
     default: op
@@ -244,7 +247,6 @@ permissions:
       lunachat-admin.listen-all-channels: true
       lunachat-admin.template: true
       lunachat-admin.dictionary: true
-      lunachat-admin.check: true
       lunachat-admin.set: true
       lunachat-admin.reload: true
       lunachat-admin.japanize-other: true
