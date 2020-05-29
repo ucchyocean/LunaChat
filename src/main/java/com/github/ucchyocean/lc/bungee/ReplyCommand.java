@@ -10,7 +10,7 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 /**
- * BungeeJapanizeMessengerのreplyコマンド実装クラス
+ * LunaChatのreplyコマンド実装クラス
  * @author ucchy
  */
 public class ReplyCommand extends TellCommand {
@@ -21,9 +21,11 @@ public class ReplyCommand extends TellCommand {
      * コンストラクタ
      * @param BungeeJapanizeMessenger
      * @param name コマンド
+     * @param permission パーミッション
+     * @param aliases エイリアス
      */
-    public ReplyCommand(LunaChatBungee parent, String name) {
-        super(parent, name);
+    public ReplyCommand(LunaChatBungee parent, String name, String permission, String... aliases) {
+        super(parent, name, permission, aliases);
         this.parent = parent;
     }
 

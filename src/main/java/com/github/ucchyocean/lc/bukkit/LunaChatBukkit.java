@@ -25,7 +25,7 @@ import com.github.ucchyocean.lc.bridge.McMMOBridge;
 import com.github.ucchyocean.lc.bridge.MultiverseCoreBridge;
 import com.github.ucchyocean.lc.bridge.VaultChatBridge;
 import com.github.ucchyocean.lc.channel.ChannelManager;
-import com.github.ucchyocean.lc.command.BukkitLunaChatCommand;
+import com.github.ucchyocean.lc.command.LunaChatCommandBukkit;
 import com.github.ucchyocean.lc.command.LunaChatJapanizeCommand;
 import com.github.ucchyocean.lc.command.LunaChatMessageCommand;
 import com.github.ucchyocean.lc.command.LunaChatReplyCommand;
@@ -48,7 +48,7 @@ public class LunaChatBukkit extends JavaPlugin implements PluginInterface {
     private ExpireCheckTask expireCheckerTask;
     private LunaChatLogger normalChatLogger;
 
-    private BukkitLunaChatCommand lunachatCommand;
+    private LunaChatCommandBukkit lunachatCommand;
     private LunaChatMessageCommand messageCommand;
     private LunaChatReplyCommand replyCommand;
     private LunaChatJapanizeCommand lcjapanizeCommand;
@@ -103,7 +103,7 @@ public class LunaChatBukkit extends JavaPlugin implements PluginInterface {
         getServer().getPluginManager().registerEvents(new BukkitEventListener(), this);
 
         // コマンドの登録
-        lunachatCommand = new BukkitLunaChatCommand();
+        lunachatCommand = new LunaChatCommandBukkit();
         messageCommand = new LunaChatMessageCommand();
         replyCommand = new LunaChatReplyCommand();
         lcjapanizeCommand = new LunaChatJapanizeCommand();

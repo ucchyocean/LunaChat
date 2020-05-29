@@ -10,7 +10,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import com.github.ucchyocean.lc.LunaChatAPI;
-import com.github.ucchyocean.lc.Resources;
+import com.github.ucchyocean.lc.Messages;
 import com.github.ucchyocean.lc.bukkit.LunaChatBukkit;
 import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.member.ChannelMember;
@@ -21,7 +21,7 @@ import com.github.ucchyocean.lc.member.ChannelMember;
  */
 public class LunaChatMessageCommand implements CommandExecutor {
 
-    private static final String PREERR = Resources.get("errorPrefix");
+    private static final String PREERR = Messages.get("errorPrefix");
 
     /**
      * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
@@ -129,7 +129,7 @@ public class LunaChatMessageCommand implements CommandExecutor {
     protected void sendResourceMessage(CommandSender sender, String pre,
             String key, Object... args) {
 
-        String org = Resources.get(key);
+        String org = Messages.get(key);
         if ( org == null || org.equals("") ) {
             return;
         }
@@ -147,7 +147,7 @@ public class LunaChatMessageCommand implements CommandExecutor {
     protected void sendResourceMessage(ChannelMember cp, String pre,
             String key, Object... args) {
 
-        String org = Resources.get(key);
+        String org = Messages.get(key);
         if ( org == null || org.equals("") ) {
             return;
         }

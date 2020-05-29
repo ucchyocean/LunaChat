@@ -26,7 +26,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.LunaChatConfig;
-import com.github.ucchyocean.lc.Resources;
+import com.github.ucchyocean.lc.Messages;
 import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.bridge.VaultChatBridge;
 import com.github.ucchyocean.lc.channel.Channel;
@@ -42,10 +42,10 @@ import com.github.ucchyocean.lc.member.ChannelMemberBukkit;
  */
 public class BukkitEventListener implements Listener {
 
-    private static final String MOTD_FIRSTLINE = Resources.get("motdFirstLine");
-    private static final String LIST_ENDLINE = Resources.get("listEndLine");
-    private static final String LIST_FORMAT = Resources.get("listFormat");
-    private static final String PREERR = Resources.get("errorPrefix");
+    private static final String MOTD_FIRSTLINE = Messages.get("motdFirstLine");
+    private static final String LIST_ENDLINE = Messages.get("listEndLine");
+    private static final String LIST_FORMAT = Messages.get("listFormat");
+    private static final String PREERR = Messages.get("errorPrefix");
 
     private SimpleDateFormat dateFormat;
     private SimpleDateFormat timeFormat;
@@ -597,7 +597,7 @@ public class BukkitEventListener implements Listener {
     private void sendResourceMessage(
             CommandSender sender, String pre, String key, Object... args) {
 
-        String org = Resources.get(key);
+        String org = Messages.get(key);
         if ( org == null || org.equals("") ) {
             return;
         }

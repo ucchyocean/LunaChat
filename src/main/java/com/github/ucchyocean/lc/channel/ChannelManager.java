@@ -14,7 +14,7 @@ import java.util.List;
 
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
-import com.github.ucchyocean.lc.Resources;
+import com.github.ucchyocean.lc.Messages;
 import com.github.ucchyocean.lc.YamlConfig;
 import com.github.ucchyocean.lc.japanize.JapanizeType;
 import com.github.ucchyocean.lc.member.ChannelMember;
@@ -25,7 +25,7 @@ import com.github.ucchyocean.lc.member.ChannelMember;
  */
 public class ChannelManager implements LunaChatAPI {
 
-    private static final String MSG_BREAKUP = Resources.get("breakupMessage");
+    private static final String MSG_BREAKUP = Messages.get("breakupMessage");
 
     private static final String FILE_NAME_DCHANNELS = "defaults.yml";
     private static final String FILE_NAME_TEMPLATES = "templates.yml";
@@ -623,8 +623,15 @@ public class ChannelManager implements LunaChatAPI {
      * @param file 出力先
      */
     private void makeEmptyFile(File file) {
+//        try {
+//            file.createNewFile();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+        YamlConfig config = new YamlConfig();
         try {
-            file.createNewFile();
+            config.save(file);
         } catch (IOException e) {
             e.printStackTrace();
         }

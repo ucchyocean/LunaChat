@@ -11,7 +11,7 @@ import java.util.Comparator;
 
 import org.bukkit.ChatColor;
 
-import com.github.ucchyocean.lc.Resources;
+import com.github.ucchyocean.lc.Messages;
 import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.member.ChannelMember;
 
@@ -21,10 +21,10 @@ import com.github.ucchyocean.lc.member.ChannelMember;
  */
 public class ListCommand extends SubCommandAbst {
 
-    private static final String LIST_FIRSTLINE = Resources.get("listFirstLine");
-    private static final String LIST_FIRSTLINE_PAGING = Resources.get("listFirstLinePaging");
-    private static final String LIST_ENDLINE = Resources.get("listEndLine");
-    private static final String LIST_FORMAT = Resources.get("listFormat");
+    private static final String LIST_FIRSTLINE = Messages.get("listFirstLine");
+    private static final String LIST_FIRSTLINE_PAGING = Messages.get("listFirstLinePaging");
+    private static final String LIST_ENDLINE = Messages.get("listEndLine");
+    private static final String LIST_FORMAT = Messages.get("listFormat");
 
     private static final String COMMAND_NAME = "list";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;

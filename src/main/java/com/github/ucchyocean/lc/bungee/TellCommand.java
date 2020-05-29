@@ -21,7 +21,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
 /**
- * BungeeJapanizeMessengerのtellコマンド実装クラス
+ * LunaChatのtellコマンド実装クラス
  * @author ucchy
  */
 public class TellCommand extends Command {
@@ -32,9 +32,11 @@ public class TellCommand extends Command {
      * コンストラクタ
      * @param parent
      * @param name コマンド
+     * @param permission パーミッション
+     * @param aliases エイリアス
      */
-    public TellCommand(LunaChatBungee parent, String name) {
-        super(name);
+    public TellCommand(LunaChatBungee parent, String name, String permission, String... aliases) {
+        super(name, permission, aliases);
         this.parent = parent;
     }
 

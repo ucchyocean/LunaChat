@@ -15,7 +15,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
 
 /**
- * BungeeJapanizeMessengerのdictionaryコマンド実装クラス
+ * LunaChatのdictionaryコマンド実装クラス
  * @author ucchy
  */
 public class DictionaryCommand extends Command {
@@ -26,9 +26,11 @@ public class DictionaryCommand extends Command {
      * コンストラクタ
      * @param parent
      * @param name コマンド
+     * @param permission パーミッション
+     * @param aliases エイリアス
      */
-    public DictionaryCommand(LunaChatBungee parent, String name) {
-        super(name);
+    public DictionaryCommand(LunaChatBungee parent, String name, String permission, String... aliases) {
+        super(name, permission, aliases);
         this.parent = parent;
     }
 

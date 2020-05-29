@@ -8,7 +8,7 @@ package com.github.ucchyocean.lc.command;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import com.github.ucchyocean.lc.Resources;
+import com.github.ucchyocean.lc.Messages;
 import com.github.ucchyocean.lc.member.ChannelMember;
 
 /**
@@ -17,8 +17,8 @@ import com.github.ucchyocean.lc.member.ChannelMember;
  */
 public class LunaChatReplyCommand extends LunaChatMessageCommand {
 
-    private static final String PREINFO = Resources.get("infoPrefix");
-    private static final String PREERR = Resources.get("errorPrefix");
+    private static final String PREINFO = Messages.get("infoPrefix");
+    private static final String PREERR = Messages.get("errorPrefix");
 
     /**
      * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])

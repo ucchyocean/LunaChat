@@ -7,7 +7,7 @@ package com.github.ucchyocean.lc.command;
 
 import java.util.ArrayList;
 
-import com.github.ucchyocean.lc.Resources;
+import com.github.ucchyocean.lc.Messages;
 import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.member.ChannelMember;
@@ -24,11 +24,11 @@ public class HideCommand extends SubCommandAbst {
     private static final String USAGE_KEY2 = "usageHidePlayer";
 
     private static final String HIDE_CHANNEL_FIRSTLINE =
-            Resources.get("hideChannelFirstLine");
+            Messages.get("hideChannelFirstLine");
     private static final String HIDE_PLAYER_FIRSTLINE =
-            Resources.get("hidePlayerFirstLine");
-    private static final String LIST_ENDLINE = Resources.get("listEndLine");
-    private static final String LIST_PREFIX = Resources.get("listPlainPrefix");
+            Messages.get("hidePlayerFirstLine");
+    private static final String LIST_ENDLINE = Messages.get("listEndLine");
+    private static final String LIST_PREFIX = Messages.get("listPlainPrefix");
 
     /**
      * コマンドを取得します。

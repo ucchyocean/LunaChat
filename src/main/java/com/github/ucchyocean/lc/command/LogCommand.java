@@ -8,7 +8,7 @@ package com.github.ucchyocean.lc.command;
 import java.util.ArrayList;
 
 import com.github.ucchyocean.lc.LunaChatLogger;
-import com.github.ucchyocean.lc.Resources;
+import com.github.ucchyocean.lc.Messages;
 import com.github.ucchyocean.lc.bukkit.LunaChatBukkit;
 import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.member.ChannelMember;
@@ -19,9 +19,9 @@ import com.github.ucchyocean.lc.member.ChannelMember;
  */
 public class LogCommand extends SubCommandAbst {
 
-    private static final String LOGDISPLAY_FIRSTLINE = Resources.get("logDisplayFirstLine");
-    private static final String LOGDISPLAY_ENDLINE = Resources.get("logDisplayEndLine");
-    private static final String LOGDISPLAY_FORMAT = Resources.get("logDisplayFormat");
+    private static final String LOGDISPLAY_FIRSTLINE = Messages.get("logDisplayFirstLine");
+    private static final String LOGDISPLAY_ENDLINE = Messages.get("logDisplayEndLine");
+    private static final String LOGDISPLAY_FORMAT = Messages.get("logDisplayFormat");
 
     private static final String COMMAND_NAME = "log";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;

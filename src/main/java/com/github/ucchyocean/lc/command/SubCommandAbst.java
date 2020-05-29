@@ -8,7 +8,7 @@ package com.github.ucchyocean.lc.command;
 import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.LunaChatConfig;
-import com.github.ucchyocean.lc.Resources;
+import com.github.ucchyocean.lc.Messages;
 import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.member.ChannelMember;
@@ -35,8 +35,8 @@ public abstract class SubCommandAbst {
         ADMIN
     }
 
-    protected static final String PREINFO = Resources.get("infoPrefix");
-    protected static final String PREERR = Resources.get("errorPrefix");
+    protected static final String PREINFO = Messages.get("infoPrefix");
+    protected static final String PREERR = Messages.get("errorPrefix");
 
     protected LunaChatAPI api;
     protected LunaChatConfig config;
@@ -59,7 +59,7 @@ public abstract class SubCommandAbst {
     protected void sendResourceMessageWithKeyword(
             Channel channel, String key, ChannelMember player) {
 
-        String msg = Resources.get(key);
+        String msg = Messages.get(key);
         if ( msg == null || msg.equals("") ) {
             return;
         }
@@ -87,7 +87,7 @@ public abstract class SubCommandAbst {
     protected void sendResourceMessageWithKeyword(
             Channel channel, String key, ChannelMember player, int minutes) {
 
-        String msg = Resources.get(key);
+        String msg = Messages.get(key);
         if ( msg == null || msg.equals("") ) {
             return;
         }
@@ -115,7 +115,7 @@ public abstract class SubCommandAbst {
     protected void sendResourceMessage(
             ChannelMember cp, String pre, String key, Object... args) {
 
-        String org = Resources.get(key);
+        String org = Messages.get(key);
         if ( org == null || org.equals("") ) {
             return;
         }

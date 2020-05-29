@@ -11,7 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc.LunaChatAPI;
-import com.github.ucchyocean.lc.Resources;
+import com.github.ucchyocean.lc.Messages;
 import com.github.ucchyocean.lc.bukkit.LunaChatBukkit;
 import com.github.ucchyocean.lc.member.ChannelMember;
 
@@ -23,8 +23,8 @@ public class LunaChatJapanizeCommand implements CommandExecutor {
 
     private static final String PERM_JAPANIZE_OTHER = "lunachat-admin.japanize-other";
 
-    private static final String PREINFO = Resources.get("infoPrefix");
-    private static final String PREERR = Resources.get("errorPrefix");
+    private static final String PREINFO = Messages.get("infoPrefix");
+    private static final String PREERR = Messages.get("errorPrefix");
 
     /**
      * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
@@ -111,7 +111,7 @@ public class LunaChatJapanizeCommand implements CommandExecutor {
     protected void sendResourceMessage(CommandSender sender, String pre,
             String key, Object... args) {
 
-        String org = Resources.get(key);
+        String org = Messages.get(key);
         if ( org == null || org.equals("") ) {
             return;
         }
@@ -129,7 +129,7 @@ public class LunaChatJapanizeCommand implements CommandExecutor {
     protected void sendResourceMessage(ChannelMember cp, String pre,
             String key, Object... args) {
 
-        String org = Resources.get(key);
+        String org = Messages.get(key);
         if ( org == null || org.equals("") ) {
             return;
         }

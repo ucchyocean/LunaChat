@@ -43,6 +43,7 @@ public class LunaChatBungee extends Plugin implements PluginInterface {
         LunaChat.setMode(LunaChatMode.BUNGEE);
 
         // 初期化
+        config = new LunaChatConfig(getDataFolder(), getFile());
         history = new HashMap<String, String>();
 
         manager = new ChannelManager();
@@ -54,22 +55,14 @@ public class LunaChatBungee extends Plugin implements PluginInterface {
         }
 
         // コマンド登録
-        for ( String command : new String[]{
-                "tell", "msg", "message", "m", "w", "t"}) {
-            getProxy().getPluginManager().registerCommand(
-                    this, new TellCommand(this, command));
-        }
-        for ( String command : new String[]{"reply", "r"}) {
-            getProxy().getPluginManager().registerCommand(
-                    this, new ReplyCommand(this, command));
-        }
-        for ( String command : new String[]{"dictionary", "dic"}) {
-            getProxy().getPluginManager().registerCommand(
-                    this, new DictionaryCommand(this, command));
-        }
-
-        // コンフィグ取得
-        config = new LunaChatConfig(getDataFolder(), getFile());
+        getProxy().getPluginManager().registerCommand(this,
+                new LunaChatCommand("lunachat", "lunachat.command", "lc", "ch"));
+        getProxy().getPluginManager().registerCommand(this,
+                new TellCommand(this, "tell", "lunachat.message", "msg", "message", "m", "w", "t"));
+        getProxy().getPluginManager().registerCommand(this,
+                new ReplyCommand(this, "reply", "lunachat.reply", "r"));
+        getProxy().getPluginManager().registerCommand(this,
+                new DictionaryCommand(this, "dictionary", "lunachat.dictionary", "dic"));
 
         // リスナー登録
         getProxy().getPluginManager().registerListener(this, new BungeeEventListener(this));

@@ -6,35 +6,30 @@
 package com.github.ucchyocean.lc.command;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
-import com.github.ucchyocean.lc.Resources;
+import com.github.ucchyocean.lc.Messages;
 import com.github.ucchyocean.lc.bukkit.LunaChatBukkit;
 import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.member.ChannelMember;
 
-import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.plugin.Command;
-import net.md_5.bungee.api.plugin.TabExecutor;
-
 /**
- * Lunachatコマンドの処理クラス（Bungee実装）
+ * Lunachatコマンドの処理クラス
  * @author ucchy
  */
-public class BungeeLunaChatCommand extends Command implements TabExecutor {
+public abstract class LunaChatCommand {
 
-    private static final String PREERR = Resources.get("errorPrefix");
+    private static final String PREERR = Messages.get("errorPrefix");
 
     private ArrayList<SubCommandAbst> commands;
     private ArrayList<SubCommandAbst> commonCommands;
     private JoinCommand joinCommand;
     private HelpCommand helpCommand;
 
-    public BungeeLunaChatCommand(String name) {
-        super(name);
+    /**
+     * コンストラクタ
+     */
+    public LunaChatCommand() {
 
         commands = new ArrayList<SubCommandAbst>();
         joinCommand = new JoinCommand();
@@ -70,8 +65,14 @@ public class BungeeLunaChatCommand extends Command implements TabExecutor {
         commonCommands.add(new ReloadCommand());
     }
 
-    @Override
-    public void execute(CommandSender sender, String[] args) {
+    /**
+     * コマンドを実行したときに呼び出されるメソッド
+     * @param sender 実行者
+     * @param label 実行されたコマンドのラベル
+     * @param args 実行されたコマンドの引数
+     * @return 実行したかどうか（falseを返した場合、サーバーがUsageを表示する）
+     */
+    protected boolean execute(ChannelMember sender, String label, String[] args) {
 
         // チャンネルチャットが無効でも利用できるコマンドはここで処理する
         // （hide, unhide, dic, dictionary, reload）
@@ -83,12 +84,11 @@ public class BungeeLunaChatCommand extends Command implements TabExecutor {
                     String node = c.getPermissionNode();
                     if ( !sender.hasPermission(node) ) {
                         sendResourceMessage(sender, PREERR, "errmsgPermission", node);
-                        return;
+                        return true;
                     }
 
                     // 実行
-                    c.runCommand(ChannelMember.getChannelMember(sender), getName(), args);
-                    return;
+                    return c.runCommand(sender, label, args);
                 }
             }
         }
@@ -97,13 +97,13 @@ public class BungeeLunaChatCommand extends Command implements TabExecutor {
         if ( !LunaChatBukkit.getInstance().getLunaChatConfig().isEnableChannelChat()
                 && !sender.hasPermission("lunachat-admin") ) {
             sendResourceMessage(sender, PREERR, "errmsgChannelChatDisabled");
-            return;
+            return true;
         }
 
         // 引数なしは、ヘルプを表示
         if (args.length == 0) {
-            helpCommand.runCommand(ChannelMember.getChannelMember(sender), getName(), args);
-            return;
+            helpCommand.runCommand(sender, label, args);
+            return true;
         }
 
         // 第1引数に指定されたコマンドを実行する
@@ -114,12 +114,11 @@ public class BungeeLunaChatCommand extends Command implements TabExecutor {
                 String node = c.getPermissionNode();
                 if ( !sender.hasPermission(node) ) {
                     sendResourceMessage(sender, PREERR, "errmsgPermission", node);
-                    return;
+                    return true;
                 }
 
                 // 実行
-                c.runCommand(ChannelMember.getChannelMember(sender), getName(), args);
-                return;
+                return c.runCommand(sender, label, args);
             }
         }
 
@@ -127,20 +126,20 @@ public class BungeeLunaChatCommand extends Command implements TabExecutor {
         String node = joinCommand.getPermissionNode();
         if ( !sender.hasPermission(node) ) {
             sendResourceMessage(sender, PREERR, "errmsgPermission", node);
-            return;
+            return true;
         }
 
-        joinCommand.runCommand(ChannelMember.getChannelMember(sender), getName(), args);
+        return joinCommand.runCommand(sender, label, args);
     }
 
     /**
      * TABキー補完が実行されたときに呼び出されるメソッド
      * @param sender TABキー補完の実行者
+     * @param label 実行されたコマンドのラベル
      * @param args 実行されたコマンドの引数
      * @return 補完候補
      */
-    @Override
-    public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
+    protected List<String> onTabComplete(ChannelMember sender, String label, String[] args) {
         if ( args.length == 1 ) {
             // コマンド名で補完する
             String arg = args[0].toLowerCase();
@@ -165,7 +164,7 @@ public class BungeeLunaChatCommand extends Command implements TabExecutor {
             // 参加可能チャンネル名で補完する
             String arg = args[1].toLowerCase();
             ArrayList<String> items = new ArrayList<String>();
-            for ( String name : getListCanJoin(ChannelMember.getChannelMember(sender)) ) {
+            for ( String name : getListCanJoin(sender) ) {
                 if ( name.toLowerCase().startsWith(arg) ) {
                     items.add(name);
                 }
@@ -180,15 +179,7 @@ public class BungeeLunaChatCommand extends Command implements TabExecutor {
                 args[0].equalsIgnoreCase("unmute") ) ) {
             // プレイヤー名で補完する
             String arg = args[1].toLowerCase();
-            ArrayList<String> items = new ArrayList<String>();
-            for ( ProxiedPlayer player : getOnlinePlayers() ) {
-                String pname = player.getName();
-                pname = pname == null ? "" : pname.toLowerCase();
-                if ( pname.startsWith(arg) ) {
-                    items.add(player.getName());
-                }
-            }
-            return items;
+            return getListPlayerNames(arg);
 
         } else if ( args.length == 3 && (
                 args[0].equalsIgnoreCase("ban") ||
@@ -199,7 +190,7 @@ public class BungeeLunaChatCommand extends Command implements TabExecutor {
             // チャンネル名で補完する
             String arg = args[2].toLowerCase();
             ArrayList<String> items = new ArrayList<String>();
-            for ( String name : getListCanJoin(ChannelMember.getChannelMember(sender)) ) {
+            for ( String name : getListCanJoin(sender) ) {
                 if ( name.toLowerCase().startsWith(arg) ) {
                     items.add(name);
                 }
@@ -214,18 +205,12 @@ public class BungeeLunaChatCommand extends Command implements TabExecutor {
             // 文字列"player", "channel"で補完する
             String arg = args[1].toLowerCase();
             ArrayList<String> items = new ArrayList<String>();
-            for ( String name : getListCanJoin(ChannelMember.getChannelMember(sender)) ) {
+            for ( String name : getListCanJoin(sender) ) {
                 if ( name.toLowerCase().startsWith(arg) ) {
                     items.add(name);
                 }
             }
-            for ( ProxiedPlayer player : getOnlinePlayers() ) {
-                String pname = player.getName();
-                pname = pname == null ? "" : pname.toLowerCase();
-                if ( pname.startsWith(arg) ) {
-                    items.add(player.getName());
-                }
-            }
+            items.addAll(getListPlayerNames(arg));
             if ( "player".startsWith(arg) ) {
                 items.add("player");
             }
@@ -241,15 +226,7 @@ public class BungeeLunaChatCommand extends Command implements TabExecutor {
 
             // プレイヤー名で補完する
             String arg = args[2].toLowerCase();
-            ArrayList<String> items = new ArrayList<String>();
-            for ( ProxiedPlayer player : getOnlinePlayers() ) {
-                String pname = player.getName();
-                pname = pname == null ? "" : pname.toLowerCase();
-                if ( pname.startsWith(arg) ) {
-                    items.add(player.getName());
-                }
-            }
-            return items;
+            return getListPlayerNames(arg);
 
         } else if ( args.length == 3 &&
                 (args[0].equalsIgnoreCase("hide") ||
@@ -258,19 +235,13 @@ public class BungeeLunaChatCommand extends Command implements TabExecutor {
 
             // チャンネル名で補完する
             String arg = args[2].toLowerCase();
-            ArrayList<String> items = new ArrayList<String>();
-            for ( String name : getListCanJoin(ChannelMember.getChannelMember(sender)) ) {
-                if ( name.toLowerCase().startsWith(arg) ) {
-                    items.add(name);
-                }
-            }
-            return items;
+            return getListPlayerNames(arg);
 
         } else if ( args.length == 2 && args[0].equalsIgnoreCase("remove") ) {
             // 削除可能チャンネル名で補完する
             String arg = args[1].toLowerCase();
             ArrayList<String> items = new ArrayList<String>();
-            for ( String name : getListCanRemove(ChannelMember.getChannelMember(sender)) ) {
+            for ( String name : getListCanRemove(sender) ) {
                 if ( name.toLowerCase().startsWith(arg) ) {
                     items.add(name);
                 }
@@ -317,22 +288,14 @@ public class BungeeLunaChatCommand extends Command implements TabExecutor {
                 args[0].equalsIgnoreCase("set") && args[1].equalsIgnoreCase("default") ) {
             // プレイヤー名で補完する
             String arg = args[2].toLowerCase();
-            ArrayList<String> items = new ArrayList<String>();
-            for ( ProxiedPlayer player : getOnlinePlayers() ) {
-                String pname = player.getName();
-                pname = pname == null ? "" : pname.toLowerCase();
-                if ( pname.startsWith(arg) ) {
-                    items.add(player.getName());
-                }
-            }
-            return items;
+            return getListPlayerNames(arg);
 
         } else if ( args.length == 4 &&
                 args[0].equalsIgnoreCase("set") && args[1].equalsIgnoreCase("default") ) {
             // チャンネル名で補完する
             String arg = args[3].toLowerCase();
             ArrayList<String> items = new ArrayList<String>();
-            for ( String name : getListCanJoin(ChannelMember.getChannelMember(sender)) ) {
+            for ( String name : getListCanJoin(sender) ) {
                 if ( name.toLowerCase().startsWith(arg) ) {
                     items.add(name);
                 }
@@ -345,20 +308,21 @@ public class BungeeLunaChatCommand extends Command implements TabExecutor {
 
     /**
      * メッセージリソースのメッセージを、カラーコード置き換えしつつ、senderに送信する
+     *
      * @param sender メッセージの送り先
      * @param pre プレフィックス
      * @param key リソースキー
      * @param args リソース内の置き換え対象キーワード
      */
-    private void sendResourceMessage(CommandSender sender, String pre,
+    private void sendResourceMessage(ChannelMember sender, String pre,
             String key, Object... args) {
 
-        String org = Resources.get(key);
+        String org = Messages.get(key);
         if ( org == null || org.equals("") ) {
             return;
         }
         String msg = String.format(pre + org, args);
-        sender.sendMessage(TextComponent.fromLegacyText(msg));
+        sender.sendMessage(msg);
     }
 
     /**
@@ -366,15 +330,14 @@ public class BungeeLunaChatCommand extends Command implements TabExecutor {
      * @param sender コマンド実行者
      * @return リスト
      */
-    private ArrayList<String> getListCanJoin(ChannelMember sender) {
+    protected ArrayList<String> getListCanJoin(ChannelMember sender) {
 
         ArrayList<String> items = new ArrayList<String>();
-        ChannelMember cp = ChannelMember.getChannelMember(sender);
 
         for ( Channel channel : LunaChatBukkit.getInstance().getLunaChatAPI().getChannels() ) {
 
             // BANされているチャンネルは対象外
-            if ( channel.getBanned().contains(cp) ) {
+            if ( channel.getBanned().contains(sender) ) {
                 continue;
             }
 
@@ -384,10 +347,8 @@ public class BungeeLunaChatCommand extends Command implements TabExecutor {
             }
 
             // 未参加で visible=false のチャンネルは対象外
-            if ( sender instanceof ProxiedPlayer &&
-                    !channel.getMembers().contains(cp) &&
-                    !channel.isGlobalChannel() &&
-                    !channel.isVisible() ) {
+            if ( !channel.getMembers().contains(sender) &&
+                    !channel.isGlobalChannel() && !channel.isVisible() ) {
                 continue;
             }
 
@@ -402,7 +363,7 @@ public class BungeeLunaChatCommand extends Command implements TabExecutor {
      * @param sender コマンド実行者
      * @return リスト
      */
-    private ArrayList<String> getListCanRemove(ChannelMember sender) {
+    protected ArrayList<String> getListCanRemove(ChannelMember sender) {
 
         ArrayList<String> items = new ArrayList<String>();
 
@@ -429,7 +390,10 @@ public class BungeeLunaChatCommand extends Command implements TabExecutor {
         return items;
     }
 
-    private Collection<ProxiedPlayer> getOnlinePlayers() {
-        return ProxyServer.getInstance().getPlayers();
-    }
+    /**
+     * オンラインプレイヤーのうち、プレイヤー名が指定された文字列と前方一致するものをリストにして返す
+     * @param pre 検索キー
+     * @return プレイヤー名リスト
+     */
+    protected abstract List<String> getListPlayerNames(String pre);
 }

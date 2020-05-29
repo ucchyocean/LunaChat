@@ -23,7 +23,7 @@ import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.LunaChatConfig;
 import com.github.ucchyocean.lc.LunaChatLogger;
 import com.github.ucchyocean.lc.NGWordAction;
-import com.github.ucchyocean.lc.Resources;
+import com.github.ucchyocean.lc.Messages;
 import com.github.ucchyocean.lc.Utility;
 import com.github.ucchyocean.lc.UtilityBukkit;
 import com.github.ucchyocean.lc.bridge.DynmapBridge;
@@ -42,37 +42,37 @@ public class BukkitChannel extends Channel {
 
     private static final String PERMISSION_SPEAK_PREFIX = "lunachat.speak";
 
-    private static final String INFO_FIRSTLINE = Resources.get("channelInfoFirstLine");
-    private static final String INFO_PREFIX = Resources.get("channelInfoPrefix");
-    private static final String INFO_ALIAS = Resources.get("channelInfoAlias");
-    private static final String INFO_GLOBAL = Resources.get("channelInfoGlobal");
-    private static final String INFO_BROADCAST = Resources.get("channelInfoBroadcast");
-    private static final String INFO_SECRET = Resources.get("channelInfoSecret");
-    private static final String INFO_PASSWORD = Resources.get("channelInfoPassword");
-    private static final String INFO_WORLDCHAT = Resources.get("channelInfoWorldChat");
-    private static final String INFO_RANGECHAT = Resources.get("channelInfoRangeChat");
-    private static final String INFO_FORMAT = Resources.get("channelInfoFormat");
-    private static final String INFO_BANNED = Resources.get("channelInfoBanned");
-    private static final String INFO_MUTED = Resources.get("channelInfoMuted");
+    private static final String INFO_FIRSTLINE = Messages.get("channelInfoFirstLine");
+    private static final String INFO_PREFIX = Messages.get("channelInfoPrefix");
+    private static final String INFO_ALIAS = Messages.get("channelInfoAlias");
+    private static final String INFO_GLOBAL = Messages.get("channelInfoGlobal");
+    private static final String INFO_BROADCAST = Messages.get("channelInfoBroadcast");
+    private static final String INFO_SECRET = Messages.get("channelInfoSecret");
+    private static final String INFO_PASSWORD = Messages.get("channelInfoPassword");
+    private static final String INFO_WORLDCHAT = Messages.get("channelInfoWorldChat");
+    private static final String INFO_RANGECHAT = Messages.get("channelInfoRangeChat");
+    private static final String INFO_FORMAT = Messages.get("channelInfoFormat");
+    private static final String INFO_BANNED = Messages.get("channelInfoBanned");
+    private static final String INFO_MUTED = Messages.get("channelInfoMuted");
 
-    private static final String LIST_ENDLINE = Resources.get("listEndLine");
-    private static final String LIST_FORMAT = Resources.get("listFormat");
+    private static final String LIST_ENDLINE = Messages.get("listEndLine");
+    private static final String LIST_FORMAT = Messages.get("listFormat");
 
-    private static final String MSG_BAN_NGWORD = Resources.get("banNGWordMessage");
-    private static final String MSG_KICK_NGWORD = Resources.get("kickNGWordMessage");
-    private static final String MSG_MUTE_NGWORD = Resources.get("muteNGWordMessage");
+    private static final String MSG_BAN_NGWORD = Messages.get("banNGWordMessage");
+    private static final String MSG_KICK_NGWORD = Messages.get("kickNGWordMessage");
+    private static final String MSG_MUTE_NGWORD = Messages.get("muteNGWordMessage");
 
-    private static final String MSG_BAN_EXPIRED = Resources.get("expiredBanMessage");
-    private static final String MSG_MUTE_EXPIRED = Resources.get("expiredMuteMessage");
-    private static final String MSG_BAN_EXPIRED_PLAYER = Resources.get("cmdmsgPardoned");
-    private static final String MSG_MUTE_EXPIRED_PLAYER = Resources.get("cmdmsgUnmuted");
+    private static final String MSG_BAN_EXPIRED = Messages.get("expiredBanMessage");
+    private static final String MSG_MUTE_EXPIRED = Messages.get("expiredMuteMessage");
+    private static final String MSG_BAN_EXPIRED_PLAYER = Messages.get("cmdmsgPardoned");
+    private static final String MSG_MUTE_EXPIRED_PLAYER = Messages.get("cmdmsgUnmuted");
 
-    private static final String PREINFO = Resources.get("infoPrefix");
-    private static final String PREERR = Resources.get("errorPrefix");
+    private static final String PREINFO = Messages.get("infoPrefix");
+    private static final String PREERR = Messages.get("errorPrefix");
 
-    private static final String MSG_NO_RECIPIENT = Resources.get("noRecipientMessage");
+    private static final String MSG_NO_RECIPIENT = Messages.get("noRecipientMessage");
 
-    private static final String ERRMSG_MUTED = Resources.get("errmsgMuted");
+    private static final String ERRMSG_MUTED = Messages.get("errmsgMuted");
 
     private SimpleDateFormat dateFormat;
     private SimpleDateFormat timeFormat;
@@ -300,7 +300,7 @@ public class BukkitChannel extends Channel {
             return;
         }
 
-        String msg = Resources.get(key);
+        String msg = Messages.get(key);
         if ( msg == null || msg.equals("") ) {
             return;
         }
@@ -839,7 +839,7 @@ public class BukkitChannel extends Channel {
     private void sendResourceMessage(
             ChannelMember player, String pre, String key, Object... args) {
 
-        String org = Resources.get(key);
+        String org = Messages.get(key);
         if ( org == null || org.equals("") ) {
             return;
         }
