@@ -144,14 +144,13 @@ public class LogCommand extends SubCommandAbst {
             }
 
             // BANされていないかどうか確認する
-            ChannelMember cp = ChannelMember.getChannelMember(sender);
-            if ( sender != null && channel.getBanned().contains(cp) ) {
+            if ( sender != null && channel.getBanned().contains(sender) ) {
                 sendResourceMessage(sender, PREERR, "errmsgBanned");
                 return true;
             }
 
             // チャンネルのメンバーかどうかを確認する
-            if (!channel.getMembers().contains(cp)) {
+            if (!channel.getMembers().contains(sender)) {
                 sendResourceMessage(sender, PREERR, "errmsgNomember");
                 return true;
             }

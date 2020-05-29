@@ -45,19 +45,13 @@ public class ChannelMemberProxiedPlayer extends ChannelMemberBungee {
      * @return ChannelMemberProxiedPlayer
      */
     public static ChannelMemberProxiedPlayer getChannelMember(String nameOrUuid) {
-        ProxiedPlayer player = null;
+
         if ( nameOrUuid.startsWith("$") ) {
-            player = ProxyServer.getInstance().getPlayer(
-                    UUID.fromString(nameOrUuid.substring(1)));
+            return new ChannelMemberProxiedPlayer(UUID.fromString(nameOrUuid.substring(1)));
         } else {
-            player = ProxyServer.getInstance().getPlayer(nameOrUuid);
+            ProxiedPlayer player = ProxyServer.getInstance().getPlayer(nameOrUuid);
+            if ( player != null ) return new ChannelMemberProxiedPlayer(player.getUniqueId());
         }
-        if ( player != null ) {
-            return new ChannelMemberProxiedPlayer(player.getUniqueId());
-        }
-
-        // TODO オフラインプレイヤーのUUIDを取得する方法を検討する
-
         return null;
     }
 
