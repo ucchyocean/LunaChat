@@ -8,6 +8,7 @@ package com.github.ucchyocean.lc3;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 import com.github.ucchyocean.lc3.japanize.JapanizeType;
@@ -267,10 +268,10 @@ public class LunaChatConfig {
         if ( globalChannel != null && !globalChannel.equals("") &&
                 !globalChannel.matches("[0-9a-zA-Z\\-_]{1,20}") ) {
 
-            // TODO コンソールに警告を表示する
-//            String msg = String.format(
-//                    Resources.get("errmsgCannotUseForGlobal"), globalChannel);
-//            LunaChat.getInstance().getLogger().warning(msg);
+            // コンソールに警告を表示する
+            String msg = String.format(
+                    Messages.get("errmsgCannotUseForGlobal"), globalChannel);
+            LunaChat.getPlugin().log(Level.WARNING, msg);
             globalChannel = "";
         }
     }

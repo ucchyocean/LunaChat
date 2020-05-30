@@ -168,7 +168,6 @@ public class BungeeEventListener implements Listener {
             if ( channel.isPersonalChat() && cname.contains(pname) ) {
                 boolean isAllOffline = true;
                 for ( ChannelMember cp : channel.getMembers() ) {
-                    // TODO
                     if ( cp.isOnline() ) {
                         isAllOffline = false;
                     }

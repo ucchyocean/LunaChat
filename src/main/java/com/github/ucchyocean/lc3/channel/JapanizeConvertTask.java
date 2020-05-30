@@ -55,10 +55,7 @@ public class JapanizeConvertTask {
         HashMap<String, String> keywordMap = new HashMap<String, String>();
         ArrayList<String> keywords = new ArrayList<String>();
         if ( LunaChat.getConfig().isJapanizeIgnorePlayerName() ) {
-            // TODO
-//            for ( Player player : Bukkit.getOnlinePlayers() ) {
-//                keywords.add(player.getName());
-//            }
+            keywords.addAll(LunaChat.getPlugin().getOnlinePlayerNames());
         }
         HashMap<String, String> dictionary =
                 LunaChat.getAPI().getAllDictionary();

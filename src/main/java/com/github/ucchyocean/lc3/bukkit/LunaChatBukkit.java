@@ -6,11 +6,15 @@
 package com.github.ucchyocean.lc3.bukkit;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -238,5 +242,28 @@ public class LunaChatBukkit extends JavaPlugin implements PluginInterface {
      */
     protected void setNormalChatLogger(LunaChatLogger normalChatLogger) {
         this.normalChatLogger = normalChatLogger;
+    }
+
+    /**
+     * オンラインのプレイヤー名一覧を取得する
+     * @return オンラインのプレイヤー名一覧
+     */
+    @Override
+    public Set<String> getOnlinePlayerNames() {
+        Set<String> list = new HashSet<>();
+        for ( Player p : Bukkit.getOnlinePlayers() ) {
+            list.add(p.getName());
+        }
+        return list;
+    }
+
+    /**
+     * このプラグインのログを記録する
+     * @param level ログレベル
+     * @param msg ログメッセージ
+     */
+    @Override
+    public void log(Level level, String msg) {
+        getLogger().log(level, msg);
     }
 }

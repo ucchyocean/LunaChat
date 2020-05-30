@@ -7,6 +7,9 @@ package com.github.ucchyocean.lc3.bungee;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.Level;
 
 import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatAPI;
@@ -17,6 +20,7 @@ import com.github.ucchyocean.lc3.PluginInterface;
 import com.github.ucchyocean.lc3.channel.ChannelManager;
 
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 
 /**
@@ -142,5 +146,28 @@ public class LunaChatBungee extends Plugin implements PluginInterface {
     @Override
     public LunaChatLogger getNormalChatLogger() {
         return normalChatLogger;
+    }
+
+    /**
+     * オンラインのプレイヤー名一覧を取得する
+     * @return オンラインのプレイヤー名一覧
+     */
+    @Override
+    public Set<String> getOnlinePlayerNames() {
+        Set<String> list = new HashSet<>();
+        for ( ProxiedPlayer p : ProxyServer.getInstance().getPlayers() ) {
+            list.add(p.getName());
+        }
+        return list;
+    }
+
+    /**
+     * このプラグインのログを記録する
+     * @param level ログレベル
+     * @param msg ログメッセージ
+     */
+    @Override
+    public void log(Level level, String msg) {
+        getLogger().log(level, msg);
     }
 }

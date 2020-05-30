@@ -6,6 +6,8 @@
 package com.github.ucchyocean.lc3;
 
 import java.io.File;
+import java.util.Set;
+import java.util.logging.Level;
 
 /**
  * プラグインインターフェイス
@@ -42,4 +44,17 @@ public interface PluginInterface {
      * @return normalChatLogger
      */
     public LunaChatLogger getNormalChatLogger();
+
+    /**
+     * オンラインのプレイヤー名一覧を取得する
+     * @return オンラインのプレイヤー名一覧
+     */
+    public Set<String> getOnlinePlayerNames();
+
+    /**
+     * このプラグインのログを記録する
+     * @param level ログレベル
+     * @param msg ログメッセージ
+     */
+    public void log(Level level, String msg);
 }

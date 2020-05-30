@@ -7,6 +7,8 @@ package com.github.ucchyocean.lc3.standalone;
 
 import java.io.File;
 import java.net.URISyntaxException;
+import java.util.Set;
+import java.util.logging.Level;
 
 import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatAPI;
@@ -72,4 +74,18 @@ public class LunaChatStandalone implements PluginInterface {
     public LunaChatLogger getNormalChatLogger() {
         return null;
     }
+
+    /**
+     * オンラインのプレイヤー名一覧を取得する
+     * @return オンラインのプレイヤー名一覧
+     */
+    public Set<String> getOnlinePlayerNames() {
+        return null;
+    }
+
+    @Override
+    public void log(Level level, String msg) {
+        // TODO 未実装
+    }
+
 }

@@ -87,11 +87,11 @@ public class SetCommand extends SubCommandAbst {
 
             sendResourceMessage(sender, PREINFO, "cmdmsgSetDefault", targetPlayer, targetChannel.getName());
 
-            // TODO setされる相手のプレイヤーにも通知する
-//            Player target = Utility.getPlayerExact(targetPlayer);
-//            if ( target != null ) {
-//                sendResourceMessage(new CommandSenderBukkit(target), PREINFO, "cmdmsgSet", targetChannel.getName());
-//            }
+            // setされる相手のプレイヤーにも通知する
+            ChannelMember target = ChannelMember.getChannelMember(targetPlayer);
+            if ( target != null ) {
+                sendResourceMessage(target, PREINFO, "cmdmsgSet", targetChannel.getName());
+            }
 
             return true;
         }

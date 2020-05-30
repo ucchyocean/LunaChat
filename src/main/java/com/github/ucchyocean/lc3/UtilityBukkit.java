@@ -8,7 +8,6 @@ package com.github.ucchyocean.lc3;
 import java.util.Collection;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
@@ -32,44 +31,6 @@ public class UtilityBukkit {
      */
     public static int getOnlinePlayersCount() {
         return getOnlinePlayers().size();
-    }
-
-    /**
-     * ChatColorで指定可能な色かどうかを判断する
-     * @param color カラー表記の文字列
-     * @return 指定可能かどうか
-     */
-    public static boolean isValidColor(String color) {
-        if ( color == null ) return false;
-        for (ChatColor c : ChatColor.values()) {
-            if (c.name().equals(color.toUpperCase())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * カラー表記の文字列を、カラーコードに変換する
-     * @param color カラー表記の文字列
-     * @return カラーコード
-     */
-    public static String changeToColorCode(String color) {
-
-        return "&" + changeToChatColor(color).getChar();
-    }
-
-    /**
-     * カラー表記の文字列を、ChatColorクラスに変換する
-     * @param color カラー表記の文字列
-     * @return ChatColorクラス
-     */
-    public static ChatColor changeToChatColor(String color) {
-
-        if (isValidColor(color)) {
-            return ChatColor.valueOf(color.toUpperCase());
-        }
-        return ChatColor.WHITE;
     }
 
     /**

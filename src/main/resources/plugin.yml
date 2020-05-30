@@ -1,5 +1,5 @@
 name: ${project.name}
-main: com.github.ucchyocean.lc3.LunaChat
+main: com.github.ucchyocean.lc3.bukkit.LunaChatBukkit
 version: ${project.version}
 authors: [ucchy, YukiLeafX, LazyGon]
 description: ${project.description}

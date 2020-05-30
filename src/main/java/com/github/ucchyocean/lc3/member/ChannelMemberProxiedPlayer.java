@@ -9,7 +9,6 @@ import java.util.UUID;
 
 import org.jetbrains.annotations.Nullable;
 
-import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -49,22 +48,10 @@ public class ChannelMemberProxiedPlayer extends ChannelMemberBungee {
         if ( nameOrUuid.startsWith("$") ) {
             return new ChannelMemberProxiedPlayer(UUID.fromString(nameOrUuid.substring(1)));
         } else {
+            // TODO オフラインのプレイヤー取得について検討する
             ProxiedPlayer player = ProxyServer.getInstance().getPlayer(nameOrUuid);
             if ( player != null ) return new ChannelMemberProxiedPlayer(player.getUniqueId());
         }
-        return null;
-    }
-
-    /**
-     * CommandSenderから、ChannelMemberProxiedPlayerを作成して返す
-     * @param sender
-     * @return ChannelMemberProxiedPlayer
-     */
-    public static ChannelMemberProxiedPlayer getChannelPlayer(CommandSender sender) {
-        if ( sender instanceof ProxiedPlayer ) {
-            return new ChannelMemberProxiedPlayer(((ProxiedPlayer)sender).getUniqueId());
-        }
-        // TODO BungeeCordのCommandSenderを実装するクラスは、ProxiedPlayer以外にないはず。コンソールは？
         return null;
     }
 

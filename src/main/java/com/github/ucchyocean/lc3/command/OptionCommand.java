@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.github.ucchyocean.lc3.Utility;
-import com.github.ucchyocean.lc3.UtilityBukkit;
 import com.github.ucchyocean.lc3.channel.Channel;
 import com.github.ucchyocean.lc3.japanize.JapanizeType;
 import com.github.ucchyocean.lc3.member.ChannelMember;
@@ -205,9 +204,8 @@ public class OptionCommand extends SubCommandAbst {
 
                 String code = options.get("color");
 
-                // TODO Bukkit依存になってしまっているので、実装修正を検討する
-                if ( UtilityBukkit.isValidColor(code) ) {
-                    code = UtilityBukkit.changeToColorCode(code);
+                if ( Utility.isValidColor(code) ) {
+                    code = Utility.changeToColorCode(code);
                 }
                 if ( Utility.isAltColorCode(code) ) {
                     channel.setColorCode(code);

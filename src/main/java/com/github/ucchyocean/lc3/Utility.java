@@ -85,6 +85,16 @@ public class Utility {
      */
     public static String stripColorCode(String source) {
         if (source == null) return null;
+        return stripAltColorCode(source).replaceAll("\u00A7([0-9a-fk-or])", "");
+    }
+
+    /**
+     * 文字列に含まれているカラーコード候補（&a）を除去して返す
+     * @param source 置き換え元の文字列
+     * @return 置き換え後の文字列
+     */
+    public static String stripAltColorCode(String source) {
+        if (source == null) return null;
         return source.replaceAll("&([0-9a-fk-or])", "");
     }
 
@@ -107,6 +117,45 @@ public class Utility {
         if (code == null) return false;
         return code.matches("&[0-9a-fk-orA-FK-OR]");
     }
+
+    /**
+     * ChatColorで指定可能な色（REDとかGREENとか）かどうかを判断する
+     * @param color カラー表記の文字列
+     * @return 指定可能かどうか
+     */
+    public static boolean isValidColor(String color) {
+        if ( color == null ) return false;
+        for (ChatColor c : ChatColor.values()) {
+            if (c.name().equals(color.toUpperCase())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * カラー表記の文字列を、カラーコードに変換する
+     * @param color カラー表記の文字列
+     * @return カラーコード
+     */
+    public static String changeToColorCode(String color) {
+
+        return "&" + changeToChatColor(color).getChar();
+    }
+
+    /**
+     * カラー表記の文字列を、ChatColorクラスに変換する
+     * @param color カラー表記の文字列
+     * @return ChatColorクラス
+     */
+    public static ChatColor changeToChatColor(String color) {
+
+        if (isValidColor(color)) {
+            return ChatColor.valueOf(color.toUpperCase());
+        }
+        return ChatColor.WHITE;
+    }
+
     /**
      * 指定された文字数のアスタリスクの文字列を返す
      * @param length アスタリスクの個数
