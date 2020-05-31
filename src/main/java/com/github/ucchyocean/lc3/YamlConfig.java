@@ -23,6 +23,7 @@ import org.yaml.snakeyaml.Yaml;
 
 /**
  * Yaml設定読み書きユーティリティクラス
+ * このクラスは、階層構造のデータ形式に対応していないので注意。
  * @author ucchy
  */
 public class YamlConfig {

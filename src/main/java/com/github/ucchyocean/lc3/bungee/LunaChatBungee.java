@@ -16,6 +16,7 @@ import com.github.ucchyocean.lc3.LunaChatAPI;
 import com.github.ucchyocean.lc3.LunaChatConfig;
 import com.github.ucchyocean.lc3.LunaChatLogger;
 import com.github.ucchyocean.lc3.LunaChatMode;
+import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.PluginInterface;
 import com.github.ucchyocean.lc3.channel.ChannelManager;
 
@@ -48,6 +49,7 @@ public class LunaChatBungee extends Plugin implements PluginInterface {
 
         // 初期化
         config = new LunaChatConfig(getDataFolder(), getFile());
+        Messages.initialize(new File(getDataFolder(), "messages"), getFile(), config.getLang());
         history = new HashMap<String, String>();
 
         manager = new ChannelManager();

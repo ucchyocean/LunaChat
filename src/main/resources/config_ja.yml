@@ -6,6 +6,9 @@
 
 # -------------------- 全般設定 --------------------
 
+# 言語設定
+lang: ja
+
 # チャンネルチャット機能を利用可能にするかどうか
 # Japanize機能のみを利用したい場合は、falseにしてください。
 enableChannelChat: true
@@ -24,15 +27,6 @@ noJoinAsGlobal: true
 
 # チャンネルチャットの発言内容を、ログに残すかどうか
 loggingChat: true
-
-# チャンネルチャットの発言内容を、HawkEyeに記録するかどうか
-# この設定を利用する場合は、HawkEyeのconfig.ymlで、log: セクションの chat の設定を true にしてください。
-loggingChatToHawkEye: true
-
-# チャンネルチャットの発言内容を、Prismに記録するかどうか
-# この設定を利用する場合は、Prismのconfig.ymlで、
-# tracking: セクションの player-chat の設定を true にしてください。
-loggingChatToPrism: true
 
 # チャンネルチャットの発言内容を、サーバーコンソールに表示するかどうか
 displayChatOnConsole: true

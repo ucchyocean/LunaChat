@@ -7,9 +7,8 @@ package com.github.ucchyocean.lc3;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Locale;
+import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
 
 /**
  * プラグインのメッセージリソース管理クラス
@@ -17,27 +16,57 @@ import java.util.Locale;
  */
 public class Messages {
 
-    private static final String BASE_NAME = "messages";
-    private static final String FILE_NAME = BASE_NAME + ".yml";
-
     private static YamlConfig resources;
+    private static File _messageFolder;
+    private static File _jar;
 
     /**
-     * 初期化する
+     * Jarファイル内から直接 messages_en.yml をdefaultMessagesとしてロードし、
+     * langに対応するメッセージをファイルからロードする。
+     * @param messagesFolder メッセージ格納フォルダ
+     * @param jar jarファイル
+     * @param lang デフォルト言語
      */
-    protected static void initialize() {
+    public static void initialize(File messagesFolder, File jar, String lang) {
 
-        File file = new File(
-                LunaChat.getDataFolder() +
-                File.separator + FILE_NAME);
+        _jar = jar;
+        _messageFolder = messagesFolder;
+        if ( !_messageFolder.exists() ) {
+            _messageFolder.mkdirs();
+        }
 
+        // コンフィグフォルダにメッセージファイルがまだ無いなら、コピーしておく
+        for ( String filename : new String[]{
+                "messages_en.yml", "messages_ja.yml"} ) {
+            File file = new File(_messageFolder, filename);
+            if ( !file.exists() ) {
+                Utility.copyFileFromJar(_jar, file, filename, true);
+            }
+        }
+
+        // デフォルトメッセージを、jarファイル内からロードする
+        YamlConfig defaultMessages = null;
+        try ( JarFile jarFile = new JarFile(_jar) ) {
+
+            ZipEntry zipEntry = jarFile.getEntry(String.format("messages_%s.yml", lang));
+            if ( zipEntry == null ) {
+                zipEntry = jarFile.getEntry("messages_en.yml");
+            }
+
+            defaultMessages = YamlConfig.load(jarFile.getInputStream(zipEntry));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // 対応する言語のメッセージをロードする
+        File file = new File(_messageFolder, String.format("messages_%s.yml", lang));
         if ( !file.exists() ) {
-            Utility.copyFileFromJar(LunaChat.getPluginJarFile(),
-                    file, FILE_NAME, false);
+            file = new File(_messageFolder, "messages_en.yml");
         }
 
         resources = YamlConfig.load(file);
-        resources.addDefaults(loadDefaultMessages());
+        resources.addDefaults(defaultMessages);
     }
 
     /**
@@ -46,47 +75,14 @@ public class Messages {
      * @return リソース
      */
     public static String get(String key) {
-
-        if ( resources == null ) {
-            initialize();
-        }
         return Utility.replaceColorCode(resources.getString(key));
     }
 
     /**
-     * Jarファイル内から直接 messages.yml を読み込み、YamlConfigにして返すメソッド
-     * @return
+     * 指定された言語でリロードを行う。
+     * @param lang 言語
      */
-    private static YamlConfig loadDefaultMessages() {
-        try {
-            return YamlConfig.load(getResourceInputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * Jarファイル内を検索して、現在のlanguageやcountryになるべく一致するリソースを見つけて、InputStreamで返す
-     * @return　InputStream
-     */
-    private static InputStream getResourceInputStream() {
-
-        String baseName = BASE_NAME;
-        Locale locale = Locale.getDefault();
-
-        ArrayList<String> candidates = new ArrayList<String>();
-        candidates.add(String.format("/%s_%s_%s.yaml", baseName, locale.getLanguage(), locale.getCountry()));
-        candidates.add(String.format("/%s_%s_%s.yml", baseName, locale.getLanguage(), locale.getCountry()));
-        candidates.add(String.format("/%s_%s.yaml", baseName, locale.getLanguage()));
-        candidates.add(String.format("/%s_%s.yml", baseName, locale.getLanguage()));
-        candidates.add("/" + baseName + ".yaml");
-        candidates.add("/" + baseName + ".yml");
-
-        for ( String name : candidates ) {
-            InputStream stream = Messages.class.getResourceAsStream(name);
-            if ( stream != null ) return stream;
-        }
-        return null;
+    public static void reload(String lang) {
+        initialize(_jar, _messageFolder, lang);
     }
 }

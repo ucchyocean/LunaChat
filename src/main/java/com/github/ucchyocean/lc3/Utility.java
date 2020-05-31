@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.Locale;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
@@ -31,6 +32,9 @@ public class Utility {
      */
     public static void copyFileFromJar(
             File jarFile, File targetFile, String sourceFilePath, boolean isBinary) {
+
+        // でばっぐ
+        System.out.println(jarFile + " - " + targetFile + " - " + sourceFilePath);
 
         File parent = targetFile.getParentFile();
         if (!parent.exists()) {
@@ -177,5 +181,15 @@ public class Utility {
     public static boolean existsOfflinePlayer(String name) {
         // TODO 未実装
         return false;
+    }
+
+    /**
+     * 動作環境のロケールを取得する。
+     * @return 動作環境のロケール
+     */
+    public static Locale getDefaultLocale() {
+        Locale locale = Locale.getDefault();
+        if ( locale == null ) return Locale.ENGLISH;
+        return locale;
     }
 }

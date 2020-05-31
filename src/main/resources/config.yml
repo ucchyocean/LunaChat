@@ -1,0 +1,120 @@
+# ${project.name} v${project.version}
+# @author     ucchy
+# @license    LGPLv3
+# @copyright  Copyright ucchy 2020
+
+
+# -------------------- General Settings --------------------
+
+# Message locale.
+lang: en
+
+# Enable channel chat feature.
+enableChannelChat: true
+
+# Player chat event listener priority.
+# LOWEST, LOW, NORMAL, HIGH(default), HIGHEST
+playerChatEventListenerPriority: 'HIGH'
+
+
+# -------------------- Channel Chat Settings --------------------
+
+# Whether to treat the remarks of player who are not in channel chat as global.
+noJoinAsGlobal: true
+
+# Whether to log the messages of channel chat.
+loggingChat: true
+
+# Whether to show the messages of channel chat on the server console.
+displayChatOnConsole: true
+
+# Global marker.
+# If the global marker is in the head of a chat message, it temporarily becomes a global chat.
+globalMarker: '!'
+
+# Whether to delete the channel when all members leave.
+zeroMemberRemove: false
+
+# Whether to show participating channels when logging in.
+showListOnJoin: false
+
+# Whether to create a new channel and enter the room when a channel that does not exist is specified with the "/ch join" command
+createChannelOnJoinCommand: false
+
+# Global channel to use as default instead of regular chat.
+globalChannel: ''
+
+forceJoinChannels: []
+
+formatConstraint: ['%username', '%msg']
+
+defaultFormat: '&f[%color%ch&f]%prefix%username%suffix&a:&f %msg'
+
+opListenAllChannel: false
+
+minChannelNameLength: 4
+
+maxChannelNameLength: 20
+
+enableQuickChannelChat: true
+
+quickChannelChatSeparator: ':'
+
+
+# -------------------- Private Message Settings --------------------
+
+defaultFormatForPrivateMessage: '&7[%player -> %to]&f %msg'
+
+
+# -------------------- Dynmap Cooperation settings --------------------
+
+sendBroadcastChannelChatToDynmap: true
+
+sendFormattedMessageToDynmap: false
+
+dynmapChannel: ''
+
+
+# -------------------- NG Words Settings --------------------
+
+ngword: []
+
+ngwordAction: mask
+
+
+
+# -------------------- Chat Format Settings --------------------
+
+enableNormalChatMessageFormat: true
+
+normalChatMessageFormat: '&f%prefix%username%suffix&a:&f %msg'
+
+enableNormalChatColorCode: true
+
+
+
+# -------------------- Japanize Settings --------------------
+
+japanizeType: none
+
+japanizeDisplayLine: 1
+
+japanizeLine1Format: '%msg &6(%japanize)'
+
+japanizeLine2Format: '&6[JP] %japanize'
+
+japanizeIgnorePlayerName: true
+
+noneJapanizeMarker: '#'
+
+
+# -------------------- BungeeCord Settings --------------------
+
+defaultFormatForPrivateMessage: '&7[%sender@%senderserver > %reciever@%recieverserver] %msg'
+
+broadcastChat: true
+
+broadcastChatFormat: '%date %time &d<%sender@%senderserver> &f%msg'
+
+broadcastChatLocalJapanize: true
+

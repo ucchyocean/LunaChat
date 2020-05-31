@@ -19,6 +19,9 @@ import com.github.ucchyocean.lc3.japanize.JapanizeType;
  */
 public class LunaChatConfig {
 
+    /** メッセージの言語 */
+    private String lang;
+
     /** チャンネルチャット機能を利用可能にするかどうか */
     private boolean enableChannelChat;
 
@@ -30,12 +33,6 @@ public class LunaChatConfig {
 
     /** チャンネルチャットの発言内容を、ログに残すかどうか */
     private boolean loggingChat;
-
-    /** チャンネルチャットの発言内容を、HawkEyeに記録するかどうか */
-    private boolean loggingChatToHawkEye;
-
-    /** チャンネルチャットの発言内容を、Prismに記録するかどうか */
-    private boolean loggingChatToPrism;
 
     /** チャンネルチャットの発言内容を、コンソールに表示するかどうか */
     private boolean displayChatOnConsole;
@@ -171,17 +168,22 @@ public class LunaChatConfig {
         File configFile = new File(dataFolder, "config.yml");
         if ( !configFile.exists() ) {
             Utility.copyFileFromJar(jarFile, configFile, "config_ja.yml", false);
+            String language = Utility.getDefaultLocale().getLanguage();
+            if ( language.equals("ja") ) {
+                Utility.copyFileFromJar(jarFile, configFile, "config_ja.yml", false);
+            } else {
+                Utility.copyFileFromJar(jarFile, configFile, "config.yml", false);
+            }
         }
 
         YamlConfig config = YamlConfig.load(configFile);
 
+        lang = config.getString("lang", "en");
         enableChannelChat = config.getBoolean("enableChannelChat", true);
         playerChatEventListenerPriority
             = getEventPriority(config.getString("playerChatEventListenerPriority"), EventPriority.HIGH);
         noJoinAsGlobal = config.getBoolean("noJoinAsGlobal", true);
         loggingChat = config.getBoolean("loggingChat", true);
-        loggingChatToHawkEye = config.getBoolean("loggingChatToHawkEye", true);
-        loggingChatToPrism = config.getBoolean("loggingChatToPrism", true);
         displayChatOnConsole = config.getBoolean("displayChatOnConsole", true);
         globalMarker = config.getString("globalMarker", "!");
         zeroMemberRemove = config.getBoolean("zeroMemberRemove", false);
@@ -277,6 +279,14 @@ public class LunaChatConfig {
     }
 
     /**
+     * メッセージの言語
+     * @return lang
+     */
+    public String getLang() {
+        return lang;
+    }
+
+    /**
      * チャンネルチャット機能を利用可能にするかどうか
      * @return enableChannelChatを返す
      */
@@ -306,22 +316,6 @@ public class LunaChatConfig {
      */
     public boolean isLoggingChat() {
         return loggingChat;
-    }
-
-    /**
-     * チャンネルチャットの発言内容を、HawkEyeに記録するかどうか
-     * @return loggingChatToHawkEye
-     */
-    public boolean isLoggingChatToHawkEye() {
-        return loggingChatToHawkEye;
-    }
-
-    /**
-     * チャンネルチャットの発言内容を、Prismに記録するかどうか
-     * @return loggingChatToPrism
-     */
-    public boolean isLoggingChatToPrism() {
-        return loggingChatToPrism;
     }
 
     /**

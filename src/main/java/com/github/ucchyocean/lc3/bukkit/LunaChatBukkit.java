@@ -23,6 +23,7 @@ import com.github.ucchyocean.lc3.LunaChatAPI;
 import com.github.ucchyocean.lc3.LunaChatConfig;
 import com.github.ucchyocean.lc3.LunaChatLogger;
 import com.github.ucchyocean.lc3.LunaChatMode;
+import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.PluginInterface;
 import com.github.ucchyocean.lc3.bridge.DynmapBridge;
 import com.github.ucchyocean.lc3.bridge.McMMOBridge;
@@ -69,6 +70,7 @@ public class LunaChatBukkit extends JavaPlugin implements PluginInterface {
 
         // 変数などの初期化
         config = new LunaChatConfig(getDataFolder(), getFile());
+        Messages.initialize(new File(getDataFolder(), "messages"), getFile(), config.getLang());
         manager = new ChannelManager();
         normalChatLogger = new LunaChatLogger("==normalchat");
 
