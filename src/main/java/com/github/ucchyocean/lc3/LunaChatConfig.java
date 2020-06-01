@@ -271,9 +271,7 @@ public class LunaChatConfig {
                 !globalChannel.matches("[0-9a-zA-Z\\-_]{1,20}") ) {
 
             // コンソールに警告を表示する
-            String msg = String.format(
-                    Messages.get("errmsgCannotUseForGlobal"), globalChannel);
-            LunaChat.getPlugin().log(Level.WARNING, msg);
+            LunaChat.getPlugin().log(Level.WARNING, Messages.errmsgCannotUseForGlobal(globalChannel));
             globalChannel = "";
         }
     }

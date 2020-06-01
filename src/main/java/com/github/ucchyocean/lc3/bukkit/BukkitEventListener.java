@@ -42,11 +42,6 @@ import com.github.ucchyocean.lc3.member.ChannelMemberBukkit;
  */
 public class BukkitEventListener implements Listener {
 
-    private static final String MOTD_FIRSTLINE = Messages.get("motdFirstLine");
-    private static final String LIST_ENDLINE = Messages.get("listEndLine");
-    private static final String LIST_FORMAT = Messages.get("listFormat");
-    private static final String PREERR = Messages.get("errorPrefix");
-
     private SimpleDateFormat dateFormat;
     private SimpleDateFormat timeFormat;
 

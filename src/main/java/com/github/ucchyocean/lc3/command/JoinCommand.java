@@ -106,7 +106,7 @@ public class JoinCommand extends SubCommandAbst {
                 // 発言先を削除して、グローバルチャンネルにする
 
                 api.removeDefaultChannel(sender.getName());
-                sendResourceMessage(sender, PREINFO, "cmdmsgSet", "グローバル");
+                sendResourceMessage(sender, PREINFO, "cmdmsgSet", "Global");
 
                 // TODO
 //                Player p = null;
