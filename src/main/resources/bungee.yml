@@ -1,0 +1,5 @@
+name: ${project.name}
+main: com.github.ucchyocean.lc.bungeecord.BungeeMain
+version: ${project.version}
+authors: [ucchy, YukiLeafX, LazyGon]
+description: ${project.description}

@@ -198,6 +198,9 @@ permissions:
   lunachat.option.japanize:
     description: japanizeオプション設定コマンドの使用権限
     default: true
+  lunachat.option.bungee:
+    description: bungeeオプション設定コマンドの使用権限
+    default: op
   lunachat.option.*:
     children:
       lunachat.option.description: true
@@ -209,6 +212,7 @@ permissions:
       lunachat.option.visible: true
       lunachat.option.allowcc: true
       lunachat.option.japanize: true
+      lunachat.option.bungee: true
     description: オプション設定の全コマンドの使用権限
 
   lunachat-admin.mod-all-channels:

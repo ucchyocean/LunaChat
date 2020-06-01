@@ -356,6 +356,30 @@ public class OptionCommand extends SubCommandAbst {
             }
         }
 
+        if ( options.containsKey("bungee") ) {
+            // Bungeecord内の他のサーバーの同名チャンネル間でチャットを貫通するかどうか。
+
+            String pnode = PERMISSION_NODE + ".bungee";
+            if ( !sender.hasPermission(pnode) ) {
+                sendResourceMessage(sender, PREERR,
+                        "errmsgNotPermission", pnode);
+            } else {
+
+                String temp = options.get("bungee");
+                if ( temp.equalsIgnoreCase("false") ) {
+                    channel.setBungee(false);
+                    sendResourceMessage(sender, PREINFO,
+                            "cmdmsgOption", "bungee", "false");
+                    setOption = true;
+                } else if ( temp.equalsIgnoreCase("true") ) {
+                    channel.setBungee(true);
+                    sendResourceMessage(sender, PREINFO,
+                            "cmdmsgOption", "bungee", "true");
+                    setOption = true;
+                }
+            }
+        }
+
         if ( !channel.isGlobalChannel() ) {
 
             if ( options.containsKey("password") ) {

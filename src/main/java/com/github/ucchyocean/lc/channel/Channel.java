@@ -55,6 +55,7 @@ public abstract class Channel implements ConfigurationSerializable {
     private static final String KEY_MUTE_EXPIRES = "mute_expires";
     private static final String KEY_ALLOWCC = "allowcc";
     private static final String KEY_JAPANIZE = "japanize";
+    private static final String KEY_BUNGEE = "bungee";
 
     /** 参加者 */
     private List<ChannelPlayer> members;
@@ -123,6 +124,9 @@ public abstract class Channel implements ConfigurationSerializable {
 
     /** チャンネルごとのjapanize変換設定 */
     private JapanizeType japanizeType;
+
+    /** Bungeecordチャンネルかどうか */
+    private boolean bungee;
 
     /**
      * コンストラクタ
@@ -455,6 +459,7 @@ public abstract class Channel implements ConfigurationSerializable {
         map.put(KEY_MUTE_EXPIRES, getStringLongMap(muteExpires));
         map.put(KEY_ALLOWCC, allowcc);
         map.put(KEY_JAPANIZE, japanizeType == null ? null : japanizeType.toString());
+        map.put(KEY_BUNGEE, bungee);
         return map;
     }
 
@@ -490,6 +495,7 @@ public abstract class Channel implements ConfigurationSerializable {
         channel.muteExpires = castToChannelPlayerLongMap(data.get(KEY_MUTE_EXPIRES));
         channel.allowcc = castWithDefault(data.get(KEY_ALLOWCC), true);
         channel.japanizeType = JapanizeType.fromID(data.get(KEY_JAPANIZE) + "", null);
+        channel.bungee = castWithDefault(data.get(KEY_BUNGEE), false);
         return channel;
     }
 
@@ -886,6 +892,22 @@ public abstract class Channel implements ConfigurationSerializable {
      */
     public void setJapanizeType(JapanizeType japanize) {
         this.japanizeType = japanize;
+    }
+
+    /**
+     * Bungeecord内のサーバーのうち、同じ名前かつbungee=trueのチャンネル同士で貫通チャットが出来るかどうか。
+     * @return bungeeを返す。
+     */
+    public boolean isBungee() {
+        return bungee;
+    }
+
+    /**
+     * Bungeecord内のサーバーのうち、同じ名前かつbungee=trueのチャンネル同士で貫通チャットが出来るかどうかを設定する。
+     * @param bungee サーバー貫通チャンネルにするかどうか
+     */
+    public void setBungee(boolean bungee) {
+        this.bungee = bungee;
     }
 
     /**

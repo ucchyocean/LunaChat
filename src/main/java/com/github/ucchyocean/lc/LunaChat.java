@@ -6,13 +6,17 @@
 package com.github.ucchyocean.lc;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.StringUtil;
 
 import com.github.ucchyocean.lc.bridge.DynmapBridge;
 import com.github.ucchyocean.lc.bridge.HawkEyeBridge;
@@ -51,6 +55,8 @@ public class LunaChat extends JavaPlugin {
     private LunaChatReplyCommand replyCommand;
     private LunaChatJapanizeCommand lcjapanizeCommand;
 
+    private BungeeListener bungeeListener;
+
     /**
      * プラグインが有効化されたときに呼び出されるメソッド
      * @see org.bukkit.plugin.java.JavaPlugin#onEnable()
@@ -62,6 +68,11 @@ public class LunaChat extends JavaPlugin {
         config = new LunaChatConfig();
         manager = new ChannelManager();
         normalChatLogger = new LunaChatLogger("==normalchat");
+
+        // Bungeecordに発言などの情報を送信するチャンネル
+        bungeeListener = new BungeeListener();
+        getServer().getMessenger().registerIncomingPluginChannel(this, "lc:tobukkit", bungeeListener);
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "lc:tobungee");
 
         // チャンネルチャット無効なら、デフォルト発言先をクリアする(see issue #59)
         if ( !config.isEnableChannelChat() ) {
@@ -126,6 +137,9 @@ public class LunaChat extends JavaPlugin {
     @Override
     public void onDisable() {
 
+        getServer().getMessenger().unregisterIncomingPluginChannel(this, "lc:tobukkit", bungeeListener);
+        getServer().getMessenger().unregisterOutgoingPluginChannel(this, "lc:tobungee");
+
         // 期限チェッカータスクの停止
         if ( expireCheckerTask != null ) {
             expireCheckerTask.cancel();
@@ -165,8 +179,11 @@ public class LunaChat extends JavaPlugin {
         if ( command.getName().equals("lunachat") ) {
             completeList = lunachatCommand.onTabComplete(sender, command, label, args);
         }
+        if ( command.getName().equals("tell") && args.length == 1 ) {
+            completeList = getOnlineBungeePlayers();
+        }
         if ( completeList != null ) {
-            return completeList;
+            return StringUtil.copyPartialMatches(args[args.length - 1], completeList, new ArrayList<>());
         }
         return super.onTabComplete(sender, command, label, args);
     }
@@ -180,6 +197,24 @@ public class LunaChat extends JavaPlugin {
             instance = (LunaChat)Bukkit.getPluginManager().getPlugin("LunaChat");
         }
         return instance;
+    }
+
+    /**
+     * Bungeecord上にログインしているプレイヤーを追跡しているリストを返す。
+     * 
+     * @return プレイヤーのリスト
+     */
+    public List<String> getOnlineBungeePlayers() {
+        List<String> players = Collections.unmodifiableList(bungeeListener.onlinePlayers);
+        if (!players.isEmpty()) {
+            return players; 
+        } else {
+            players = new ArrayList<>();
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                players.add(player.getName());
+            }
+            return players;
+        }
     }
 
     /**

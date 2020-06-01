@@ -10,9 +10,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import com.github.ucchyocean.lc.LunaChat;
-import com.github.ucchyocean.lc.LunaChatAPI;
 import com.github.ucchyocean.lc.Resources;
-import com.github.ucchyocean.lc.channel.Channel;
 import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
 /**
@@ -56,58 +54,9 @@ public class LunaChatMessageCommand implements CommandExecutor {
         }
 
         // メッセージを送信する
-        sendTellMessage(inviter, invitedName, message.toString().trim());
+        LunaChat.getInstance().getLunaChatAPI()
+                .sendTellMessage(inviter, invitedName, message.toString().trim());
         return true;
-    }
-
-    /**
-     * Tellコマンドの実行処理を行う
-     * @param inviter
-     * @param invitedName
-     * @param message
-     */
-    protected void sendTellMessage(ChannelPlayer inviter, String invitedName, String message) {
-
-        // 招待相手が存在するかどうかを確認する
-        ChannelPlayer invited = ChannelPlayer.getChannelPlayer(invitedName);
-        if ( invited == null || !invited.isOnline() ) {
-            sendResourceMessage(inviter, PREERR,
-                    "errmsgNotfoundPlayer", invitedName);
-            return;
-        }
-
-        // 招待相手が自分自身でないか確認する
-        if (inviter.getName().equals(invited.getName())) {
-            sendResourceMessage(inviter, PREERR,
-                    "errmsgCannotSendPMSelf");
-            return;
-        }
-
-        // チャンネルが存在するかどうかをチェックする
-        LunaChatAPI api = LunaChat.getInstance().getLunaChatAPI();
-        String cname = inviter.getName() + ">" + invited.getName();
-        Channel channel = api.getChannel(cname);
-        if ( channel == null ) {
-            // チャンネルを作成して、送信者、受信者をメンバーにする
-            channel = api.createChannel(cname);
-            channel.setVisible(false);
-            channel.addMember(inviter);
-            channel.addMember(invited);
-            channel.setPrivateMessageTo(invited.getName());
-        }
-
-        // メッセージがあるなら送信する
-        if ( message.trim().length() > 0 ) {
-            channel.chat(inviter, message);
-        }
-
-        // 送信履歴を残す
-        DataMaps.privateMessageMap.put(
-                invited.getName(), inviter.getName());
-        DataMaps.privateMessageMap.put(
-                inviter.getName(), invited.getName());
-
-        return;
     }
 
     /**
@@ -135,23 +84,5 @@ public class LunaChatMessageCommand implements CommandExecutor {
         }
         String msg = String.format(pre + org, args);
         sender.sendMessage(msg);
-    }
-
-    /**
-     * メッセージリソースのメッセージを、カラーコード置き換えしつつ、senderに送信する
-     * @param sender メッセージの送り先
-     * @param pre プレフィックス
-     * @param key リソースキー
-     * @param args リソース内の置き換え対象キーワード
-     */
-    protected void sendResourceMessage(ChannelPlayer cp, String pre,
-            String key, Object... args) {
-
-        String org = Resources.get(key);
-        if ( org == null || org.equals("") ) {
-            return;
-        }
-        String msg = String.format(pre + org, args);
-        cp.sendMessage(msg);
     }
 }

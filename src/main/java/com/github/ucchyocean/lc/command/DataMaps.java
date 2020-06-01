@@ -14,13 +14,13 @@ import java.util.HashMap;
 public class DataMaps {
 
     /** 招待された人→招待されたチャンネル名 のマップ */
-    protected static HashMap<String, String> inviteMap;
+    public final static HashMap<String, String> inviteMap;
 
     /** 招待された人→招待した人 のマップ */
-    protected static HashMap<String, String> inviterMap;
+    public final static HashMap<String, String> inviterMap;
 
     /** tell/rコマンドの送信者→受信者 のマップ */
-    protected static HashMap<String, String> privateMessageMap;
+    public final static HashMap<String, String> privateMessageMap;
 
     static {
         inviteMap = new HashMap<String, String>();

@@ -8,6 +8,7 @@ package com.github.ucchyocean.lc.command;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
+import com.github.ucchyocean.lc.LunaChat;
 import com.github.ucchyocean.lc.Resources;
 import com.github.ucchyocean.lc.channel.ChannelPlayer;
 
@@ -57,7 +58,8 @@ public class LunaChatReplyCommand extends LunaChatMessageCommand {
             message.append(args[i] + " ");
         }
 
-        sendTellMessage(inviter, invitedName, message.toString().trim());
+        LunaChat.getInstance().getLunaChatAPI()
+                .sendTellMessage(inviter, invitedName, message.toString().trim());
 
         return true;
     }

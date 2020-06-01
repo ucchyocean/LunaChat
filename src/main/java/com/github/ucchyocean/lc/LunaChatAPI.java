@@ -192,4 +192,12 @@ public interface LunaChatAPI {
      * LunaChatの全データを再読み込みする
      */
     public void reloadAllData();
+
+    /**
+     * Tellコマンドの実行処理を行う
+     * @param inviter
+     * @param invitedName
+     * @param message
+     */
+    public void sendTellMessage(ChannelPlayer inviter, String invitedName, String message);
 }

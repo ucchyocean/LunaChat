@@ -5,9 +5,12 @@
  */
 package com.github.ucchyocean.lc.channel;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -152,6 +155,54 @@ public class ChannelImpl extends Channel {
         if ( event.isCancelled() ) {
             return;
         }
+
+        // 以下の条件をすべて満たす時だけBungee全体に送信。
+        if ( !(player instanceof ChannelBungeePlayer) // このサーバーから発言
+                && (isBungee() || isPersonalChat()) // bungeeチャンネルまたは個人チャット
+                && !isWorldRange() && getChatRange() == 0) // 範囲無制限
+        {
+            try {
+                ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
+                DataOutputStream out = new DataOutputStream(byteOutStream);
+                
+                // 操作
+                out.writeUTF("chat");
+                
+                // チャンネル名
+                out.writeUTF(getName());
+                
+                // プレイヤー名
+                out.writeUTF(player.getName());
+                
+                // プレイヤー表示名
+                out.writeUTF(player.getDisplayName());
+                
+                // プレイヤープレフィックス
+                out.writeUTF(player.getPrefix());
+                
+                // プレイヤーサフィックス
+                out.writeUTF(player.getSuffix());
+                
+                // プレイヤーのいるワールド
+                out.writeUTF(player.getWorldName());
+                
+                // メッセージ
+                out.writeUTF(event.getPreReplaceMessage());
+                
+                // 日本語化するかどうか。ONなら、送信先のサーバーでも日本語化が実行される。
+                out.writeBoolean(LunaChat.getInstance().getLunaChatAPI().isPlayerJapanize(player.getName()));
+                
+                // カラーコードを使えるかどうか
+                out.writeBoolean(player.hasPermission("lunachat.allowcc"));
+                
+                Bukkit.getServer().sendPluginMessage(LunaChat.getInstance(), "lc:tobungee", byteOutStream.toByteArray());
+                out.close();
+                byteOutStream.close();
+            } catch (Exception e) {
+                LunaChat.getInstance().getLogger().log(Level.WARNING, "Cannot send message to bungeecord.", e);
+            }
+        }
+
         msgFormat = event.getMessageFormat();
         maskedMessage = event.getNgMaskedMessage();
 
