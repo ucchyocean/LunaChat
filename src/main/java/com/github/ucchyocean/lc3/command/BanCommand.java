@@ -5,6 +5,7 @@
  */
 package com.github.ucchyocean.lc3.command;
 
+import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.channel.Channel;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 
@@ -12,17 +13,15 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  * banコマンドの実行クラス
  * @author ucchy
  */
-public class BanCommand extends SubCommandAbst {
+public class BanCommand extends LunaChatSubCommand {
 
     private static final String COMMAND_NAME = "ban";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
-    private static final String USAGE_KEY1 = "usageBan";
-    private static final String USAGE_KEY2 = "usageBan2";
 
     /**
      * コマンドを取得します。
      * @return コマンド
-     * @see com.github.ucchyocean.lc3.command.SubCommandAbst#getCommandName()
+     * @see com.github.ucchyocean.lc3.command.LunaChatSubCommand#getCommandName()
      */
     @Override
     public String getCommandName() {
@@ -32,7 +31,7 @@ public class BanCommand extends SubCommandAbst {
     /**
      * パーミッションノードを取得します。
      * @return パーミッションノード
-     * @see com.github.ucchyocean.lc3.command.SubCommandAbst#getPermissionNode()
+     * @see com.github.ucchyocean.lc3.command.LunaChatSubCommand#getPermissionNode()
      */
     @Override
     public String getPermissionNode() {
@@ -42,7 +41,7 @@ public class BanCommand extends SubCommandAbst {
     /**
      * コマンドの種別を取得します。
      * @return コマンド種別
-     * @see com.github.ucchyocean.lc3.command.SubCommandAbst#getCommandType()
+     * @see com.github.ucchyocean.lc3.command.LunaChatSubCommand#getCommandType()
      */
     @Override
     public CommandType getCommandType() {
@@ -53,13 +52,13 @@ public class BanCommand extends SubCommandAbst {
      * 使用方法に関するメッセージをsenderに送信します。
      * @param sender コマンド実行者
      * @param label 実行ラベル
-     * @see com.github.ucchyocean.lc3.command.SubCommandAbst#sendUsageMessage()
+     * @see com.github.ucchyocean.lc3.command.LunaChatSubCommand#sendUsageMessage()
      */
     @Override
     public void sendUsageMessage(
             ChannelMember sender, String label) {
-        sendResourceMessage(sender, "", USAGE_KEY1, label);
-        sendResourceMessage(sender, "", USAGE_KEY2, label);
+        sender.sendMessage(Messages.usageBan(label));
+        sender.sendMessage(Messages.usageBan2(label));
     }
 
     /**
@@ -68,7 +67,7 @@ public class BanCommand extends SubCommandAbst {
      * @param label 実行ラベル
      * @param args 実行時の引数
      * @return コマンドが実行されたかどうか
-     * @see com.github.ucchyocean.lc3.command.SubCommandAbst#runCommand(java.lang.String[])
+     * @see com.github.ucchyocean.lc3.command.LunaChatSubCommand#runCommand(java.lang.String[])
      */
     @Override
     public boolean runCommand(
@@ -79,7 +78,7 @@ public class BanCommand extends SubCommandAbst {
         if (args.length >= 2) {
             kickedName = args[1];
         } else {
-            sendResourceMessage(sender, PREERR, "errmsgCommand");
+            sender.sendMessage(Messages.errmsgCommand());
             return true;
         }
 
@@ -93,32 +92,32 @@ public class BanCommand extends SubCommandAbst {
             channel = api.getDefaultChannel(sender.getName());
         }
         if (channel == null) {
-            sendResourceMessage(sender, PREERR, "errmsgNoJoin");
+            sender.sendMessage(Messages.errmsgNoJoin());
             return true;
         }
 
         // モデレーターかどうか確認する
         if ( !channel.hasModeratorPermission(sender) ) {
-            sendResourceMessage(sender, PREERR, "errmsgNotModerator");
+            sender.sendMessage(Messages.errmsgNotModerator());
             return true;
         }
 
         // グローバルチャンネルならBANできない
         if ( channel.isGlobalChannel() ) {
-            sendResourceMessage(sender, PREERR, "errmsgCannotBANGlobal", channel.getName());
+            sender.sendMessage(Messages.errmsgCannotBANGlobal(channel.getName()));
             return true;
         }
 
         // BANされるプレイヤーがメンバーかどうかチェックする
         ChannelMember kicked = ChannelMember.getChannelMember(kickedName);
         if (!channel.getMembers().contains(kicked)) {
-            sendResourceMessage(sender, PREERR, "errmsgNomemberOther");
+            sender.sendMessage(Messages.errmsgNomemberOther());
             return true;
         }
 
         // 既にBANされているかどうかチェックする
         if (channel.getBanned().contains(kicked)) {
-            sendResourceMessage(sender, PREERR, "errmsgAlreadyBanned");
+            sender.sendMessage(Messages.errmsgAlreadyBanned());
             return true;
         }
 
@@ -126,12 +125,12 @@ public class BanCommand extends SubCommandAbst {
         int expireMinutes = -1;
         if (args.length >= 3 && !isSpecifiedChannel) {
             if ( !args[2].matches("[0-9]+") ) {
-                sendResourceMessage(sender, PREERR, "errmsgInvalidBanExpireParameter");
+                sender.sendMessage(Messages.errmsgInvalidBanExpireParameter());
                 return true;
             }
             expireMinutes = Integer.parseInt(args[2]);
             if ( expireMinutes < 1 || 43200 < expireMinutes ) {
-                sendResourceMessage(sender, PREERR, "errmsgInvalidBanExpireParameter");
+                sender.sendMessage(Messages.errmsgInvalidBanExpireParameter());
                 return true;
             }
         }
@@ -146,25 +145,25 @@ public class BanCommand extends SubCommandAbst {
 
         // senderに通知メッセージを出す
         if ( expireMinutes != -1 ) {
-            sendResourceMessage(sender, PREINFO,
-                    "cmdmsgBanWithExpire", kickedName, channel.getName(), expireMinutes);
+            sender.sendMessage(Messages.cmdmsgBanWithExpire(
+                    kickedName, channel.getName(), expireMinutes));
         } else {
-            sendResourceMessage(sender, PREINFO,
-                    "cmdmsgBan", kickedName, channel.getName());
+            sender.sendMessage(Messages.cmdmsgBan(
+                    kickedName, channel.getName()));
         }
 
         // チャンネルに通知メッセージを出す
         if ( expireMinutes != -1 ) {
-            sendResourceMessageWithKeyword(channel,
-                    "banWithExpireMessage", kicked, expireMinutes);
+            sender.sendMessage(Messages.banWithExpireMessage(
+                    channel.getColorCode(), channel.getName(), kicked.getName(), expireMinutes));
         } else {
-            sendResourceMessageWithKeyword(channel, "banMessage", kicked);
+            sender.sendMessage(Messages.banMessage(
+                    channel.getColorCode(), channel.getName(), kicked.getName()));
         }
 
         // BANされた人に通知メッセージを出す
         if ( kicked != null && kicked.isOnline() ) {
-            sendResourceMessage(kicked, PREINFO,
-                    "cmdmsgBanned", channel.getName());
+            sender.sendMessage(Messages.cmdmsgBanned(channel.getName()));
         }
 
         return true;

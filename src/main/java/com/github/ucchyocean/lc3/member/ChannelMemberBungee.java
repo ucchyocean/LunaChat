@@ -37,6 +37,7 @@ public abstract class ChannelMemberBungee extends ChannelMember {
         if ( sender instanceof ProxiedPlayer ) {
             return new ChannelMemberProxiedPlayer(((ProxiedPlayer)sender).getUniqueId());
         } else {
+            // ProxiedPlayer以外のCommandSenderは、ConsoleSenderしかないはず
             return new ChannelMemberBungeeConsole((CommandSender)sender);
         }
     }

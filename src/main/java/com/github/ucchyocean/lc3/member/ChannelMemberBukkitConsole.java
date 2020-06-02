@@ -83,6 +83,7 @@ public class ChannelMemberBukkitConsole extends ChannelMemberBukkit {
      */
     @Override
     public void sendMessage(String message) {
+        if ( message == null || message.isEmpty() ) return;
         sender.sendMessage(message);
     }
 

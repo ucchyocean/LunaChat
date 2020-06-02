@@ -17,20 +17,15 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  * logコマンドの実行クラス
  * @author ucchy
  */
-public class LogCommand extends SubCommandAbst {
-
-    private static final String LOGDISPLAY_FIRSTLINE = Messages.get("logDisplayFirstLine");
-    private static final String LOGDISPLAY_ENDLINE = Messages.get("logDisplayEndLine");
-    private static final String LOGDISPLAY_FORMAT = Messages.get("logDisplayFormat");
+public class LogCommand extends LunaChatSubCommand {
 
     private static final String COMMAND_NAME = "log";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
-    private static final String USAGE_KEY = "usageLog";
 
     /**
      * コマンドを取得します。
      * @return コマンド
-     * @see com.github.ucchyocean.lc3.command.SubCommandAbst#getCommandName()
+     * @see com.github.ucchyocean.lc3.command.LunaChatSubCommand#getCommandName()
      */
     @Override
     public String getCommandName() {
@@ -40,7 +35,7 @@ public class LogCommand extends SubCommandAbst {
     /**
      * パーミッションノードを取得します。
      * @return パーミッションノード
-     * @see com.github.ucchyocean.lc3.command.SubCommandAbst#getPermissionNode()
+     * @see com.github.ucchyocean.lc3.command.LunaChatSubCommand#getPermissionNode()
      */
     @Override
     public String getPermissionNode() {
@@ -50,7 +45,7 @@ public class LogCommand extends SubCommandAbst {
     /**
      * コマンドの種別を取得します。
      * @return コマンド種別
-     * @see com.github.ucchyocean.lc3.command.SubCommandAbst#getCommandType()
+     * @see com.github.ucchyocean.lc3.command.LunaChatSubCommand#getCommandType()
      */
     @Override
     public CommandType getCommandType() {
@@ -61,12 +56,12 @@ public class LogCommand extends SubCommandAbst {
      * 使用方法に関するメッセージをsenderに送信します。
      * @param sender コマンド実行者
      * @param label 実行ラベル
-     * @see com.github.ucchyocean.lc3.command.SubCommandAbst#sendUsageMessage()
+     * @see com.github.ucchyocean.lc3.command.LunaChatSubCommand#sendUsageMessage()
      */
     @Override
     public void sendUsageMessage(
             ChannelMember sender, String label) {
-        sendResourceMessage(sender, "", USAGE_KEY, label);
+        sender.sendMessage(Messages.usageLog(label));
     }
 
     /**
@@ -75,7 +70,7 @@ public class LogCommand extends SubCommandAbst {
      * @param label 実行ラベル
      * @param args 実行時の引数
      * @return コマンドが実行されたかどうか
-     * @see com.github.ucchyocean.lc3.command.SubCommandAbst#runCommand(java.lang.String[])
+     * @see com.github.ucchyocean.lc3.command.LunaChatSubCommand#runCommand(java.lang.String[])
      */
     @Override
     public boolean runCommand(ChannelMember sender, String label, String[] args) {
@@ -116,8 +111,7 @@ public class LogCommand extends SubCommandAbst {
         // 参照権限を確認する
         String node = PERMISSION_NODE + "." + cname;
         if (sender.isPermissionSet(node) && !sender.hasPermission(node)) {
-            sendResourceMessage(sender, PREERR, "errmsgPermission",
-                    PERMISSION_NODE + "." + cname);
+            sender.sendMessage(Messages.errmsgPermission(node));
             return true;
         }
 
@@ -139,19 +133,19 @@ public class LogCommand extends SubCommandAbst {
             // チャンネルが存在するかどうか確認する
             Channel channel = api.getChannel(cname);
             if ( channel == null ) {
-                sendResourceMessage(sender, PREERR, "errmsgNotExist");
+                sender.sendMessage(Messages.errmsgNotExist());
                 return true;
             }
 
             // BANされていないかどうか確認する
             if ( sender != null && channel.getBanned().contains(sender) ) {
-                sendResourceMessage(sender, PREERR, "errmsgBanned");
+                sender.sendMessage(Messages.errmsgBanned());
                 return true;
             }
 
             // チャンネルのメンバーかどうかを確認する
             if (!channel.getMembers().contains(sender)) {
-                sendResourceMessage(sender, PREERR, "errmsgNomember");
+                sender.sendMessage(Messages.errmsgNomember());
                 return true;
             }
 
@@ -159,7 +153,7 @@ public class LogCommand extends SubCommandAbst {
         }
 
         // 整形と表示
-        sender.sendMessage(String.format(LOGDISPLAY_FIRSTLINE, cname));
+        sender.sendMessage(Messages.logDisplayFirstLine(cname));
 
         for ( String log : logs ) {
 
@@ -170,11 +164,10 @@ public class LogCommand extends SubCommandAbst {
             if ( temp.length >= 3 ) {
                 playerName = temp[2];
             }
-            sender.sendMessage(String.format(
-                    LOGDISPLAY_FORMAT, date, playerName, message));
+            sender.sendMessage(Messages.logDisplayFormat(date, playerName, message));
         }
 
-        sender.sendMessage(LOGDISPLAY_ENDLINE);
+        sender.sendMessage(Messages.logDisplayEndLine());
 
         return true;
     }

@@ -13,7 +13,7 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  * unhideコマンドの実行クラス
  * @author ucchy
  */
-public class UnhideCommand extends SubCommandAbst {
+public class UnhideCommand extends LunaChatSubCommand {
 
     private static final String COMMAND_NAME = "unhide";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
@@ -23,7 +23,7 @@ public class UnhideCommand extends SubCommandAbst {
     /**
      * コマンドを取得します。
      * @return コマンド
-     * @see com.github.ucchyocean.lc3.command.SubCommandAbst#getCommandName()
+     * @see com.github.ucchyocean.lc3.command.LunaChatSubCommand#getCommandName()
      */
     @Override
     public String getCommandName() {
@@ -33,7 +33,7 @@ public class UnhideCommand extends SubCommandAbst {
     /**
      * パーミッションノードを取得します。
      * @return パーミッションノード
-     * @see com.github.ucchyocean.lc3.command.SubCommandAbst#getPermissionNode()
+     * @see com.github.ucchyocean.lc3.command.LunaChatSubCommand#getPermissionNode()
      */
     @Override
     public String getPermissionNode() {
@@ -43,7 +43,7 @@ public class UnhideCommand extends SubCommandAbst {
     /**
      * コマンドの種別を取得します。
      * @return コマンド種別
-     * @see com.github.ucchyocean.lc3.command.SubCommandAbst#getCommandType()
+     * @see com.github.ucchyocean.lc3.command.LunaChatSubCommand#getCommandType()
      */
     @Override
     public CommandType getCommandType() {
@@ -54,7 +54,7 @@ public class UnhideCommand extends SubCommandAbst {
      * 使用方法に関するメッセージをsenderに送信します。
      * @param sender コマンド実行者
      * @param label 実行ラベル
-     * @see com.github.ucchyocean.lc3.command.SubCommandAbst#sendUsageMessage()
+     * @see com.github.ucchyocean.lc3.command.LunaChatSubCommand#sendUsageMessage()
      */
     @Override
     public void sendUsageMessage(
@@ -69,7 +69,7 @@ public class UnhideCommand extends SubCommandAbst {
      * @param label 実行ラベル
      * @param args 実行時の引数
      * @return コマンドが実行されたかどうか
-     * @see com.github.ucchyocean.lc3.command.SubCommandAbst#runCommand(java.lang.String[])
+     * @see com.github.ucchyocean.lc3.command.LunaChatSubCommand#runCommand(java.lang.String[])
      */
     @Override
     public boolean runCommand(

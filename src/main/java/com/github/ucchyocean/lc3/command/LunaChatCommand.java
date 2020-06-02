@@ -19,10 +19,8 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  */
 public abstract class LunaChatCommand {
 
-    private static final String PREERR = Messages.get("errorPrefix");
-
-    private ArrayList<SubCommandAbst> commands;
-    private ArrayList<SubCommandAbst> commonCommands;
+    private ArrayList<LunaChatSubCommand> commands;
+    private ArrayList<LunaChatSubCommand> commonCommands;
     private JoinCommand joinCommand;
     private HelpCommand helpCommand;
 
@@ -31,7 +29,7 @@ public abstract class LunaChatCommand {
      */
     public LunaChatCommand() {
 
-        commands = new ArrayList<SubCommandAbst>();
+        commands = new ArrayList<LunaChatSubCommand>();
         joinCommand = new JoinCommand();
         commands.add(joinCommand);
         commands.add(new LeaveCommand());
@@ -57,7 +55,7 @@ public abstract class LunaChatCommand {
         helpCommand = new HelpCommand(commands);
         commands.add(helpCommand);
 
-        commonCommands = new ArrayList<SubCommandAbst>();
+        commonCommands = new ArrayList<LunaChatSubCommand>();
         commonCommands.add(new HideCommand());
         commonCommands.add(new UnhideCommand());
         commonCommands.add(new DictionaryCommand());
@@ -77,13 +75,13 @@ public abstract class LunaChatCommand {
         // チャンネルチャットが無効でも利用できるコマンドはここで処理する
         // （hide, unhide, dic, dictionary, reload）
         if ( args.length >= 1 ) {
-            for ( SubCommandAbst c : commonCommands ) {
+            for ( LunaChatSubCommand c : commonCommands ) {
                 if ( c.getCommandName().equalsIgnoreCase(args[0]) ) {
 
                     // パーミッションの確認
                     String node = c.getPermissionNode();
                     if ( !sender.hasPermission(node) ) {
-                        sendResourceMessage(sender, PREERR, "errmsgPermission", node);
+                        sender.sendMessage(Messages.errmsgPermission(node));
                         return true;
                     }
 
@@ -96,7 +94,7 @@ public abstract class LunaChatCommand {
         // チャンネルチャット機能が無効になっている場合は、メッセージを表示して終了
         if ( !LunaChat.getConfig().isEnableChannelChat()
                 && !sender.hasPermission("lunachat-admin") ) {
-            sendResourceMessage(sender, PREERR, "errmsgChannelChatDisabled");
+            sender.sendMessage(Messages.errmsgChannelChatDisabled());
             return true;
         }
 
@@ -107,13 +105,13 @@ public abstract class LunaChatCommand {
         }
 
         // 第1引数に指定されたコマンドを実行する
-        for ( SubCommandAbst c : commands ) {
+        for ( LunaChatSubCommand c : commands ) {
             if ( c.getCommandName().equalsIgnoreCase(args[0]) ) {
 
                 // パーミッションの確認
                 String node = c.getPermissionNode();
                 if ( !sender.hasPermission(node) ) {
-                    sendResourceMessage(sender, PREERR, "errmsgPermission", node);
+                    sender.sendMessage(Messages.errmsgPermission(node));
                     return true;
                 }
 
@@ -125,7 +123,7 @@ public abstract class LunaChatCommand {
         // 第1引数がコマンドでないなら、joinが指定されたとみなす
         String node = joinCommand.getPermissionNode();
         if ( !sender.hasPermission(node) ) {
-            sendResourceMessage(sender, PREERR, "errmsgPermission", node);
+            sender.sendMessage(Messages.errmsgPermission(node));
             return true;
         }
 
@@ -144,13 +142,13 @@ public abstract class LunaChatCommand {
             // コマンド名で補完する
             String arg = args[0].toLowerCase();
             ArrayList<String> coms = new ArrayList<String>();
-            for ( SubCommandAbst c : commands ) {
+            for ( LunaChatSubCommand c : commands ) {
                 if ( c.getCommandName().startsWith(arg) &&
                         sender.hasPermission(c.getPermissionNode()) ) {
                     coms.add(c.getCommandName());
                 }
             }
-            for ( SubCommandAbst c : commonCommands ) {
+            for ( LunaChatSubCommand c : commonCommands ) {
                 if ( c.getCommandName().startsWith(arg) &&
                         sender.hasPermission(c.getPermissionNode()) ) {
                     coms.add(c.getCommandName());
@@ -304,25 +302,6 @@ public abstract class LunaChatCommand {
 
         }
         return new ArrayList<String>();
-    }
-
-    /**
-     * メッセージリソースのメッセージを、カラーコード置き換えしつつ、senderに送信する
-     *
-     * @param sender メッセージの送り先
-     * @param pre プレフィックス
-     * @param key リソースキー
-     * @param args リソース内の置き換え対象キーワード
-     */
-    private void sendResourceMessage(ChannelMember sender, String pre,
-            String key, Object... args) {
-
-        String org = Messages.get(key);
-        if ( org == null || org.equals("") ) {
-            return;
-        }
-        String msg = String.format(pre + org, args);
-        sender.sendMessage(msg);
     }
 
     /**

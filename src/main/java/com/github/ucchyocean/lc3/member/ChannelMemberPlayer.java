@@ -157,6 +157,7 @@ public class ChannelMemberPlayer extends ChannelMemberBukkit {
      */
     @Override
     public void sendMessage(String message) {
+        if ( message == null || message.isEmpty() ) return;
         Player player = getPlayer();
         if ( player != null ) {
             player.sendMessage(message);

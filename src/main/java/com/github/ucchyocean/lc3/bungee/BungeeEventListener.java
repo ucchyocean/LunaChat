@@ -41,11 +41,6 @@ import net.md_5.bungee.event.EventPriority;
  */
 public class BungeeEventListener implements Listener {
 
-    private static final String MOTD_FIRSTLINE = Messages.get("motdFirstLine");
-    private static final String LIST_ENDLINE = Messages.get("listEndLine");
-    private static final String LIST_FORMAT = Messages.get("listFormat");
-    private static final String PREERR = Messages.get("errorPrefix");
-
     private static final String DATE_FORMAT_PATTERN = "yyyy/MM/dd";
     private static final String TIME_FORMAT_PATTERN = "HH:mm:ss";
 
@@ -230,7 +225,8 @@ public class BungeeEventListener implements Listener {
                             ChannelMember.getChannelMember(event.getSender());
                     if ( !channel.getMembers().contains(player) ) {
                         // 指定されたチャンネルに参加していないなら、エラーを表示して何も発言せずに終了する。
-                        sendResourceMessage((ProxiedPlayer)event.getSender(), PREERR, "errmsgNomember");
+                        ((ProxiedPlayer)event.getSender()).sendMessage(
+                                TextComponent.fromLegacyText(Messages.errmsgNomember()));
                         event.setCancelled(true);
                         return;
                     }
@@ -480,7 +476,7 @@ public class BungeeEventListener implements Listener {
         }
 
         ArrayList<String> items = new ArrayList<String>();
-        items.add(MOTD_FIRSTLINE);
+        items.add(Messages.motdFirstLine());
         for ( Channel channel : api.getChannels() ) {
 
             // BANされているチャンネルは表示しない
@@ -506,11 +502,10 @@ public class BungeeEventListener implements Listener {
             String desc = channel.getDescription();
             int onlineNum = channel.getOnlineNum();
             int memberNum = channel.getTotalNum();
-            String item = String.format(
-                    LIST_FORMAT, disp, onlineNum, memberNum, desc);
+            String item = Messages.listFormat(disp, onlineNum, memberNum, desc);
             items.add(item);
         }
-        items.add(LIST_ENDLINE);
+        items.add(Messages.listEndLine());
 
         return items;
     }
@@ -523,24 +518,6 @@ public class BungeeEventListener implements Listener {
     private void sendMessage(CommandSender reciever, String message) {
         if ( message == null ) return;
         reciever.sendMessage(TextComponent.fromLegacyText(message));
-    }
-
-    /**
-     * メッセージリソースのメッセージを、カラーコード置き換えしつつ、senderに送信する
-     * @param sender メッセージの送り先
-     * @param pre プレフィックス
-     * @param key リソースキー
-     * @param args リソース内の置き換え対象キーワード
-     */
-    private void sendResourceMessage(
-            CommandSender sender, String pre, String key, Object... args) {
-
-        String org = Messages.get(key);
-        if ( org == null || org.equals("") ) {
-            return;
-        }
-        String msg = String.format(pre + org, args);
-        sender.sendMessage(TextComponent.fromLegacyText(msg));
     }
 
     /**

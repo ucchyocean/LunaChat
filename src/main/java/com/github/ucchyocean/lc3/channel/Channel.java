@@ -52,29 +52,6 @@ public abstract class Channel {
     private static final String KEY_ALLOWCC = "allowcc";
     private static final String KEY_JAPANIZE = "japanize";
 
-    private static final String INFO_FIRSTLINE = Messages.get("channelInfoFirstLine");
-    private static final String INFO_PREFIX = Messages.get("channelInfoPrefix");
-    private static final String INFO_ALIAS = Messages.get("channelInfoAlias");
-    private static final String INFO_GLOBAL = Messages.get("channelInfoGlobal");
-    private static final String INFO_BROADCAST = Messages.get("channelInfoBroadcast");
-    private static final String INFO_SECRET = Messages.get("channelInfoSecret");
-    private static final String INFO_PASSWORD = Messages.get("channelInfoPassword");
-    private static final String INFO_WORLDCHAT = Messages.get("channelInfoWorldChat");
-    private static final String INFO_RANGECHAT = Messages.get("channelInfoRangeChat");
-    private static final String INFO_FORMAT = Messages.get("channelInfoFormat");
-    private static final String INFO_BANNED = Messages.get("channelInfoBanned");
-    private static final String INFO_MUTED = Messages.get("channelInfoMuted");
-
-    private static final String LIST_ENDLINE = Messages.get("listEndLine");
-    private static final String LIST_FORMAT = Messages.get("listFormat");
-
-    private static final String MSG_BAN_EXPIRED = Messages.get("expiredBanMessage");
-    private static final String MSG_MUTE_EXPIRED = Messages.get("expiredMuteMessage");
-    private static final String MSG_BAN_EXPIRED_PLAYER = Messages.get("cmdmsgPardoned");
-    private static final String MSG_MUTE_EXPIRED_PLAYER = Messages.get("cmdmsgUnmuted");
-
-    private static final String PREINFO = Messages.get("infoPrefix");
-
     /** 参加者 */
     private List<ChannelMember> members;
 
@@ -270,7 +247,9 @@ public abstract class Channel {
         }
         members = after;
 
-        sendSystemMessage("joinMessage", player);
+        if ( !isPersonalChat() ) {
+            player.sendMessage(Messages.joinMessage(getColorCode(), getName(), player.getName()));
+        }
 
         save();
     }
@@ -309,7 +288,9 @@ public abstract class Channel {
         // 実際にメンバーから削除する
         members.remove(player);
 
-        sendSystemMessage("quitMessage", player);
+        if ( !isPersonalChat() ) {
+            player.sendMessage(Messages.quitMessage(getColorCode(), getName(), player.getName()));
+        }
 
         // 0人で削除する設定がオンで、0人になったなら、チャンネルを削除する
         LunaChatConfig config = LunaChat.getConfig();
@@ -346,7 +327,9 @@ public abstract class Channel {
         moderator.add(player);
 
         // メッセージ
-        sendSystemMessage("addModeratorMessage", player);
+        if ( !isPersonalChat() ) {
+            player.sendMessage(Messages.addModeratorMessage(getColorCode(), getName(), player.getName()));
+        }
 
         save();
     }
@@ -366,17 +349,12 @@ public abstract class Channel {
         moderator.remove(player);
 
         // メッセージ
-        sendSystemMessage("removeModeratorMessage", player);
+        if ( !isPersonalChat() ) {
+            player.sendMessage(Messages.removeModeratorMessage(getColorCode(), getName(), player.getName()));
+        }
 
         save();
     }
-
-    /**
-     * プレイヤーに関連する、システムメッセージをチャンネルに流す
-     * @param key リソースキー
-     * @param player プレイヤー
-     */
-    protected abstract void sendSystemMessage(String key, ChannelMember player);
 
     /**
      * メッセージを表示します。指定したプレイヤーの発言として処理されます。
@@ -405,34 +383,33 @@ public abstract class Channel {
     public List<String> getInfo(boolean forModerator) {
 
         ArrayList<String> info = new ArrayList<String>();
-        info.add(INFO_FIRSTLINE);
+        info.add(Messages.channelInfoFirstLine());
 
         // チャンネル名、参加人数、総人数、チャンネル説明文
-        info.add( String.format(
-                LIST_FORMAT, getName(), getOnlineNum(), getTotalNum(), getDescription()) );
+        info.add(Messages.listFormat(getName(), getOnlineNum(), getTotalNum(), getDescription()));
 
         // チャンネル別名
         String alias = getAlias();
         if ( alias != null && alias.length() > 0 ) {
-            info.add(INFO_ALIAS + alias);
+            info.add(Messages.channelInfoAlias() + alias);
         }
 
         // 参加メンバー一覧
         if ( isGlobalChannel() ) {
-            info.add(INFO_GLOBAL);
+            info.add(Messages.channelInfoGlobal());
         } else if ( isBroadcastChannel() ) {
-            info.add(INFO_BROADCAST);
+            info.add(Messages.channelInfoBroadcast());
         } else {
             // メンバーを、5人ごとに表示する
             StringBuffer buf = new StringBuffer();
-            buf.append(INFO_PREFIX);
+            buf.append(Messages.channelInfoPrefix());
 
             for ( int i=0; i<getMembers().size(); i++ ) {
 
                 if ( i%5 == 0 && i != 0 ) {
                     info.add(buf.toString());
                     buf = new StringBuffer();
-                    buf.append(INFO_PREFIX);
+                    buf.append(Messages.channelInfoPrefix());
                 }
 
                 ChannelMember cp = getMembers().get(i);
@@ -457,42 +434,42 @@ public abstract class Channel {
 
         // シークレットチャンネルかどうか
         if ( !isVisible() ) {
-            info.add(INFO_SECRET);
+            info.add(Messages.channelInfoSecret());
         }
 
         // パスワード設定があるかどうか
         if ( getPassword().length() > 0 ) {
             if ( !forModerator ) {
-                info.add(INFO_PASSWORD);
+                info.add(Messages.channelInfoPassword());
             } else {
-                info.add(INFO_PASSWORD + " " + getPassword());
+                info.add(Messages.channelInfoPassword() + " " + getPassword());
             }
         }
 
         // 範囲チャット、ワールドチャット
         if ( isWorldRange() && getChatRange() > 0 ) {
-            info.add(String.format(INFO_RANGECHAT, getChatRange()));
+            info.add(Messages.channelInfoRangeChat(getChatRange()));
         } else if ( isWorldRange() ) {
-            info.add(INFO_WORLDCHAT);
+            info.add(Messages.channelInfoWorldChat());
         }
 
         if ( forModerator ) {
 
             // フォーマット情報
-            info.add(INFO_FORMAT);
-            info.add(INFO_PREFIX + " " + ChatColor.WHITE + getFormat());
+            info.add(Messages.channelInfoFormat());
+            info.add(Messages.channelInfoPrefix() + " " + ChatColor.WHITE + getFormat());
 
             // Muteリスト情報、5人ごとに表示する
             if ( getMuted().size() > 0 ) {
-                info.add(INFO_MUTED);
+                info.add(Messages.channelInfoMuted());
 
                 StringBuffer buf = new StringBuffer();
-                buf.append(INFO_PREFIX + ChatColor.WHITE);
+                buf.append(Messages.channelInfoPrefix() + ChatColor.WHITE);
                 for ( int i=0; i<getMuted().size(); i++ ) {
                     if ( i%5 == 0 && i != 0 ) {
                         info.add(buf.toString());
                         buf = new StringBuffer();
-                        buf.append(INFO_PREFIX + ChatColor.WHITE);
+                        buf.append(Messages.channelInfoPrefix() + ChatColor.WHITE);
                     }
                     buf.append(getMuted().get(i).getName() + ",");
                 }
@@ -502,15 +479,15 @@ public abstract class Channel {
 
             // BANリスト情報、5人ごとに表示する
             if ( getBanned().size() > 0 ) {
-                info.add(INFO_BANNED);
+                info.add(Messages.channelInfoBanned());
 
                 StringBuffer buf = new StringBuffer();
-                buf.append(INFO_PREFIX + ChatColor.WHITE);
+                buf.append(Messages.channelInfoPrefix() + ChatColor.WHITE);
                 for ( int i=0; i<getBanned().size(); i++ ) {
                     if ( i%5 == 0 && i != 0 ) {
                         info.add(buf.toString());
                         buf = new StringBuffer();
-                        buf.append(INFO_PREFIX + ChatColor.WHITE);
+                        buf.append(Messages.channelInfoPrefix() + ChatColor.WHITE);
                     }
                     buf.append(getBanned().get(i).getName() + ",");
                 }
@@ -519,7 +496,7 @@ public abstract class Channel {
             }
         }
 
-        info.add(LIST_ENDLINE);
+        info.add(Messages.listEndLine());
 
         return info;
     }
@@ -542,13 +519,13 @@ public abstract class Channel {
                     save();
 
                     // メッセージ通知を流す
-                    if ( !MSG_BAN_EXPIRED.equals("") ) {
-                        String msg = replaceKeywords(MSG_BAN_EXPIRED, cp);
+                    String msg = Messages.expiredBanMessage(getColorCode(), getName(), cp.getName());
+                    if ( !msg.isEmpty() ) {
                         sendMessage(null, msg, null, false, "system");
                     }
 
-                    if ( cp.isOnline() && !MSG_BAN_EXPIRED_PLAYER.equals("") ) {
-                        String msg = PREINFO + String.format(MSG_BAN_EXPIRED_PLAYER, getName());
+                    msg = Messages.cmdmsgPardoned(getName());
+                    if ( cp.isOnline() && !msg.isEmpty() ) {
                         cp.sendMessage(msg);
                     }
                 }
@@ -566,13 +543,13 @@ public abstract class Channel {
                     save();
 
                     // メッセージ通知を流す
-                    if ( !MSG_MUTE_EXPIRED.equals("") ) {
-                        String msg = replaceKeywords(MSG_MUTE_EXPIRED, cp);
+                    String msg = Messages.expiredMuteMessage(getColorCode(), getName(), cp.getName());
+                    if ( !msg.isEmpty() ) {
                         sendMessage(null, msg, null, false, "system");
                     }
 
-                    if ( cp.isOnline() && !MSG_MUTE_EXPIRED_PLAYER.equals("") ) {
-                        String msg = PREINFO + String.format(MSG_MUTE_EXPIRED_PLAYER, getName());
+                    msg = Messages.cmdmsgUnmuted(getName());
+                    if ( cp.isOnline() && !msg.isEmpty() ) {
                         cp.sendMessage(msg);
                     }
                 }
@@ -1139,23 +1116,5 @@ public abstract class Channel {
             return new HashMap<String, Long>();
         }
         return (Map<String, Long>)obj;
-    }
-
-    /**
-     * メッセージリソースのメッセージを、カラーコード置き換えしつつ、senderに送信する
-     * @param player メッセージの送り先
-     * @param pre プレフィックス
-     * @param key リソースキー
-     * @param args リソース内の置き換え対象キーワード
-     */
-    void sendResourceMessage(
-            ChannelMember player, String pre, String key, Object... args) {
-
-        String org = Messages.get(key);
-        if ( org == null || org.equals("") ) {
-            return;
-        }
-        String msg = String.format(pre + org, args);
-        player.sendMessage(msg);
     }
 }

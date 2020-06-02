@@ -7,6 +7,7 @@ package com.github.ucchyocean.lc3.command;
 
 import java.util.List;
 
+import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.channel.Channel;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 
@@ -14,16 +15,15 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  * infoコマンドの実行クラス
  * @author ucchy
  */
-public class InfoCommand extends SubCommandAbst {
+public class InfoCommand extends LunaChatSubCommand {
 
     private static final String COMMAND_NAME = "info";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
-    private static final String USAGE_KEY = "usageInfo";
 
     /**
      * コマンドを取得します。
      * @return コマンド
-     * @see com.github.ucchyocean.lc3.command.SubCommandAbst#getCommandName()
+     * @see com.github.ucchyocean.lc3.command.LunaChatSubCommand#getCommandName()
      */
     @Override
     public String getCommandName() {
@@ -33,7 +33,7 @@ public class InfoCommand extends SubCommandAbst {
     /**
      * パーミッションノードを取得します。
      * @return パーミッションノード
-     * @see com.github.ucchyocean.lc3.command.SubCommandAbst#getPermissionNode()
+     * @see com.github.ucchyocean.lc3.command.LunaChatSubCommand#getPermissionNode()
      */
     @Override
     public String getPermissionNode() {
@@ -43,7 +43,7 @@ public class InfoCommand extends SubCommandAbst {
     /**
      * コマンドの種別を取得します。
      * @return コマンド種別
-     * @see com.github.ucchyocean.lc3.command.SubCommandAbst#getCommandType()
+     * @see com.github.ucchyocean.lc3.command.LunaChatSubCommand#getCommandType()
      */
     @Override
     public CommandType getCommandType() {
@@ -54,12 +54,12 @@ public class InfoCommand extends SubCommandAbst {
      * 使用方法に関するメッセージをsenderに送信します。
      * @param sender コマンド実行者
      * @param label 実行ラベル
-     * @see com.github.ucchyocean.lc3.command.SubCommandAbst#sendUsageMessage()
+     * @see com.github.ucchyocean.lc3.command.LunaChatSubCommand#sendUsageMessage()
      */
     @Override
     public void sendUsageMessage(
             ChannelMember sender, String label) {
-        sendResourceMessage(sender, "", USAGE_KEY, label);
+        sender.sendMessage(Messages.usageInfo(label));
     }
 
     /**
@@ -68,7 +68,7 @@ public class InfoCommand extends SubCommandAbst {
      * @param label 実行ラベル
      * @param args 実行時の引数
      * @return コマンドが実行されたかどうか
-     * @see com.github.ucchyocean.lc3.command.SubCommandAbst#runCommand(java.lang.String[])
+     * @see com.github.ucchyocean.lc3.command.LunaChatSubCommand#runCommand(java.lang.String[])
      */
     @Override
     public boolean runCommand(

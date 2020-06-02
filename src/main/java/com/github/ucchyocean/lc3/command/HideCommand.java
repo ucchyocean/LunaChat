@@ -16,24 +16,15 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  * hideコマンドの実行クラス
  * @author ucchy
  */
-public class HideCommand extends SubCommandAbst {
+public class HideCommand extends LunaChatSubCommand {
 
     private static final String COMMAND_NAME = "hide";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
-    private static final String USAGE_KEY1 = "usageHide";
-    private static final String USAGE_KEY2 = "usageHidePlayer";
-
-    private static final String HIDE_CHANNEL_FIRSTLINE =
-            Messages.get("hideChannelFirstLine");
-    private static final String HIDE_PLAYER_FIRSTLINE =
-            Messages.get("hidePlayerFirstLine");
-    private static final String LIST_ENDLINE = Messages.get("listEndLine");
-    private static final String LIST_PREFIX = Messages.get("listPlainPrefix");
 
     /**
      * コマンドを取得します。
      * @return コマンド
-     * @see com.github.ucchyocean.lc3.command.SubCommandAbst#getCommandName()
+     * @see com.github.ucchyocean.lc3.command.LunaChatSubCommand#getCommandName()
      */
     @Override
     public String getCommandName() {
@@ -43,7 +34,7 @@ public class HideCommand extends SubCommandAbst {
     /**
      * パーミッションノードを取得します。
      * @return パーミッションノード
-     * @see com.github.ucchyocean.lc3.command.SubCommandAbst#getPermissionNode()
+     * @see com.github.ucchyocean.lc3.command.LunaChatSubCommand#getPermissionNode()
      */
     @Override
     public String getPermissionNode() {
@@ -53,7 +44,7 @@ public class HideCommand extends SubCommandAbst {
     /**
      * コマンドの種別を取得します。
      * @return コマンド種別
-     * @see com.github.ucchyocean.lc3.command.SubCommandAbst#getCommandType()
+     * @see com.github.ucchyocean.lc3.command.LunaChatSubCommand#getCommandType()
      */
     @Override
     public CommandType getCommandType() {
@@ -64,13 +55,13 @@ public class HideCommand extends SubCommandAbst {
      * 使用方法に関するメッセージをsenderに送信します。
      * @param sender コマンド実行者
      * @param label 実行ラベル
-     * @see com.github.ucchyocean.lc3.command.SubCommandAbst#sendUsageMessage()
+     * @see com.github.ucchyocean.lc3.command.LunaChatSubCommand#sendUsageMessage()
      */
     @Override
     public void sendUsageMessage(
             ChannelMember sender, String label) {
-        sendResourceMessage(sender, "", USAGE_KEY1, label);
-        sendResourceMessage(sender, "", USAGE_KEY2, label);
+        sender.sendMessage(Messages.usageHide(label));
+        sender.sendMessage(Messages.usageHidePlayer(label));
     }
 
     /**
@@ -79,7 +70,7 @@ public class HideCommand extends SubCommandAbst {
      * @param label 実行ラベル
      * @param args 実行時の引数
      * @return コマンドが実行されたかどうか
-     * @see com.github.ucchyocean.lc3.command.SubCommandAbst#runCommand(java.lang.String[])
+     * @see com.github.ucchyocean.lc3.command.LunaChatSubCommand#runCommand(java.lang.String[])
      */
     @Override
     public boolean runCommand(
@@ -184,15 +175,15 @@ public class HideCommand extends SubCommandAbst {
     private ArrayList<String> getHideInfoList(ChannelMember player) {
 
         ArrayList<String> items = new ArrayList<String>();
-        items.add(HIDE_CHANNEL_FIRSTLINE);
+        items.add(Messages.hideChannelFirstLine());
         for ( String channel : getHideChannelNameList(player) ) {
-            items.add(LIST_PREFIX + channel);
+            items.add(Messages.listPlainPrefix() + channel);
         }
-        items.add(HIDE_PLAYER_FIRSTLINE);
+        items.add(Messages.hidePlayerFirstLine());
         for ( ChannelMember p : api.getHideinfo(player) ) {
-            items.add(LIST_PREFIX + p.getDisplayName());
+            items.add(Messages.listPlainPrefix() + p.getDisplayName());
         }
-        items.add(LIST_ENDLINE);
+        items.add(Messages.listEndLine());
 
         return items;
     }

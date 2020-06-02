@@ -44,7 +44,6 @@ public class ChannelMemberProxiedPlayer extends ChannelMemberBungee {
      * @return ChannelMemberProxiedPlayer
      */
     public static ChannelMemberProxiedPlayer getChannelMember(String nameOrUuid) {
-
         if ( nameOrUuid.startsWith("$") ) {
             return new ChannelMemberProxiedPlayer(UUID.fromString(nameOrUuid.substring(1)));
         } else {
@@ -128,6 +127,7 @@ public class ChannelMemberProxiedPlayer extends ChannelMemberBungee {
      */
     @Override
     public void sendMessage(String message) {
+        if ( message == null || message.isEmpty() ) return;
         ProxiedPlayer player = getPlayer();
         if ( player != null ) {
             player.sendMessage(TextComponent.fromLegacyText(message));

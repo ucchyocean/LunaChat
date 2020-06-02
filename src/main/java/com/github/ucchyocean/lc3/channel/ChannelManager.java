@@ -26,8 +26,6 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  */
 public class ChannelManager implements LunaChatAPI {
 
-    private static final String MSG_BREAKUP = Messages.get("breakupMessage");
-
     private static final String FILE_NAME_DCHANNELS = "defaults.yml";
     private static final String FILE_NAME_TEMPLATES = "templates.yml";
     private static final String FILE_NAME_JAPANIZE = "japanize.yml";
@@ -435,10 +433,8 @@ public class ChannelManager implements LunaChatAPI {
         if ( channel != null ) {
 
             // 強制解散のメッセージを、残ったメンバーに流す
-            if ( !channel.isPersonalChat() && !MSG_BREAKUP.equals("") ) {
-                String message = new String(MSG_BREAKUP);
-                message = message.replace("%ch", channel.getName());
-                message = message.replace("%color", channel.getColorCode());
+            String message = Messages.breakupMessage(channel.getColorCode(), channel.getName());
+            if ( !channel.isPersonalChat() && !message.equals("") ) {
                 for ( ChannelMember cp : channel.getMembers() ) {
                     cp.sendMessage(message);
                 }

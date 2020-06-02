@@ -51,7 +51,7 @@ public class MessageParser {
             System.out.println(String.format(
                     "        String msg = resources.getString(\"%s\");", key));
             System.out.println(String.format(
-                    "        if ( msg == null || msg.equals(\"\") ) return \"\";", key));
+                    "        if ( msg == null ) return \"\";", key));
 
             for ( String keyword : keywords ) {
                 System.out.println(String.format(
@@ -59,8 +59,10 @@ public class MessageParser {
             }
             if ( key.startsWith("errmsg") ) {
                 System.out.println("        return resources.getString(\"errorPrefix\", \"\") + msg;");
+            } else if ( key.startsWith("cmdmsg") ) {
+                System.out.println("        return resources.getString(\"infoPrefix\", \"\") + msg;");
             } else {
-                System.out.println("        return msg;");
+                System.out.println("        return Utility.replaceColorCode(msg);");
             }
             System.out.println("    }");
         }

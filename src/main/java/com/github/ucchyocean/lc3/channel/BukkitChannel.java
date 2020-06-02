@@ -41,16 +41,6 @@ public class BukkitChannel extends Channel {
 
     private static final String PERMISSION_SPEAK_PREFIX = "lunachat.speak";
 
-    private static final String MSG_BAN_NGWORD = Messages.get("banNGWordMessage");
-    private static final String MSG_KICK_NGWORD = Messages.get("kickNGWordMessage");
-    private static final String MSG_MUTE_NGWORD = Messages.get("muteNGWordMessage");
-
-    private static final String PREERR = Messages.get("errorPrefix");
-
-    private static final String MSG_NO_RECIPIENT = Messages.get("noRecipientMessage");
-
-    private static final String ERRMSG_MUTED = Messages.get("errmsgMuted");
-
     private SimpleDateFormat dateFormat;
     private SimpleDateFormat timeFormat;
 
@@ -75,8 +65,7 @@ public class BukkitChannel extends Channel {
         // 発言権限を確認する
         String node = PERMISSION_SPEAK_PREFIX + "." + getName();
         if ( player.isPermissionSet(node) && !player.hasPermission(node) ) {
-            sendResourceMessage(player, PREERR, "errmsgPermission",
-                    PERMISSION_SPEAK_PREFIX + "." + getName());
+            player.sendMessage(Messages.errmsgPermission(node));
             return;
         }
 
@@ -85,7 +74,7 @@ public class BukkitChannel extends Channel {
 
         // Muteされているかどうかを確認する
         if ( getMuted().contains(player) ) {
-            player.sendMessage( PREERR + ERRMSG_MUTED );
+            player.sendMessage(Messages.errmsgMuted());
             return;
         }
 
@@ -183,9 +172,8 @@ public class BukkitChannel extends Channel {
                 if ( !isGlobalChannel() ) {
                     getBanned().add(player);
                     removeMember(player);
-                    if ( !MSG_BAN_NGWORD.equals("") ) {
-                        String m = replaceKeywordsForSystemMessages(
-                                MSG_BAN_NGWORD, player.getName());
+                    if ( !Messages.banNGWordMessage("", "", "").isEmpty() ) {
+                        String m = Messages.banNGWordMessage(getColorCode(), getName(), player.getName());
                         player.sendMessage(m);
                         sendMessage(null, m, null, true, "system");
                     }
@@ -196,9 +184,8 @@ public class BukkitChannel extends Channel {
 
                 if ( !isGlobalChannel() ) {
                     removeMember(player);
-                    if ( !MSG_KICK_NGWORD.equals("") ) {
-                        String m = replaceKeywordsForSystemMessages(
-                                MSG_KICK_NGWORD, player.getName());
+                    if ( !Messages.kickNGWordMessage("", "", "").isEmpty() ) {
+                        String m = Messages.kickNGWordMessage(getColorCode(), getName(), player.getName());
                         player.sendMessage(m);
                         sendMessage(null, m, null, true, "system");
                     }
@@ -209,9 +196,8 @@ public class BukkitChannel extends Channel {
 
                 getMuted().add(player);
                 save();
-                if ( !MSG_MUTE_NGWORD.equals("") ) {
-                    String m = replaceKeywordsForSystemMessages(
-                            MSG_MUTE_NGWORD, player.getName());
+                if ( !Messages.muteNGWordMessage("", "", "").isEmpty() ) {
+                    String m = Messages.muteNGWordMessage(getColorCode(), getName(), player.getName());
                     player.sendMessage(m);
                     sendMessage(null, m, null, true, "system");
                 }
@@ -256,27 +242,6 @@ public class BukkitChannel extends Channel {
         // メッセージの送信
         boolean sendDynmap = source == null || !source.equals("web");
         sendMessage(null, maskedMessage, msgFormat, sendDynmap, name);
-    }
-
-    /**
-     * プレイヤーに関連する、システムメッセージをチャンネルに流す
-     * @param key リソースキー
-     * @param player プレイヤー
-     */
-    @Override
-    protected void sendSystemMessage(String key, ChannelMember player) {
-
-        // プライベートチャットならシステムメッセージを流さない
-        if ( isPersonalChat() ) {
-            return;
-        }
-
-        String msg = Messages.get(key);
-        if ( msg == null || msg.equals("") ) {
-            return;
-        }
-        msg = replaceKeywordsForSystemMessages(msg, player.getName());
-        sendMessage(null, msg, null, false, "system");
     }
 
     /**
@@ -335,7 +300,7 @@ public class BukkitChannel extends Channel {
                 }
 
                 // 受信者が自分以外いない場合は、メッセージを表示する
-                if ( !MSG_NO_RECIPIENT.equals("") && (
+                if ( !Messages.noRecipientMessage("", "").isEmpty() && (
                         recipients.size() == 0 ||
                         (recipients.size() == 1 &&
                          recipients.get(0).getName().equals(player.getName()) ) ) ) {
@@ -426,8 +391,7 @@ public class BukkitChannel extends Channel {
 
         // 受信者が自分以外いない場合は、メッセージを表示する
         if ( sendNoRecipientMessage ) {
-            String msg = replaceKeywordsForSystemMessages(MSG_NO_RECIPIENT, "");
-            player.sendMessage(msg);
+            player.sendMessage(Messages.noRecipientMessage(getColorCode(), getName()));
         }
 
         // ロギング

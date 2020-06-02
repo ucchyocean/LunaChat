@@ -5,6 +5,7 @@
  */
 package com.github.ucchyocean.lc3.command;
 
+import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.channel.Channel;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 
@@ -12,16 +13,15 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  * acceptコマンドの実行クラス
  * @author ucchy
  */
-public class AcceptCommand extends SubCommandAbst {
+public class AcceptCommand extends LunaChatSubCommand {
 
     private static final String COMMAND_NAME = "accept";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
-    private static final String USAGE_KEY = "usageAccept";
 
     /**
      * コマンドを取得します。
      * @return コマンド
-     * @see com.github.ucchyocean.lc3.command.SubCommandAbst#getCommandName()
+     * @see com.github.ucchyocean.lc3.command.LunaChatSubCommand#getCommandName()
      */
     @Override
     public String getCommandName() {
@@ -31,7 +31,7 @@ public class AcceptCommand extends SubCommandAbst {
     /**
      * パーミッションノードを取得します。
      * @return パーミッションノード
-     * @see com.github.ucchyocean.lc3.command.SubCommandAbst#getPermissionNode()
+     * @see com.github.ucchyocean.lc3.command.LunaChatSubCommand#getPermissionNode()
      */
     @Override
     public String getPermissionNode() {
@@ -41,7 +41,7 @@ public class AcceptCommand extends SubCommandAbst {
     /**
      * コマンドの種別を取得します。
      * @return コマンド種別
-     * @see com.github.ucchyocean.lc3.command.SubCommandAbst#getCommandType()
+     * @see com.github.ucchyocean.lc3.command.LunaChatSubCommand#getCommandType()
      */
     @Override
     public CommandType getCommandType() {
@@ -52,12 +52,12 @@ public class AcceptCommand extends SubCommandAbst {
      * 使用方法に関するメッセージをsenderに送信します。
      * @param sender コマンド実行者
      * @param label 実行ラベル
-     * @see com.github.ucchyocean.lc3.command.SubCommandAbst#sendUsageMessage()
+     * @see com.github.ucchyocean.lc3.command.LunaChatSubCommand#sendUsageMessage()
      */
     @Override
     public void sendUsageMessage(
             ChannelMember sender, String label) {
-        sendResourceMessage(sender, "", USAGE_KEY, label);
+        sender.sendMessage(Messages.usageAccept(label));
     }
 
     /**
@@ -66,14 +66,14 @@ public class AcceptCommand extends SubCommandAbst {
      * @param label 実行ラベル
      * @param args 実行時の引数
      * @return コマンドが実行されたかどうか
-     * @see com.github.ucchyocean.lc3.command.SubCommandAbst#runCommand(java.lang.String[])
+     * @see com.github.ucchyocean.lc3.command.LunaChatSubCommand#runCommand(java.lang.String[])
      */
     @Override
     public boolean runCommand(ChannelMember sender, String label, String[] args) {
 
         // 招待を受けていないプレイヤーなら、エラーを表示して終了する
         if (!DataMaps.inviteMap.containsKey(sender.getName())) {
-            sendResourceMessage(sender, PREERR, "errmsgNotInvited");
+            sender.sendMessage(Messages.errmsgNotInvited());
             return true;
         }
 
@@ -85,23 +85,23 @@ public class AcceptCommand extends SubCommandAbst {
 
         // 取得できなかったらエラー終了する
         if (channel == null) {
-            sendResourceMessage(sender, PREERR, "errmsgNotfoundChannel");
+            sender.sendMessage(Messages.errmsgNotfoundChannel());
             return true;
         }
 
         // 既に参加しているなら、エラーを表示して終了する
         if (channel.getMembers().contains(sender)) {
-            sendResourceMessage(sender, PREERR, "errmsgInvitedAlreadyJoin");
+            sender.sendMessage(Messages.errmsgInvitedAlreadyJoin());
             return true;
         }
 
         // 参加する
         channel.addMember(sender);
-        sendResourceMessage(sender, PREINFO, "cmdmsgJoin", channel.getName());
+        sender.sendMessage(Messages.cmdmsgJoin(channel.getName()));
 
         // デフォルトの発言先に設定する
         api.setDefaultChannel(sender.getName(), channelName);
-        sendResourceMessage(sender, PREINFO, "cmdmsgSet", channelName);
+        sender.sendMessage(Messages.cmdmsgSet(channel.getName()));
 
         return true;
     }
