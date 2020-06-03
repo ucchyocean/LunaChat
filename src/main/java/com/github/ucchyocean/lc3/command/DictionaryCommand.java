@@ -76,7 +76,7 @@ public class DictionaryCommand extends LunaChatSubCommand {
         // 引数チェック
         // このコマンドは、コンソールでも実行できる
         if ( args.length <= 1 ) {
-            sendResourceMessage(sender, PREERR, "errmsgCommand");
+            sender.sendMessage(Messages.errmsgCommand());
             sendUsageMessage(sender, label);
             return true;
         }
@@ -84,7 +84,7 @@ public class DictionaryCommand extends LunaChatSubCommand {
         if ( !args[1].equalsIgnoreCase("add") &&
                 !args[1].equalsIgnoreCase("remove") &&
                 !args[1].equalsIgnoreCase("view") ) {
-            sendResourceMessage(sender, PREERR, "errmsgCommand");
+            sender.sendMessage(Messages.errmsgCommand());
             sendUsageMessage(sender, label);
             return true;
         }
@@ -93,7 +93,7 @@ public class DictionaryCommand extends LunaChatSubCommand {
 
             // addの場合は、さらに2つ引数が必要
             if ( args.length <= 3 ) {
-                sendResourceMessage(sender, PREERR, "errmsgCommand");
+                sender.sendMessage(Messages.errmsgCommand());
                 sendUsageMessage(sender, label);
                 return true;
             }
@@ -102,14 +102,14 @@ public class DictionaryCommand extends LunaChatSubCommand {
             String value = args[3];
             api.setDictionary(key, value);
 
-            sendResourceMessage(sender, PREINFO, "cmdmsgDictionaryAdd", key, value);
+            sender.sendMessage(Messages.cmdmsgDictionaryAdd(key, value));
             return true;
 
         } else if ( args[1].equalsIgnoreCase("remove") ) {
 
             // removeの場合は、さらに1つ引数が必要
             if ( args.length <= 2 ) {
-                sendResourceMessage(sender, PREERR, "errmsgCommand");
+                sender.sendMessage(Messages.errmsgCommand());
                 sendUsageMessage(sender, label);
                 return true;
             }
@@ -117,7 +117,7 @@ public class DictionaryCommand extends LunaChatSubCommand {
             String key = args[2];
             api.removeDictionary(key);
 
-            sendResourceMessage(sender, PREINFO, "cmdmsgDictionaryRemove", key);
+            sender.sendMessage(Messages.cmdmsgDictionaryRemove(key));
             return true;
 
         } else if ( args[1].equalsIgnoreCase("view") ) {

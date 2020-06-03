@@ -93,7 +93,7 @@ public class InviteCommand extends LunaChatSubCommand {
         // デフォルトの発言先を取得する
         Channel channel = api.getDefaultChannel(sender.getName());
         if ( channel == null ) {
-            sendResourceMessage(sender, PREERR, "errmsgNoJoin");
+            sender.sendMessage(Messages.errmsgNoJoin());
             return true;
         }
 
@@ -102,28 +102,26 @@ public class InviteCommand extends LunaChatSubCommand {
         if (args.length >= 2) {
             invitedName = args[1];
         } else {
-            sendResourceMessage(sender, PREERR, "errmsgCommand");
+            sender.sendMessage(Messages.errmsgCommand());
             return true;
         }
 
         // モデレーターかどうか確認する
         if ( !channel.hasModeratorPermission(sender) ) {
-            sendResourceMessage(sender, PREERR, "errmsgNotModerator");
+            sender.sendMessage(Messages.errmsgNotModerator());
             return true;
         }
 
         // 招待相手が存在するかどうかを確認する
         ChannelMember invited = ChannelMember.getChannelMember(invitedName);
         if ( invited == null || !invited.isOnline() ) {
-            sendResourceMessage(sender, PREERR,
-                    "errmsgNotfoundPlayer", invitedName);
+            sender.sendMessage(Messages.errmsgNotfoundPlayer(invitedName));
             return true;
         }
 
         // 招待相手が既にチャンネルに参加しているかどうかを確認する
         if (channel.getMembers().contains(invited)) {
-            sendResourceMessage(sender, PREERR,
-                    "errmsgInvitedAlreadyExist", invitedName);
+            sender.sendMessage(Messages.errmsgInvitedAlreadyExist(invitedName));
             return true;
         }
 
@@ -131,11 +129,9 @@ public class InviteCommand extends LunaChatSubCommand {
         DataMaps.inviteMap.put(invitedName, channel.getName());
         DataMaps.inviterMap.put(invitedName, sender.getName());
 
-        sendResourceMessage(sender, PREINFO,
-                "cmdmsgInvite", invitedName, channel.getName());
-        sendResourceMessage(invited, PREINFO,
-                "cmdmsgInvited1", sender.getName(), channel.getName());
-        sendResourceMessage(invited, PREINFO, "cmdmsgInvited2");
+        sender.sendMessage(Messages.cmdmsgInvite(invitedName, channel.getName()));
+        invited.sendMessage(Messages.cmdmsgInvited1(sender.getName(), channel.getName()));
+        invited.sendMessage(Messages.cmdmsgInvited2());
         return true;
     }
 
@@ -150,8 +146,7 @@ public class InviteCommand extends LunaChatSubCommand {
 
         // パーミッションチェック
         if ( !sender.hasPermission(PERMISSION_NODE_FORCE_INVITE) ) {
-            sendResourceMessage(sender, PREERR, "errmsgPermission",
-                    PERMISSION_NODE_FORCE_INVITE);
+            sender.sendMessage(Messages.errmsgPermission(PERMISSION_NODE_FORCE_INVITE));
             return true;
         }
 
@@ -166,14 +161,14 @@ public class InviteCommand extends LunaChatSubCommand {
         } else if ( args.length >= 4 ) {
             cname = args[3];
         } else {
-            sendResourceMessage(sender, PREERR, "errmsgCommand");
+            sender.sendMessage(Messages.errmsgCommand());
             return true;
         }
 
         // チャンネルが存在するかどうか確認する
         Channel channel = api.getChannel(cname);
         if ( channel == null ) {
-            sendResourceMessage(sender, PREERR, "errmsgNotExist");
+            sender.sendMessage(Messages.errmsgNotExist());
             return true;
         }
 
@@ -181,25 +176,21 @@ public class InviteCommand extends LunaChatSubCommand {
         String invitedName = args[1];
         ChannelMember invited = ChannelMember.getChannelMember(invitedName);
         if ( invited == null || !invited.isOnline() ) {
-            sendResourceMessage(sender, PREERR,
-                    "errmsgNotfoundPlayer", invitedName);
+            sender.sendMessage(Messages.errmsgNotfoundPlayer(invitedName));
             return true;
         }
 
         // 招待相手が既にチャンネルに参加しているかどうかを確認する
         if (channel.getMembers().contains(invited)) {
-            sendResourceMessage(sender, PREERR,
-                    "errmsgInvitedAlreadyExist", invitedName);
+            sender.sendMessage(Messages.errmsgInvitedAlreadyExist(invitedName));
             return true;
         }
 
         // 参加する
         channel.addMember(invited);
         api.setDefaultChannel(invitedName, cname);
-        sendResourceMessage(sender, PREINFO,
-                "cmdmsgInvite", invitedName, channel.getName());
-        sendResourceMessage(invited, PREINFO,
-                "cmdmsgJoin", channel.getName());
+        sender.sendMessage(Messages.cmdmsgInvite(invitedName, channel.getName()));
+        invited.sendMessage(Messages.cmdmsgJoin(channel.getName()));
 
         return true;
     }

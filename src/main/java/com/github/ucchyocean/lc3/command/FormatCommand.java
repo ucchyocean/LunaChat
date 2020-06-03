@@ -92,7 +92,7 @@ public class FormatCommand extends LunaChatSubCommand {
                 format = format + args[i] + " ";
             }
         } else {
-            sendResourceMessage(sender, PREERR, "errmsgCommand");
+            sender.sendMessage(Messages.errmsgCommand());
             return true;
         }
         format = format.trim();
@@ -100,13 +100,13 @@ public class FormatCommand extends LunaChatSubCommand {
         // チャンネルが存在するかどうかをチェックする
         Channel channel = api.getChannel(cname);
         if ( channel == null ) {
-            sendResourceMessage(sender, PREERR, "errmsgNotExist");
+            sender.sendMessage(Messages.errmsgNotExist());
             return true;
         }
 
         // モデレーターかどうか確認する
         if ( !channel.hasModeratorPermission(sender) ) {
-            sendResourceMessage(sender, PREERR, "errmsgNotModerator");
+            sender.sendMessage(Messages.errmsgNotModerator());
             return true;
         }
 
@@ -122,14 +122,14 @@ public class FormatCommand extends LunaChatSubCommand {
         }
         for ( String constraint : constraints ) {
             if ( !tempFormat.contains(constraint) ) {
-                sendResourceMessage(sender, PREERR, "errmsgFormatConstraint", constraint);
+                sender.sendMessage(Messages.errmsgFormatConstraint(constraint));
                 return true;
             }
         }
 
         // フォーマットの設定
         channel.setFormat(format);
-        sendResourceMessage(sender, PREINFO, "cmdmsgFormat", format);
+        sender.sendMessage(Messages.cmdmsgFormat(format));
         channel.save();
         return true;
     }

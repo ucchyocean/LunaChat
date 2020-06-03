@@ -87,7 +87,7 @@ public class LeaveCommand extends LunaChatSubCommand {
 
         // チャンネルが存在するかどうかをチェックする
         if ( channel == null ) {
-            sendResourceMessage(sender, PREERR, "errmsgNotExist");
+            sender.sendMessage(Messages.errmsgNotExist());
             return true;
         }
 
@@ -96,32 +96,31 @@ public class LeaveCommand extends LunaChatSubCommand {
         // 退室権限を確認する
         String node = PERMISSION_NODE + "." + channelName;
         if (sender.isPermissionSet(node) && !sender.hasPermission(node)) {
-            sendResourceMessage(sender, PREERR, "errmsgPermission",
-                    PERMISSION_NODE + "." + channelName);
+            sender.sendMessage(Messages.errmsgPermission(node));
             return true;
         }
 
         // グローバルチャンネルなら退出できない
         if ( channel.isGlobalChannel() ) {
-            sendResourceMessage(sender, PREERR, "errmsgCannotLeaveGlobal", channelName);
+            sender.sendMessage(Messages.errmsgCannotLeaveGlobal(channelName));
             return true;
         }
 
         // 強制参加チャンネルなら退出できない
         if ( channel.isForceJoinChannel() ) {
-            sendResourceMessage(sender, PREERR, "errmsgCannotLeaveForceJoin", channelName);
+            sender.sendMessage(Messages.errmsgCannotLeaveForceJoin(channelName));
             return true;
         }
 
         // チャンネルのメンバーかどうかを確認する
         if (!channel.getMembers().contains(sender)) {
-            sendResourceMessage(sender, PREERR, "errmsgNomember");
+            sender.sendMessage(Messages.errmsgNomember());
             return true;
         }
 
         // チャンネルから退出する
         channel.removeMember(sender);
-        sendResourceMessage(sender, PREINFO, "cmdmsgLeave", channelName);
+        sender.sendMessage(Messages.cmdmsgLeave(channelName));
         return true;
     }
 }

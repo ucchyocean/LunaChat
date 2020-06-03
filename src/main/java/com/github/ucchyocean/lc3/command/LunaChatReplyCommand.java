@@ -17,9 +17,6 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  */
 public class LunaChatReplyCommand extends LunaChatMessageCommand {
 
-    private static final String PREINFO = Messages.get("infoPrefix");
-    private static final String PREERR = Messages.get("errorPrefix");
-
     /**
      * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
      */
@@ -36,18 +33,16 @@ public class LunaChatReplyCommand extends LunaChatMessageCommand {
         // 引数が無ければ、現在の会話相手を表示して終了する
         if (args.length == 0) {
             if ( invitedName == null ) {
-                sendResourceMessage(sender, PREINFO,
-                        "cmdmsgReplyInviterNone", inviter.getName());
+                sender.sendMessage(Messages.cmdmsgReplyInviterNone(inviter.getName()));
             } else {
-                sendResourceMessage(sender, PREINFO,
-                        "cmdmsgReplyInviter", inviter.getName(), invitedName);
+                sender.sendMessage(Messages.cmdmsgReplyInviter(inviter.getName(), invitedName));
             }
             return true;
         }
 
         // 会話相手がからっぽなら、コマンドを終了する。
         if ( invitedName == null ) {
-            sendResourceMessage(sender, PREERR, "errmsgNotfoundPM");
+            sender.sendMessage(Messages.errmsgNotfoundPM());
             return true;
         }
 

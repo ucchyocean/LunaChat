@@ -117,7 +117,7 @@ public class HideCommand extends LunaChatSubCommand {
         if ( !isPlayerCommand && channel != null ) {
             isChannelCommand = true;
         } else if ( Utility.existsOfflinePlayer(cname) ) {
-            sendResourceMessage(sender, PREERR, "errmsgNotExistChannelAndPlayer");
+            sender.sendMessage(Messages.errmsgNotExistChannelAndPlayer());
             return true;
         }
 
@@ -126,20 +126,20 @@ public class HideCommand extends LunaChatSubCommand {
 
             // 既に非表示になっていないかどうかをチェックする
             if ( channel.getHided().contains(sender) ) {
-                sendResourceMessage(sender, PREERR, "errmsgAlreadyHided");
+                sender.sendMessage(Messages.errmsgAlreadyHided());
                 return true;
             }
 
             // メンバーかどうかをチェックする
             if ( !channel.getMembers().contains(sender) ) {
-                sendResourceMessage(sender, PREERR, "errmsgNomember");
+                sender.sendMessage(Messages.errmsgNomember());
                 return true;
             }
 
             // 設定する
             channel.getHided().add(sender);
             channel.save();
-            sendResourceMessage(sender, PREINFO, "cmdmsgHided", channel.getName());
+            sender.sendMessage(Messages.cmdmsgHided(channel.getName()));
 
             return true;
 
@@ -149,19 +149,19 @@ public class HideCommand extends LunaChatSubCommand {
             // 既に非表示になっていないかどうかをチェックする
             ChannelMember hided = ChannelMember.getChannelMember(cname);
             if ( api.getHidelist(hided).contains(sender) ) {
-                sendResourceMessage(sender, PREERR, "errmsgAlreadyHidedPlayer");
+                sender.sendMessage(Messages.errmsgAlreadyHidedPlayer());
                 return true;
             }
 
             // 自分自身を指定していないかどうかチェックする
             if ( hided.equals(sender) ) {
-                sendResourceMessage(sender, PREERR, "errmsgCannotHideSelf");
+                sender.sendMessage(Messages.errmsgCannotHideSelf());
                 return true;
             }
 
             // 設定する
             api.addHidelist(sender, hided);
-            sendResourceMessage(sender, PREINFO, "cmdmsgHidedPlayer", hided.getDisplayName());
+            sender.sendMessage(Messages.cmdmsgHidedPlayer(hided.getDisplayName()));
 
             return true;
         }

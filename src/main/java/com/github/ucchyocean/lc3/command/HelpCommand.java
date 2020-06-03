@@ -144,17 +144,17 @@ public class HelpCommand extends LunaChatSubCommand {
         int lastPage = ( (com.size() - 1) / PAGE_ITEM_NUM) + 1;
 
         // 表示処理
-        sendResourceMessage(sender, "", "usageTop", typeDesc, page, lastPage);
+        sender.sendMessage(Messages.usageTop(typeDesc, page, lastPage));
         for (int index=(page-1)*PAGE_ITEM_NUM; index<page*PAGE_ITEM_NUM; index++) {
             if ( index >= com.size() ) break;
             com.get(index).sendUsageMessage(sender, label);
         }
-        sendResourceMessage(sender, "", "usageFoot");
+        sender.sendMessage(Messages.usageFoot());
         if ( page < lastPage ) {
             if ( type != CommandType.USER ) {
-                sendResourceMessage(sender, "", "usageNoticeNextPage", typeDesc, (page + 1));
+                sender.sendMessage(Messages.usageNoticeNextPage(label, typeDesc, (page + 1)));
             } else {
-                sendResourceMessage(sender, "", "usageNoticeNextPage", "", (page + 1));
+                sender.sendMessage(Messages.usageNoticeNextPage(label, "", (page + 1)));
             }
         }
     }

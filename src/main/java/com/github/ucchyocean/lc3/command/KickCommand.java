@@ -36,7 +36,7 @@ public class KickCommand extends LunaChatSubCommand {
     @Override
     public String getPermissionNode() {
         return PERMISSION_NODE;
-    }
+     }
 
     /**
      * コマンドの種別を取得します。
@@ -77,7 +77,7 @@ public class KickCommand extends LunaChatSubCommand {
         if (args.length >= 2) {
             kickedName = args[1];
         } else {
-            sendResourceMessage(sender, PREERR, "errmsgCommand");
+            sender.sendMessage(Messages.errmsgCommand());
             return true;
         }
 
@@ -89,27 +89,26 @@ public class KickCommand extends LunaChatSubCommand {
             channel = api.getDefaultChannel(sender.getName());
         }
         if (channel == null) {
-            sendResourceMessage(sender, PREERR, "errmsgNoJoin");
+            sender.sendMessage(Messages.errmsgNoJoin());
             return true;
         }
 
         // モデレーターかどうか確認する
         if ( !channel.hasModeratorPermission(sender) ) {
-            sendResourceMessage(sender, PREERR, "errmsgNotModerator");
+            sender.sendMessage(Messages.errmsgNotModerator());
             return true;
         }
 
         // グローバルチャンネルならキックできない
         if ( channel.isGlobalChannel() ) {
-            sendResourceMessage(sender, PREERR,
-                    "errmsgCannotKickGlobal", channel.getName());
+            sender.sendMessage(Messages.errmsgCannotKickGlobal(channel.getName()));
             return true;
         }
 
         // キックされるプレイヤーがメンバーかどうかチェックする
         ChannelMember kicked = ChannelMember.getChannelMember(kickedName);
         if (!channel.getMembers().contains(kicked)) {
-            sendResourceMessage(sender, PREERR, "errmsgNomemberOther");
+            sender.sendMessage(Messages.errmsgNomemberOther());
             return true;
         }
 
@@ -118,16 +117,16 @@ public class KickCommand extends LunaChatSubCommand {
         channel.save();
 
         // senderに通知メッセージを出す
-        sendResourceMessage(sender, PREINFO,
-                "cmdmsgKick", kickedName, channel.getName());
+        sender.sendMessage(Messages.cmdmsgKick(kickedName, channel.getName()));
 
         // チャンネルに通知メッセージを出す
-        sendResourceMessageWithKeyword(channel, "kickMessage", kicked);
+        channel.sendMessage(null,
+                Messages.kickMessage(channel.getColorCode(), channel.getName(), kicked),
+                null, true, "system");
 
         // キックされた人に通知メッセージを出す
         if ( kicked != null && kicked.isOnline() ) {
-            sendResourceMessage(kicked, PREINFO,
-                    "cmdmsgKicked", channel.getName());
+            kicked.sendMessage(Messages.cmdmsgKicked(channel.getName()));
         }
 
         return true;

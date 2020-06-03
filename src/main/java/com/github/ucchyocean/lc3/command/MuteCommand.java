@@ -5,6 +5,7 @@
  */
 package com.github.ucchyocean.lc3.command;
 
+import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.channel.Channel;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 
@@ -16,8 +17,6 @@ public class MuteCommand extends LunaChatSubCommand {
 
     private static final String COMMAND_NAME = "mute";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
-    private static final String USAGE_KEY1 = "usageMute";
-    private static final String USAGE_KEY2 = "usageMute2";
 
     /**
      * コマンドを取得します。
@@ -58,8 +57,8 @@ public class MuteCommand extends LunaChatSubCommand {
     @Override
     public void sendUsageMessage(
             ChannelMember sender, String label) {
-        sendResourceMessage(sender, "", USAGE_KEY1, label);
-        sendResourceMessage(sender, "", USAGE_KEY2, label);
+        sender.sendMessage(Messages.usageMute(label));
+        sender.sendMessage(Messages.usageMute2(label));
     }
 
     /**
@@ -79,7 +78,7 @@ public class MuteCommand extends LunaChatSubCommand {
         if (args.length >= 2) {
             kickedName = args[1];
         } else {
-            sendResourceMessage(sender, PREERR, "errmsgCommand");
+            sender.sendMessage(Messages.errmsgCommand());
             return true;
         }
 
@@ -93,26 +92,26 @@ public class MuteCommand extends LunaChatSubCommand {
             channel = api.getDefaultChannel(sender.getName());
         }
         if (channel == null) {
-            sendResourceMessage(sender, PREERR, "errmsgNoJoin");
+            sender.sendMessage(Messages.errmsgNoJoin());
             return true;
         }
 
         // モデレーターかどうか確認する
         if ( !channel.hasModeratorPermission(sender) ) {
-            sendResourceMessage(sender, PREERR, "errmsgNotModerator");
+            sender.sendMessage(Messages.errmsgNotModerator());
             return true;
         }
 
         // Muteされるプレイヤーがメンバーかどうかチェックする
         ChannelMember kicked = ChannelMember.getChannelMember(kickedName);
         if (!channel.getMembers().contains(kicked)) {
-            sendResourceMessage(sender, PREERR, "errmsgNomemberOther");
+            sender.sendMessage(Messages.errmsgNomemberOther());
             return true;
         }
 
         // 既にMuteされているかどうかチェックする
         if (channel.getMuted().contains(kicked)) {
-            sendResourceMessage(sender, PREERR, "errmsgAlreadyMuted");
+            sender.sendMessage(Messages.errmsgAlreadyMuted());
             return true;
         }
 
@@ -120,12 +119,12 @@ public class MuteCommand extends LunaChatSubCommand {
         int expireMinutes = -1;
         if (args.length >= 3 && !isSpecifiedChannel) {
             if ( !args[2].matches("[0-9]+") ) {
-                sendResourceMessage(sender, PREERR, "errmsgInvalidMuteExpireParameter");
+                sender.sendMessage(Messages.errmsgInvalidMuteExpireParameter());
                 return true;
             }
             expireMinutes = Integer.parseInt(args[2]);
             if ( expireMinutes < 1 || 43200 < expireMinutes ) {
-                sendResourceMessage(sender, PREERR, "errmsgInvalidMuteExpireParameter");
+                sender.sendMessage(Messages.errmsgInvalidMuteExpireParameter());
                 return true;
             }
         }
@@ -140,25 +139,26 @@ public class MuteCommand extends LunaChatSubCommand {
 
         // senderに通知メッセージを出す
         if ( expireMinutes != -1 ) {
-            sendResourceMessage(sender, PREINFO,
-                    "cmdmsgMuteWithExpire", kickedName, channel.getName(), expireMinutes);
+            sender.sendMessage(Messages.cmdmsgMuteWithExpire(
+                    kickedName, channel.getName(), expireMinutes));
         } else {
-            sendResourceMessage(sender, PREINFO,
-                    "cmdmsgMute", kickedName, channel.getName());
+            sender.sendMessage(Messages.cmdmsgMute(kickedName, channel.getName()));
         }
 
         // チャンネルに通知メッセージを出す
         if ( expireMinutes != -1 ) {
-            sendResourceMessageWithKeyword(channel,
-                    "muteWithExpireMessage", kicked, expireMinutes);
+            channel.sendMessage(null, Messages.muteWithExpireMessage(
+                    channel.getColorCode(), channel.getName(), kicked.getName(), expireMinutes),
+                    null, true, "system");
         } else {
-            sendResourceMessageWithKeyword(channel, "muteMessage", kicked);
+            channel.sendMessage(null, Messages.muteMessage(
+                    channel.getColorCode(), channel.getName(), kicked.getName()),
+                    null, true, "system");
         }
 
         // BANされた人に通知メッセージを出す
         if ( kicked != null ) {
-            sendResourceMessage(kicked, PREINFO,
-                    "cmdmsgMuted", channel.getName());
+            kicked.sendMessage(Messages.cmdmsgMuted(channel.getName()));
         }
 
         return true;

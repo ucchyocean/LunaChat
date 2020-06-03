@@ -20,11 +20,6 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  */
 public class ListCommand extends LunaChatSubCommand {
 
-    private static final String LIST_FIRSTLINE = Messages.get("listFirstLine");
-    private static final String LIST_FIRSTLINE_PAGING = Messages.get("listFirstLinePaging");
-    private static final String LIST_ENDLINE = Messages.get("listEndLine");
-    private static final String LIST_FORMAT = Messages.get("listFormat");
-
     private static final String COMMAND_NAME = "list";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
 
@@ -114,14 +109,14 @@ public class ListCommand extends LunaChatSubCommand {
 
         ArrayList<String> items = new ArrayList<>();
         if ( page == 0 ) { // 全表示
-            items.add(LIST_FIRSTLINE);
+            items.add(Messages.listFirstLine());
             items.addAll(list);
-            items.add(LIST_ENDLINE);
+            items.add(Messages.listEndLine());
         } else { // ページ表示
-            items.add(String.format(LIST_FIRSTLINE_PAGING, page, maxPage));
+            items.add(Messages.listFirstLinePaging(page, maxPage));
             int endIndex = (page * PAGE_SIZE > size) ? size : page * PAGE_SIZE;
             items.addAll(list.subList((page - 1) * PAGE_SIZE, endIndex));
-            items.add(LIST_ENDLINE);
+            items.add(Messages.listEndLine());
         }
 
         return items;
@@ -188,8 +183,7 @@ public class ListCommand extends LunaChatSubCommand {
             String desc = channel.getDescription();
             int onlineNum = channel.getOnlineNum();
             int memberNum = channel.getTotalNum();
-            String item = String.format(
-                    LIST_FORMAT, disp, onlineNum, memberNum, desc);
+            String item = Messages.listFormat(disp, onlineNum, memberNum, desc);
             items.add(item);
         }
 

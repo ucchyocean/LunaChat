@@ -1923,11 +1923,12 @@ public class Messages {
     }
 
     /**
-     * &6次のページを見るには、&c/ch help %type% %next%&6 と実行してください。
+     * &6次のページを見るには、&c/%label% help %type% %next%&6 と実行してください。
      */
-    public static String usageNoticeNextPage(Object type, Object next) {
+    public static String usageNoticeNextPage(Object label, Object type, Object next) {
         String msg = resources.getString("usageNoticeNextPage");
         if ( msg == null ) return "";
+        msg = msg.replace("%label%", label.toString());
         msg = msg.replace("%type%", type.toString());
         msg = msg.replace("%next%", next.toString());
         return Utility.replaceColorCode(msg);

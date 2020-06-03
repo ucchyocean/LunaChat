@@ -8,6 +8,7 @@ package com.github.ucchyocean.lc3.command;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.Utility;
 import com.github.ucchyocean.lc3.channel.Channel;
 import com.github.ucchyocean.lc3.japanize.JapanizeType;
@@ -25,7 +26,6 @@ public class OptionCommand extends LunaChatSubCommand {
 
     private static final String COMMAND_NAME = "option";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
-    private static final String USAGE_KEY = "usageOption";
 
     /**
      * コマンドを取得します。
@@ -66,7 +66,7 @@ public class OptionCommand extends LunaChatSubCommand {
     @Override
     public void sendUsageMessage(
             ChannelMember sender, String label) {
-        sendResourceMessage(sender, "", USAGE_KEY, label);
+        sender.sendMessage(Messages.usageOption(label));
     }
 
     /**
@@ -99,7 +99,7 @@ public class OptionCommand extends LunaChatSubCommand {
                 optionsTemp.add(args[i]);
             }
         } else {
-            sendResourceMessage(sender, PREERR, "errmsgCommand");
+            sender.sendMessage(Messages.errmsgCommand());
             return true;
         }
 
@@ -107,7 +107,7 @@ public class OptionCommand extends LunaChatSubCommand {
 
         // チャンネルが存在するかどうかをチェックする
         if ( channel == null ) {
-            sendResourceMessage(sender, PREERR, "errmsgNotExist");
+            sender.sendMessage(Messages.errmsgNotExist());
             return true;
         }
 
@@ -115,7 +115,7 @@ public class OptionCommand extends LunaChatSubCommand {
 
         // モデレーターかどうか確認する
         if ( !channel.hasModeratorPermission(sender) ) {
-            sendResourceMessage(sender, PREERR, "errmsgNotModerator");
+            sender.sendMessage(Messages.errmsgNotModerator());
             return true;
         }
 
@@ -145,19 +145,16 @@ public class OptionCommand extends LunaChatSubCommand {
 
             String pnode = PERMISSION_NODE + ".description";
             if ( !sender.hasPermission(pnode) ) {
-                sendResourceMessage(sender, PREERR,
-                        "errmsgNotPermission", pnode);
+                sender.sendMessage(Messages.errmsgNotPermission(pnode));
             } else {
 
                 String desc = options.get("description");
                 // チャンネル説明文は最大文字長を超えていないか確認
                 if ( desc.length() > MAX_LENGTH_DESCRIPTION ) {
-                    sendResourceMessage(sender, PREERR,
-                            "errmsgToolongDescription", MAX_LENGTH_DESCRIPTION);
+                    sender.sendMessage(Messages.errmsgToolongDescription(MAX_LENGTH_DESCRIPTION));
                 } else {
                     channel.setDescription(desc);
-                    sendResourceMessage(sender, PREINFO,
-                            "cmdmsgOption", "description", desc);
+                    sender.sendMessage(Messages.cmdmsgOption("description", desc));
                     setOption = true;
                 }
             }
@@ -168,26 +165,22 @@ public class OptionCommand extends LunaChatSubCommand {
 
             String pnode = PERMISSION_NODE + ".alias";
             if ( !sender.hasPermission(pnode) ) {
-                sendResourceMessage(sender, PREERR,
-                        "errmsgNotPermission", pnode);
+                sender.sendMessage(Messages.errmsgNotPermission(pnode));
             } else {
 
                 String alias = options.get("alias");
                 if ( alias.length() > MAX_LENGTH_ALIAS ) {
                     // チャンネル別名が最大文字長を超えている
-                    sendResourceMessage(sender, PREERR,
-                            "errmsgToolongAlias", MAX_LENGTH_ALIAS);
+                    sender.sendMessage(Messages.errmsgToolongAlias(MAX_LENGTH_ALIAS));
 
                 } else if (api.getChannel(alias) != null) {
                     // 別のチャンネル名またはチャンネル別名と重複する
-                    sendResourceMessage(sender, PREERR,
-                            "errmsgDuplicatedAlias",
-                            alias, api.getChannel(alias).getName());
+                    sender.sendMessage(Messages.errmsgDuplicatedAlias(
+                            alias, api.getChannel(alias).getName()));
 
                 } else {
                     channel.setAlias(alias);
-                    sendResourceMessage(sender, PREINFO,
-                            "cmdmsgOption", "alias", alias);
+                    sender.sendMessage(Messages.cmdmsgOption("alias", alias));
                     setOption = true;
                 }
             }
@@ -198,8 +191,7 @@ public class OptionCommand extends LunaChatSubCommand {
 
             String pnode = PERMISSION_NODE + ".color";
             if ( !sender.hasPermission(pnode) ) {
-                sendResourceMessage(sender, PREERR,
-                        "errmsgNotPermission", pnode);
+                sender.sendMessage(Messages.errmsgNotPermission(pnode));
             } else {
 
                 String code = options.get("color");
@@ -209,12 +201,10 @@ public class OptionCommand extends LunaChatSubCommand {
                 }
                 if ( Utility.isAltColorCode(code) ) {
                     channel.setColorCode(code);
-                    sendResourceMessage(sender, PREINFO,
-                            "cmdmsgOption", "color", options.get("color"));
+                    sender.sendMessage(Messages.cmdmsgOption("color", options.get("color")));
                     setOption = true;
                 } else {
-                    sendResourceMessage(sender, PREERR,
-                            "errmsgInvalidColorCode", options.get("color"));
+                    sender.sendMessage(Messages.errmsgInvalidColorCode(options.get("color")));
                 }
             }
         }
@@ -224,30 +214,25 @@ public class OptionCommand extends LunaChatSubCommand {
 
             String pnode = PERMISSION_NODE + ".broadcast";
             if ( !sender.hasPermission(pnode) ) {
-                sendResourceMessage(sender, PREERR,
-                        "errmsgNotPermission", pnode);
+                sender.sendMessage(Messages.errmsgNotPermission(pnode));
             } else {
 
                 String value = options.get("broadcast");
 
                 if ( value.equals("") || value.equalsIgnoreCase("false") ) {
                     if ( channel.isGlobalChannel() ) {
-                        sendResourceMessage(sender, PREERR,
-                                "errmsgCannotOffGlobalBroadcast");
+                        sender.sendMessage(Messages.errmsgCannotOffGlobalBroadcast());
                     } else {
                         channel.setBroadcast(false);
-                        sendResourceMessage(sender, PREINFO,
-                                "cmdmsgOption", "broadcast", "false");
+                        sender.sendMessage(Messages.cmdmsgOption("broadcast", "false"));
                         setOption = true;
                     }
                 } else if ( value.equalsIgnoreCase("true") ) {
                     channel.setBroadcast(true);
-                    sendResourceMessage(sender, PREINFO,
-                            "cmdmsgOption", "broadcast", "true");
+                    sender.sendMessage(Messages.cmdmsgOption("broadcast", "true"));
                     setOption = true;
                 } else {
-                    sendResourceMessage(sender, PREERR,
-                            "errmsgInvalidBooleanOption", "broadcast");
+                    sender.sendMessage(Messages.errmsgInvalidBooleanOption("broadcast"));
                 }
             }
         }
@@ -257,8 +242,7 @@ public class OptionCommand extends LunaChatSubCommand {
 
             String pnode = PERMISSION_NODE + ".range";
             if ( !sender.hasPermission(pnode) ) {
-                sendResourceMessage(sender, PREERR,
-                        "errmsgNotPermission", pnode);
+                sender.sendMessage(Messages.errmsgNotPermission(pnode));
             } else {
 
                 String value = options.get("range");
@@ -266,24 +250,20 @@ public class OptionCommand extends LunaChatSubCommand {
                 if ( value.equals("") ) {
                     channel.setWorldRange(false);
                     channel.setChatRange(0);
-                    sendResourceMessage(sender, PREINFO,
-                            "cmdmsgOption", "range", "無効");
+                    sender.sendMessage(Messages.cmdmsgOption("range", "off"));
                     setOption = true;
                 } else if ( value.equalsIgnoreCase("world") ) {
                     channel.setWorldRange(true);
                     channel.setChatRange(0);
-                    sendResourceMessage(sender, PREINFO,
-                            "cmdmsgOption", "range", "world");
+                    sender.sendMessage(Messages.cmdmsgOption("range", "world"));
                     setOption = true;
                 } else if ( value.matches("[0-9]+") ) {
                     channel.setWorldRange(true);
                     channel.setChatRange(Integer.parseInt(value));
-                    sendResourceMessage(sender, PREINFO,
-                            "cmdmsgOption", "range", value);
+                    sender.sendMessage(Messages.cmdmsgOption("range", value));
                     setOption = true;
                 } else {
-                    sendResourceMessage(sender, PREERR,
-                            "errmsgInvalidRangeOption");
+                    sender.sendMessage(Messages.errmsgInvalidRangeOption());
                 }
             }
         }
@@ -293,25 +273,21 @@ public class OptionCommand extends LunaChatSubCommand {
 
             String pnode = PERMISSION_NODE + ".allowcc";
             if ( !sender.hasPermission(pnode) ) {
-                sendResourceMessage(sender, PREERR,
-                        "errmsgNotPermission", pnode);
+                sender.sendMessage(Messages.errmsgNotPermission(pnode));
             } else {
 
                 String value = options.get("allowcc");
 
                 if ( value.equals("") || value.equalsIgnoreCase("false") ) {
                     channel.setAllowCC(false);
-                    sendResourceMessage(sender, PREINFO,
-                            "cmdmsgOption", "allowcc", "false");
+                    sender.sendMessage(Messages.cmdmsgOption("allowcc", "false"));
                     setOption = true;
                 } else if ( value.equalsIgnoreCase("true") ) {
                     channel.setAllowCC(true);
-                    sendResourceMessage(sender, PREINFO,
-                            "cmdmsgOption", "allowcc", "true");
+                    sender.sendMessage(Messages.cmdmsgOption("allowcc", "true"));
                     setOption = true;
                 } else {
-                    sendResourceMessage(sender, PREERR,
-                            "errmsgInvalidBooleanOption", "allowcc");
+                    sender.sendMessage(Messages.errmsgInvalidBooleanOption("allowcc"));
                 }
             }
         }
@@ -321,26 +297,22 @@ public class OptionCommand extends LunaChatSubCommand {
 
             String pnode = PERMISSION_NODE + ".japanize";
             if ( !sender.hasPermission(pnode) ) {
-                sendResourceMessage(sender, PREERR,
-                        "errmsgNotPermission", pnode);
+                sender.sendMessage(Messages.errmsgNotPermission(pnode));
             } else {
 
                 String value = options.get("japanize");
 
                 if ( value.equals("") ) {
                     channel.setJapanizeType(null);
-                    sendResourceMessage(sender, PREINFO,
-                            "cmdmsgOption", "japanize", "デフォルト");
+                    sender.sendMessage(Messages.cmdmsgOption("japanize", "default"));
                     setOption = true;
                 } else {
                     JapanizeType type = JapanizeType.fromID(value, null);
                     if ( type == null ) {
-                        sendResourceMessage(sender, PREERR,
-                                "errmsgInvalidJapanizeOption", "japanize", value);
+                        sender.sendMessage(Messages.errmsgCommand());
                     } else {
                         channel.setJapanizeType(type);
-                        sendResourceMessage(sender, PREINFO,
-                                "cmdmsgOption", "japanize", type.toString());
+                        sender.sendMessage(Messages.cmdmsgOption("japanize", type.toString()));
                         setOption = true;
                     }
                 }
@@ -354,19 +326,16 @@ public class OptionCommand extends LunaChatSubCommand {
 
                 String pnode = PERMISSION_NODE + ".password";
                 if ( !sender.hasPermission(pnode) ) {
-                    sendResourceMessage(sender, PREERR,
-                            "errmsgNotPermission", pnode);
+                    sender.sendMessage(Messages.errmsgNotPermission(pnode));
                 } else {
 
                     String password = options.get("password");
                     // パスワードが文字制限を超える場合はエラー
                     if ( password.length() > MAX_LENGTH_PASSWORD ) {
-                        sendResourceMessage(sender, PREERR,
-                                "errmsgToolongPassword", MAX_LENGTH_PASSWORD);
+                        sender.sendMessage(Messages.errmsgToolongPassword(MAX_LENGTH_PASSWORD));
                     } else {
                         channel.setPassword(password);
-                        sendResourceMessage(sender, PREINFO,
-                                "cmdmsgOption", "password", password);
+                        sender.sendMessage(Messages.cmdmsgOption("password", password));
                         setOption = true;
                     }
                 }
@@ -377,28 +346,27 @@ public class OptionCommand extends LunaChatSubCommand {
 
                 String pnode = PERMISSION_NODE + ".visible";
                 if ( !sender.hasPermission(pnode) ) {
-                    sendResourceMessage(sender, PREERR,
-                            "errmsgNotPermission", pnode);
+                    sender.sendMessage(Messages.errmsgNotPermission(pnode));
                 } else {
 
                     String temp = options.get("visible");
                     if ( temp.equalsIgnoreCase("false") ) {
                         channel.setVisible(false);
-                        sendResourceMessage(sender, PREINFO,
-                                "cmdmsgOption", "visible", "false");
+                        sender.sendMessage(Messages.cmdmsgOption("visible", "false"));
                         setOption = true;
                     } else if ( temp.equalsIgnoreCase("true") ) {
                         channel.setVisible(true);
-                        sendResourceMessage(sender, PREINFO,
-                                "cmdmsgOption", "visible", "true");
+                        sender.sendMessage(Messages.cmdmsgOption("visible", "true"));
                         setOption = true;
+                    } else {
+                        sender.sendMessage(Messages.errmsgInvalidBooleanOption("visible"));
                     }
                 }
             }
         }
 
         if ( !setOption ) {
-            sendResourceMessage(sender, PREERR, "errmsgInvalidOptions");
+            sender.sendMessage(Messages.errmsgInvalidOptions());
         } else {
             channel.save();
         }

@@ -91,7 +91,7 @@ public class JoinCommand extends LunaChatSubCommand {
                 }
             }
         } else {
-            sendResourceMessage(sender, PREERR, "errmsgCommand");
+            sender.sendMessage(Messages.errmsgCommand());
             return true;
         }
 
@@ -106,7 +106,7 @@ public class JoinCommand extends LunaChatSubCommand {
                 // 発言先を削除して、グローバルチャンネルにする
 
                 api.removeDefaultChannel(sender.getName());
-                sendResourceMessage(sender, PREINFO, "cmdmsgSet", "Global");
+                sender.sendMessage(Messages.cmdmsgSet("Global"));
 
                 // TODO
 //                Player p = null;
@@ -122,24 +122,21 @@ public class JoinCommand extends LunaChatSubCommand {
 
                 // 使用可能なチャンネル名かどうかをチェックする
                 if ( !channelName.matches("[0-9a-zA-Z\\-_]+") ) {
-                    sendResourceMessage(sender, PREERR,
-                            "errmsgCannotUseForChannel", channelName);
+                    sender.sendMessage(Messages.errmsgCannotUseForChannel(channelName));
                     return true;
                 }
 
                 // 最低文字列長を上回っているかをチェックする
                 if ( channelName.length() < config.getMinChannelNameLength() ) {
-                    sendResourceMessage(sender, PREERR,
-                            "errmsgCannotUseForChannelTooShort",
-                            channelName, config.getMinChannelNameLength());
+                    sender.sendMessage(Messages.errmsgCannotUseForChannelTooShort(
+                            channelName, config.getMinChannelNameLength()));
                     return true;
                 }
 
                 // 最大文字列長を下回っているかをチェックする
                 if ( channelName.length() > config.getMaxChannelNameLength() ) {
-                    sendResourceMessage(sender, PREERR,
-                            "errmsgCannotUseForChannelTooLong",
-                            channelName, config.getMaxChannelNameLength());
+                    sender.sendMessage(Messages.errmsgCannotUseForChannelTooLong(
+                            channelName, config.getMaxChannelNameLength()));
                     return true;
                 }
 
@@ -147,14 +144,14 @@ public class JoinCommand extends LunaChatSubCommand {
                 Channel c = api.createChannel(channelName);
                 if ( c != null ) {
                     c.addMember(sender);
-                    sendResourceMessage(sender, PREINFO, "cmdmsgCreate", channelName);
+                    sender.sendMessage(Messages.cmdmsgCreate(channelName));
                 }
                 return true;
 
             } else {
                 // 存在しないチャットには入れない設定の場合
 
-                sendResourceMessage(sender, PREERR, "errmsgNotExist");
+                sender.sendMessage(Messages.errmsgNotExist());
                 return true;
             }
         }
@@ -164,20 +161,19 @@ public class JoinCommand extends LunaChatSubCommand {
         // 入室権限を確認する
         String node = PERMISSION_NODE + "." + channelName;
         if (sender.isPermissionSet(node) && !sender.hasPermission(node)) {
-            sendResourceMessage(sender, PREERR, "errmsgPermission",
-                    PERMISSION_NODE + "." + channelName);
+            sender.sendMessage(Messages.errmsgPermission(node));
             return true;
         }
 
         // BANされていないか確認する
         if (channel.getBanned().contains(sender)) {
-            sendResourceMessage(sender, PREERR, "errmsgBanned");
+            sender.sendMessage(Messages.errmsgBanned());
             return true;
         }
 
         // 個人チャットの場合はエラーにする
         if (channel.isPersonalChat()) {
-            sendResourceMessage(sender, PREERR, "errmsgCannotJoinPersonal");
+            sender.sendMessage(Messages.errmsgCannotJoinPersonal());
             return true;
         }
 
@@ -191,7 +187,7 @@ public class JoinCommand extends LunaChatSubCommand {
 
             // デフォルトの発言先に設定する
             api.setDefaultChannel(sender.getName(), channelName);
-            sendResourceMessage(sender, PREINFO, "cmdmsgSet", channelName);
+            sender.sendMessage(Messages.cmdmsgSet(channelName));
 
         } else {
 
@@ -206,15 +202,15 @@ public class JoinCommand extends LunaChatSubCommand {
             if ( !channel.getPassword().equals("") ) {
                 if ( message.toString().trim().equals("") ) {
                     // パスワード空欄
-                    sendResourceMessage(sender, PREERR, "errmsgPassword1");
-                    sendResourceMessage(sender, PREERR, "errmsgPassword2");
-                    sendResourceMessage(sender, PREERR, "errmsgPassword3");
+                    sender.sendMessage(Messages.errmsgPassword1());
+                    sender.sendMessage(Messages.errmsgPassword2());
+                    sender.sendMessage(Messages.errmsgPassword3());
                     return true;
                 } else if ( !channel.getPassword().equals(message.toString().trim()) ) {
                     // パスワード不一致
-                    sendResourceMessage(sender, PREERR, "errmsgPasswordNotmatch");
-                    sendResourceMessage(sender, PREERR, "errmsgPassword2");
-                    sendResourceMessage(sender, PREERR, "errmsgPassword3");
+                    sender.sendMessage(Messages.errmsgPasswordNotmatch());
+                    sender.sendMessage(Messages.errmsgPassword2());
+                    sender.sendMessage(Messages.errmsgPassword3());
                     return true;
                 }
             }
@@ -222,20 +218,20 @@ public class JoinCommand extends LunaChatSubCommand {
             // チャンネルに参加し、デフォルトの発言先に設定する
             if ( !channel.getName().equals(config.getGlobalChannel()) ) {
                 channel.addMember(sender);
-                sendResourceMessage(sender, PREINFO, "cmdmsgJoin", channelName);
+                sender.sendMessage(Messages.cmdmsgJoin(channelName));
             }
             api.setDefaultChannel(sender.getName(), channelName);
-            sendResourceMessage(sender, PREINFO, "cmdmsgSet", channelName);
+            sender.sendMessage(Messages.cmdmsgSet(channelName));
         }
 
         // チャンネル説明文があるなら、説明文を表示する
         if ( !channel.getDescription().trim().equals("") ) {
-            sendResourceMessage(sender, PREINFO, "cmdmsgSetTopic", channel.getDescription().trim());
+            sender.sendMessage(Messages.cmdmsgSetTopic(channel.getDescription().trim()));
         }
 
         // 非表示に設定しているなら、注意を流す
         if ( channel.getHided().contains(sender) ) {
-            sendResourceMessage(sender, PREINFO, "cmdmsgSetHide");
+            sender.sendMessage(Messages.cmdmsgSetHide());
         }
 
         return true;

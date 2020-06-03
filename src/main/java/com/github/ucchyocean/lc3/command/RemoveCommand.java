@@ -5,6 +5,7 @@
  */
 package com.github.ucchyocean.lc3.command;
 
+import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.channel.Channel;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 
@@ -16,7 +17,6 @@ public class RemoveCommand extends LunaChatSubCommand {
 
     private static final String COMMAND_NAME = "remove";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
-    private static final String USAGE_KEY = "usageRemove";
 
     /**
      * コマンドを取得します。
@@ -57,7 +57,7 @@ public class RemoveCommand extends LunaChatSubCommand {
     @Override
     public void sendUsageMessage(
             ChannelMember sender, String label) {
-        sendResourceMessage(sender, "", USAGE_KEY, label);
+        sender.sendMessage(Messages.usageRemove(label));
     }
 
     /**
@@ -83,32 +83,32 @@ public class RemoveCommand extends LunaChatSubCommand {
         } else if ( args.length >= 2 ) {
             cname = args[1];
         } else {
-            sendResourceMessage(sender, PREERR, "errmsgCommand");
+            sender.sendMessage(Messages.errmsgCommand());
             return true;
         }
 
         // チャンネルが存在するかどうか確認する
         Channel channel = api.getChannel(cname);
         if ( channel == null ) {
-            sendResourceMessage(sender, PREERR, "errmsgNotExist");
+            sender.sendMessage(Messages.errmsgNotExist());
             return true;
         }
 
         // モデレーターかどうか確認する
         if ( !channel.hasModeratorPermission(sender) ) {
-            sendResourceMessage(sender, PREERR, "errmsgNotModerator");
+            sender.sendMessage(Messages.errmsgNotModerator());
             return true;
         }
 
         // グローバルチャンネルなら削除できない
         if ( channel.isGlobalChannel() ) {
-            sendResourceMessage(sender, PREERR, "errmsgCannotRemoveGlobal", channel.getName());
+            sender.sendMessage(Messages.errmsgCannotRemoveGlobal(channel.getName()));
             return true;
         }
 
         // チャンネル削除
         if ( api.removeChannel(cname) ) {
-            sendResourceMessage(sender, PREINFO, "cmdmsgRemove", cname);
+            sender.sendMessage(Messages.cmdmsgRemove(cname));
         }
         return true;
     }

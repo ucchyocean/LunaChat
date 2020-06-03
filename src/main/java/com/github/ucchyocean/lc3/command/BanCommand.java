@@ -154,16 +154,18 @@ public class BanCommand extends LunaChatSubCommand {
 
         // チャンネルに通知メッセージを出す
         if ( expireMinutes != -1 ) {
-            sender.sendMessage(Messages.banWithExpireMessage(
-                    channel.getColorCode(), channel.getName(), kicked.getName(), expireMinutes));
+            channel.sendMessage(null, Messages.banWithExpireMessage(
+                    channel.getColorCode(), channel.getName(), kicked.getName(), expireMinutes),
+                    null, true, "system");
         } else {
-            sender.sendMessage(Messages.banMessage(
-                    channel.getColorCode(), channel.getName(), kicked.getName()));
+            channel.sendMessage(null, Messages.banMessage(
+                    channel.getColorCode(), channel.getName(), kicked.getName()),
+                    null, true, "system");
         }
 
         // BANされた人に通知メッセージを出す
         if ( kicked != null && kicked.isOnline() ) {
-            sender.sendMessage(Messages.cmdmsgBanned(channel.getName()));
+            kicked.sendMessage(Messages.cmdmsgBanned(channel.getName()));
         }
 
         return true;

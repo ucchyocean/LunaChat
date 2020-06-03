@@ -81,37 +81,34 @@ public class CreateCommand extends LunaChatSubCommand {
                 desc = args[2];
             }
         } else {
-            sendResourceMessage(sender, PREERR, "errmsgCommand");
+            sender.sendMessage(Messages.errmsgCommand());
             return true;
         }
 
         // チャンネルが存在するかどうかをチェックする
         Channel other = api.getChannel(name);
         if ( other != null ) {
-            sendResourceMessage(sender, PREERR, "errmsgExist");
+            sender.sendMessage(Messages.errmsgExist());
             return true;
         }
 
         // 使用可能なチャンネル名かどうかをチェックする
         if ( !name.matches("[0-9a-zA-Z\\-_]+") ) {
-            sendResourceMessage(sender, PREERR,
-                    "errmsgCannotUseForChannel", name);
+            sender.sendMessage(Messages.errmsgCannotUseForChannel(name));
             return true;
         }
 
         // 最低文字列長を上回っているかをチェックする
         if ( name.length() < config.getMinChannelNameLength() ) {
-            sendResourceMessage(sender, PREERR,
-                    "errmsgCannotUseForChannelTooShort",
-                    name, config.getMinChannelNameLength());
+            sender.sendMessage(Messages.errmsgCannotUseForChannelTooShort(
+                    name, config.getMinChannelNameLength()));
             return true;
         }
 
         // 最大文字列長を下回っているかをチェックする
         if ( name.length() > config.getMaxChannelNameLength() ) {
-            sendResourceMessage(sender, PREERR,
-                    "errmsgCannotUseForChannelTooLong",
-                    name, config.getMaxChannelNameLength());
+            sender.sendMessage(Messages.errmsgCannotUseForChannelTooLong(
+                    name, config.getMaxChannelNameLength()));
             return true;
         }
 
@@ -120,7 +117,7 @@ public class CreateCommand extends LunaChatSubCommand {
         if ( channel != null ) {
             channel.setDescription(desc);
             channel.save();
-            sendResourceMessage(sender, PREINFO, "cmdmsgCreate", name);
+            sender.sendMessage(Messages.cmdmsgCreate(name));
         }
         return true;
     }

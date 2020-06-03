@@ -1,5 +1,6 @@
 package com.github.ucchyocean.lc3.command;
 
+import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.channel.Channel;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 
@@ -7,7 +8,6 @@ public class SetCommand extends LunaChatSubCommand {
 
     private static final String COMMAND_NAME = "set";
     private static final String PERMISSION_NODE = "lunachat-admin." + COMMAND_NAME;
-    private static final String USAGE_KEY1 = "usageSet1";
 
     /**
      * コマンドを取得します。
@@ -47,7 +47,7 @@ public class SetCommand extends LunaChatSubCommand {
      */
     @Override
     public void sendUsageMessage(ChannelMember sender, String label) {
-        sendResourceMessage(sender, "", USAGE_KEY1, label);
+        sender.sendMessage(Messages.usageSet1(label));
     }
 
     /**
@@ -78,19 +78,19 @@ public class SetCommand extends LunaChatSubCommand {
 
             if ( targetChannel == null ) {
                 // チャンネルが正しく指定されなかった
-                sendResourceMessage(sender, PREERR, "errmsgNotExistOrNotSpecified");
+                sender.sendMessage(Messages.errmsgNotExistOrNotSpecified());
                 return true;
             }
 
             // 発言先を設定
             api.setDefaultChannel(targetPlayer, targetChannel.getName());
 
-            sendResourceMessage(sender, PREINFO, "cmdmsgSetDefault", targetPlayer, targetChannel.getName());
+            sender.sendMessage(Messages.cmdmsgSetDefault(targetPlayer, targetChannel.getName()));
 
             // setされる相手のプレイヤーにも通知する
             ChannelMember target = ChannelMember.getChannelMember(targetPlayer);
             if ( target != null ) {
-                sendResourceMessage(target, PREINFO, "cmdmsgSet", targetChannel.getName());
+                target.sendMessage(Messages.cmdmsgSet(targetChannel.getName()));
             }
 
             return true;

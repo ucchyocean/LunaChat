@@ -15,7 +15,7 @@ import net.md_5.bungee.api.plugin.TabExecutor;
  * LunaChatのlunachatコマンド実装クラス
  * @author ucchy
  */
-public class LunaChatCommand extends Command implements TabExecutor {
+public class LunaChatCommandImpl extends Command implements TabExecutor {
 
     private LunaChatCommandBungee com = new LunaChatCommandBungee();
 
@@ -25,7 +25,7 @@ public class LunaChatCommand extends Command implements TabExecutor {
      * @param permission パーミッション
      * @param aliases エイリアス
      */
-    public LunaChatCommand(String name, String permission, String... aliases) {
+    public LunaChatCommandImpl(String name, String permission, String... aliases) {
         super(name, permission, aliases);
     }
 

@@ -15,7 +15,6 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
 public class DicCommand extends DictionaryCommand {
 
     private static final String COMMAND_NAME = "dic";
-    private static final String USAGE_KEY = "usageDic";
 
     /**
      * コマンドを取得します。

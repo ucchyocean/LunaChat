@@ -7,6 +7,7 @@ package com.github.ucchyocean.lc3.command;
 
 import java.util.ArrayList;
 
+import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.channel.Channel;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 
@@ -18,7 +19,6 @@ public class ModeratorCommand extends LunaChatSubCommand {
 
     private static final String COMMAND_NAME = "moderator";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
-    private static final String USAGE_KEY = "usageModerator";
 
     /**
      * コマンドを取得します。
@@ -59,7 +59,7 @@ public class ModeratorCommand extends LunaChatSubCommand {
     @Override
     public void sendUsageMessage(
             ChannelMember sender, String label) {
-        sendResourceMessage(sender, "", USAGE_KEY, label);
+        sender.sendMessage(Messages.usageModerator(label));
     }
 
     /**
@@ -92,7 +92,7 @@ public class ModeratorCommand extends LunaChatSubCommand {
                 moderator.add(args[i]);
             }
         } else {
-            sendResourceMessage(sender, PREERR, "errmsgCommand");
+            sender.sendMessage(Messages.errmsgCommand());
             return true;
         }
 
@@ -100,7 +100,7 @@ public class ModeratorCommand extends LunaChatSubCommand {
 
         // チャンネルが存在するかどうかをチェックする
         if ( channel == null ) {
-            sendResourceMessage(sender, PREERR, "errmsgNotExist");
+            sender.sendMessage(Messages.errmsgNotExist());
             return true;
         }
 
@@ -108,14 +108,13 @@ public class ModeratorCommand extends LunaChatSubCommand {
 
         // モデレーターかどうか確認する
         if ( !channel.hasModeratorPermission(sender) ) {
-            sendResourceMessage(sender, PREERR, "errmsgNotModerator");
+            sender.sendMessage(Messages.errmsgNotModerator());
             return true;
         }
 
         // グローバルチャンネルなら設定できない
         if ( channel.isGlobalChannel() ) {
-            sendResourceMessage(sender, PREERR,
-                    "errmsgCannotModeratorGlobal", channel.getName());
+            sender.sendMessage(Messages.errmsgCannotModeratorGlobal(channel.getName()));
             return true;
         }
 
@@ -125,13 +124,11 @@ public class ModeratorCommand extends LunaChatSubCommand {
                 String name = mod.substring(1);
                 ChannelMember cp = ChannelMember.getChannelMember(name);
                 channel.removeModerator(cp);
-                sendResourceMessage(sender, PREINFO,
-                        "cmdmsgModeratorMinus", name, cname);
+                sender.sendMessage(Messages.cmdmsgModeratorMinus(name, cname));
             } else {
                 ChannelMember cp = ChannelMember.getChannelMember(mod);
                 channel.addModerator(cp);
-                sendResourceMessage(sender, PREINFO,
-                        "cmdmsgModerator", mod, cname);
+                sender.sendMessage(Messages.cmdmsgModerator(mod, cname));
             }
         }
 

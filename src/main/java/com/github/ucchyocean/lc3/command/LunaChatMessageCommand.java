@@ -21,8 +21,6 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  */
 public class LunaChatMessageCommand implements CommandExecutor {
 
-    private static final String PREERR = Messages.get("errorPrefix");
-
     /**
      * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
      */
@@ -50,7 +48,7 @@ public class LunaChatMessageCommand implements CommandExecutor {
                 }
             }
         } else {
-            sendResourceMessage(sender, PREERR, "errmsgCommand");
+            sender.sendMessage(Messages.errmsgCommand());
             printUsage(sender, label);
             return true;
         }
@@ -71,15 +69,13 @@ public class LunaChatMessageCommand implements CommandExecutor {
         // 招待相手が存在するかどうかを確認する
         ChannelMember invited = ChannelMember.getChannelMember(invitedName);
         if ( invited == null || !invited.isOnline() ) {
-            sendResourceMessage(inviter, PREERR,
-                    "errmsgNotfoundPlayer", invitedName);
+            inviter.sendMessage(Messages.errmsgNotfoundPlayer(invitedName));
             return;
         }
 
         // 招待相手が自分自身でないか確認する
         if (inviter.getName().equals(invited.getName())) {
-            sendResourceMessage(inviter, PREERR,
-                    "errmsgCannotSendPMSelf");
+            inviter.sendMessage(Messages.errmsgCannotSendPMSelf());
             return;
         }
 
@@ -116,42 +112,6 @@ public class LunaChatMessageCommand implements CommandExecutor {
      * @param label
      */
     private void printUsage(CommandSender sender, String label) {
-        sendResourceMessage(sender, "", "usageMessage", label);
-    }
-
-    /**
-     * メッセージリソースのメッセージを、カラーコード置き換えしつつ、senderに送信する
-     * @param sender メッセージの送り先
-     * @param pre プレフィックス
-     * @param key リソースキー
-     * @param args リソース内の置き換え対象キーワード
-     */
-    protected void sendResourceMessage(CommandSender sender, String pre,
-            String key, Object... args) {
-
-        String org = Messages.get(key);
-        if ( org == null || org.equals("") ) {
-            return;
-        }
-        String msg = String.format(pre + org, args);
-        sender.sendMessage(msg);
-    }
-
-    /**
-     * メッセージリソースのメッセージを、カラーコード置き換えしつつ、senderに送信する
-     * @param sender メッセージの送り先
-     * @param pre プレフィックス
-     * @param key リソースキー
-     * @param args リソース内の置き換え対象キーワード
-     */
-    protected void sendResourceMessage(ChannelMember cp, String pre,
-            String key, Object... args) {
-
-        String org = Messages.get(key);
-        if ( org == null || org.equals("") ) {
-            return;
-        }
-        String msg = String.format(pre + org, args);
-        cp.sendMessage(msg);
+        sender.sendMessage(Messages.usageMessage(label));
     }
 }

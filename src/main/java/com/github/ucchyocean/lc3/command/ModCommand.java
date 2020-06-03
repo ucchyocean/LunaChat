@@ -5,6 +5,7 @@
  */
 package com.github.ucchyocean.lc3.command;
 
+import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 
 /**
@@ -14,7 +15,6 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
 public class ModCommand extends ModeratorCommand {
 
     private static final String COMMAND_NAME = "mod";
-    private static final String USAGE_KEY = "usageMod";
 
     /**
      * コマンドを取得します。
@@ -35,6 +35,6 @@ public class ModCommand extends ModeratorCommand {
     @Override
     public void sendUsageMessage(
             ChannelMember sender, String label) {
-        sendResourceMessage(sender, "", USAGE_KEY, label);
+        sender.sendMessage(Messages.usageMod(label));
     }
 }

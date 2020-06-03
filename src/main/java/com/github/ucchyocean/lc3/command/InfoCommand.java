@@ -85,20 +85,20 @@ public class InfoCommand extends LunaChatSubCommand {
         } else if ( args.length >= 2 ) {
             cname = args[1];
         } else {
-            sendResourceMessage(sender, PREERR, "errmsgCommand");
+            sender.sendMessage(Messages.errmsgCommand());
             return true;
         }
 
         // チャンネルが存在するかどうか確認する
         Channel channel = api.getChannel(cname);
         if ( channel == null ) {
-            sendResourceMessage(sender, PREERR, "errmsgNotExist");
+            sender.sendMessage(Messages.errmsgNotExist());
             return true;
         }
 
         // BANされていないかどうか確認する
         if ( channel.getBanned().contains(sender) ) {
-            sendResourceMessage(sender, PREERR, "errmsgBanned");
+            sender.sendMessage(Messages.errmsgBanned());
             return true;
         }
 

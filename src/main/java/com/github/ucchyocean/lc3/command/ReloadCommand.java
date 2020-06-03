@@ -5,7 +5,10 @@
  */
 package com.github.ucchyocean.lc3.command;
 
+import java.io.File;
+
 import com.github.ucchyocean.lc3.LunaChat;
+import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 
 /**
@@ -16,7 +19,6 @@ public class ReloadCommand extends LunaChatSubCommand {
 
     private static final String COMMAND_NAME = "reload";
     private static final String PERMISSION_NODE = "lunachat-admin." + COMMAND_NAME;
-    private static final String USAGE_KEY = "usageReload";
 
     /**
      * コマンドを取得します。
@@ -57,7 +59,7 @@ public class ReloadCommand extends LunaChatSubCommand {
     @Override
     public void sendUsageMessage(
             ChannelMember sender, String label) {
-        sendResourceMessage(sender, "", USAGE_KEY, label);
+        sender.sendMessage(Messages.usageReload(label));
     }
 
     /**
@@ -74,7 +76,9 @@ public class ReloadCommand extends LunaChatSubCommand {
 
         api.reloadAllData();
         config.reloadConfig(LunaChat.getDataFolder(), LunaChat.getPluginJarFile());
-        sendResourceMessage(sender, PREINFO, "cmdmsgReload");
+        Messages.initialize(new File(LunaChat.getDataFolder(), "messages"),
+                LunaChat.getPluginJarFile(), config.getLang());
+        sender.sendMessage(Messages.cmdmsgReload());
         return true;
     }
 

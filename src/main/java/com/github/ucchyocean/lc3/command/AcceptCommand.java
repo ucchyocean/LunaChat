@@ -79,9 +79,14 @@ public class AcceptCommand extends LunaChatSubCommand {
 
         // チャンネルを取得して、招待記録を消去する
         String channelName = DataMaps.inviteMap.get(sender.getName());
+
+        // 取得できなかったらエラー終了する
+        if ( channelName == null ) {
+            sender.sendMessage(Messages.errmsgNotfoundChannel());
+            return true;
+        }
+
         Channel channel = api.getChannel(channelName);
-        DataMaps.inviteMap.remove(sender.getName());
-        DataMaps.inviterMap.remove(sender.getName());
 
         // 取得できなかったらエラー終了する
         if (channel == null) {
@@ -89,9 +94,18 @@ public class AcceptCommand extends LunaChatSubCommand {
             return true;
         }
 
+        DataMaps.inviteMap.remove(sender.getName());
+        DataMaps.inviterMap.remove(sender.getName());
+
         // 既に参加しているなら、エラーを表示して終了する
         if (channel.getMembers().contains(sender)) {
             sender.sendMessage(Messages.errmsgInvitedAlreadyJoin());
+            return true;
+        }
+
+        // BANされていないか確認する
+        if (channel.getBanned().contains(sender)) {
+            sender.sendMessage(Messages.errmsgBanned());
             return true;
         }
 

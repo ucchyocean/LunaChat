@@ -5,6 +5,7 @@
  */
 package com.github.ucchyocean.lc3.command;
 
+import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.channel.Channel;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 
@@ -16,7 +17,6 @@ public class UnmuteCommand extends LunaChatSubCommand {
 
     private static final String COMMAND_NAME = "unmute";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
-    private static final String USAGE_KEY = "usageUnmute";
 
     /**
      * コマンドを取得します。
@@ -57,7 +57,7 @@ public class UnmuteCommand extends LunaChatSubCommand {
     @Override
     public void sendUsageMessage(
             ChannelMember sender, String label) {
-        sendResourceMessage(sender, "", USAGE_KEY, label);
+        sender.sendMessage(Messages.usageUnmute(label));
     }
 
     /**
@@ -77,7 +77,7 @@ public class UnmuteCommand extends LunaChatSubCommand {
         if (args.length >= 2) {
             kickedName = args[1];
         } else {
-            sendResourceMessage(sender, PREERR, "errmsgCommand");
+            sender.sendMessage(Messages.errmsgCommand());
             return true;
         }
 
@@ -89,20 +89,20 @@ public class UnmuteCommand extends LunaChatSubCommand {
             channel = api.getDefaultChannel(sender.getName());
         }
         if (channel == null) {
-            sendResourceMessage(sender, PREERR, "errmsgNoJoin");
+            sender.sendMessage(Messages.errmsgNoJoin());
             return true;
         }
 
         // モデレーターかどうか確認する
         if ( !channel.hasModeratorPermission(sender) ) {
-            sendResourceMessage(sender, PREERR, "errmsgNotModerator");
+            sender.sendMessage(Messages.errmsgNotModerator());
             return true;
         }
 
         // Mute解除されるプレイヤーがMuteされているかどうかチェックする
         ChannelMember kicked = ChannelMember.getChannelMember(kickedName);
         if (!channel.getMuted().contains(kicked)) {
-            sendResourceMessage(sender, PREERR, "errmsgNotMuted");
+            sender.sendMessage(Messages.errmsgNotMuted());
             return true;
         }
 
@@ -114,16 +114,16 @@ public class UnmuteCommand extends LunaChatSubCommand {
         channel.save();
 
         // senderに通知メッセージを出す
-        sendResourceMessage(sender, PREINFO,
-                "cmdmsgUnmute", kickedName, channel.getName());
+        sender.sendMessage(Messages.cmdmsgUnmute(kickedName, channel.getName()));
 
         // チャンネルに通知メッセージを出す
-        sendResourceMessageWithKeyword(channel, "unmuteMessage", kicked);
+        channel.sendMessage(null, Messages.unmuteMessage(
+                channel.getColorCode(), channel.getName(), kicked.getName()),
+                null, true, "system");
 
         // BANされていた人に通知メッセージを出す
         if ( kicked != null && kicked.isOnline() ) {
-            sendResourceMessage(kicked, PREINFO,
-                    "cmdmsgUnmuted", channel.getName());
+            kicked.sendMessage(Messages.cmdmsgUnmuted(channel.getName()));
         }
 
         return true;

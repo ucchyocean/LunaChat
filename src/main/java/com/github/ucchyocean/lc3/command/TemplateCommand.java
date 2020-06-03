@@ -5,6 +5,7 @@
  */
 package com.github.ucchyocean.lc3.command;
 
+import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 
 /**
@@ -15,7 +16,6 @@ public class TemplateCommand extends LunaChatSubCommand {
 
     private static final String COMMAND_NAME = "template";
     private static final String PERMISSION_NODE = "lunachat-admin." + COMMAND_NAME;
-    private static final String USAGE_KEY = "usageTemplate";
 
     /**
      * コマンドを取得します。
@@ -56,7 +56,7 @@ public class TemplateCommand extends LunaChatSubCommand {
     @Override
     public void sendUsageMessage(
             ChannelMember sender, String label) {
-        sendResourceMessage(sender, "", USAGE_KEY, label);
+        sender.sendMessage(Messages.usageTemplate(label));
     }
 
     /**
@@ -74,13 +74,13 @@ public class TemplateCommand extends LunaChatSubCommand {
         // 引数チェック
         // このコマンドは、コンソールでも実行できる
         if ( args.length <= 1 ) {
-            sendResourceMessage(sender, PREERR, "errmsgCommand");
+            sender.sendMessage(Messages.errmsgCommand());
             return true;
         }
 
         if ( !args[1].matches("[0-9]") ) {
-            sendResourceMessage(sender, PREERR, "errmsgInvalidTemplateNumber");
-            sendResourceMessage(sender, PREERR, "usageTemplate");
+            sender.sendMessage(Messages.errmsgInvalidTemplateNumber());
+            sender.sendMessage(Messages.usageTemplate(label));
             return true;
         }
 
@@ -96,12 +96,10 @@ public class TemplateCommand extends LunaChatSubCommand {
         // 登録を実行
         if ( format.equals("") ) {
             api.removeTemplate(id);
-            sendResourceMessage(sender, PREINFO,
-                    "cmdmsgTemplateRemove", id);
+            sender.sendMessage(Messages.cmdmsgTemplateRemove(id));
         } else {
             api.setTemplate(id, format);
-            sendResourceMessage(sender, PREINFO,
-                    "cmdmsgTemplate", id, format);
+            sender.sendMessage(Messages.cmdmsgTemplate(id, format));
         }
 
         return true;

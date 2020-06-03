@@ -5,6 +5,7 @@
  */
 package com.github.ucchyocean.lc3.command;
 
+import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.Utility;
 import com.github.ucchyocean.lc3.channel.Channel;
 import com.github.ucchyocean.lc3.member.ChannelMember;
@@ -17,8 +18,6 @@ public class UnhideCommand extends LunaChatSubCommand {
 
     private static final String COMMAND_NAME = "unhide";
     private static final String PERMISSION_NODE = "lunachat." + COMMAND_NAME;
-    private static final String USAGE_KEY1 = "usageUnhide";
-    private static final String USAGE_KEY2 = "usageUnhidePlayer";
 
     /**
      * コマンドを取得します。
@@ -59,8 +58,8 @@ public class UnhideCommand extends LunaChatSubCommand {
     @Override
     public void sendUsageMessage(
             ChannelMember sender, String label) {
-        sendResourceMessage(sender, "", USAGE_KEY1, label);
-        sendResourceMessage(sender, "", USAGE_KEY2, label);
+        sender.sendMessage(Messages.usageUnhide(label));
+        sender.sendMessage(Messages.usageUnhidePlayer(label));
     }
 
     /**
@@ -108,7 +107,7 @@ public class UnhideCommand extends LunaChatSubCommand {
         if ( !isPlayerCommand && channel != null ) {
             isChannelCommand = true;
         } else if ( Utility.existsOfflinePlayer(cname) ) {
-            sendResourceMessage(sender, PREERR, "errmsgNotExistChannelAndPlayer");
+            sender.sendMessage(Messages.errmsgNotExistChannelAndPlayer());
             return true;
         }
 
@@ -117,14 +116,14 @@ public class UnhideCommand extends LunaChatSubCommand {
 
             // 非表示になっているかどうかをチェックする
             if ( !channel.getHided().contains(sender) ) {
-                sendResourceMessage(sender, PREERR, "errmsgAlreadyUnhided");
+                sender.sendMessage(Messages.errmsgAlreadyUnhided());
                 return true;
             }
 
             // 設定する
             channel.getHided().remove(sender);
             channel.save();
-            sendResourceMessage(sender, PREINFO, "cmdmsgUnhided", channel.getName());
+            sender.sendMessage(Messages.cmdmsgUnhided(channel.getName()));
 
             return true;
 
@@ -134,13 +133,13 @@ public class UnhideCommand extends LunaChatSubCommand {
             // 既に表示になっていないかどうかをチェックする
             ChannelMember hided = ChannelMember.getChannelMember(cname);
             if ( !api.getHidelist(hided).contains(sender) ) {
-                sendResourceMessage(sender, PREERR, "errmsgAlreadyUnhidedPlayer");
+                sender.sendMessage(Messages.errmsgAlreadyUnhidedPlayer());
                 return true;
             }
 
             // 設定する
             api.removeHidelist(sender, hided);
-            sendResourceMessage(sender, PREINFO, "cmdmsgUnhidedPlayer", hided.getDisplayName());
+            sender.sendMessage(Messages.cmdmsgUnhidedPlayer(hided.getDisplayName()));
 
             return true;
         }

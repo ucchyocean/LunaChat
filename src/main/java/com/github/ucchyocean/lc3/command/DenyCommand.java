@@ -72,7 +72,7 @@ public class DenyCommand extends LunaChatSubCommand {
 
         // 招待を受けていないプレイヤーなら、エラーを表示して終了する
         if (!DataMaps.inviteMap.containsKey(sender.getName())) {
-            sendResourceMessage(sender, PREERR, "errmsgNotInvited");
+            sender.sendMessage(Messages.errmsgNotInvited());
             return true;
         }
 
@@ -82,10 +82,10 @@ public class DenyCommand extends LunaChatSubCommand {
         DataMaps.inviterMap.remove(sender.getName());
 
         // メッセージ送信
-        sendResourceMessage(sender, PREINFO, "cmdmsgDeny");
+        sender.sendMessage(Messages.cmdmsgDeny());
         ChannelMember inviter = ChannelMember.getChannelMember(inviterName);
-        if (inviter != null) {
-            sendResourceMessage(inviter, PREINFO, "cmdmsgDenyed");
+        if (inviter != null && inviter.isOnline()) {
+            inviter.sendMessage(Messages.cmdmsgDenyed());
         }
         return true;
     }
