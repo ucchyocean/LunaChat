@@ -3,14 +3,15 @@
  * @license    LGPLv3
  * @copyright  Copyright ucchy 2020
  */
-package com.github.ucchyocean.lc3.channel;
+package com.github.ucchyocean.lc3.bukkit;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.github.ucchyocean.lc3.LunaChat;
-import com.github.ucchyocean.lc3.bukkit.LunaChatBukkit;
+import com.github.ucchyocean.lc3.channel.JapanizeConvertTask;
 import com.github.ucchyocean.lc3.japanize.JapanizeType;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 import com.github.ucchyocean.lc3.member.ChannelMemberPlayer;
@@ -19,10 +20,12 @@ import com.github.ucchyocean.lc3.member.ChannelMemberPlayer;
  * Japanize2行表示のときに、変換結果を遅延して通常チャットに表示するためのタスク
  * @author ucchy
  */
-public class DelayedJapanizeNormalChatTask extends DelayedJapanizeConvertTask {
+public class BukkitNormalChatJapanizeTask extends BukkitRunnable {
 
     private ChannelMember player;
     private AsyncPlayerChatEvent event;
+
+    private JapanizeConvertTask task;
 
     /**
      * コンストラクタ
@@ -32,9 +35,10 @@ public class DelayedJapanizeNormalChatTask extends DelayedJapanizeConvertTask {
      * @param japanizeFormat 変換後に発言するときの、発言フォーマット
      * @param event イベント
      */
-    public DelayedJapanizeNormalChatTask(String org, JapanizeType type,
+    public BukkitNormalChatJapanizeTask(String org, JapanizeType type,
             ChannelMember player, String japanizeFormat, final AsyncPlayerChatEvent event) {
-        super(org, type, null, player, japanizeFormat);
+
+        task = new JapanizeConvertTask(org, type, japanizeFormat);
         this.player = player;
         this.event = event;
     }
@@ -45,9 +49,9 @@ public class DelayedJapanizeNormalChatTask extends DelayedJapanizeConvertTask {
     @Override
     public void run() {
 
-        if ( runSync() ) {
+        if ( task.runSync() ) {
 
-            String result = getResult();
+            String result = task.getResult();
 
             // 送信
             for ( Player p : event.getRecipients() ) {

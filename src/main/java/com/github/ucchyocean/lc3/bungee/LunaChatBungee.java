@@ -64,11 +64,9 @@ public class LunaChatBungee extends Plugin implements PluginInterface {
         getProxy().getPluginManager().registerCommand(this,
                 new LunaChatCommandImpl("lunachat", "", "lc", "ch"));
         getProxy().getPluginManager().registerCommand(this,
-                new TellCommand(this, "tell", "", "msg", "message", "m", "w", "t"));
+                new TellCommand(this, "tell", "", "msg", "message", "m", "t"));
         getProxy().getPluginManager().registerCommand(this,
                 new ReplyCommand(this, "reply", "", "r"));
-        getProxy().getPluginManager().registerCommand(this,
-                new DictionaryCommand(this, "dictionary", "", "dic"));
 
         // リスナー登録
         getProxy().getPluginManager().registerListener(this, new BungeeEventListener(this));

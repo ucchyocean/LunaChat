@@ -12,11 +12,13 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  * Japanize2行表示のときに、変換結果を遅延してチャンネルに表示するためのタスク
  * @author ucchy
  */
-public class DelayedJapanizeChannelChatTask extends DelayedJapanizeConvertTask {
+public class ChannelChatJapanizeTask implements Runnable {
 
     private Channel channel;
     private ChannelMember player;
     private String lineFormat;
+
+    private JapanizeConvertTask task;
 
     /**
      * コンストラクタ
@@ -27,9 +29,10 @@ public class DelayedJapanizeChannelChatTask extends DelayedJapanizeConvertTask {
      * @param japanizeFormat 変換後に発言するときの、発言フォーマット
      * @param lineFormat
      */
-    public DelayedJapanizeChannelChatTask(String org, JapanizeType type, Channel channel,
+    public ChannelChatJapanizeTask(String org, JapanizeType type, Channel channel,
             ChannelMember player, String japanizeFormat, String lineFormat) {
-        super(org, type, channel, player, japanizeFormat);
+
+        task = new JapanizeConvertTask(org, type, japanizeFormat);
         this.channel = channel;
         this.player = player;
         this.lineFormat = lineFormat;
@@ -40,11 +43,10 @@ public class DelayedJapanizeChannelChatTask extends DelayedJapanizeConvertTask {
      */
     @Override
     public void run() {
-        if ( runSync() ) {
+        if ( task.runSync() ) {
             // チャンネルへ送信
             String name = (player != null) ? player.getDisplayName() : "";
-            channel.sendMessage(player, getResult(), lineFormat, true, name);
+            channel.sendMessage(player, task.getResult(), lineFormat, true, name);
         }
     }
-
 }

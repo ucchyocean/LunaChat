@@ -17,8 +17,8 @@ import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatAPI;
 import com.github.ucchyocean.lc3.LunaChatConfig;
 import com.github.ucchyocean.lc3.Utility;
+import com.github.ucchyocean.lc3.bukkit.BukkitRecipientChatJapanizeTask;
 import com.github.ucchyocean.lc3.bukkit.LunaChatBukkit;
-import com.github.ucchyocean.lc3.channel.DelayedJapanizeRecipientChatTask;
 import com.github.ucchyocean.lc3.japanize.JapanizeType;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 import com.gmail.nossr50.api.PartyAPI;
@@ -99,7 +99,7 @@ public class McMMOBridge implements Listener {
 
                 String taskFormat = Utility.replaceColorCode(config.getJapanizeLine2Format());
 
-                DelayedJapanizeRecipientChatTask task = new DelayedJapanizeRecipientChatTask(
+                BukkitRecipientChatJapanizeTask task = new BukkitRecipientChatJapanizeTask(
                         message, config.getJapanizeType(), player, taskFormat, recipients);
 
                 // 発言処理を必ず先に実施させるため、遅延を入れてタスクを実行する。

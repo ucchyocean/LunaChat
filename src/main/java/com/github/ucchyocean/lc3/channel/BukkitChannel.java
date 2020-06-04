@@ -130,7 +130,7 @@ public class BukkitChannel extends Channel {
 
         // Japanize変換タスクを作成する
         boolean isIncludeSyncChat = true;
-        DelayedJapanizeConvertTask delayedTask = null;
+        ChannelChatJapanizeTask delayedTask = null;
         JapanizeType japanizeType = (getJapanizeType() == null)
                 ? config.getJapanizeType() : getJapanizeType();
 
@@ -150,7 +150,7 @@ public class BukkitChannel extends Channel {
             }
 
             // タスクを作成しておく
-            delayedTask = new DelayedJapanizeChannelChatTask(maskedMessage,
+            delayedTask = new ChannelChatJapanizeTask(maskedMessage,
                     japanizeType, this, player, jpFormat, messageFormat);
         }
 
@@ -161,7 +161,8 @@ public class BukkitChannel extends Channel {
 
         // 非同期実行タスクがある場合、追加で実行する
         if ( delayedTask != null ) {
-            delayedTask.runTaskAsynchronously(LunaChatBukkit.getInstance());
+            Bukkit.getScheduler().runTaskAsynchronously(
+                    LunaChatBukkit.getInstance(), delayedTask);
         }
 
         // NGワード発言者に、NGワードアクションを実行する

@@ -132,7 +132,7 @@ public class BungeeChannel extends Channel {
 
         // Japanize変換タスクを作成する
         boolean isIncludeSyncChat = true;
-        JapanizeChannelChatTask delayedTask = null;
+        ChannelChatJapanizeTask delayedTask = null;
         JapanizeType japanizeType = (getJapanizeType() == null)
                 ? config.getJapanizeType() : getJapanizeType();
 
@@ -152,7 +152,7 @@ public class BungeeChannel extends Channel {
             }
 
             // タスクを作成しておく
-            delayedTask = new JapanizeChannelChatTask(maskedMessage,
+            delayedTask = new ChannelChatJapanizeTask(maskedMessage,
                     japanizeType, this, player, jpFormat, messageFormat);
         }
 

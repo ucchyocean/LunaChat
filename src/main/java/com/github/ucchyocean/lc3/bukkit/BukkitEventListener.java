@@ -29,7 +29,6 @@ import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.Utility;
 import com.github.ucchyocean.lc3.bridge.VaultChatBridge;
 import com.github.ucchyocean.lc3.channel.Channel;
-import com.github.ucchyocean.lc3.channel.DelayedJapanizeNormalChatTask;
 import com.github.ucchyocean.lc3.event.LunaChatPreChatEvent;
 import com.github.ucchyocean.lc3.japanize.JapanizeType;
 import com.github.ucchyocean.lc3.member.ChannelMember;
@@ -365,7 +364,7 @@ public class BukkitEventListener implements Listener {
 
                     String taskFormat = Utility.replaceColorCode(config.getJapanizeLine2Format());
 
-                    DelayedJapanizeNormalChatTask task = new DelayedJapanizeNormalChatTask(
+                    BukkitNormalChatJapanizeTask task = new BukkitNormalChatJapanizeTask(
                             message, config.getJapanizeType(), player, taskFormat, event);
 
                     // 発言処理を必ず先に実施させるため、遅延を入れてタスクを実行する。

@@ -49,7 +49,7 @@ commands:
     permission-message: パーミッション "<permission>" が無いため、実行できません。
   tell:
     description: 1:1チャット送信コマンド
-    aliases: [msg, message, m, t, w]
+    aliases: [msg, message, m, t]
     usage: /<command> (name) [message] - 指定した人との1:1チャットを開始します。
     permission: lunachat.message
     permission-message: パーミッション "<permission>" が無いため、実行できません。
