@@ -5,10 +5,6 @@
  */
 package com.github.ucchyocean.lc3.command;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-
 import com.github.ucchyocean.lc3.LunaChatAPI;
 import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.bukkit.LunaChatBukkit;
@@ -19,14 +15,16 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  * 1:1チャット送信コマンド
  * @author ucchy
  */
-public class LunaChatMessageCommand implements CommandExecutor {
+public class LunaChatMessageCommand {
 
     /**
-     * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
+     * コマンドを実行したときに呼び出されるメソッド
+     * @param sender 実行者
+     * @param label 実行されたコマンドのラベル
+     * @param args 実行されたコマンドの引数
+     * @return 実行したかどうか（falseを返した場合、サーバーがUsageを表示する）
      */
-    @Override
-    public boolean onCommand(CommandSender sender, Command command,
-            String label, String[] args) {
+    public boolean execute(ChannelMember sender, String label, String[] args) {
 
         // senderからChannelMemberを作成する
         ChannelMember inviter = ChannelMember.getChannelMember(sender);
@@ -111,7 +109,7 @@ public class LunaChatMessageCommand implements CommandExecutor {
      * @param sender
      * @param label
      */
-    private void printUsage(CommandSender sender, String label) {
+    private void printUsage(ChannelMember sender, String label) {
         sender.sendMessage(Messages.usageMessage(label));
     }
 }

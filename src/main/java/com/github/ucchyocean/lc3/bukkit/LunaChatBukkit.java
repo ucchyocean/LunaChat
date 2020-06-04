@@ -6,9 +6,9 @@
 package com.github.ucchyocean.lc3.bukkit;
 
 import java.io.File;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -17,7 +17,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 
+import com.github.ucchyocean.lc3.ExpireCheckTask;
 import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatAPI;
 import com.github.ucchyocean.lc3.LunaChatConfig;
@@ -30,10 +32,11 @@ import com.github.ucchyocean.lc3.bridge.McMMOBridge;
 import com.github.ucchyocean.lc3.bridge.MultiverseCoreBridge;
 import com.github.ucchyocean.lc3.bridge.VaultChatBridge;
 import com.github.ucchyocean.lc3.channel.ChannelManager;
-import com.github.ucchyocean.lc3.command.LunaChatCommandBukkit;
+import com.github.ucchyocean.lc3.command.LunaChatCommand;
 import com.github.ucchyocean.lc3.command.LunaChatJapanizeCommand;
 import com.github.ucchyocean.lc3.command.LunaChatMessageCommand;
 import com.github.ucchyocean.lc3.command.LunaChatReplyCommand;
+import com.github.ucchyocean.lc3.member.ChannelMember;
 
 /**
  * LunaChatのBukkit実装
@@ -50,10 +53,10 @@ public class LunaChatBukkit extends JavaPlugin implements PluginInterface {
     private DynmapBridge dynmap;
     private MultiverseCoreBridge multiverse;
 
-    private ExpireCheckTask expireCheckerTask;
+    private BukkitTask expireCheckerTask;
     private LunaChatLogger normalChatLogger;
 
-    private LunaChatCommandBukkit lunachatCommand;
+    private LunaChatCommand lunachatCommand;
     private LunaChatMessageCommand messageCommand;
     private LunaChatReplyCommand replyCommand;
     private LunaChatJapanizeCommand lcjapanizeCommand;
@@ -109,14 +112,14 @@ public class LunaChatBukkit extends JavaPlugin implements PluginInterface {
         getServer().getPluginManager().registerEvents(new BukkitEventListener(), this);
 
         // コマンドの登録
-        lunachatCommand = new LunaChatCommandBukkit();
+        lunachatCommand = new LunaChatCommand();
         messageCommand = new LunaChatMessageCommand();
         replyCommand = new LunaChatReplyCommand();
         lcjapanizeCommand = new LunaChatJapanizeCommand();
 
         // 期限チェッカータスクの起動
-        expireCheckerTask = new ExpireCheckTask();
-        expireCheckerTask.runTaskTimerAsynchronously(this, 100, 600);
+        expireCheckerTask = Bukkit.getScheduler().runTaskTimerAsynchronously(
+                this, new ExpireCheckTask(), 100, 600);
     }
 
     /**
@@ -141,13 +144,13 @@ public class LunaChatBukkit extends JavaPlugin implements PluginInterface {
             CommandSender sender, Command command, String label, String[] args) {
 
         if ( command.getName().equals("lunachat") ) {
-            return lunachatCommand.onCommand(sender, command, label, args);
+            return lunachatCommand.execute(ChannelMember.getChannelMember(sender), label, args);
         } else if ( command.getName().equals("tell") ) {
-            return messageCommand.onCommand(sender, command, label, args);
+            return messageCommand.execute(ChannelMember.getChannelMember(sender), label, args);
         } else if ( command.getName().equals("reply") ) {
-            return replyCommand.onCommand(sender, command, label, args);
+            return replyCommand.execute(ChannelMember.getChannelMember(sender), label, args);
         } else if ( command.getName().equals("lcjapanize") ) {
-            return lcjapanizeCommand.onCommand(sender, command, label, args);
+            return lcjapanizeCommand.execute(ChannelMember.getChannelMember(sender), label, args);
         }
 
         return false;
@@ -163,7 +166,7 @@ public class LunaChatBukkit extends JavaPlugin implements PluginInterface {
 
         List<String> completeList = null;
         if ( command.getName().equals("lunachat") ) {
-            completeList = lunachatCommand.onTabComplete(sender, command, label, args);
+            completeList = lunachatCommand.onTabComplete(ChannelMember.getChannelMember(sender), label, args);
         }
         if ( completeList != null ) {
             return completeList;
@@ -252,7 +255,7 @@ public class LunaChatBukkit extends JavaPlugin implements PluginInterface {
      */
     @Override
     public Set<String> getOnlinePlayerNames() {
-        Set<String> list = new HashSet<>();
+        Set<String> list = new TreeSet<>();
         for ( Player p : Bukkit.getOnlinePlayers() ) {
             list.add(p.getName());
         }

@@ -7,8 +7,8 @@ package com.github.ucchyocean.lc3.bungee;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Level;
 
 import com.github.ucchyocean.lc3.LunaChat;
@@ -62,11 +62,13 @@ public class LunaChatBungee extends Plugin implements PluginInterface {
 
         // コマンド登録
         getProxy().getPluginManager().registerCommand(this,
-                new LunaChatCommandImpl("lunachat", "", "lc", "ch"));
+                new LunaChatCommandBungee("lunachat", "", "lc", "ch"));
         getProxy().getPluginManager().registerCommand(this,
-                new TellCommand(this, "tell", "", "msg", "message", "m", "t"));
+                new MessageCommandBungee("tell", "", "msg", "message", "m", "t"));
         getProxy().getPluginManager().registerCommand(this,
-                new ReplyCommand(this, "reply", "", "r"));
+                new ReplyCommandBungee("reply", "", "r"));
+        getProxy().getPluginManager().registerCommand(this,
+                new JapanizeCommandBungee("japanize", "", "jp"));
 
         // リスナー登録
         getProxy().getPluginManager().registerListener(this, new BungeeEventListener(this));
@@ -154,7 +156,7 @@ public class LunaChatBungee extends Plugin implements PluginInterface {
      */
     @Override
     public Set<String> getOnlinePlayerNames() {
-        Set<String> list = new HashSet<>();
+        Set<String> list = new TreeSet<>();
         for ( ProxiedPlayer p : ProxyServer.getInstance().getPlayers() ) {
             list.add(p.getName());
         }

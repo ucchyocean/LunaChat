@@ -5,28 +5,30 @@
  */
 package com.github.ucchyocean.lc3.bungee;
 
-import com.github.ucchyocean.lc3.command.LunaChatCommandBungee;
+import com.github.ucchyocean.lc3.command.LunaChatCommand;
+import com.github.ucchyocean.lc3.member.ChannelMember;
 
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 
 /**
- * LunaChatのlunachatコマンド実装クラス
+ * Lunachatコマンドの処理クラス（Bungee実装）
  * @author ucchy
  */
-public class LunaChatCommandImpl extends Command implements TabExecutor {
+public class LunaChatCommandBungee extends Command implements TabExecutor {
 
-    private LunaChatCommandBungee com = new LunaChatCommandBungee();
+    private LunaChatCommand command;
 
     /**
      * コンストラクタ
-     * @param name コマンド
-     * @param permission パーミッション
-     * @param aliases エイリアス
+     * @param name
+     * @param permission
+     * @param aliases
      */
-    public LunaChatCommandImpl(String name, String permission, String... aliases) {
+    public LunaChatCommandBungee(String name, String permission, String... aliases) {
         super(name, permission, aliases);
+        command = new LunaChatCommand();
     }
 
     /**
@@ -35,8 +37,9 @@ public class LunaChatCommandImpl extends Command implements TabExecutor {
      * @param args 実行されたコマンドの引数
      * @see net.md_5.bungee.api.plugin.Command#execute(net.md_5.bungee.api.CommandSender, java.lang.String[])
      */
+    @Override
     public void execute(CommandSender sender, String[] args) {
-        com.execute(sender, args);
+        command.execute(ChannelMember.getChannelMember(sender), "ch", args);
     }
 
     /**
@@ -48,6 +51,6 @@ public class LunaChatCommandImpl extends Command implements TabExecutor {
      */
     @Override
     public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
-        return com.onTabComplete(sender, args);
+        return command.onTabComplete(ChannelMember.getChannelMember(sender), "ch", args);
     }
 }

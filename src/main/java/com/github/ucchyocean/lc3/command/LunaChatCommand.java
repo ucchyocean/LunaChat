@@ -17,7 +17,7 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  * Lunachatコマンドの処理クラス
  * @author ucchy
  */
-public abstract class LunaChatCommand {
+public class LunaChatCommand {
 
     private ArrayList<LunaChatSubCommand> commands;
     private ArrayList<LunaChatSubCommand> commonCommands;
@@ -70,7 +70,7 @@ public abstract class LunaChatCommand {
      * @param args 実行されたコマンドの引数
      * @return 実行したかどうか（falseを返した場合、サーバーがUsageを表示する）
      */
-    protected boolean execute(ChannelMember sender, String label, String[] args) {
+    public boolean execute(ChannelMember sender, String label, String[] args) {
 
         // チャンネルチャットが無効でも利用できるコマンドはここで処理する
         // （hide, unhide, dic, dictionary, reload）
@@ -137,7 +137,7 @@ public abstract class LunaChatCommand {
      * @param args 実行されたコマンドの引数
      * @return 補完候補
      */
-    protected List<String> onTabComplete(ChannelMember sender, String label, String[] args) {
+    public List<String> onTabComplete(ChannelMember sender, String label, String[] args) {
         if ( args.length == 1 ) {
             // コマンド名で補完する
             String arg = args[0].toLowerCase();
@@ -374,5 +374,14 @@ public abstract class LunaChatCommand {
      * @param pre 検索キー
      * @return プレイヤー名リスト
      */
-    protected abstract List<String> getListPlayerNames(String pre);
+    private List<String> getListPlayerNames(String pre) {
+        String prefix = pre.toLowerCase();
+        List<String> items = new ArrayList<String>();
+        for ( String pname : LunaChat.getPlugin().getOnlinePlayerNames() ) {
+            if ( pname.toLowerCase().startsWith(prefix) ) {
+                items.add(pname);
+            }
+        }
+        return items;
+    }
 }

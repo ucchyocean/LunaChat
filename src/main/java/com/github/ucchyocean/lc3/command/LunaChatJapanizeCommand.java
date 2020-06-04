@@ -5,10 +5,6 @@
  */
 package com.github.ucchyocean.lc3.command;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-
 import com.github.ucchyocean.lc3.LunaChatAPI;
 import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.bukkit.LunaChatBukkit;
@@ -18,16 +14,18 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  * Japanize変換設定コマンド
  * @author ucchy
  */
-public class LunaChatJapanizeCommand implements CommandExecutor {
+public class LunaChatJapanizeCommand {
 
     private static final String PERM_JAPANIZE_OTHER = "lunachat-admin.japanize-other";
 
     /**
-     * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
+     * コマンドを実行したときに呼び出されるメソッド
+     * @param sender 実行者
+     * @param label 実行されたコマンドのラベル
+     * @param args 実行されたコマンドの引数
+     * @return 実行したかどうか（falseを返した場合、サーバーがUsageを表示する）
      */
-    @Override
-    public boolean onCommand(CommandSender sender, Command command,
-            String label, String[] args) {
+    public boolean execute(ChannelMember sender, String label, String[] args) {
 
         if ( args.length == 1 &&
                 (args[0].equalsIgnoreCase("on") || args[0].equalsIgnoreCase("off")) ) {
@@ -85,7 +83,7 @@ public class LunaChatJapanizeCommand implements CommandExecutor {
      * @param sender
      * @param label
      */
-    private void printUsage(CommandSender sender, String label) {
+    private void printUsage(ChannelMember sender, String label) {
         sender.sendMessage(Messages.usageJapanize(label));
         if ( sender.hasPermission(PERM_JAPANIZE_OTHER) ) {
             sender.sendMessage(Messages.usageJapanizeOther(label));

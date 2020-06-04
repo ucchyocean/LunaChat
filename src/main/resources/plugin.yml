@@ -59,9 +59,9 @@ commands:
     usage: /<command> [message] - 受信した1:1チャットに返信します。
     permission: lunachat.reply
     permission-message: パーミッション "<permission>" が無いため、実行できません。
-  lcjapanize:
+  japanize:
     description: lunachatのjapanizeオンオフ設定コマンド
-    aliases: [japanize, jp]
+    aliases: [jp]
     usage: |
            /<command> on|off - Turn on/off the Japanize conversion of your chat.
            /<command> (player) (on|off) - Turn on/off the Japanize conversion of other player's chat.
