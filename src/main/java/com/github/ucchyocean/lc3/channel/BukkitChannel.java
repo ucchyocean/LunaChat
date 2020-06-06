@@ -479,7 +479,12 @@ public class BukkitChannel extends Channel {
         msg = msg.replace("%ch", getName());
         //msg = msg.replace("%msg", message);
         msg = msg.replace("%color", getColorCode());
-        msg = msg.replace("%to", getPrivateMessageTo());
+        if ( getPrivateMessageTo() != null ) {
+            msg = msg.replace("%to", getPrivateMessageTo().getDisplayName());
+        } else {
+            msg = msg.replace("%to", "");
+        }
+        msg = msg.replace("%recieverserver", "");
 
         if ( msg.contains("%date") ) {
             msg = msg.replace("%date", dateFormat.format(new Date()));

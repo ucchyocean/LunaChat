@@ -89,7 +89,7 @@ public class Utility {
      */
     public static String stripColorCode(String source) {
         if (source == null) return null;
-        return stripAltColorCode(source).replaceAll("\u00A7([0-9a-fk-or])", "");
+        return stripAltColorCode(source).replaceAll("\u00A7([0-9a-fk-or])", "").replaceAll("&([0-9a-fk-or])", "");
     }
 
     /**

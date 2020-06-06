@@ -5,9 +5,9 @@
  */
 package com.github.ucchyocean.lc3.command;
 
+import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatAPI;
 import com.github.ucchyocean.lc3.Messages;
-import com.github.ucchyocean.lc3.bukkit.LunaChatBukkit;
 import com.github.ucchyocean.lc3.channel.Channel;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 
@@ -78,7 +78,7 @@ public class LunaChatMessageCommand {
         }
 
         // チャンネルが存在するかどうかをチェックする
-        LunaChatAPI api = LunaChatBukkit.getInstance().getLunaChatAPI();
+        LunaChatAPI api = LunaChat.getAPI();
         String cname = inviter.getName() + ">" + invited.getName();
         Channel channel = api.getChannel(cname);
         if ( channel == null ) {
@@ -87,7 +87,7 @@ public class LunaChatMessageCommand {
             channel.setVisible(false);
             channel.addMember(inviter);
             channel.addMember(invited);
-            channel.setPrivateMessageTo(invited.getName());
+            channel.setPrivateMessageTo(invited);
         }
 
         // メッセージがあるなら送信する

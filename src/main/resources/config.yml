@@ -110,11 +110,11 @@ noneJapanizeMarker: '#'
 
 # -------------------- BungeeCord Settings --------------------
 
-defaultFormatForPrivateMessage: '&7[%sender@%senderserver > %reciever@%recieverserver] %msg'
+defaultFormatForPrivateMessage: '&7[%username@%server > %to@%recieverserver] %msg'
 
 broadcastChat: true
 
-broadcastChatFormat: '%date %time &d<%sender@%senderserver> &f%msg'
+broadcastChatFormat: '%date %time &d<%username@%senderserver> &f%msg'
 
 broadcastChatLocalJapanize: true
 

@@ -334,7 +334,7 @@ public class BukkitEventListener implements Listener {
                 message = message.substring(marker.length());
             }
 
-            // 2byteコードを含むなら、Japanize変換は行わない
+            // 2byteコードを含む、または、半角カタカナのみなら、Japanize変換は行わない
             String kanaTemp = Utility.stripColorCode(message);
             if ( !skipJapanize &&
                     ( kanaTemp.getBytes().length > kanaTemp.length() ||

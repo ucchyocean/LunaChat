@@ -538,7 +538,7 @@ public class Messages {
         String msg = resources.getString("cmdmsgJoin");
         if ( msg == null ) return "";
         msg = msg.replace("%channel%", channel.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -548,7 +548,7 @@ public class Messages {
         String msg = resources.getString("cmdmsgSet");
         if ( msg == null ) return "";
         msg = msg.replace("%channel%", channel.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -558,7 +558,7 @@ public class Messages {
         String msg = resources.getString("cmdmsgSetTopic");
         if ( msg == null ) return "";
         msg = msg.replace("%topic%", topic.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -567,7 +567,7 @@ public class Messages {
     public static String cmdmsgSetHide() {
         String msg = resources.getString("cmdmsgSetHide");
         if ( msg == null ) return "";
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -577,7 +577,7 @@ public class Messages {
         String msg = resources.getString("cmdmsgLeave");
         if ( msg == null ) return "";
         msg = msg.replace("%channel%", channel.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -588,7 +588,7 @@ public class Messages {
         if ( msg == null ) return "";
         msg = msg.replace("%player%", player.toString());
         msg = msg.replace("%channel%", channel.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -599,7 +599,7 @@ public class Messages {
         if ( msg == null ) return "";
         msg = msg.replace("%player%", player.toString());
         msg = msg.replace("%channel%", channel.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -608,7 +608,7 @@ public class Messages {
     public static String cmdmsgInvited2() {
         String msg = resources.getString("cmdmsgInvited2");
         if ( msg == null ) return "";
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -617,7 +617,7 @@ public class Messages {
     public static String cmdmsgDeny() {
         String msg = resources.getString("cmdmsgDeny");
         if ( msg == null ) return "";
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -626,7 +626,7 @@ public class Messages {
     public static String cmdmsgDenyed() {
         String msg = resources.getString("cmdmsgDenyed");
         if ( msg == null ) return "";
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -637,7 +637,7 @@ public class Messages {
         if ( msg == null ) return "";
         msg = msg.replace("%player%", player.toString());
         msg = msg.replace("%channel%", channel.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -647,7 +647,7 @@ public class Messages {
         String msg = resources.getString("cmdmsgKicked");
         if ( msg == null ) return "";
         msg = msg.replace("%channel%", channel.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -658,7 +658,7 @@ public class Messages {
         if ( msg == null ) return "";
         msg = msg.replace("%player%", player.toString());
         msg = msg.replace("%channel%", channel.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -670,7 +670,7 @@ public class Messages {
         msg = msg.replace("%player%", player.toString());
         msg = msg.replace("%channel%", channel.toString());
         msg = msg.replace("%minutes%", minutes.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -680,7 +680,7 @@ public class Messages {
         String msg = resources.getString("cmdmsgBanned");
         if ( msg == null ) return "";
         msg = msg.replace("%channel%", channel.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -691,7 +691,7 @@ public class Messages {
         if ( msg == null ) return "";
         msg = msg.replace("%player%", player.toString());
         msg = msg.replace("%channel%", channel.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -701,7 +701,7 @@ public class Messages {
         String msg = resources.getString("cmdmsgPardoned");
         if ( msg == null ) return "";
         msg = msg.replace("%channel%", channel.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -712,7 +712,7 @@ public class Messages {
         if ( msg == null ) return "";
         msg = msg.replace("%player%", player.toString());
         msg = msg.replace("%channel%", channel.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -724,7 +724,7 @@ public class Messages {
         msg = msg.replace("%player%", player.toString());
         msg = msg.replace("%channel%", channel.toString());
         msg = msg.replace("%minutes%", minutes.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -734,7 +734,7 @@ public class Messages {
         String msg = resources.getString("cmdmsgMuted");
         if ( msg == null ) return "";
         msg = msg.replace("%channel%", channel.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -745,7 +745,7 @@ public class Messages {
         if ( msg == null ) return "";
         msg = msg.replace("%player%", player.toString());
         msg = msg.replace("%channel%", channel.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -755,7 +755,7 @@ public class Messages {
         String msg = resources.getString("cmdmsgUnmuted");
         if ( msg == null ) return "";
         msg = msg.replace("%channel%", channel.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -765,7 +765,7 @@ public class Messages {
         String msg = resources.getString("cmdmsgHided");
         if ( msg == null ) return "";
         msg = msg.replace("%channel%", channel.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -775,7 +775,7 @@ public class Messages {
         String msg = resources.getString("cmdmsgHidedPlayer");
         if ( msg == null ) return "";
         msg = msg.replace("%player%", player.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -785,7 +785,7 @@ public class Messages {
         String msg = resources.getString("cmdmsgUnhided");
         if ( msg == null ) return "";
         msg = msg.replace("%channel%", channel.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -795,7 +795,7 @@ public class Messages {
         String msg = resources.getString("cmdmsgUnhidedPlayer");
         if ( msg == null ) return "";
         msg = msg.replace("%channel%", channel.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -804,7 +804,7 @@ public class Messages {
     public static String cmdmsgReload() {
         String msg = resources.getString("cmdmsgReload");
         if ( msg == null ) return "";
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -814,7 +814,7 @@ public class Messages {
         String msg = resources.getString("cmdmsgCreate");
         if ( msg == null ) return "";
         msg = msg.replace("%channel%", channel.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -824,7 +824,7 @@ public class Messages {
         String msg = resources.getString("cmdmsgRemove");
         if ( msg == null ) return "";
         msg = msg.replace("%channel%", channel.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -834,7 +834,7 @@ public class Messages {
         String msg = resources.getString("cmdmsgFormat");
         if ( msg == null ) return "";
         msg = msg.replace("%format%", format.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -845,7 +845,7 @@ public class Messages {
         if ( msg == null ) return "";
         msg = msg.replace("%player%", player.toString());
         msg = msg.replace("%channel%", channel.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -856,7 +856,7 @@ public class Messages {
         if ( msg == null ) return "";
         msg = msg.replace("%player%", player.toString());
         msg = msg.replace("%channel%", channel.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -867,7 +867,7 @@ public class Messages {
         if ( msg == null ) return "";
         msg = msg.replace("%key%", key.toString());
         msg = msg.replace("%value%", value.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -877,7 +877,7 @@ public class Messages {
         String msg = resources.getString("cmdmsgDictionaryRemove");
         if ( msg == null ) return "";
         msg = msg.replace("%key%", key.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -888,7 +888,7 @@ public class Messages {
         if ( msg == null ) return "";
         msg = msg.replace("%key%", key.toString());
         msg = msg.replace("%value%", value.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -899,7 +899,7 @@ public class Messages {
         if ( msg == null ) return "";
         msg = msg.replace("%index%", index.toString());
         msg = msg.replace("%value%", value.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -909,7 +909,7 @@ public class Messages {
         String msg = resources.getString("cmdmsgTemplateRemove");
         if ( msg == null ) return "";
         msg = msg.replace("%index%", index.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -920,7 +920,7 @@ public class Messages {
         if ( msg == null ) return "";
         msg = msg.replace("%player%", player.toString());
         msg = msg.replace("%channel%", channel.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -930,7 +930,7 @@ public class Messages {
         String msg = resources.getString("cmdmsgPlayerJapanize");
         if ( msg == null ) return "";
         msg = msg.replace("%value%", value.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -941,7 +941,7 @@ public class Messages {
         if ( msg == null ) return "";
         msg = msg.replace("%player%", player.toString());
         msg = msg.replace("%value%", value.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -952,7 +952,7 @@ public class Messages {
         if ( msg == null ) return "";
         msg = msg.replace("%inviter%", inviter.toString());
         msg = msg.replace("%invited%", invited.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -962,7 +962,7 @@ public class Messages {
         String msg = resources.getString("cmdmsgReplyInviterNone");
         if ( msg == null ) return "";
         msg = msg.replace("%inviter%", inviter.toString());
-        return resources.getString("infoPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
     }
 
     /**
@@ -971,7 +971,7 @@ public class Messages {
     public static String errmsgIngame() {
         String msg = resources.getString("errmsgIngame");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -980,7 +980,7 @@ public class Messages {
     public static String errmsgCommand() {
         String msg = resources.getString("errmsgCommand");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -989,7 +989,7 @@ public class Messages {
     public static String errmsgNotExist() {
         String msg = resources.getString("errmsgNotExist");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -998,7 +998,7 @@ public class Messages {
     public static String errmsgNotExistChannelAndPlayer() {
         String msg = resources.getString("errmsgNotExistChannelAndPlayer");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1007,7 +1007,7 @@ public class Messages {
     public static String errmsgNotExistOrNotSpecified() {
         String msg = resources.getString("errmsgNotExistOrNotSpecified");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1016,7 +1016,7 @@ public class Messages {
     public static String errmsgExist() {
         String msg = resources.getString("errmsgExist");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1025,7 +1025,7 @@ public class Messages {
     public static String errmsgNomember() {
         String msg = resources.getString("errmsgNomember");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1034,7 +1034,7 @@ public class Messages {
     public static String errmsgNomemberOther() {
         String msg = resources.getString("errmsgNomemberOther");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1044,7 +1044,7 @@ public class Messages {
         String msg = resources.getString("errmsgNotfoundPlayer");
         if ( msg == null ) return "";
         msg = msg.replace("%player%", player.toString());
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1053,7 +1053,7 @@ public class Messages {
     public static String errmsgNotInvited() {
         String msg = resources.getString("errmsgNotInvited");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1062,7 +1062,7 @@ public class Messages {
     public static String errmsgNotfoundChannel() {
         String msg = resources.getString("errmsgNotfoundChannel");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1072,7 +1072,7 @@ public class Messages {
         String msg = resources.getString("errmsgInvitedAlreadyExist");
         if ( msg == null ) return "";
         msg = msg.replace("%player%", player.toString());
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1081,7 +1081,7 @@ public class Messages {
     public static String errmsgInvitedAlreadyJoin() {
         String msg = resources.getString("errmsgInvitedAlreadyJoin");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1090,7 +1090,7 @@ public class Messages {
     public static String errmsgNoJoin() {
         String msg = resources.getString("errmsgNoJoin");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1099,7 +1099,7 @@ public class Messages {
     public static String errmsgBanned() {
         String msg = resources.getString("errmsgBanned");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1108,7 +1108,7 @@ public class Messages {
     public static String errmsgMuted() {
         String msg = resources.getString("errmsgMuted");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1117,7 +1117,7 @@ public class Messages {
     public static String errmsgAlreadyBanned() {
         String msg = resources.getString("errmsgAlreadyBanned");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1126,7 +1126,7 @@ public class Messages {
     public static String errmsgAlreadyMuted() {
         String msg = resources.getString("errmsgAlreadyMuted");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1135,7 +1135,7 @@ public class Messages {
     public static String errmsgAlreadyHided() {
         String msg = resources.getString("errmsgAlreadyHided");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1144,7 +1144,7 @@ public class Messages {
     public static String errmsgAlreadyHidedPlayer() {
         String msg = resources.getString("errmsgAlreadyHidedPlayer");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1153,7 +1153,7 @@ public class Messages {
     public static String errmsgAlreadyUnhided() {
         String msg = resources.getString("errmsgAlreadyUnhided");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1162,7 +1162,7 @@ public class Messages {
     public static String errmsgAlreadyUnhidedPlayer() {
         String msg = resources.getString("errmsgAlreadyUnhidedPlayer");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1171,7 +1171,7 @@ public class Messages {
     public static String errmsgCannotJoinPersonal() {
         String msg = resources.getString("errmsgCannotJoinPersonal");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1180,7 +1180,7 @@ public class Messages {
     public static String errmsgNotModerator() {
         String msg = resources.getString("errmsgNotModerator");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1189,7 +1189,7 @@ public class Messages {
     public static String errmsgNotBanned() {
         String msg = resources.getString("errmsgNotBanned");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1198,7 +1198,7 @@ public class Messages {
     public static String errmsgNotMuted() {
         String msg = resources.getString("errmsgNotMuted");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1207,7 +1207,7 @@ public class Messages {
     public static String errmsgInvalidOptions() {
         String msg = resources.getString("errmsgInvalidOptions");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1216,7 +1216,7 @@ public class Messages {
     public static String errmsgPassword1() {
         String msg = resources.getString("errmsgPassword1");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1225,7 +1225,7 @@ public class Messages {
     public static String errmsgPassword2() {
         String msg = resources.getString("errmsgPassword2");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1234,7 +1234,7 @@ public class Messages {
     public static String errmsgPassword3() {
         String msg = resources.getString("errmsgPassword3");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1243,7 +1243,7 @@ public class Messages {
     public static String errmsgPasswordNotmatch() {
         String msg = resources.getString("errmsgPasswordNotmatch");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1253,7 +1253,7 @@ public class Messages {
         String msg = resources.getString("errmsgPermission");
         if ( msg == null ) return "";
         msg = msg.replace("%permission%", permission.toString());
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1263,7 +1263,7 @@ public class Messages {
         String msg = resources.getString("errmsgCannotLeaveGlobal");
         if ( msg == null ) return "";
         msg = msg.replace("%channel%", channel.toString());
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1273,7 +1273,7 @@ public class Messages {
         String msg = resources.getString("errmsgCannotKickGlobal");
         if ( msg == null ) return "";
         msg = msg.replace("%channel%", channel.toString());
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1283,7 +1283,7 @@ public class Messages {
         String msg = resources.getString("errmsgCannotBANGlobal");
         if ( msg == null ) return "";
         msg = msg.replace("%channel%", channel.toString());
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1293,7 +1293,7 @@ public class Messages {
         String msg = resources.getString("errmsgCannotRemoveGlobal");
         if ( msg == null ) return "";
         msg = msg.replace("%channel%", channel.toString());
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1303,7 +1303,7 @@ public class Messages {
         String msg = resources.getString("errmsgCannotModeratorGlobal");
         if ( msg == null ) return "";
         msg = msg.replace("%channel%", channel.toString());
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1313,7 +1313,7 @@ public class Messages {
         String msg = resources.getString("errmsgCannotLeaveForceJoin");
         if ( msg == null ) return "";
         msg = msg.replace("%channel%", channel.toString());
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1322,7 +1322,7 @@ public class Messages {
     public static String errmsgNotfoundPM() {
         String msg = resources.getString("errmsgNotfoundPM");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1331,7 +1331,7 @@ public class Messages {
     public static String errmsgCannotSendPMSelf() {
         String msg = resources.getString("errmsgCannotSendPMSelf");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1341,7 +1341,7 @@ public class Messages {
         String msg = resources.getString("errmsgCannotUseForChannel");
         if ( msg == null ) return "";
         msg = msg.replace("%channel%", channel.toString());
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1352,7 +1352,7 @@ public class Messages {
         if ( msg == null ) return "";
         msg = msg.replace("%channel%", channel.toString());
         msg = msg.replace("%min%", min.toString());
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1363,7 +1363,7 @@ public class Messages {
         if ( msg == null ) return "";
         msg = msg.replace("%channel%", channel.toString());
         msg = msg.replace("%max%", max.toString());
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1373,7 +1373,7 @@ public class Messages {
         String msg = resources.getString("errmsgCannotUseForGlobal");
         if ( msg == null ) return "";
         msg = msg.replace("%word%", word.toString());
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1383,7 +1383,7 @@ public class Messages {
         String msg = resources.getString("errmsgInvalidColorCode");
         if ( msg == null ) return "";
         msg = msg.replace("%value%", value.toString());
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1392,7 +1392,7 @@ public class Messages {
     public static String errmsgInvalidTemplateNumber() {
         String msg = resources.getString("errmsgInvalidTemplateNumber");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1402,7 +1402,7 @@ public class Messages {
         String msg = resources.getString("errmsgToolongDescription");
         if ( msg == null ) return "";
         msg = msg.replace("%max%", max.toString());
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1412,7 +1412,7 @@ public class Messages {
         String msg = resources.getString("errmsgToolongAlias");
         if ( msg == null ) return "";
         msg = msg.replace("%max%", max.toString());
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1422,7 +1422,7 @@ public class Messages {
         String msg = resources.getString("errmsgToolongPassword");
         if ( msg == null ) return "";
         msg = msg.replace("%max%", max.toString());
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1432,7 +1432,7 @@ public class Messages {
         String msg = resources.getString("errmsgInvalidBooleanOption");
         if ( msg == null ) return "";
         msg = msg.replace("%key%", key.toString());
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1441,7 +1441,7 @@ public class Messages {
     public static String errmsgInvalidRangeOption() {
         String msg = resources.getString("errmsgInvalidRangeOption");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1452,7 +1452,7 @@ public class Messages {
         if ( msg == null ) return "";
         msg = msg.replace("%key%", key.toString());
         msg = msg.replace("%value%", value.toString());
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1461,7 +1461,7 @@ public class Messages {
     public static String errmsgCannotOffGlobalBroadcast() {
         String msg = resources.getString("errmsgCannotOffGlobalBroadcast");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1471,7 +1471,7 @@ public class Messages {
         String msg = resources.getString("errmsgFormatConstraint");
         if ( msg == null ) return "";
         msg = msg.replace("%key%", key.toString());
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1480,7 +1480,7 @@ public class Messages {
     public static String errmsgInvalidBanExpireParameter() {
         String msg = resources.getString("errmsgInvalidBanExpireParameter");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1489,7 +1489,7 @@ public class Messages {
     public static String errmsgInvalidMuteExpireParameter() {
         String msg = resources.getString("errmsgInvalidMuteExpireParameter");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1498,7 +1498,7 @@ public class Messages {
     public static String errmsgCannotHideSelf() {
         String msg = resources.getString("errmsgCannotHideSelf");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1509,7 +1509,7 @@ public class Messages {
         if ( msg == null ) return "";
         msg = msg.replace("%aliase%", aliase.toString());
         msg = msg.replace("%channel%", channel.toString());
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1519,7 +1519,7 @@ public class Messages {
         String msg = resources.getString("errmsgNotPermission");
         if ( msg == null ) return "";
         msg = msg.replace("%permission%", permission.toString());
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**
@@ -1528,7 +1528,7 @@ public class Messages {
     public static String errmsgChannelChatDisabled() {
         String msg = resources.getString("errmsgChannelChatDisabled");
         if ( msg == null ) return "";
-        return resources.getString("errorPrefix", "") + msg;
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
     }
 
     /**

@@ -111,8 +111,8 @@ public abstract class Channel {
     /** 期限付きMuteの期限（key=プレイヤー名、value=期日（ミリ秒）） */
     private Map<ChannelMember, Long> muteExpires;
 
-    /** 1:1チャットの相手名 */
-    private String privateMessageTo;
+    /** 1:1チャットの相手 */
+    private ChannelMember privateMessageTo;
 
     /** カラーコードの使用可否 */
     private boolean allowcc;
@@ -145,7 +145,7 @@ public abstract class Channel {
         this.chatRange = 0;
         this.banExpires = new HashMap<ChannelMember, Long>();
         this.muteExpires = new HashMap<ChannelMember, Long>();
-        this.privateMessageTo = "";
+        this.privateMessageTo = null;
         this.allowcc = true;
 
         LunaChatConfig config = LunaChat.getConfig();
@@ -156,7 +156,7 @@ public abstract class Channel {
         }
         this.japanizeType = config.getJapanizeType();
 
-        logger = new LunaChatLogger(name.replace(">", "-"));
+        logger = new LunaChatLogger(name.replace(">", "-").replace("*", "_"));
     }
 
     /**
@@ -853,9 +853,9 @@ public abstract class Channel {
 
     /**
      * 1:1チャットのときに、会話の相手先を取得する
-     * @return 会話の相手のプレイヤー名
+     * @return 会話の相手のプレイヤー
      */
-    public String getPrivateMessageTo() {
+    public ChannelMember getPrivateMessageTo() {
         return privateMessageTo;
     }
 
@@ -863,8 +863,8 @@ public abstract class Channel {
      * 1:1チャットのときに、会話の相手先を設定する
      * @param name 会話の相手のプレイヤー名
      */
-    public void setPrivateMessageTo(String name) {
-        this.privateMessageTo = name;
+    public void setPrivateMessageTo(ChannelMember to) {
+        this.privateMessageTo = to;
     }
 
     /**

@@ -17,7 +17,6 @@ import java.util.regex.Pattern;
 import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatAPI;
 import com.github.ucchyocean.lc3.LunaChatConfig;
-import com.github.ucchyocean.lc3.LunaChatLogger;
 import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.NGWordAction;
 import com.github.ucchyocean.lc3.Utility;
@@ -40,9 +39,6 @@ public class BungeeChannel extends Channel {
     private SimpleDateFormat dateFormat;
     private SimpleDateFormat timeFormat;
 
-    /** ロガー */
-    private LunaChatLogger logger;
-
     /**
      * コンストラクタ
      * @param name チャンネル名
@@ -51,7 +47,6 @@ public class BungeeChannel extends Channel {
 
         super(name);
 
-        logger = new LunaChatLogger(name.replace(">", "-"));
         dateFormat = new SimpleDateFormat("yyyy/MM/dd");
         timeFormat = new SimpleDateFormat("HH:mm:ss");
     }
@@ -124,6 +119,7 @@ public class BungeeChannel extends Channel {
 
         // 2byteコードを含むか、半角カタカナのみなら、Japanize変換は行わない
         String kanaTemp = Utility.stripColorCode(maskedMessage);
+
         if ( !skipJapanize &&
                 ( kanaTemp.getBytes().length > kanaTemp.length() ||
                         kanaTemp.matches("[ \\uFF61-\\uFF9F]+") ) ) {
@@ -417,7 +413,18 @@ public class BungeeChannel extends Channel {
         msg = msg.replace("%ch", getName());
         //msg = msg.replace("%msg", message);
         msg = msg.replace("%color", getColorCode());
-        msg = msg.replace("%to", getPrivateMessageTo());
+        if ( getPrivateMessageTo() != null ) {
+            msg = msg.replace("%to", getPrivateMessageTo().getDisplayName());
+            if ( getPrivateMessageTo() instanceof ChannelMemberProxiedPlayer ) {
+                ChannelMemberProxiedPlayer cm = (ChannelMemberProxiedPlayer)getPrivateMessageTo();
+                msg = msg.replace("%recieverserver", cm.getServer().getInfo().getName());
+            } else {
+                msg = msg.replace("%recieverserver", "");
+            }
+        } else {
+            msg = msg.replace("%to", "");
+            msg = msg.replace("%recieverserver", "");
+        }
 
         if ( msg.contains("%date") ) {
             msg = msg.replace("%date", dateFormat.format(new Date()));

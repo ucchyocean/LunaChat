@@ -122,6 +122,9 @@ public abstract class ChannelMember implements Comparable<ChannelMember> {
      * @return ChannelMember
      */
     public static ChannelMember getChannelMember(Object obj) {
+
+        if ( obj != null && obj instanceof ChannelMember ) return (ChannelMember)obj;
+
         if ( LunaChat.getMode() == LunaChatMode.BUKKIT ) {
             return ChannelMemberBukkit.getChannelMemberBukkit(obj);
         } else if ( LunaChat.getMode() == LunaChatMode.BUNGEE ) {

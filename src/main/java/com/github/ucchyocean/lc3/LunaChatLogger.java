@@ -7,10 +7,11 @@ package com.github.ucchyocean.lc3;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -65,23 +66,14 @@ public class LunaChatLogger {
                 String msg = Utility.stripColorCode(message);
                 if ( msg == null ) msg = "";
                 msg = msg.replace(",", "，");
-                FileWriter writer = null;
-                try {
-                    writer = new FileWriter(file, true);
-                    String str = lformat.format(new Date()) +
-                            "," + msg + "," + player;
+
+                try ( OutputStreamWriter writer = new OutputStreamWriter(
+                        new FileOutputStream(file, true), "UTF-8"); ) {
+
+                    String str = lformat.format(new Date()) + "," + msg + "," + player;
                     writer.write(str + "\r\n");
-                    writer.flush();
-                } catch (Exception e) {
+                } catch (IOException e) {
                     e.printStackTrace();
-                } finally {
-                    if ( writer != null ) {
-                        try {
-                            writer.close();
-                        } catch (Exception e) {
-                            // do nothing.
-                        }
-                    }
                 }
             }
         }).start();
@@ -147,11 +139,11 @@ public class LunaChatLogger {
     private ArrayList<String> readAllLines(File file) {
 
         ArrayList<String> data = new ArrayList<String>();
+        if ( !file.exists() ) return data;
 
-        BufferedReader reader = null;
+        try ( BufferedReader reader = new BufferedReader(
+                new InputStreamReader(new FileInputStream(file), "UTF-8")) ) {
 
-        try {
-            reader = new BufferedReader(new FileReader(file));
             String line;
             while ( (line = reader.readLine()) != null ) {
                 line = line.trim();
@@ -159,18 +151,8 @@ public class LunaChatLogger {
                     data.add(line);
                 }
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if ( reader != null ) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    // do nothing.
-                }
-            }
         }
 
         return data;

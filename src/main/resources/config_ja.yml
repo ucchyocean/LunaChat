@@ -221,12 +221,13 @@ noneJapanizeMarker: '#'
 # /tell や /msg や /r コマンドでプライベートメッセージを送信するときに、
 # 適用されるフォーマット設定。
 # フォーマット設定には、下記のキーワードが使用できます。
-# %sender         : 発言者表示名
+# %username       : 発言者表示名
+# %player         : 発言者ID
 # %senderserver   : 発言者の接続サーバー名
 # %reciever       : 受信者表示名
 # %recieverserver : 受信者の接続サーバー名
 # %msg            : 発言内容（Japanize変換された場合は、Japanize結果を含みます。）
-defaultFormatForPrivateMessage: '&7[%sender@%senderserver > %reciever@%recieverserver] %msg'
+defaultFormatForPrivateMessage: '&7[%username@%server > %to@%recieverserver] %msg'
 
 
 # -------------------- 広域チャット設定 --------------------
@@ -239,12 +240,13 @@ broadcastChat: true
 # broadcastChat が true のときに、
 # 他のサーバーで表示されるチャットフォーマットの設定。
 # フォーマット設定には、下記のキーワードが使用できます。
-# %sender         : 発言者表示名
+# %username       : 発言者表示名
+# %player         : 発言者ID
 # %senderserver   : 発言者の接続サーバー名
 # %date           : 発言した日付（BungeeCordのProxyサーバーのシステム時刻が使用されます）
 # %time           : 発言した時刻（BungeeCordのProxyサーバーのシステム時刻が使用されます）
 # %msg            : 発言内容（Japanize変換された場合は、Japanize結果を含みます。）
-broadcastChatFormat: '%date %time &d<%sender@%senderserver> &f%msg'
+broadcastChatFormat: '%date %time &d<%username@%senderserver> &f%msg'
 
 # broadcastChat が true のときに、
 # 発言者のサーバーについても、Japanize変換を行うかどうか。

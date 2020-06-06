@@ -5,9 +5,9 @@
  */
 package com.github.ucchyocean.lc3.command;
 
+import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatAPI;
 import com.github.ucchyocean.lc3.Messages;
-import com.github.ucchyocean.lc3.bukkit.LunaChatBukkit;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 
 /**
@@ -40,7 +40,7 @@ public class LunaChatJapanizeCommand {
 
             // Japanize設定をon/offにする
             boolean value = args[0].equalsIgnoreCase("on");
-            LunaChatAPI api = LunaChatBukkit.getInstance().getLunaChatAPI();
+            LunaChatAPI api = LunaChat.getAPI();
             api.setPlayersJapanize(sender.getName(), value);
 
             sender.sendMessage(Messages.cmdmsgPlayerJapanize(args[0]));
@@ -65,7 +65,7 @@ public class LunaChatJapanizeCommand {
 
             // Japanize設定をon/offにする
             boolean value = args[1].equalsIgnoreCase("on");
-            LunaChatAPI api = LunaChatBukkit.getInstance().getLunaChatAPI();
+            LunaChatAPI api = LunaChat.getAPI();
             api.setPlayersJapanize(target.getName(), value);
 
             target.sendMessage(Messages.cmdmsgPlayerJapanize(args[1]));

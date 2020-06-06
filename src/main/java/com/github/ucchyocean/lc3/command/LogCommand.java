@@ -7,9 +7,9 @@ package com.github.ucchyocean.lc3.command;
 
 import java.util.ArrayList;
 
+import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatLogger;
 import com.github.ucchyocean.lc3.Messages;
-import com.github.ucchyocean.lc3.bukkit.LunaChatBukkit;
 import com.github.ucchyocean.lc3.channel.Channel;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 
@@ -123,10 +123,10 @@ public class LogCommand extends LunaChatSubCommand {
 
             // グローバルチャンネル設定が無くて、指定チャンネルがマーカーの場合、
             // 通常チャットのログを取得する
-            LunaChatLogger logger = LunaChatBukkit.getInstance().getNormalChatLogger();
+            LunaChatLogger logger = LunaChat.getNormalChatLogger();
             logs = logger.getLog(argsPlayer, argsFilter, argsDate, reverse);
 
-            cname = "グローバルチャット";
+            cname = "GlobalChat";
 
         } else {
 

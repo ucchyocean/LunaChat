@@ -58,9 +58,9 @@ public class MessageParser {
                         "        msg = msg.replace(\"%%%s%%\", %s.toString());", keyword, keyword));
             }
             if ( key.startsWith("errmsg") ) {
-                System.out.println("        return resources.getString(\"errorPrefix\", \"\") + msg;");
+                System.out.println("        return Utility.replaceColorCode(resources.getString(\"errorPrefix\", \"\") + msg);");
             } else if ( key.startsWith("cmdmsg") ) {
-                System.out.println("        return resources.getString(\"infoPrefix\", \"\") + msg;");
+                System.out.println("        return Utility.replaceColorCode(resources.getString(\"infoPrefix\", \"\") + msg);");
             } else {
                 System.out.println("        return Utility.replaceColorCode(msg);");
             }
