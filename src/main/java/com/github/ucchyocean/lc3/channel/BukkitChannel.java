@@ -5,6 +5,7 @@
  */
 package com.github.ucchyocean.lc3.channel;
 
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -123,7 +124,7 @@ public class BukkitChannel extends Channel {
         // 2byteコードを含むか、半角カタカナのみなら、Japanize変換は行わない
         String kanaTemp = Utility.stripColorCode(maskedMessage);
         if ( !skipJapanize &&
-                ( kanaTemp.getBytes().length > kanaTemp.length() ||
+                ( kanaTemp.getBytes(StandardCharsets.UTF_8).length > kanaTemp.length() ||
                         kanaTemp.matches("[ \\uFF61-\\uFF9F]+") ) ) {
             skipJapanize = true;
         }

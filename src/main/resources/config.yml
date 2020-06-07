@@ -163,7 +163,7 @@ enableNormalChatMessageFormat: true
 # %date: date
 # %time: time
 # %msg: Content of statement (When converted to Japanize, the result of Japanize is included.)
-normalChatMessageFormat: '&f %prefix%username%suffix&a:&f %msg'
+normalChatMessageFormat: '&f%prefix%username%suffix&a:&f %msg'
 #normalChatMessageFormat: '&f%username@%server&a:&f %msg'
 
 # Color code (&a, &b, etc.) in normal chat (non-channel chat)
