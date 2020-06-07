@@ -285,6 +285,12 @@ public class BungeeEventListener implements Listener {
 
         // 2byteコードを含む、または、半角カタカナのみなら、Japanize変換は行わない
         String kanaTemp = Utility.stripColorCode(message);
+
+        // TODO でばっぐコード
+//        System.out.println("==LCDebug: file.encoding=" + System.getProperty("file.encoding"));
+//        System.out.println("==LCDebug: kanaBytes=" + kanaTemp.getBytes(StandardCharsets.UTF_8).length +
+//                ", kanaLen=" + kanaTemp.length());
+
         if ( !skipJapanize &&
                 ( kanaTemp.getBytes(StandardCharsets.UTF_8).length > kanaTemp.length() ||
                         kanaTemp.matches("[ \\uFF61-\\uFF9F]+") ) ) {
