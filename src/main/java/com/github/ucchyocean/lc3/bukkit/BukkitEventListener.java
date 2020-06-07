@@ -488,6 +488,8 @@ public class BukkitEventListener implements Listener {
             format = format.replace("%world", worldname);
         }
 
+        format = format.replace("%server", "");
+
         return Utility.replaceColorCode(format);
     }
 

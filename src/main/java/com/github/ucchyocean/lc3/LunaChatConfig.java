@@ -142,15 +142,6 @@ public class LunaChatConfig {
 
     // === 以下、BungeeCord用設定 ===
 
-    /** 通常チャットを全サーバーにブロードキャストするかどうか */
-    private boolean broadcastChat;
-
-    /** 通常チャットを全サーバーにブロードキャストする場合のフォーマット */
-    private String broadcastChatFormat;
-
-    /** 通常チャットを全サーバーにブロードキャストする場合に、発言者サーバーのチャット内容もJapanize化するかどうか */
-    private boolean broadcastChatLocalJapanize;
-
     /**
      * コンストラクタ
      * @param dataFolder コンフィグ格納フォルダ
@@ -258,13 +249,6 @@ public class LunaChatConfig {
         japanizeIgnorePlayerName = config.getBoolean("japanizeIgnorePlayerName", true);
         noneJapanizeMarker = config.getString("noneJapanizeMarker", "#");
         japanizeWait = config.getInt("japanizeWait", 1);
-
-        broadcastChat = config.getBoolean("broadcastChat", true);
-        broadcastChatFormat =
-                config.getString("broadcastChatFormat",
-                        "%date %time &d<%sender@%senderserver> &f%msg");
-        broadcastChatLocalJapanize =
-                config.getBoolean("broadcastChatLocalJapanize", true);
 
         // globalチャンネルが、使用可能なチャンネル名かどうかを調べる
         if ( globalChannel != null && !globalChannel.equals("") &&
@@ -575,30 +559,6 @@ public class LunaChatConfig {
      */
     public boolean isEnableNormalChatColorCode() {
         return enableNormalChatColorCode;
-    }
-
-    /**
-     * 通常チャットを全サーバーにブロードキャストするかどうか
-     * @return broadcastChatを返す
-     */
-    public boolean isBroadcastChat() {
-        return broadcastChat;
-    }
-
-    /**
-     * 通常チャットを全サーバーにブロードキャストする場合のフォーマット
-     * @return broadcastChatFormatを返す
-     */
-    public String getBroadcastChatFormat() {
-        return broadcastChatFormat;
-    }
-
-    /**
-     * 通常チャットを全サーバーにブロードキャストする場合に、発言者サーバーのチャット内容もJapanize化するかどうか
-     * @return broadcastChatLocalJapanizeを返す
-     */
-    public boolean isBroadcastChatLocalJapanize() {
-        return broadcastChatLocalJapanize;
     }
 
     /**

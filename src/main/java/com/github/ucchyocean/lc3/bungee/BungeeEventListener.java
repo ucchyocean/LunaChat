@@ -10,11 +10,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.bukkit.ChatColor;
-
+import com.github.ucchyocean.lc3.ChatColor;
 import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatAPI;
 import com.github.ucchyocean.lc3.LunaChatConfig;
@@ -23,6 +23,7 @@ import com.github.ucchyocean.lc3.Utility;
 import com.github.ucchyocean.lc3.channel.Channel;
 import com.github.ucchyocean.lc3.japanize.Japanizer;
 import com.github.ucchyocean.lc3.member.ChannelMember;
+import com.github.ucchyocean.lc3.member.ChannelMemberProxiedPlayer;
 
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -267,7 +268,6 @@ public class BungeeEventListener implements Listener {
 
         // 発言者と発言サーバーと発言内容の取得
         final ProxiedPlayer sender = (ProxiedPlayer)event.getSender();
-        String senderServer = sender.getServer().getInfo().getName();
         String message = event.getMessage();
         LunaChatConfig config = LunaChat.getConfig();
 
@@ -310,65 +310,70 @@ public class BungeeEventListener implements Listener {
             }
         }
 
-        // フォーマットの置き換え処理
-        String result = config.getBroadcastChatFormat();
-        result = result.replace("%senderserver", senderServer);
-        result = result.replace("%player", sender.getName());
-        result = result.replace("%username", sender.getDisplayName());
-        if ( result.contains("%date") ) {
-            result = result.replace("%date", dateFormat.format(new Date()));
-        }
-        if ( result.contains("%time") ) {
-            result = result.replace("%time", timeFormat.format(new Date()));
-        }
-        result = result.replace("%msg", message);
-        result = Utility.replaceColorCode(result);
+        String result;
+        if ( config.isEnableNormalChatMessageFormat() ) {
+            // チャットフォーマット装飾を適用する場合
+            String format = config.getNormalChatMessageFormat();
+            result = replaceNormalChatFormatKeywords(format, sender, message);
 
-        // TODO イベントパススルーモードを追加する
-        // イベントをキャンセルする
-        event.setCancelled(true);
+            // イベントをキャンセルする
+            event.setCancelled(true);
 
-        // //発言したプレイヤーがいるサーバー"以外"のサーバーに、
-        // hideされているプレイヤーを除くすべてのプレイヤーに、
-        // 発言内容を送信する。
-        List<ChannelMember> hidelist = api.getHidelist(ChannelMember.getChannelMember(sender));
-        for ( String server : parent.getProxy().getServers().keySet() ) {
+            // hideされているプレイヤーを除くすべてのプレイヤーに、
+            // 発言内容を送信する。
+            List<ChannelMember> hidelist = api.getHidelist(ChannelMember.getChannelMember(sender));
+            for ( String server : parent.getProxy().getServers().keySet() ) {
 
-//            if ( server.equals(senderServer) ) {
-//                continue;
-//            }
+                ServerInfo info = parent.getProxy().getServerInfo(server);
+                for ( ProxiedPlayer player : info.getPlayers() ) {
+                    if ( !containsHideList(player, hidelist) ) {
+                        sendMessage(player, result);
+                    }
+                }
+            }
 
-            ServerInfo info = parent.getProxy().getServerInfo(server);
-            for ( ProxiedPlayer player : info.getPlayers() ) {
-                if ( !containsHideList(player, hidelist) ) {
+        } else {
+            // チャットフォーマットを適用しない場合
+            // NOTE: ChatEvent経由で送信する都合上、hideは適用しない（できない）仕様とする。
+
+            // NOTE: 改行がサポートされないので、改行を含む場合は、
+            // \nで分割して前半をセットし、後半は150ミリ秒後に送信する。
+            if ( !message.contains("\n") ) {
+                event.setMessage(Utility.stripColorCode(message));
+            } else {
+                int index = message.indexOf("\n");
+                String pre = message.substring(0, index);
+                final String post = Utility.replaceColorCode(
+                        message.substring(index + "\n".length()));
+                event.setMessage(Utility.stripColorCode(pre));
+
+                parent.getProxy().getScheduler().schedule(parent, new Runnable() {
+                    @Override
+                    public void run() {
+                        for ( ProxiedPlayer p : sender.getServer().getInfo().getPlayers() ) {
+                            sendMessage(p, post);
+                        }
+                    }
+                }, 150, TimeUnit.MILLISECONDS);
+            }
+
+            result = Utility.replaceColorCode(message);
+
+            // 発言したプレイヤーがいるサーバー"以外"のサーバーに、
+            // 発言内容を送信する。
+            for ( String server : parent.getProxy().getServers().keySet() ) {
+
+                String senderServer = sender.getServer().getInfo().getName();
+                if ( server.equals(senderServer) ) {
+                    continue;
+                }
+
+                ServerInfo info = parent.getProxy().getServerInfo(server);
+                for ( ProxiedPlayer player : info.getPlayers() ) {
                     sendMessage(player, result);
                 }
             }
         }
-
-        // ローカルも置き換える処理なら、置換えを行う
-//        if ( config.isBroadcastChatLocalJapanize() ) {
-//
-//            // NOTE: 改行がサポートされないので、改行を含む場合は、
-//            // \nで分割して前半をセットし、後半は150ミリ秒後に送信する。
-//            if ( !message.contains("\n") ) {
-//                event.setMessage(Utility.stripColorCode(message));
-//            } else {
-//                int index = message.indexOf("\n");
-//                String pre = message.substring(0, index);
-//                final String post = Utility.replaceColorCode(
-//                        message.substring(index + "\n".length()));
-//                event.setMessage(Utility.stripColorCode(pre));
-//                parent.getProxy().getScheduler().schedule(parent, new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        for ( ProxiedPlayer p : sender.getServer().getInfo().getPlayers() ) {
-//                            sendMessage(p, post);
-//                        }
-//                    }
-//                }, 150, TimeUnit.MILLISECONDS);
-//            }
-//        }
 
         // コンソールに表示設定なら、コンソールに表示する
         if ( config.isDisplayChatOnConsole() ) {
@@ -377,6 +382,47 @@ public class BungeeEventListener implements Listener {
 
         // ログに記録する
         LunaChat.getNormalChatLogger().log(Utility.stripColorCode(result), sender.getName());
+    }
+
+    /**
+     * 通常チャットのフォーマット設定のキーワードを置き換えして返す
+     * @param org フォーマット設定
+     * @param player 発言プレイヤー
+     * @param msg 発言内容
+     * @return キーワード置き換え済みの文字列
+     */
+    private String replaceNormalChatFormatKeywords(String org, ProxiedPlayer player, String msg) {
+
+        String format = org;
+        format = format.replace("%username", player.getDisplayName());
+        format = format.replace("%msg", msg);
+        format = format.replace("%player", player.getName());
+
+        if ( format.contains("%date") ) {
+            format = format.replace("%date", dateFormat.format(new Date()));
+        }
+        if ( format.contains("%time") ) {
+            format = format.replace("%time", timeFormat.format(new Date()));
+        }
+
+        if ( format.contains("%prefix") || format.contains("%suffix") ) {
+            // TODO 未実装
+            format = format.replace("%prefix", "");
+            format = format.replace("%suffix", "");
+        }
+
+        if ( format.contains("%world") ) {
+            format = format.replace("%world", "");
+        }
+
+        if ( player instanceof ChannelMemberProxiedPlayer ) {
+            ChannelMemberProxiedPlayer p = (ChannelMemberProxiedPlayer)player;
+            format = format.replace("%server", p.getServer().getInfo().getName());
+        } else {
+            format = format.replace("%server", "");
+        }
+
+        return Utility.replaceColorCode(format);
     }
 
     /**

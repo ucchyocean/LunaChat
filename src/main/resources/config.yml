@@ -4,117 +4,203 @@
 # @copyright  Copyright ucchy 2020
 
 
-# -------------------- General Settings --------------------
+# -------------------- General settings --------------------
 
-# Message locale.
+#Language setting
 lang: en
 
-# Enable channel chat feature.
+# Whether to enable channel chat function
 enableChannelChat: true
 
-# Player chat event listener priority.
-# LOWEST, LOW, NORMAL, HIGH(default), HIGHEST
+# You can set the priority of event processing.
+# Use this when it doesn't work well in combination with other plugins.
+# You can specify one of LOWEST, LOW, NORMAL, HIGH, HIGHEST.
+# Leave the default HIGH if you're not sure.
 playerChatEventListenerPriority: 'HIGH'
 
 
-# -------------------- Channel Chat Settings --------------------
+# -------------------- Channel chat settings --------------------
 
-# Whether to treat the remarks of player who are not in channel chat as global.
+# Whether to treat the remarks of people who are not in channel chat as global
 noJoinAsGlobal: true
 
-# Whether to log the messages of channel chat.
+# Whether to leave the contents of channel chat remarks in the log
 loggingChat: true
 
-# Whether to show the messages of channel chat on the server console.
+# Whether to show the contents of channel chat on the server console
 displayChatOnConsole: true
 
 # Global marker.
-# If the global marker is in the head of a chat message, it temporarily becomes a global chat.
+# If this is in the head of a statement, it temporarily becomes a global statement.
 globalMarker: '!'
 
-# Whether to delete the channel when all members leave.
+# Whether to delete the channel when all members leave
 zeroMemberRemove: false
 
-# Whether to show participating channels when logging in.
+# Whether to show participating channels when logging in
 showListOnJoin: false
 
-# Whether to create a new channel and enter the room when a channel that does not exist is specified with the "/ch join" command
+# When someone specifies a channel that does not exist with the "/ch join" command,
+# whether to create a new channel and enter
 createChannelOnJoinCommand: false
 
 # Global channel to use as default instead of regular chat.
+# If you use regular chat without creating a global channel,
+# specify the empty string ''.
 globalChannel: ''
 
+# A channel(s) that users who join the server must join.
+# Can be specified separately from the global channel.
+# Multiple channels can be set. Example) forceJoinChannels: ['L','M','N']
 forceJoinChannels: []
 
-formatConstraint: ['%username', '%msg']
+# A keyword that must be included when executing the format command.
+formatConstraint: ['%username','%msg']
 
+# The format settings that are set by default when you create a channel.
+# The following keywords can be used for formatting.
+# %ch: Channel name
+# %color: Channel color
+# %username: Speaker display name
+# %player: Speaker ID
+# %world: world name
+# %prefix: prefix (replaced if Vault and Prefix/Suffix plugin are installed)
+# %suffix: suffix (replaced if Vault and Prefix/Suffix plugin are installed)
+# %date: date
+# %time: time
+# %msg: Content of statement
 defaultFormat: '&f[%color%ch&f]%prefix%username%suffix&a:&f %msg'
 
+# Setting to display the content of all channels on the OP screen.
 opListenAllChannel: false
 
+# The minimum string length that the channel name must satisfy when creating a new channel.
+# If the specified channel name is less than this number of characters, an error occurs and the channel cannot be created.
 minChannelNameLength: 4
 
+# Maximum string length that the channel name must satisfy when creating a new channel.
+# If the specified channel name exceeds this number of characters, an error occurs and the channel cannot be created.
 maxChannelNameLength: 20
 
+# Whether to enable the quick channel chat feature.
+# You can use Quick Channel Chat by saying "(Channel Name or Alias) + (Dedicated Symbol) + (Message)".
+# For example, if you set the alias m to the main channel, you do not have to speak to the main channel
+# m:Hello!
+# You can say to the main channel by saying.
 enableQuickChannelChat: true
 
+# Symbol used for quick channel chat feature.
 quickChannelChatSeparator: ':'
 
 
-# -------------------- Private Message Settings --------------------
+# -------------------- Private message settings --------------------
 
+# When sending a private message with the # /tell, /msg or /r command, applied formatting.
+# The following keywords can be used for formatting.
+# %ch: Channel name (same as "%player>%to")
+# %username: Speaker display name
+# %player: Speaker ID
+# %server: Speaker's connection server name (valid when installed on BungeeCord side.)
+# %to: ID of the person (recipient) who speaks
+# %recieverserver: Recipient's connection server name (valid when installed on BungeeCord side)
+# %world: Name of the world you said (Valid when it is installed on the spigot side. When MultiVerse is installed, the display name of the world is acquired and used.)
+# %prefix: prefix (replaced if Vault and Prefix/Suffix plugin are installed)
+# %suffix: suffix (replaced if Vault and Prefix/Suffix plugin are installed)
+# %date: date
+# %time: time
+# %msg: Content of statement (When converted to Japanize, the result of Japanize is included.)
 defaultFormatForPrivateMessage: '&7[%player -> %to]&f %msg'
+#defaultFormatForPrivateMessage: '&7[%player@%server >%to@%recieverserver] %msg'
 
 
-# -------------------- Dynmap Cooperation settings --------------------
+# -------------------- dynmap linkage setting --------------------
 
+# Whether to send the contents of the broadcast channel to dynmap.
+# This setting is ignored (handled as false) if dynmap is not loaded.
 sendBroadcastChannelChatToDynmap: true
 
+# Whether to reflect the channel format when sending to dynmap.
+# If set to true, a message reflecting the channel format will be displayed on the dynmap.
+# If set to false, only messages will be displayed on dynmap.
+# Reference: https://github.com/ucchyocean/LunaChat/issues/68
 sendFormattedMessageToDynmap: false
 
+# A channel that displays the content of the speech made from the dynmap Web UI.
+# If dynmapChannel is not specified and globalChannel is specified,
+# If dynmapChannel is not specified and globalChannel is not specified, the chat is usually done.
 dynmapChannel: ''
 
 
-# -------------------- NG Words Settings --------------------
+# -------------------- NG word setting --------------------
 
+# NG word setting. You can specify a regular expression.
+#The NG word part is masked by the player who speaks the word set here.
 ngword: []
 
+# NG Word operation setting when speaking. You can set any of four: mask, mute, kick, ban.
+# mask: mask NG words
+# mute: Mute the speaking player from the channel after masking the NG word
+# kick: After masking the NG word, kick the speaking player from the channel
+# ban: After masking the NG word, ban the player who said it from the channel
+# For regular chat (non-channel chat),
+# Even if you set # kick or ban, only the mask is executed.
 ngwordAction: mask
 
 
+# -------------------- Chat decoration settings --------------------
 
-# -------------------- Chat Format Settings --------------------
-
+# Whether to decorate normal chat (non-channel chat) from LunaChat.
 enableNormalChatMessageFormat: true
 
-normalChatMessageFormat: '&f%prefix%username%suffix&a:&f %msg'
+# Chat decoration formatting.
+# The following keywords can be used for formatting.
+# %username: Speaker display name
+# %player: Speaker ID
+# %world: Name of the world you said (Valid when it is installed on the spigot side. When MultiVerse is installed, the display name of the world is acquired and used.)
+# %server: Speaker's connection server name (valid when installed on BungeeCord side.)
+# %prefix: prefix (replaced if Vault and Prefix/Suffix plugins are installed)
+# %suffix: suffix (replaced if Vault and Prefix/Suffix plugins are installed)
+# %date: date
+# %time: time
+# %msg: Content of statement (When converted to Japanize, the result of Japanize is included.)
+normalChatMessageFormat: '&f %prefix%username%suffix&a:&f %msg'
+#normalChatMessageFormat: '&f%username@%server&a:&f %msg'
 
+# Color code (&a, &b, etc.) in normal chat (non-channel chat)
+# Whether to enable. If set to false, color codes will not be converted.
 enableNormalChatColorCode: true
 
 
 
-# -------------------- Japanize Settings --------------------
+# -------------------- Japanize conversion settings --------------------
 
+# Settings for converting Roman characters to Kana or Kanji.
+# You can set any one of none/kana/GoogleIME.
+# none: No conversion.
+# kana: Kana conversion only.
+# GoogleIME: After converting kana, convert kanji using GoogleIME.
 japanizeType: none
 
+# When converting kana or kanji,
+# Display the conversion result in a single line with the original statement content, or
+# Set whether to display only the conversion result on the second line.
 japanizeDisplayLine: 1
 
+# Set the display format when japanizeDisplayLine is 1.
+# The following keywords can be used for formatting.
+# %msg: Original content
+# %japanize: Japanize Within the converted statement
 japanizeLine1Format: '%msg &6(%japanize)'
 
+# Sets the display format for the second line when japanizeDisplayLine is 2.
+# The following keywords can be used for formatting.
+# %msg: Original content
+# %japanize: Japanize Converted remark contents
 japanizeLine2Format: '&6[JP] %japanize'
 
+# Set whether to exclude the player name included in the statement from Japanize conversion.
 japanizeIgnorePlayerName: true
 
+# Non-Japanese marker.
+# If this is at the beginning of your remark, do not temporarily perform Japanize conversion.
 noneJapanizeMarker: '#'
-
-
-# -------------------- BungeeCord Settings --------------------
-
-defaultFormatForPrivateMessage: '&7[%username@%server > %to@%recieverserver] %msg'
-
-broadcastChat: true
-
-broadcastChatFormat: '%date %time &d<%username@%senderserver> &f%msg'
-
-broadcastChatLocalJapanize: true
-

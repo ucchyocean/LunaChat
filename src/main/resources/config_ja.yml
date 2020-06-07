@@ -102,14 +102,17 @@ quickChannelChatSeparator: ':'
 # %ch       : チャンネル名（「%player>%to」と同一です。）
 # %username : 発言者表示名
 # %player   : 発言者ID
+# %server   : 発言者の接続サーバー名（BungeeCord側に導入したときに有効です。）
 # %to       : 発言の相手（受信者）のID
-# %world    : 発言したワールド名
+# %recieverserver : 受信者の接続サーバー名（BungeeCord側に導入したときに有効です。）
+# %world    : 発言したワールド名（spigot側に導入したときに有効です。MultiVerseが導入されている場合は、ワールドの表示名を取得して使用します。）
 # %prefix   : プレフィックス（VaultとPermissionsExが導入されている場合に置き換えられます）
 # %suffix   : サフィックス（VaultとPermissionsExが導入されている場合に置き換えられます）
 # %date     : 日付
 # %time     : 時刻
 # %msg      : 発言内容（Japanize変換された場合は、Japanize結果を含みます。）
 defaultFormatForPrivateMessage: '&7[%player -> %to]&f %msg'
+#defaultFormatForPrivateMessage: '&7[%player@%server > %to@%recieverserver] %msg'
 
 
 # -------------------- dynmap連携設定 --------------------
@@ -151,23 +154,22 @@ ngwordAction: mask
 
 # -------------------- チャット装飾設定 --------------------
 
-# チャンネルチャット機能を利用しないユーザーのための設定です。
-
 # 通常チャット（非チャンネルチャット）の装飾を、LunaChatから行うかどうか。
-# Vault がロードされていない場合は、この設定は無視される（false扱い）。
 enableNormalChatMessageFormat: true
 
 # チャット装飾のフォーマット設定。
 # フォーマット設定には、下記のキーワードが使用できます。
 # %username : 発言者表示名
 # %player   : 発言者ID
-# %world    : 発言したワールド名
-# %prefix   : プレフィックス（VaultとPermissionsExが導入されている場合に置き換えられます）
-# %suffix   : サフィックス（VaultとPermissionsExが導入されている場合に置き換えられます）
+# %world    : 発言したワールド名（spigot側に導入したときに有効です。MultiVerseが導入されている場合は、ワールドの表示名を取得して使用します。）
+# %server   : 発言者の接続サーバー名（BungeeCord側に導入したときに有効です。）
+# %prefix   : プレフィックス（VaultとPrefix/Suffixプラグインが導入されている場合に置き換えられます）
+# %suffix   : サフィックス（VaultとPrefix/Suffixプラグインが導入されている場合に置き換えられます）
 # %date     : 日付
 # %time     : 時刻
 # %msg      : 発言内容（Japanize変換された場合は、Japanize結果を含みます。）
 normalChatMessageFormat: '&f%prefix%username%suffix&a:&f %msg'
+#normalChatMessageFormat: '&f%username@%server&a:&f %msg'
 
 # 通常チャット（非チャンネルチャット）で、カラーコード（&aや&bなど）を
 # 使用可能にするかどうか。falseに設定すると、カラーコードは変換されません。
@@ -215,42 +217,3 @@ noneJapanizeMarker: '#'
 
 
 # -------------------- BungeeCord用設定 --------------------
-
-# -------------------- tellコマンド設定 --------------------
-
-# /tell や /msg や /r コマンドでプライベートメッセージを送信するときに、
-# 適用されるフォーマット設定。
-# フォーマット設定には、下記のキーワードが使用できます。
-# %username       : 発言者表示名
-# %player         : 発言者ID
-# %senderserver   : 発言者の接続サーバー名
-# %reciever       : 受信者表示名
-# %recieverserver : 受信者の接続サーバー名
-# %msg            : 発言内容（Japanize変換された場合は、Japanize結果を含みます。）
-defaultFormatForPrivateMessage: '&7[%username@%server > %to@%recieverserver] %msg'
-
-
-# -------------------- 広域チャット設定 --------------------
-
-# 通常のチャット発言を、他のサーバーにも送信するかどうか。
-# 注意：LunaChatなどで、サーバーローカルにチャンネルチャットを設定している場合、
-#       チャンネルチャットへの発言内容も、全て他のサーバーに送信されてしまいます。
-broadcastChat: true
-
-# broadcastChat が true のときに、
-# 他のサーバーで表示されるチャットフォーマットの設定。
-# フォーマット設定には、下記のキーワードが使用できます。
-# %username       : 発言者表示名
-# %player         : 発言者ID
-# %senderserver   : 発言者の接続サーバー名
-# %date           : 発言した日付（BungeeCordのProxyサーバーのシステム時刻が使用されます）
-# %time           : 発言した時刻（BungeeCordのProxyサーバーのシステム時刻が使用されます）
-# %msg            : 発言内容（Japanize変換された場合は、Japanize結果を含みます。）
-broadcastChatFormat: '%date %time &d<%username@%senderserver> &f%msg'
-
-# broadcastChat が true のときに、
-# 発言者のサーバーについても、Japanize変換を行うかどうか。
-# 各サーバーごとで、LunaChatなどのJapanize変換を行うプラグインを使用したい場合は、
-# false にしてください。
-broadcastChatLocalJapanize: true
-
