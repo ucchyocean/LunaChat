@@ -14,6 +14,7 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.bridge.VaultChatBridge;
 import com.github.ucchyocean.lc3.bukkit.LunaChatBukkit;
 
@@ -88,6 +89,10 @@ public class ChannelMemberPlayer extends ChannelMemberBukkit {
      */
     @Override
     public String getName() {
+        String cache = LunaChat.getUUIDCacheData().get(id.toString());
+        if ( cache != null ) {
+            return cache;
+        }
         Player player = Bukkit.getPlayer(id);
         if ( player != null ) {
             return player.getName();

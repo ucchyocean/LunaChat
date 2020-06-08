@@ -27,6 +27,7 @@ import com.github.ucchyocean.lc3.LunaChatLogger;
 import com.github.ucchyocean.lc3.LunaChatMode;
 import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.PluginInterface;
+import com.github.ucchyocean.lc3.UUIDCacheData;
 import com.github.ucchyocean.lc3.bridge.DynmapBridge;
 import com.github.ucchyocean.lc3.bridge.McMMOBridge;
 import com.github.ucchyocean.lc3.bridge.MultiverseCoreBridge;
@@ -48,6 +49,7 @@ public class LunaChatBukkit extends JavaPlugin implements PluginInterface {
 
     private LunaChatConfig config;
     private ChannelManager manager;
+    private UUIDCacheData uuidCacheData;
 
     private VaultChatBridge vaultchat;
     private DynmapBridge dynmap;
@@ -73,6 +75,7 @@ public class LunaChatBukkit extends JavaPlugin implements PluginInterface {
 
         // 変数などの初期化
         config = new LunaChatConfig(getDataFolder(), getFile());
+        uuidCacheData = new UUIDCacheData(getDataFolder());
         Messages.initialize(new File(getDataFolder(), "messages"), getFile(), config.getLang());
         manager = new ChannelManager();
         normalChatLogger = new LunaChatLogger("==normalchat");
@@ -270,5 +273,15 @@ public class LunaChatBukkit extends JavaPlugin implements PluginInterface {
     @Override
     public void log(Level level, String msg) {
         getLogger().log(level, msg);
+    }
+
+    /**
+     * UUIDキャッシュデータを取得する
+     * @return UUIDキャッシュデータ
+     * @see com.github.ucchyocean.lc3.PluginInterface#getUUIDCacheData()
+     */
+    @Override
+    public UUIDCacheData getUUIDCacheData() {
+        return uuidCacheData;
     }
 }

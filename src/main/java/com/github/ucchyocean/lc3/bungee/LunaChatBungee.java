@@ -18,6 +18,7 @@ import com.github.ucchyocean.lc3.LunaChatLogger;
 import com.github.ucchyocean.lc3.LunaChatMode;
 import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.PluginInterface;
+import com.github.ucchyocean.lc3.UUIDCacheData;
 import com.github.ucchyocean.lc3.channel.ChannelManager;
 
 import net.md_5.bungee.api.ProxyServer;
@@ -35,6 +36,7 @@ public class LunaChatBungee extends Plugin implements PluginInterface {
     private HashMap<String, String> history;
     private LunaChatConfig config;
     private ChannelManager manager;
+    private UUIDCacheData uuidCacheData;
     private LunaChatLogger normalChatLogger;
 
     /**
@@ -49,6 +51,7 @@ public class LunaChatBungee extends Plugin implements PluginInterface {
 
         // 初期化
         config = new LunaChatConfig(getDataFolder(), getFile());
+        uuidCacheData = new UUIDCacheData(getDataFolder());
         Messages.initialize(new File(getDataFolder(), "messages"), getFile(), config.getLang());
         history = new HashMap<String, String>();
 
@@ -171,5 +174,15 @@ public class LunaChatBungee extends Plugin implements PluginInterface {
     @Override
     public void log(Level level, String msg) {
         getLogger().log(level, msg);
+    }
+
+    /**
+     * UUIDキャッシュデータを取得する
+     * @return UUIDキャッシュデータ
+     * @see com.github.ucchyocean.lc3.PluginInterface#getUUIDCacheData()
+     */
+    @Override
+    public UUIDCacheData getUUIDCacheData() {
+        return uuidCacheData;
     }
 }

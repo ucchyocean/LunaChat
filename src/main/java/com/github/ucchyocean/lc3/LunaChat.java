@@ -57,4 +57,8 @@ public class LunaChat {
     public static LunaChatLogger getNormalChatLogger() {
         return instance.getNormalChatLogger();
     }
+
+    public static UUIDCacheData getUUIDCacheData() {
+        return instance.getUUIDCacheData();
+    }
 }

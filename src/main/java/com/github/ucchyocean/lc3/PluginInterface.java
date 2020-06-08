@@ -57,4 +57,10 @@ public interface PluginInterface {
      * @param msg ログメッセージ
      */
     public void log(Level level, String msg);
+
+    /**
+     * UUIDキャッシュデータを取得する
+     * @return UUIDキャッシュデータ
+     */
+    public UUIDCacheData getUUIDCacheData();
 }

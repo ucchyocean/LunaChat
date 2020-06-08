@@ -9,6 +9,8 @@ import java.util.UUID;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.github.ucchyocean.lc3.LunaChat;
+
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -70,13 +72,14 @@ public class ChannelMemberProxiedPlayer extends ChannelMemberBungee {
      */
     @Override
     public String getName() {
+        String cache = LunaChat.getUUIDCacheData().get(id.toString());
+        if ( cache != null ) {
+            return cache;
+        }
         ProxiedPlayer player = getPlayer();
         if ( player != null ) {
             return player.getName();
         }
-
-        // TODO 接続していないプレイヤーのUUIDを取得する方法を検討する
-
         return id.toString();
     }
 

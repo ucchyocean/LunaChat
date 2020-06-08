@@ -117,6 +117,10 @@ public class BukkitEventListener implements Listener {
         LunaChatConfig config = LunaChat.getConfig();
         Player player = event.getPlayer();
 
+        // UUIDをキャッシュ
+        LunaChat.getUUIDCacheData().put(player.getUniqueId().toString(), player.getName());
+        LunaChat.getUUIDCacheData().save();
+
         // 強制参加チャンネル設定を確認し、参加させる
         forceJoinToForceJoinChannels(player);
 

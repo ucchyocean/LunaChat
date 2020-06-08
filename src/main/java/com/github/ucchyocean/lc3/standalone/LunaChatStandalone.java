@@ -16,6 +16,7 @@ import com.github.ucchyocean.lc3.LunaChatConfig;
 import com.github.ucchyocean.lc3.LunaChatLogger;
 import com.github.ucchyocean.lc3.LunaChatMode;
 import com.github.ucchyocean.lc3.PluginInterface;
+import com.github.ucchyocean.lc3.UUIDCacheData;
 import com.github.ucchyocean.lc3.channel.ChannelManager;
 
 /**
@@ -26,6 +27,7 @@ public class LunaChatStandalone implements PluginInterface {
 
     private LunaChatConfig config;
     private ChannelManager manager;
+    private UUIDCacheData uuidCacheData;
 
     public void onEnable() {
 
@@ -37,6 +39,9 @@ public class LunaChatStandalone implements PluginInterface {
 
         // コンフィグ取得
         config = new LunaChatConfig(getDataFolder(), getPluginJarFile());
+
+        // UUIDキャッシュデータ （これ要る？）
+        uuidCacheData = new UUIDCacheData(getDataFolder());
     }
 
     @Override
@@ -88,4 +93,13 @@ public class LunaChatStandalone implements PluginInterface {
         // TODO 未実装
     }
 
+    /**
+     * UUIDキャッシュデータを取得する
+     * @return UUIDキャッシュデータ
+     * @see com.github.ucchyocean.lc3.PluginInterface#getUUIDCacheData()
+     */
+    @Override
+    public UUIDCacheData getUUIDCacheData() {
+        return uuidCacheData;
+    }
 }
