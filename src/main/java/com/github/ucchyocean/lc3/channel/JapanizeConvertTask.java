@@ -7,6 +7,7 @@ package com.github.ucchyocean.lc3.channel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -57,7 +58,7 @@ public class JapanizeConvertTask {
         if ( LunaChat.getConfig().isJapanizeIgnorePlayerName() ) {
             keywords.addAll(LunaChat.getPlugin().getOnlinePlayerNames());
         }
-        HashMap<String, String> dictionary =
+        Map<String, String> dictionary =
                 LunaChat.getAPI().getAllDictionary();
 
         // カラーコード削除、URL削除

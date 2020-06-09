@@ -6,6 +6,7 @@
 package com.github.ucchyocean.lc3.japanize;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * ローマ字表記を漢字変換して返すユーティリティ
@@ -23,7 +24,7 @@ public class Japanizer {
      * @return
      */
     public static String japanize(String org, JapanizeType type,
-            HashMap<String, String> dictionary) {
+            Map<String, String> dictionary) {
 
         // 変換不要なら空文字列を返す
         if ( type == JapanizeType.NONE || !isNeedToJapanize(org) ) {

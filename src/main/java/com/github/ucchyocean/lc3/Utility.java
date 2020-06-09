@@ -33,9 +33,6 @@ public class Utility {
     public static void copyFileFromJar(
             File jarFile, File targetFile, String sourceFilePath, boolean isBinary) {
 
-        // でばっぐ
-        System.out.println(jarFile + " - " + targetFile + " - " + sourceFilePath);
-
         File parent = targetFile.getParentFile();
         if (!parent.exists()) {
             parent.mkdirs();

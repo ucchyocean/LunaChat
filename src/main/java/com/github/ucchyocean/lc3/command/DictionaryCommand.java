@@ -5,7 +5,7 @@
  */
 package com.github.ucchyocean.lc3.command;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import com.github.ucchyocean.lc3.ChatColor;
 import com.github.ucchyocean.lc3.Messages;
@@ -122,7 +122,7 @@ public class DictionaryCommand extends LunaChatSubCommand {
 
         } else if ( args[1].equalsIgnoreCase("view") ) {
 
-            HashMap<String, String> dic = api.getAllDictionary();
+            Map<String, String> dic = api.getAllDictionary();
             for ( String key : dic.keySet() ) {
                 String value = dic.get(key);
                 sender.sendMessage(key + ChatColor.GRAY + " -> " + ChatColor.WHITE + value);

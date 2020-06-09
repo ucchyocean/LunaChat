@@ -64,7 +64,7 @@ public class BungeeChannel extends Channel {
         String node = PERMISSION_SPEAK_PREFIX + "." + getName();
         if ( player.isPermissionSet(node) && !player.hasPermission(node) ) {
             player.sendMessage(Messages.errmsgPermission(node));
-           return;
+            return;
         }
 
         LunaChatConfig config = LunaChat.getConfig();

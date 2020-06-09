@@ -386,6 +386,18 @@ public class ChannelManager implements LunaChatAPI {
      */
     @Override
     public Channel createChannel(String channelName) {
+        return createChannel(channelName, null);
+    }
+
+    /**
+     * 新しいチャンネルを作成する
+     * @param channelName チャンネル名
+     * @param member チャンネルを作成した人
+     * @return 作成されたチャンネル
+     * @see com.github.ucchyocean.lc3.LunaChatAPI#createChannel(java.lang.String, com.github.ucchyocean.lc3.member.ChannelMember)
+     */
+    @Override
+    public Channel createChannel(String channelName, ChannelMember member) {
 
         // イベントコール
 //        LunaChatChannelCreateEvent event =
@@ -418,6 +430,18 @@ public class ChannelManager implements LunaChatAPI {
      */
     @Override
     public boolean removeChannel(String channelName) {
+        return removeChannel(channelName, null);
+    }
+
+    /**
+     * チャンネルを削除する
+     * @param channelName 削除するチャンネル名
+     * @param member チャンネルを削除した人
+     * @return 削除したかどうか
+     * @see com.github.ucchyocean.lc3.LunaChatAPI#removeChannel(java.lang.String, com.github.ucchyocean.lc3.member.ChannelMember)
+     */
+    @Override
+    public boolean removeChannel(String channelName, ChannelMember member) {
 
         channelName = channelName.toLowerCase();
 

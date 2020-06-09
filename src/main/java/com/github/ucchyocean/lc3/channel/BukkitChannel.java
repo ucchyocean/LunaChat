@@ -50,7 +50,9 @@ public class BukkitChannel extends Channel {
      * @param name チャンネル名
      */
     protected BukkitChannel(String name) {
+
         super(name);
+
         dateFormat = new SimpleDateFormat("yyyy/MM/dd");
         timeFormat = new SimpleDateFormat("HH:mm:ss");
     }
