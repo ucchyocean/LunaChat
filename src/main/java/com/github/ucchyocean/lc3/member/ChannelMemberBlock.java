@@ -5,6 +5,7 @@
  */
 package com.github.ucchyocean.lc3.member;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.BlockCommandSender;
@@ -139,6 +140,15 @@ public class ChannelMemberBlock extends ChannelMemberBukkit {
     @Override
     public boolean isPermissionSet(String node) {
         return sender.isPermissionSet(node);
+    }
+
+    /**
+     * 指定されたメッセージの内容を発言する
+     * @param message メッセージ
+     * @see com.github.ucchyocean.lc3.member.ChannelMember#chat(java.lang.String)
+     */
+    public void chat(String message) {
+        Bukkit.broadcastMessage("<" + getName() + ">" + message);
     }
 
     /**

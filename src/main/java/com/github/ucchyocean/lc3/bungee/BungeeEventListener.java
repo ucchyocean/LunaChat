@@ -23,7 +23,6 @@ import com.github.ucchyocean.lc3.Utility;
 import com.github.ucchyocean.lc3.channel.Channel;
 import com.github.ucchyocean.lc3.japanize.Japanizer;
 import com.github.ucchyocean.lc3.member.ChannelMember;
-import com.github.ucchyocean.lc3.member.ChannelMemberProxiedPlayer;
 
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -420,11 +419,8 @@ public class BungeeEventListener implements Listener {
             format = format.replace("%world", "");
         }
 
-        if ( player instanceof ChannelMemberProxiedPlayer ) {
-            ChannelMemberProxiedPlayer p = (ChannelMemberProxiedPlayer)player;
-            format = format.replace("%server", p.getServer().getInfo().getName());
-        } else {
-            format = format.replace("%server", "");
+        if ( format.contains("%server") ) {
+            format = format.replace("%server", player.getServer().getInfo().getName());
         }
 
         return Utility.replaceColorCode(format);

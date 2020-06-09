@@ -6,6 +6,7 @@
 package com.github.ucchyocean.lc3.member;
 
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.connection.Server;
@@ -136,6 +137,15 @@ public class ChannelMemberBungeeConsole extends ChannelMemberBungee {
     @Override
     public boolean isPermissionSet(String node) {
         return sender.getPermissions().contains(node);
+    }
+
+    /**
+     * 指定されたメッセージの内容を発言する
+     * @param message メッセージ
+     * @see com.github.ucchyocean.lc3.member.ChannelMember#chat(java.lang.String)
+     */
+    public void chat(String message) {
+        ProxyServer.getInstance().broadcast(TextComponent.fromLegacyText("<" + getName() + ">" + message));
     }
 
     /**

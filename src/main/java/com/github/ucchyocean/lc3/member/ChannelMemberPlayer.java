@@ -240,6 +240,18 @@ public class ChannelMemberPlayer extends ChannelMemberBukkit {
     }
 
     /**
+     * 指定されたメッセージの内容を発言する
+     * @param message メッセージ
+     * @see com.github.ucchyocean.lc3.member.ChannelMember#chat(java.lang.String)
+     */
+    public void chat(String message) {
+        Player player = getPlayer();
+        if ( player != null ) {
+            player.chat(message);
+        }
+    }
+
+    /**
      * IDを返す
      * @return "$" + UUID を返す
      * @see com.github.ucchyocean.lc.channel.ChannelPlayer#getID()

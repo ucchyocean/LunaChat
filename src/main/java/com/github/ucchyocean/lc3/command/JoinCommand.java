@@ -105,18 +105,18 @@ public class JoinCommand extends LunaChatSubCommand {
                 // グローバルチャンネル設定が無くて、指定チャンネルがマーカーの場合、
                 // 発言先を削除して、グローバルチャンネルにする
 
-                api.removeDefaultChannel(sender.getName());
-                sender.sendMessage(Messages.cmdmsgSet("Global"));
+                if ( api.getDefaultChannel(sender.getName()) != null ) {
+                    api.removeDefaultChannel(sender.getName());
+                    sender.sendMessage(Messages.cmdmsgSet("Global"));
+                }
 
-                // TODO
-//                Player p = null;
-//                if ( sender instanceof ChannelMemberBukkit ) p = ((ChannelMemberBukkit)sender).getPlayer();
-//
-//                if ( message.length() > 0 && p != null ) {
-//                    p.chat(config.getGlobalMarker() + message.toString());
-//                }
+                // 何かメッセージがあるなら、そのままチャット送信する
+                // TODO 要テスト
+                sender.chat(message.toString());
+
                 return true;
             }
+
             if (config.isCreateChannelOnJoinCommand()) {
                 // 存在しないチャットには、チャンネルを作って入る設定の場合
 
@@ -186,8 +186,11 @@ public class JoinCommand extends LunaChatSubCommand {
             }
 
             // デフォルトの発言先に設定する
-            api.setDefaultChannel(sender.getName(), channelName);
-            sender.sendMessage(Messages.cmdmsgSet(channelName));
+            if ( api.getDefaultChannel(sender.getName()) == null ||
+                    !api.getDefaultChannel(sender.getName()).getName().equals(channelName) ) {
+                api.setDefaultChannel(sender.getName(), channelName);
+                sender.sendMessage(Messages.cmdmsgSet(channelName));
+            }
 
         } else {
 
@@ -220,8 +223,13 @@ public class JoinCommand extends LunaChatSubCommand {
                 channel.addMember(sender);
                 sender.sendMessage(Messages.cmdmsgJoin(channelName));
             }
-            api.setDefaultChannel(sender.getName(), channelName);
-            sender.sendMessage(Messages.cmdmsgSet(channelName));
+
+            // デフォルトの発言先に設定する
+            if ( api.getDefaultChannel(sender.getName()) == null ||
+                    !api.getDefaultChannel(sender.getName()).getName().equals(channelName) ) {
+                api.setDefaultChannel(sender.getName(), channelName);
+                sender.sendMessage(Messages.cmdmsgSet(channelName));
+            }
         }
 
         // チャンネル説明文があるなら、説明文を表示する

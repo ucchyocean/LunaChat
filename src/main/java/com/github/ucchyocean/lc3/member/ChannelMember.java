@@ -78,6 +78,12 @@ public abstract class ChannelMember implements Comparable<ChannelMember> {
     public abstract boolean isPermissionSet(String node);
 
     /**
+     * 指定されたメッセージの内容を発言する
+     * @param message メッセージ
+     */
+    public abstract void chat(String message);
+
+    /**
      * 同一のオブジェクトかどうかを返す
      * @param other 他方のオブジェクト
      * @return 同一かどうか
