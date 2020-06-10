@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 import com.github.ucchyocean.lc3.ChatColor;
 import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatAPI;
+import com.github.ucchyocean.lc3.LunaChatBungee;
 import com.github.ucchyocean.lc3.LunaChatConfig;
 import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.Utility;
@@ -54,7 +55,7 @@ public class BungeeEventListener implements Listener {
      * コンストラクタ
      * @param parent LunaChatBungeeのインスタンス
      */
-    protected BungeeEventListener(LunaChatBungee parent) {
+    public BungeeEventListener(LunaChatBungee parent) {
         this.parent = parent;
         config = parent.getConfig();
         api = parent.getLunaChatAPI();

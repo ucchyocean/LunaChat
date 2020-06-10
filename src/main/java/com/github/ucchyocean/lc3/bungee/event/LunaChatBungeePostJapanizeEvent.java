@@ -3,7 +3,7 @@
  * @license    LGPLv3
  * @copyright  Copyright ucchy 2020
  */
-package com.github.ucchyocean.lc3.event;
+package com.github.ucchyocean.lc3.bungee.event;
 
 import com.github.ucchyocean.lc3.member.ChannelMember;
 
@@ -11,7 +11,7 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  * Japanize変換が行われた後に呼び出されるイベント
  * @author ucchy
  */
-public class LunaChatPostJapanizeEvent extends LunaChatBaseCancellableEvent {
+public class LunaChatBungeePostJapanizeEvent extends LunaChatBungeeBaseCancellableEvent {
 
     private ChannelMember player;
     private String original;
@@ -24,7 +24,7 @@ public class LunaChatPostJapanizeEvent extends LunaChatBaseCancellableEvent {
      * @param original 変換前の文字列
      * @param japanized 変換後の文字列
      */
-    public LunaChatPostJapanizeEvent(String channelName, ChannelMember player,
+    public LunaChatBungeePostJapanizeEvent(String channelName, ChannelMember player,
             String original, String japanized) {
         super(channelName);
         this.player = player;

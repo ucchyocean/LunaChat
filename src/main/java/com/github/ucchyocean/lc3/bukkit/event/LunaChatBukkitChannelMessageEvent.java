@@ -3,7 +3,7 @@
  * @license    LGPLv3
  * @copyright  Copyright ucchy 2020
  */
-package com.github.ucchyocean.lc3.event;
+package com.github.ucchyocean.lc3.bukkit.event;
 
 import java.util.ArrayList;
 
@@ -14,7 +14,7 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  * このイベントはキャンセルできない。
  * @author ucchy
  */
-public class LunaChatChannelMessageEvent extends LunaChatBaseEvent {
+public class LunaChatBukkitChannelMessageEvent extends LunaChatBukkitBaseEvent {
 
     private ChannelMember player;
     private String message;
@@ -22,7 +22,7 @@ public class LunaChatChannelMessageEvent extends LunaChatBaseEvent {
     private String displayName;
     private String originalMessage;
 
-    public LunaChatChannelMessageEvent(String channelName,
+    public LunaChatBukkitChannelMessageEvent(String channelName,
             ChannelMember player, String message, ArrayList<ChannelMember> recipients,
             String displayName, String originalMessage) {
         super(channelName);

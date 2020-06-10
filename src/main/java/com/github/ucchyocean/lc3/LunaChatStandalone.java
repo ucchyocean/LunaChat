@@ -3,20 +3,13 @@
  * @license    LGPLv3
  * @copyright  Copyright ucchy 2020
  */
-package com.github.ucchyocean.lc3.standalone;
+package com.github.ucchyocean.lc3;
 
 import java.io.File;
 import java.net.URISyntaxException;
 import java.util.Set;
 import java.util.logging.Level;
 
-import com.github.ucchyocean.lc3.LunaChat;
-import com.github.ucchyocean.lc3.LunaChatAPI;
-import com.github.ucchyocean.lc3.LunaChatConfig;
-import com.github.ucchyocean.lc3.LunaChatLogger;
-import com.github.ucchyocean.lc3.LunaChatMode;
-import com.github.ucchyocean.lc3.PluginInterface;
-import com.github.ucchyocean.lc3.UUIDCacheData;
 import com.github.ucchyocean.lc3.channel.ChannelManager;
 
 /**

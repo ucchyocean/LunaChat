@@ -3,7 +3,7 @@
  * @license    LGPLv3
  * @copyright  Copyright ucchy 2020
  */
-package com.github.ucchyocean.lc3.event;
+package com.github.ucchyocean.lc3.bukkit.event;
 
 import com.github.ucchyocean.lc3.channel.Channel;
 import com.github.ucchyocean.lc3.member.ChannelMember;
@@ -12,12 +12,12 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  * チャンネルチャットへの発言前に発生するイベント
  * @author ucchy
  */
-public class LunaChatPreChatEvent extends LunaChatBaseCancellableEvent {
+public class LunaChatBukkitPreChatEvent extends LunaChatBukkitBaseCancellableEvent {
 
     private ChannelMember player;
     private String message;
 
-    public LunaChatPreChatEvent(String channelName, ChannelMember player, String message) {
+    public LunaChatBukkitPreChatEvent(String channelName, ChannelMember player, String message) {
         super(channelName);
         this.player = player;
         this.message = message;

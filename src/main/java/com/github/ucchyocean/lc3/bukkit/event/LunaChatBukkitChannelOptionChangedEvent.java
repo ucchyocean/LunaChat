@@ -3,7 +3,7 @@
  * @license    LGPLv3
  * @copyright  Copyright ucchy 2020
  */
-package com.github.ucchyocean.lc3.event;
+package com.github.ucchyocean.lc3.bukkit.event;
 
 import java.util.HashMap;
 
@@ -13,12 +13,12 @@ import org.bukkit.command.CommandSender;
  * オプション変更イベント
  * @author ucchy
  */
-public class LunaChatChannelOptionChangedEvent extends LunaChatBaseCancellableEvent {
+public class LunaChatBukkitChannelOptionChangedEvent extends LunaChatBukkitBaseCancellableEvent {
 
     private CommandSender sender;
     private HashMap<String, String> options;
 
-    public LunaChatChannelOptionChangedEvent(String channelName,
+    public LunaChatBukkitChannelOptionChangedEvent(String channelName,
             CommandSender sender, HashMap<String, String> options) {
         super(channelName);
         this.sender = sender;

@@ -15,8 +15,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc3.LunaChat;
+import com.github.ucchyocean.lc3.LunaChatBukkit;
 import com.github.ucchyocean.lc3.bridge.VaultChatBridge;
-import com.github.ucchyocean.lc3.bukkit.LunaChatBukkit;
 
 /**
  * ChannelMemberのBukkitPlayer実装

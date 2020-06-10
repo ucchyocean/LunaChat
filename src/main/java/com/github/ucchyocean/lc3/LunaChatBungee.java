@@ -3,7 +3,7 @@
  * @license    LGPLv3
  * @copyright  Copyright ucchy 2020
  */
-package com.github.ucchyocean.lc3.bungee;
+package com.github.ucchyocean.lc3;
 
 import java.io.File;
 import java.util.HashMap;
@@ -11,14 +11,12 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 
-import com.github.ucchyocean.lc3.LunaChat;
-import com.github.ucchyocean.lc3.LunaChatAPI;
-import com.github.ucchyocean.lc3.LunaChatConfig;
-import com.github.ucchyocean.lc3.LunaChatLogger;
-import com.github.ucchyocean.lc3.LunaChatMode;
-import com.github.ucchyocean.lc3.Messages;
-import com.github.ucchyocean.lc3.PluginInterface;
-import com.github.ucchyocean.lc3.UUIDCacheData;
+import com.github.ucchyocean.lc3.bungee.BungeeEventListener;
+import com.github.ucchyocean.lc3.bungee.BungeeEventSender;
+import com.github.ucchyocean.lc3.bungee.JapanizeCommandBungee;
+import com.github.ucchyocean.lc3.bungee.LunaChatCommandBungee;
+import com.github.ucchyocean.lc3.bungee.MessageCommandBungee;
+import com.github.ucchyocean.lc3.bungee.ReplyCommandBungee;
 import com.github.ucchyocean.lc3.channel.ChannelManager;
 
 import net.md_5.bungee.api.ProxyServer;
@@ -75,6 +73,9 @@ public class LunaChatBungee extends Plugin implements PluginInterface {
 
         // リスナー登録
         getProxy().getPluginManager().registerListener(this, new BungeeEventListener(this));
+
+        // イベント実行クラスの登録
+        LunaChat.setEventSender(new BungeeEventSender());
     }
 
     /**

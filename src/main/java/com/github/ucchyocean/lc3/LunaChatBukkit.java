@@ -3,7 +3,7 @@
  * @license    LGPLv3
  * @copyright  Copyright ucchy 2020
  */
-package com.github.ucchyocean.lc3.bukkit;
+package com.github.ucchyocean.lc3;
 
 import java.io.File;
 import java.util.List;
@@ -19,19 +19,12 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
-import com.github.ucchyocean.lc3.ExpireCheckTask;
-import com.github.ucchyocean.lc3.LunaChat;
-import com.github.ucchyocean.lc3.LunaChatAPI;
-import com.github.ucchyocean.lc3.LunaChatConfig;
-import com.github.ucchyocean.lc3.LunaChatLogger;
-import com.github.ucchyocean.lc3.LunaChatMode;
-import com.github.ucchyocean.lc3.Messages;
-import com.github.ucchyocean.lc3.PluginInterface;
-import com.github.ucchyocean.lc3.UUIDCacheData;
 import com.github.ucchyocean.lc3.bridge.DynmapBridge;
 import com.github.ucchyocean.lc3.bridge.McMMOBridge;
 import com.github.ucchyocean.lc3.bridge.MultiverseCoreBridge;
 import com.github.ucchyocean.lc3.bridge.VaultChatBridge;
+import com.github.ucchyocean.lc3.bukkit.BukkitEventListener;
+import com.github.ucchyocean.lc3.bukkit.BukkitEventSender;
 import com.github.ucchyocean.lc3.channel.ChannelManager;
 import com.github.ucchyocean.lc3.command.LunaChatCommand;
 import com.github.ucchyocean.lc3.command.LunaChatJapanizeCommand;
@@ -123,6 +116,9 @@ public class LunaChatBukkit extends JavaPlugin implements PluginInterface {
         // 期限チェッカータスクの起動
         expireCheckerTask = Bukkit.getScheduler().runTaskTimerAsynchronously(
                 this, new ExpireCheckTask(), 100, 600);
+
+        // イベント実行クラスの登録
+        LunaChat.setEventSender(new BukkitEventSender());
     }
 
     /**

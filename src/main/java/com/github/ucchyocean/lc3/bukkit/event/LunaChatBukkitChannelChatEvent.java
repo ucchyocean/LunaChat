@@ -3,7 +3,7 @@
  * @license    LGPLv3
  * @copyright  Copyright ucchy 2020
  */
-package com.github.ucchyocean.lc3.event;
+package com.github.ucchyocean.lc3.bukkit.event;
 
 import com.github.ucchyocean.lc3.member.ChannelMember;
 
@@ -11,14 +11,14 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  * チャンネルチャットのチャットイベント
  * @author ucchy
  */
-public class LunaChatChannelChatEvent extends LunaChatBaseCancellableEvent {
+public class LunaChatBukkitChannelChatEvent extends LunaChatBukkitBaseCancellableEvent {
 
     private ChannelMember player;
     private String originalMessage;
     private String ngMaskedMessage;
     private String messageFormat;
 
-    public LunaChatChannelChatEvent(String channelName, ChannelMember player,
+    public LunaChatBukkitChannelChatEvent(String channelName, ChannelMember player,
             String originalMessage, String ngMaskedMessage,
             String messageFormat) {
         super(channelName);

@@ -3,7 +3,7 @@
  * @license    LGPLv3
  * @copyright  Copyright ucchy 2020
  */
-package com.github.ucchyocean.lc3.event;
+package com.github.ucchyocean.lc3.bukkit.event;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
@@ -16,7 +16,7 @@ import com.github.ucchyocean.lc3.channel.Channel;
  * 基底イベントクラス
  * @author ucchy
  */
-public abstract class LunaChatBaseEvent extends Event {
+public abstract class LunaChatBukkitBaseEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
     protected String channelName;
@@ -25,7 +25,7 @@ public abstract class LunaChatBaseEvent extends Event {
      * コンストラクタ
      * @param channelName チャンネル名
      */
-    public LunaChatBaseEvent(String channelName) {
+    public LunaChatBukkitBaseEvent(String channelName) {
         super(!Bukkit.isPrimaryThread());
         this.channelName = channelName;
     }

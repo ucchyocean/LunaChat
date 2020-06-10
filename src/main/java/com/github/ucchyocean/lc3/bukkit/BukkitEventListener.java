@@ -25,12 +25,13 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatAPI;
+import com.github.ucchyocean.lc3.LunaChatBukkit;
 import com.github.ucchyocean.lc3.LunaChatConfig;
 import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.Utility;
 import com.github.ucchyocean.lc3.bridge.VaultChatBridge;
+import com.github.ucchyocean.lc3.bukkit.event.LunaChatBukkitPreChatEvent;
 import com.github.ucchyocean.lc3.channel.Channel;
-import com.github.ucchyocean.lc3.event.LunaChatPreChatEvent;
 import com.github.ucchyocean.lc3.japanize.JapanizeType;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 import com.github.ucchyocean.lc3.member.ChannelMemberBukkit;
@@ -269,7 +270,7 @@ public class BukkitEventListener implements Listener {
             }
 
             // LunaChatPreChatEvent イベントコール
-            LunaChatPreChatEvent preChatEvent = new LunaChatPreChatEvent(
+            LunaChatBukkitPreChatEvent preChatEvent = new LunaChatBukkitPreChatEvent(
                     global.getName(), player, event.getMessage());
             Bukkit.getPluginManager().callEvent(preChatEvent);
             if ( preChatEvent.isCancelled() ) {
@@ -558,7 +559,7 @@ public class BukkitEventListener implements Listener {
     private boolean chatToChannelWithEvent(ChannelMember player, Channel channel, String message) {
 
         // LunaChatPreChatEvent イベントコール
-        LunaChatPreChatEvent preChatEvent = new LunaChatPreChatEvent(
+        LunaChatBukkitPreChatEvent preChatEvent = new LunaChatBukkitPreChatEvent(
                 channel.getName(), player, message);
         Bukkit.getPluginManager().callEvent(preChatEvent);
         if ( preChatEvent.isCancelled() ) {

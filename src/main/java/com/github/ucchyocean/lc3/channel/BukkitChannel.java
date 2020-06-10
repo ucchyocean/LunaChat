@@ -21,15 +21,15 @@ import org.bukkit.entity.Player;
 
 import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatAPI;
+import com.github.ucchyocean.lc3.LunaChatBukkit;
 import com.github.ucchyocean.lc3.LunaChatConfig;
 import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.NGWordAction;
 import com.github.ucchyocean.lc3.Utility;
 import com.github.ucchyocean.lc3.UtilityBukkit;
 import com.github.ucchyocean.lc3.bridge.DynmapBridge;
-import com.github.ucchyocean.lc3.bukkit.LunaChatBukkit;
-import com.github.ucchyocean.lc3.event.LunaChatChannelChatEvent;
-import com.github.ucchyocean.lc3.event.LunaChatChannelMessageEvent;
+import com.github.ucchyocean.lc3.bukkit.event.LunaChatBukkitChannelChatEvent;
+import com.github.ucchyocean.lc3.bukkit.event.LunaChatBukkitChannelMessageEvent;
 import com.github.ucchyocean.lc3.japanize.JapanizeType;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 import com.github.ucchyocean.lc3.member.ChannelMemberBukkit;
@@ -113,8 +113,8 @@ public class BukkitChannel extends Channel {
         }
 
         // イベントコール
-        LunaChatChannelChatEvent event =
-                new LunaChatChannelChatEvent(getName(), player,
+        LunaChatBukkitChannelChatEvent event =
+                new LunaChatBukkitChannelChatEvent(getName(), player,
                         preReplaceMessage, maskedMessage, msgFormat);
         Bukkit.getPluginManager().callEvent(event);
         if ( event.isCancelled() ) {
@@ -359,8 +359,8 @@ public class BukkitChannel extends Channel {
         }
 
         // イベントコール
-        LunaChatChannelMessageEvent event =
-                new LunaChatChannelMessageEvent(
+        LunaChatBukkitChannelMessageEvent event =
+                new LunaChatBukkitChannelMessageEvent(
                         getName(), player, message, recipients, name, originalMessage);
         Bukkit.getPluginManager().callEvent(event);
         message = event.getMessage();

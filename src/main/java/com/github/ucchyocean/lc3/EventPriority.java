@@ -6,7 +6,7 @@
 package com.github.ucchyocean.lc3;
 
 /**
- * Event優先度列挙子（Bukkit用）
+ * Event優先度列挙子
  * @author ucchy
  */
 public enum EventPriority {

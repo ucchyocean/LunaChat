@@ -7,6 +7,8 @@ package com.github.ucchyocean.lc3;
 
 import java.io.File;
 
+import com.github.ucchyocean.lc3.event.EventSenderInterface;
+
 /**
  * LunaChat
  * @author ucchy
@@ -15,8 +17,9 @@ public class LunaChat {
 
     private static PluginInterface instance;
     private static LunaChatMode mode;
+    private static EventSenderInterface esender;
 
-    public static void setPlugin(PluginInterface plugin) {
+    static void setPlugin(PluginInterface plugin) {
         instance = plugin;
     }
 
@@ -24,7 +27,7 @@ public class LunaChat {
         return instance;
     }
 
-    public static void setMode(LunaChatMode _mode) {
+    static void setMode(LunaChatMode _mode) {
         mode = _mode;
     }
 
@@ -32,11 +35,13 @@ public class LunaChat {
         return mode;
     }
 
+    static void setEventSender(EventSenderInterface eventSender) {
+        esender = eventSender;
+    }
 
-//    public static EventSenderInterface getEventSender() {
-//        // TODO 未実装
-//        return null;
-//    }
+    public static EventSenderInterface getEventSender() {
+        return esender;
+    }
 
     public static File getDataFolder() {
         return instance.getDataFolder();

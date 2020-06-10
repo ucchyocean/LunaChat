@@ -15,10 +15,10 @@ import org.bukkit.event.Listener;
 
 import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatAPI;
+import com.github.ucchyocean.lc3.LunaChatBukkit;
 import com.github.ucchyocean.lc3.LunaChatConfig;
 import com.github.ucchyocean.lc3.Utility;
 import com.github.ucchyocean.lc3.bukkit.BukkitRecipientChatJapanizeTask;
-import com.github.ucchyocean.lc3.bukkit.LunaChatBukkit;
 import com.github.ucchyocean.lc3.japanize.JapanizeType;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 import com.gmail.nossr50.api.PartyAPI;

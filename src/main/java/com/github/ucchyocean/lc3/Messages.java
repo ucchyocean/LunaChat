@@ -77,7 +77,9 @@ public class Messages {
         initialize(_jar, _messageFolder, lang);
     }
 
-    // 以下、自動生成メソッド
+    // ここから下は自動生成メソッドです。変更をしないでください。
+
+    // === Auto-generated methods area start. ===
 
     /**
      * &f[%color%%channel%&f]&7%player% さんがチャンネルに参加しました。
@@ -338,7 +340,7 @@ public class Messages {
     }
 
     /**
-     * &7|
+     * &7| 
      */
     public static String listPlainPrefix() {
         String msg = resources.getString("listPlainPrefix");
@@ -356,7 +358,7 @@ public class Messages {
     }
 
     /**
-     * &7|
+     * &7| 
      */
     public static String channelInfoPrefix() {
         String msg = resources.getString("channelInfoPrefix");
@@ -1933,4 +1935,5 @@ public class Messages {
         msg = msg.replace("%next%", next.toString());
         return Utility.replaceColorCode(msg);
     }
+    // === Auto-generated methods area end. ===
 }

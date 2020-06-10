@@ -3,7 +3,7 @@
  * @license    LGPLv3
  * @copyright  Copyright ucchy 2020
  */
-package com.github.ucchyocean.lc3.event;
+package com.github.ucchyocean.lc3.bukkit.event;
 
 import org.bukkit.event.Cancellable;
 
@@ -11,7 +11,7 @@ import org.bukkit.event.Cancellable;
  * 基底のキャンセル可能イベントクラス
  * @author ucchy
  */
-public class LunaChatBaseCancellableEvent extends LunaChatBaseEvent implements Cancellable {
+public class LunaChatBukkitBaseCancellableEvent extends LunaChatBukkitBaseEvent implements Cancellable {
 
     private boolean isCancelled;
 
@@ -19,7 +19,7 @@ public class LunaChatBaseCancellableEvent extends LunaChatBaseEvent implements C
      * コンストラクタ
      * @param channelName チャンネル名
      */
-    public LunaChatBaseCancellableEvent(String channelName) {
+    public LunaChatBukkitBaseCancellableEvent(String channelName) {
         super(channelName);
     }
 
