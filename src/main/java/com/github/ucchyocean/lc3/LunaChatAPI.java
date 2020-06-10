@@ -5,7 +5,6 @@
  */
 package com.github.ucchyocean.lc3;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -148,7 +147,7 @@ public interface LunaChatAPI {
      * @param player プレイヤー
      * @return 指定したプレイヤーがhideしているプレイヤーのリスト
      */
-    public ArrayList<ChannelMember> getHideinfo(ChannelMember player);
+    public List<ChannelMember> getHideinfo(ChannelMember player);
 
     /**
      * 指定されたプレイヤーが、指定されたプレイヤーをhideするように設定する。

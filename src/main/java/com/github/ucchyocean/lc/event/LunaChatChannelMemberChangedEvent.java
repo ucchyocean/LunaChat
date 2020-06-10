@@ -12,6 +12,7 @@ import com.github.ucchyocean.lc.channel.ChannelPlayer;
 /**
  * メンバー変更イベント
  * @author ucchy
+ * @deprecated Legacy Version
  */
 public class LunaChatChannelMemberChangedEvent extends LunaChatBaseCancellableEvent {
 

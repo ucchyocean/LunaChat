@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 /**
  * プレイヤーの抽象クラス
  * @author ucchy
+ * @deprecated Legacy Version
  */
 public abstract class ChannelPlayer implements Comparable<ChannelPlayer> {
 

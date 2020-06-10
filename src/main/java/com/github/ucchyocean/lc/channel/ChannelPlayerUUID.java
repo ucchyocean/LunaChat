@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 /**
  * UUID管理のプレイヤー
  * @author ucchy
+ * @deprecated Legacy Version
  */
 public class ChannelPlayerUUID extends ChannelPlayer {
 
@@ -47,7 +48,6 @@ public class ChannelPlayerUUID extends ChannelPlayer {
         if ( player != null ) {
             return new ChannelPlayerUUID(player.getUniqueId());
         }
-        @SuppressWarnings("deprecation")
         OfflinePlayer offline = Bukkit.getOfflinePlayer(name);
         if ( offline != null && offline.getUniqueId() != null ) {
             return new ChannelPlayerUUID(offline.getUniqueId());

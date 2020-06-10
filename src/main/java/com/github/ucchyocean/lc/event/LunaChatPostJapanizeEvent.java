@@ -10,6 +10,7 @@ import com.github.ucchyocean.lc.channel.ChannelPlayer;
 /**
  * Japanize変換が行われた後に呼び出されるイベント
  * @author ucchy
+ * @deprecated Legacy Version
  */
 public class LunaChatPostJapanizeEvent extends LunaChatBaseCancellableEvent {
 

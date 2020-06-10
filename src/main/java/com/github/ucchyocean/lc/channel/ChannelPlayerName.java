@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 /**
  * 名前管理のプレイヤー
  * @author ucchy
+ * @deprecated Legacy Version
  */
 public class ChannelPlayerName extends ChannelPlayer {
 

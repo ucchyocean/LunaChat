@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 /**
  * コマンドブロック
  * @author ucchy
+ * @deprecated Legacy Version
  */
 public class ChannelPlayerBlock extends ChannelPlayer {
 
@@ -160,5 +161,9 @@ public class ChannelPlayerBlock extends ChannelPlayer {
     @Override
     public String toString() {
         return getName();
+    }
+
+    public BlockCommandSender getBlockCommandSender() {
+        return sender;
     }
 }

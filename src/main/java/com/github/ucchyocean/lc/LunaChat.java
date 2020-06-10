@@ -12,6 +12,7 @@ package com.github.ucchyocean.lc;
 public class LunaChat {
 
     private static LunaChat instance = new LunaChat();
+    @SuppressWarnings("deprecation")
     private LunaChatAPI api = new LunaChatAPI();
 
     /**

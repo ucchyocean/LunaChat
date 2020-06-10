@@ -165,4 +165,8 @@ public class ChannelMemberBlock extends ChannelMemberBukkit {
     public World getWorld() {
         return sender.getBlock().getWorld();
     }
+
+    public BlockCommandSender getBlockCommandSender() {
+        return sender;
+    }
 }
