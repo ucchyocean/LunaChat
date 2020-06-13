@@ -120,9 +120,9 @@ public class KickCommand extends LunaChatSubCommand {
         sender.sendMessage(Messages.cmdmsgKick(kickedName, channel.getName()));
 
         // チャンネルに通知メッセージを出す
-        channel.sendMessage(null,
+        channel.sendSystemMessage(
                 Messages.kickMessage(channel.getColorCode(), channel.getName(), kicked),
-                null, true, "system");
+                true, "system");
 
         // キックされた人に通知メッセージを出す
         if ( kicked != null && kicked.isOnline() ) {

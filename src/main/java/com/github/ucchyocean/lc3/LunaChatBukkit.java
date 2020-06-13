@@ -280,4 +280,14 @@ public class LunaChatBukkit extends JavaPlugin implements PluginInterface {
     public UUIDCacheData getUUIDCacheData() {
         return uuidCacheData;
     }
+
+    /**
+     * 非同期タスクを実行する
+     * @param task タスク
+     * @see com.github.ucchyocean.lc3.PluginInterface#runAsyncTask(java.lang.Runnable)
+     */
+    @Override
+    public void runAsyncTask(Runnable task) {
+        Bukkit.getScheduler().runTaskAsynchronously(this, task);
+    }
 }

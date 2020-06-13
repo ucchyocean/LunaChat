@@ -170,9 +170,14 @@ public class Channel {
      */
     public void sendMessage(
             ChannelPlayer player, String message, String format, boolean sendDynmap, String displayName) {
-        channel.sendMessage(
-                ChannelMember.getChannelMember(player.toString()),
-                message, format, sendDynmap, displayName);
+        if ( format != null ) {
+            message = format.replace("%msg", message);
+        }
+        if ( player != null ) {
+            channel.chat(ChannelMember.getChannelMember(player.toString()), message);
+        } else {
+            channel.chatFromOtherSource(displayName, null, message);
+        }
     }
 
     /**

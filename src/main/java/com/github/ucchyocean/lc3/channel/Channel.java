@@ -8,10 +8,13 @@ package com.github.ucchyocean.lc3.channel;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.github.ucchyocean.lc3.ChatColor;
 import com.github.ucchyocean.lc3.LunaChat;
@@ -20,6 +23,8 @@ import com.github.ucchyocean.lc3.LunaChatConfig;
 import com.github.ucchyocean.lc3.LunaChatLogger;
 import com.github.ucchyocean.lc3.LunaChatMode;
 import com.github.ucchyocean.lc3.Messages;
+import com.github.ucchyocean.lc3.NGWordAction;
+import com.github.ucchyocean.lc3.Utility;
 import com.github.ucchyocean.lc3.YamlConfig;
 import com.github.ucchyocean.lc3.japanize.JapanizeType;
 import com.github.ucchyocean.lc3.member.ChannelMember;
@@ -29,6 +34,8 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  * @author ucchy
  */
 public abstract class Channel {
+
+    private static final String PERMISSION_SPEAK_PREFIX = "lunachat.speak";
 
     private static final String FOLDER_NAME_CHANNELS = "channels";
 
@@ -208,7 +215,151 @@ public abstract class Channel {
      * @param player 発言をするプレイヤー
      * @param message 発言をするメッセージ
      */
-    public abstract void chat(ChannelMember player, String message);
+    public void chat(ChannelMember player, String message) {
+
+        // 発言権限を確認する
+        String node = PERMISSION_SPEAK_PREFIX + "." + getName();
+        if ( player.isPermissionSet(node) && !player.hasPermission(node) ) {
+            player.sendMessage(Messages.errmsgPermission(node));
+            return;
+        }
+
+        LunaChatConfig config = LunaChat.getConfig();
+        LunaChatAPI api = LunaChat.getAPI();
+
+        // Muteされているかどうかを確認する
+        if ( getMuted().contains(player) ) {
+            player.sendMessage(Messages.errmsgMuted());
+            return;
+        }
+
+//        String preReplaceMessage = new String(message);
+        String maskedMessage = new String(message);
+
+        // 一時的にJapanizeスキップ設定かどうかを確認する
+        boolean skipJapanize = false;
+        String marker = config.getNoneJapanizeMarker();
+        if ( !marker.equals("") && maskedMessage.startsWith(marker) ) {
+            skipJapanize = true;
+            maskedMessage = maskedMessage.substring(marker.length());
+        }
+
+        // NGワード発言をしたかどうかのチェックとマスク
+        boolean isNG = false;
+        for ( Pattern pattern : config.getNgwordCompiled() ) {
+            Matcher matcher = pattern.matcher(maskedMessage);
+            if ( matcher.find() ) {
+                maskedMessage = matcher.replaceAll(
+                        Utility.getAstariskString(matcher.group(0).length()));
+                isNG = true;
+            }
+        }
+
+        // キーワード置き換え
+        String msgFormat = replaceKeywords(getFormat(), player);
+
+        // カラーコード置き換え
+        // チャンネルで許可されていて、発言者がパーミッションを持っている場合に置き換える
+        if ( isAllowCC() && player.hasPermission("lunachat.allowcc") ) {
+            maskedMessage = Utility.replaceColorCode(maskedMessage);
+        }
+
+        // イベントコール
+//        LunaChatChannelChatEvent event =
+//                new LunaChatChannelChatEvent(getName(), player,
+//                        preReplaceMessage, maskedMessage, msgFormat);
+//        Bukkit.getPluginManager().callEvent(event);
+//        if ( event.isCancelled() ) {
+//            return;
+//        }
+//        msgFormat = event.getMessageFormat();
+//        maskedMessage = event.getNgMaskedMessage();
+
+        // 2byteコードを含むか、半角カタカナのみなら、Japanize変換は行わない
+        String kanaTemp = Utility.stripColorCode(maskedMessage);
+
+        if ( !skipJapanize &&
+                ( kanaTemp.getBytes(StandardCharsets.UTF_8).length > kanaTemp.length() ||
+                        kanaTemp.matches("[ \\uFF61-\\uFF9F]+") ) ) {
+            skipJapanize = true;
+        }
+
+        // Japanize変換タスクを作成する
+        boolean isIncludeSyncChat = true;
+        ChannelChatJapanizeTask delayedTask = null;
+        JapanizeType japanizeType = (getJapanizeType() == null)
+                ? config.getJapanizeType() : getJapanizeType();
+
+        if ( !skipJapanize &&
+                api.isPlayerJapanize(player.getName()) &&
+                japanizeType != JapanizeType.NONE ) {
+
+            int lineType = config.getJapanizeDisplayLine();
+            String jpFormat;
+            String messageFormat = null;
+            if ( lineType == 1 ) {
+                jpFormat = Utility.replaceColorCode(config.getJapanizeLine1Format());
+                messageFormat = msgFormat;
+                isIncludeSyncChat = false;
+            } else {
+                jpFormat = Utility.replaceColorCode(config.getJapanizeLine2Format());
+            }
+
+            // タスクを作成しておく
+            delayedTask = new ChannelChatJapanizeTask(maskedMessage,
+                    japanizeType, this, player, jpFormat, messageFormat);
+        }
+
+        if ( isIncludeSyncChat ) {
+            // メッセージの送信
+            sendMessage(player, maskedMessage, msgFormat, true, player.getDisplayName());
+        }
+
+        // 非同期実行タスクがある場合、追加で実行する
+        if ( delayedTask != null ) {
+            LunaChat.runAsyncTask(delayedTask);
+        }
+
+        // NGワード発言者に、NGワードアクションを実行する
+        if ( isNG ) {
+            if ( config.getNgwordAction() == NGWordAction.BAN ) {
+                // BANする
+
+                if ( !isGlobalChannel() ) {
+                    getBanned().add(player);
+                    removeMember(player);
+                    if ( !Messages.banNGWordMessage("", "", "").isEmpty() ) {
+                        String m = Messages.banNGWordMessage(getColorCode(), getName(), player.getName());
+                        player.sendMessage(m);
+                        sendMessage(null, m, null, true, "system");
+                    }
+                }
+
+            } else if ( config.getNgwordAction() == NGWordAction.KICK ) {
+                // キックする
+
+                if ( !isGlobalChannel() ) {
+                    removeMember(player);
+                    if ( !Messages.kickNGWordMessage("", "", "").isEmpty() ) {
+                        String m = Messages.kickNGWordMessage(getColorCode(), getName(), player.getName());
+                        player.sendMessage(m);
+                        sendMessage(null, m, null, true, "system");
+                    }
+                }
+
+            } else if ( config.getNgwordAction() == NGWordAction.MUTE ) {
+                // Muteする
+
+                getMuted().add(player);
+                save();
+                if ( !Messages.muteNGWordMessage("", "", "").isEmpty() ) {
+                    String m = Messages.muteNGWordMessage(getColorCode(), getName(), player.getName());
+                    player.sendMessage(m);
+                    sendMessage(null, m, null, true, "system");
+                }
+            }
+        }
+    }
 
     /**
      * ほかの連携先などから、このチャットに発言する
@@ -216,7 +367,52 @@ public abstract class Channel {
      * @param source 連携元を判別する文字列
      * @param message メッセージ
      */
-    public abstract void chatFromOtherSource(String player, String source, String message);
+    public void chatFromOtherSource(String player, String source, String message) {
+
+        LunaChatConfig config = LunaChat.getConfig();
+
+        // 表示名
+        String name;
+        if ( source != null && !source.isEmpty() ) {
+            name = player + "@" + source;
+        } else {
+            name = player;
+        }
+
+        // NGワード発言のマスク
+        String maskedMessage = new String(message);
+        for ( Pattern pattern : config.getNgwordCompiled() ) {
+            Matcher matcher = pattern.matcher(maskedMessage);
+            if ( matcher.find() ) {
+                maskedMessage = matcher.replaceAll(
+                        Utility.getAstariskString(matcher.group(0).length()));
+            }
+        }
+
+        // キーワード置き換え
+        String msgFormat = replaceKeywordsForSystemMessages(getFormat(), name);
+        msgFormat = msgFormat.replace("%prefix", "");
+        msgFormat = msgFormat.replace("%suffix", "");
+
+        // カラーコード置き換え チャンネルで許可されている場合に置き換える。
+        if ( isAllowCC() ) {
+            maskedMessage = Utility.replaceColorCode(maskedMessage);
+        }
+
+        // メッセージの送信
+        boolean sendDynmap = source == null || !source.equals("web");
+        sendMessage(null, maskedMessage, msgFormat, sendDynmap, name);
+    }
+
+    /**
+     * チャンネルにシステムメッセージを送信する。
+     * @param message メッセージ
+     * @param sendDynmap Dynmapにも表示するかどうか
+     * @param name 発言者の表示名
+     */
+    public void sendSystemMessage(String message, boolean sendDynmap, String name) {
+        sendMessage(null, message, null, sendDynmap, name);
+    }
 
     /**
      * メンバーを追加する
@@ -364,7 +560,7 @@ public abstract class Channel {
      * @param sendDynmap dynmapへ送信するかどうか
      * @param displayName 発言者の表示名（APIに使用されます）
      */
-    public abstract void sendMessage(
+    protected abstract void sendMessage(
             ChannelMember player, String message, String format, boolean sendDynmap, String displayName);
 
     /**
@@ -1004,6 +1200,23 @@ public abstract class Channel {
         }
 
         return result;
+    }
+
+    /**
+     * チャットフォーマット内のキーワードを置き換えする
+     * @param format チャットフォーマット
+     * @param playerName プレイヤー名
+     * @return 置き換え結果
+     */
+    private String replaceKeywordsForSystemMessages(String format, String playerName) {
+
+        String msg = format;
+        msg = msg.replace("%ch", getName());
+        msg = msg.replace("%color", getColorCode());
+        msg = msg.replace("%username", playerName);
+        msg = msg.replace("%player", playerName);
+
+        return Utility.replaceColorCode(msg);
     }
 
     /**

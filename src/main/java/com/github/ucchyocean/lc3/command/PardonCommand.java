@@ -117,9 +117,9 @@ public class PardonCommand extends LunaChatSubCommand {
         sender.sendMessage(Messages.cmdmsgPardon(kickedName, channel.getName()));
 
         // チャンネルに通知メッセージを出す
-        channel.sendMessage(null, Messages.pardonMessage(
+        channel.sendSystemMessage(Messages.pardonMessage(
                 channel.getColorCode(), channel.getName(), kicked.getName()),
-                null, true, "system");
+                true, "system");
 
         // BANされていた人に通知メッセージを出す
         if ( kicked != null && kicked.isOnline() ) {

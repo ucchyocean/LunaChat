@@ -66,4 +66,8 @@ public class LunaChat {
     public static UUIDCacheData getUUIDCacheData() {
         return instance.getUUIDCacheData();
     }
+
+    public static void runAsyncTask(Runnable task) {
+        instance.runAsyncTask(task);
+    }
 }

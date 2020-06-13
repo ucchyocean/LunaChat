@@ -147,13 +147,13 @@ public class MuteCommand extends LunaChatSubCommand {
 
         // チャンネルに通知メッセージを出す
         if ( expireMinutes != -1 ) {
-            channel.sendMessage(null, Messages.muteWithExpireMessage(
+            channel.sendSystemMessage(Messages.muteWithExpireMessage(
                     channel.getColorCode(), channel.getName(), kicked.getName(), expireMinutes),
-                    null, true, "system");
+                    true, "system");
         } else {
-            channel.sendMessage(null, Messages.muteMessage(
+            channel.sendSystemMessage(Messages.muteMessage(
                     channel.getColorCode(), channel.getName(), kicked.getName()),
-                    null, true, "system");
+                    true, "system");
         }
 
         // BANされた人に通知メッセージを出す

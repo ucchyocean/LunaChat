@@ -63,4 +63,10 @@ public interface PluginInterface {
      * @return UUIDキャッシュデータ
      */
     public UUIDCacheData getUUIDCacheData();
+
+    /**
+     * 非同期タスクを実行する
+     * @param task タスク
+     */
+    public void runAsyncTask(Runnable task);
 }

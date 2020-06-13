@@ -59,7 +59,7 @@ public class LunaChatLogger {
         checkDir();
 
         // 以降の処理を、発言処理の負荷軽減のため、非同期実行にする。(see issue #40.)
-        new Thread(new Runnable() {
+        LunaChat.runAsyncTask(new Runnable() {
             @Override
             public void run() {
 
@@ -76,7 +76,7 @@ public class LunaChatLogger {
                     e.printStackTrace();
                 }
             }
-        }).start();
+        });
     }
 
     /**
