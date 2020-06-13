@@ -5,9 +5,8 @@
  */
 package com.github.ucchyocean.lc3.event;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.github.ucchyocean.lc3.member.ChannelMember;
 
@@ -59,10 +58,11 @@ public interface EventSenderInterface {
      * @param recipients 受信者
      * @param displayName 発言者の表示名
      * @param originalMessage 発言内容（元々の内容）
+     * @return イベント実行結果
      */
-    public void sendLunaChatChannelMessageEvent(
+    public EventResult sendLunaChatChannelMessageEvent(
             String channelName, ChannelMember member, String message,
-            ArrayList<ChannelMember> recipients, String displayName,
+            List<ChannelMember> recipients, String displayName,
             String originalMessage);
 
     /**
@@ -74,7 +74,7 @@ public interface EventSenderInterface {
      */
     public EventResult sendLunaChatChannelOptionChangedEvent(
             String channelName, ChannelMember member,
-            HashMap<String, String> options);
+            Map<String, String> options);
 
     /**
      * チャンネル削除イベント

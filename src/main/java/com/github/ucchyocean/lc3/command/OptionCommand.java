@@ -7,10 +7,13 @@ package com.github.ucchyocean.lc3.command;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
+import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.Utility;
 import com.github.ucchyocean.lc3.channel.Channel;
+import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.japanize.JapanizeType;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 
@@ -120,7 +123,7 @@ public class OptionCommand extends LunaChatSubCommand {
         }
 
         // 指定内容を解析する
-        HashMap<String, String> options = new HashMap<String, String>();
+        Map<String, String> options = new HashMap<String, String>();
         for ( String t : optionsTemp ) {
             int index = t.indexOf("=");
             if ( index == -1 ) {
@@ -129,13 +132,13 @@ public class OptionCommand extends LunaChatSubCommand {
             options.put(t.substring(0, index), t.substring(index + 1));
         }
 
-        // イベントコール
-//        EventResult result = LunaChat.getEventSender().sendLunaChatChannelOptionChangedEvent(
-//                cname, sender, options);
-//        if ( result.isCancelled() ) {
-//            return true;
-//        }
-//        options = result.getValueAsStringMap("options");
+        // LunaChatChannelOptionChangedEvent イベントコール
+        EventResult result = LunaChat.getEventSender().sendLunaChatChannelOptionChangedEvent(
+                cname, sender, options);
+        if ( result.isCancelled() ) {
+            return true;
+        }
+        options = result.getOptions();
 
         // 設定する
         boolean setOption = false;

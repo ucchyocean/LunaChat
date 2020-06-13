@@ -22,6 +22,7 @@ import com.github.ucchyocean.lc3.LunaChatConfig;
 import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.Utility;
 import com.github.ucchyocean.lc3.channel.Channel;
+import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.japanize.Japanizer;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 
@@ -437,17 +438,16 @@ public class BungeeEventListener implements Listener {
     private boolean chatToChannelWithEvent(ChannelMember player, Channel channel, String message) {
 
         // LunaChatPreChatEvent イベントコール
-//        LunaChatPreChatEvent preChatEvent = new LunaChatPreChatEvent(
-//                channel.getName(), player, message);
-//        Bukkit.getPluginManager().callEvent(preChatEvent);
-//        if ( preChatEvent.isCancelled() ) {
-//            return true;
-//        }
-//        Channel alt = preChatEvent.getChannel();
-//        if ( alt != null ) {
-//            channel = alt;
-//        }
-//        message = preChatEvent.getMessage();
+        EventResult result = LunaChat.getEventSender().sendLunaChatPreChatEvent(
+                channel.getName(), player, message);
+        if ( result.isCancelled() ) {
+            return true;
+        }
+        Channel alt = result.getChannel();
+        if ( alt != null ) {
+            channel = alt;
+        }
+        message = result.getMessage();
 
         // チャンネルチャット発言
         channel.chat(player, message);

@@ -5,13 +5,15 @@
  */
 package com.github.ucchyocean.lc3.bungee;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.github.ucchyocean.lc3.bungee.event.LunaChatBungeeChannelChatEvent;
 import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.event.EventSenderInterface;
 import com.github.ucchyocean.lc3.member.ChannelMember;
+
+import net.md_5.bungee.api.ProxyServer;
 
 /**
  * Bungeeのイベント実行クラス
@@ -32,8 +34,17 @@ public class BungeeEventSender implements EventSenderInterface {
     @Override
     public EventResult sendLunaChatChannelChatEvent(String channelName, ChannelMember member, String originalMessage,
             String ngMaskedMessage, String messageFormat) {
-        // TODO 未実装
-        return null;
+
+        LunaChatBungeeChannelChatEvent event = new LunaChatBungeeChannelChatEvent(
+                channelName, member, originalMessage, ngMaskedMessage, messageFormat);
+        event = ProxyServer.getInstance().getPluginManager().callEvent(event);
+
+        EventResult result = new EventResult();
+        result.setCancelled(event.isCancelled());
+        result.setChannelName(event.getChannelName());
+        result.setNgMaskedMessage(event.getNgMaskedMessage());
+        result.setMessageFormat(event.getMessageFormat());
+        return result;
     }
 
     /**
@@ -72,12 +83,14 @@ public class BungeeEventSender implements EventSenderInterface {
      * @param recipients 受信者
      * @param displayName 発言者の表示名
      * @param originalMessage 発言内容（元々の内容）
+     * @return イベント実行結果
      * @see com.github.ucchyocean.lc3.event.EventSenderInterface#sendLunaChatChannelMessageEvent(java.lang.String, com.github.ucchyocean.lc3.member.ChannelMember, java.lang.String, java.util.ArrayList, java.lang.String, java.lang.String)
      */
     @Override
-    public void sendLunaChatChannelMessageEvent(String channelName, ChannelMember member, String message,
-            ArrayList<ChannelMember> recipients, String displayName, String originalMessage) {
+    public EventResult sendLunaChatChannelMessageEvent(String channelName, ChannelMember member, String message,
+            List<ChannelMember> recipients, String displayName, String originalMessage) {
         // TODO 未実装
+        return null;
     }
 
     /**
@@ -90,7 +103,7 @@ public class BungeeEventSender implements EventSenderInterface {
      */
     @Override
     public EventResult sendLunaChatChannelOptionChangedEvent(String channelName, ChannelMember member,
-            HashMap<String, String> options) {
+            Map<String, String> options) {
         // TODO 未実装
         return null;
     }

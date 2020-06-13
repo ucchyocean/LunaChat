@@ -26,6 +26,7 @@ import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.NGWordAction;
 import com.github.ucchyocean.lc3.Utility;
 import com.github.ucchyocean.lc3.YamlConfig;
+import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.japanize.JapanizeType;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 
@@ -233,7 +234,6 @@ public abstract class Channel {
             return;
         }
 
-//        String preReplaceMessage = new String(message);
         String maskedMessage = new String(message);
 
         // 一時的にJapanizeスキップ設定かどうかを確認する
@@ -264,16 +264,14 @@ public abstract class Channel {
             maskedMessage = Utility.replaceColorCode(maskedMessage);
         }
 
-        // イベントコール
-//        LunaChatChannelChatEvent event =
-//                new LunaChatChannelChatEvent(getName(), player,
-//                        preReplaceMessage, maskedMessage, msgFormat);
-//        Bukkit.getPluginManager().callEvent(event);
-//        if ( event.isCancelled() ) {
-//            return;
-//        }
-//        msgFormat = event.getMessageFormat();
-//        maskedMessage = event.getNgMaskedMessage();
+        // LunaChatChannelChatEvent イベントコール
+        EventResult result = LunaChat.getEventSender().sendLunaChatChannelChatEvent(
+                getName(), player, message, maskedMessage, msgFormat);
+        if ( result.isCancelled() ) {
+            return;
+        }
+        msgFormat = result.getMessageFormat();
+        maskedMessage = result.getNgMaskedMessage();
 
         // 2byteコードを含むか、半角カタカナのみなら、Japanize変換は行わない
         String kanaTemp = Utility.stripColorCode(maskedMessage);
@@ -429,13 +427,11 @@ public abstract class Channel {
         ArrayList<ChannelMember> after = new ArrayList<ChannelMember>(members);
         after.add(player);
 
-        // イベントコール
-//        LunaChatChannelMemberChangedEvent event =
-//                new LunaChatChannelMemberChangedEvent(this.name, this.members, after);
-//        Bukkit.getPluginManager().callEvent(event);
-//        if ( event.isCancelled() ) {
-//            return;
-//        }
+        // LunaChatChannelMemberChangedEvent イベントコール
+        EventResult result = LunaChat.getEventSender().sendLunaChatChannelMemberChangedEvent(name, members, after);
+        if ( result.isCancelled() ) {
+            return;
+        }
 
         // メンバー更新
         if ( members.size() == 0 && moderator.size() == 0 ) {
@@ -465,13 +461,11 @@ public abstract class Channel {
         ArrayList<ChannelMember> after = new ArrayList<ChannelMember>(members);
         after.remove(player);
 
-        // イベントコール
-//        LunaChatChannelMemberChangedEvent event =
-//                new LunaChatChannelMemberChangedEvent(this.name, this.members, after);
-//        Bukkit.getPluginManager().callEvent(event);
-//        if ( event.isCancelled() ) {
-//            return;
-//        }
+        // LunaChatChannelMemberChangedEvent イベントコール
+        EventResult result = LunaChat.getEventSender().sendLunaChatChannelMemberChangedEvent(name, members, after);
+        if ( result.isCancelled() ) {
+            return;
+        }
 
         // デフォルト発言先が退出するチャンネルと一致する場合、
         // デフォルト発言先を削除する

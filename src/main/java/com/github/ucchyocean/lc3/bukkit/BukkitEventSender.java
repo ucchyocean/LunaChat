@@ -5,9 +5,8 @@
  */
 package com.github.ucchyocean.lc3.bukkit;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.event.EventSenderInterface;
@@ -72,12 +71,14 @@ public class BukkitEventSender implements EventSenderInterface {
      * @param recipients 受信者
      * @param displayName 発言者の表示名
      * @param originalMessage 発言内容（元々の内容）
+     * @return イベント実行結果
      * @see com.github.ucchyocean.lc3.event.EventSenderInterface#sendLunaChatChannelMessageEvent(java.lang.String, com.github.ucchyocean.lc3.member.ChannelMember, java.lang.String, java.util.ArrayList, java.lang.String, java.lang.String)
      */
     @Override
-    public void sendLunaChatChannelMessageEvent(String channelName, ChannelMember member, String message,
-            ArrayList<ChannelMember> recipients, String displayName, String originalMessage) {
+    public EventResult sendLunaChatChannelMessageEvent(String channelName, ChannelMember member, String message,
+            List<ChannelMember> recipients, String displayName, String originalMessage) {
         // TODO 未実装
+        return null;
     }
 
     /**
@@ -90,7 +91,7 @@ public class BukkitEventSender implements EventSenderInterface {
      */
     @Override
     public EventResult sendLunaChatChannelOptionChangedEvent(String channelName, ChannelMember member,
-            HashMap<String, String> options) {
+            Map<String, String> options) {
         // TODO 未実装
         return null;
     }

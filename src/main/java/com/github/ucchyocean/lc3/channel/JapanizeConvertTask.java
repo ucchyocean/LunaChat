@@ -13,9 +13,11 @@ import java.util.regex.Pattern;
 
 import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.Utility;
+import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.japanize.IMEConverter;
 import com.github.ucchyocean.lc3.japanize.JapanizeType;
 import com.github.ucchyocean.lc3.japanize.YukiKanaConverter;
+import com.github.ucchyocean.lc3.member.ChannelMember;
 
 /**
  * Japanize変換を実行して、実行後に発言を行うタスク
@@ -28,6 +30,8 @@ public class JapanizeConvertTask {
     private String org;
     private JapanizeType type;
     private String format;
+    private Channel channel;
+    private ChannelMember player;
     private String result;
 
     /**
@@ -35,11 +39,16 @@ public class JapanizeConvertTask {
      * @param org 変換前の文字列
      * @param type 変換タイプ
      * @param japanizeFormat 変換後に発言するときの、発言フォーマット
+     * @param channel 変換後に発言する、発言先チャンネル
+     * @param player 発言したプレイヤー
      */
-    public JapanizeConvertTask(String org, JapanizeType type, String japanizeFormat) {
+    public JapanizeConvertTask(String org, JapanizeType type, String japanizeFormat,
+            Channel channel, ChannelMember player) {
         this.org = org;
         this.type = type;
         this.format = japanizeFormat;
+        this.channel = channel;
+        this.player = player;
     }
 
     public void run() {
@@ -106,14 +115,14 @@ public class JapanizeConvertTask {
             }
         }
 
-        // イベントコール
-//        String channelName = (channel == null) ? "" : channel.getName();
-//        EventResult event = LunaChat.getEventSender().sendLunaChatPostJapanizeEvent(
-//                channelName, player, org, japanized);
-//        if ( event.isCancelled() ) {
-//            return false;
-//        }
-//        japanized = event.getValueAsString("japanized");
+        // LunaChatPostJapanizeEvent イベントコール
+        String channelName = (channel == null) ? "" : channel.getName();
+        EventResult event = LunaChat.getEventSender().sendLunaChatPostJapanizeEvent(
+                channelName, player, org, japanized);
+        if ( event.isCancelled() ) {
+            return false;
+        }
+        japanized = event.getJapanized();
 
         // フォーマットする
         result = format.replace("%msg", org);

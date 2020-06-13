@@ -8,15 +8,14 @@ package com.github.ucchyocean.lc3.channel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatAPI;
 import com.github.ucchyocean.lc3.LunaChatBungee;
 import com.github.ucchyocean.lc3.LunaChatConfig;
 import com.github.ucchyocean.lc3.Utility;
+import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 import com.github.ucchyocean.lc3.member.ChannelMemberProxiedPlayer;
 
@@ -61,7 +60,7 @@ public class BungeeChannel extends Channel {
         String originalMessage = new String(message);
 
         // 受信者を設定する
-        Set<ChannelMember> recipients = new HashSet<ChannelMember>();
+        List<ChannelMember> recipients = new ArrayList<ChannelMember>();
 
         if ( isBroadcastChannel() ) {
             // ブロードキャストチャンネル
@@ -112,13 +111,11 @@ public class BungeeChannel extends Channel {
             message = format.replace("%msg", message);
         }
 
-        // イベントコール
-//        LunaChatChannelMessageEvent event =
-//                new LunaChatChannelMessageEvent(
-//                        getName(), player, message, recipients, name, originalMessage);
-//        Bukkit.getPluginManager().callEvent(event);
-//        message = event.getMessage();
-//        recipients = event.getRecipients();
+        // LunaChatChannelMessageEvent イベントコール
+        EventResult result = LunaChat.getEventSender().sendLunaChatChannelMessageEvent(
+                getName(), player, message, recipients, name, originalMessage);
+        message = result.getMessage();
+        recipients = result.getRecipients();
 
         // 送信する
         for ( ChannelMember p : recipients ) {

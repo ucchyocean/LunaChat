@@ -24,7 +24,7 @@ import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.Utility;
 import com.github.ucchyocean.lc3.UtilityBukkit;
 import com.github.ucchyocean.lc3.bridge.DynmapBridge;
-import com.github.ucchyocean.lc3.bukkit.event.LunaChatBukkitChannelMessageEvent;
+import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 import com.github.ucchyocean.lc3.member.ChannelMemberBukkit;
 
@@ -66,7 +66,7 @@ public class BukkitChannel extends Channel {
         String originalMessage = new String(message);
 
         // 受信者を設定する
-        ArrayList<ChannelMember> recipients = new ArrayList<ChannelMember>();
+        List<ChannelMember> recipients = new ArrayList<ChannelMember>();
         boolean sendNoRecipientMessage = false;
 
         if ( isBroadcastChannel() ) {
@@ -159,13 +159,11 @@ public class BukkitChannel extends Channel {
             message = format.replace("%msg", message);
         }
 
-        // イベントコール
-        LunaChatBukkitChannelMessageEvent event =
-                new LunaChatBukkitChannelMessageEvent(
-                        getName(), player, message, recipients, name, originalMessage);
-        Bukkit.getPluginManager().callEvent(event);
-        message = event.getMessage();
-        recipients = event.getRecipients();
+        // LunaChatChannelMessageEvent イベントコール
+        EventResult result = LunaChat.getEventSender().sendLunaChatChannelMessageEvent(
+                getName(), player, message, recipients, name, originalMessage);
+        message = result.getMessage();
+        recipients = result.getRecipients();
 
         // 通常ブロードキャストなら、設定に応じてdynmapへ送信する
         DynmapBridge dynmap = LunaChatBukkit.getInstance().getDynmap();

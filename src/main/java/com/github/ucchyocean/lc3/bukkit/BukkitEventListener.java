@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -30,8 +29,8 @@ import com.github.ucchyocean.lc3.LunaChatConfig;
 import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.Utility;
 import com.github.ucchyocean.lc3.bridge.VaultChatBridge;
-import com.github.ucchyocean.lc3.bukkit.event.LunaChatBukkitPreChatEvent;
 import com.github.ucchyocean.lc3.channel.Channel;
+import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.japanize.JapanizeType;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 import com.github.ucchyocean.lc3.member.ChannelMemberBukkit;
@@ -270,18 +269,17 @@ public class BukkitEventListener implements Listener {
             }
 
             // LunaChatPreChatEvent イベントコール
-            LunaChatBukkitPreChatEvent preChatEvent = new LunaChatBukkitPreChatEvent(
+            EventResult result = LunaChat.getEventSender().sendLunaChatPreChatEvent(
                     global.getName(), player, event.getMessage());
-            Bukkit.getPluginManager().callEvent(preChatEvent);
-            if ( preChatEvent.isCancelled() ) {
+            if ( result.isCancelled() ) {
                 event.setCancelled(true);
                 return;
             }
-            Channel alt = preChatEvent.getChannel();
+            Channel alt = result.getChannel();
             if ( alt != null ) {
                 global = alt;
             }
-            String message = preChatEvent.getMessage();
+            String message = result.getMessage();
 
             // デフォルト発言先が無いなら、グローバルチャンネルに設定する
             Channel dchannel = api.getDefaultChannel(player.getName());
@@ -559,17 +557,16 @@ public class BukkitEventListener implements Listener {
     private boolean chatToChannelWithEvent(ChannelMember player, Channel channel, String message) {
 
         // LunaChatPreChatEvent イベントコール
-        LunaChatBukkitPreChatEvent preChatEvent = new LunaChatBukkitPreChatEvent(
+        EventResult result = LunaChat.getEventSender().sendLunaChatPreChatEvent(
                 channel.getName(), player, message);
-        Bukkit.getPluginManager().callEvent(preChatEvent);
-        if ( preChatEvent.isCancelled() ) {
+        if ( result.isCancelled() ) {
             return true;
         }
-        Channel alt = preChatEvent.getChannel();
+        Channel alt = result.getChannel();
         if ( alt != null ) {
             channel = alt;
         }
-        message = preChatEvent.getMessage();
+        message = result.getMessage();
 
         // チャンネルチャット発言
         channel.chat(player, message);

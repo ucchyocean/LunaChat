@@ -36,7 +36,7 @@ public class BukkitRecipientChatJapanizeTask extends BukkitRunnable {
      */
     public BukkitRecipientChatJapanizeTask(String org, JapanizeType type, ChannelMember player,
             String japanizeFormat, List<Player> recipients) {
-        task = new JapanizeConvertTask(org, type, japanizeFormat);
+        task = new JapanizeConvertTask(org, type, japanizeFormat, null, player);
         this.recipients = recipients;
     }
 

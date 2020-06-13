@@ -39,7 +39,7 @@ public class BukkitNormalChatJapanizeTask extends BukkitRunnable {
     public BukkitNormalChatJapanizeTask(String org, JapanizeType type,
             ChannelMember player, String japanizeFormat, final AsyncPlayerChatEvent event) {
 
-        task = new JapanizeConvertTask(org, type, japanizeFormat);
+        task = new JapanizeConvertTask(org, type, japanizeFormat, null, player);
         this.player = player;
         this.event = event;
     }

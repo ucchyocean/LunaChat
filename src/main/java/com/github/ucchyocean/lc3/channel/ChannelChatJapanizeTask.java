@@ -32,7 +32,7 @@ public class ChannelChatJapanizeTask implements Runnable {
     public ChannelChatJapanizeTask(String org, JapanizeType type, Channel channel,
             ChannelMember player, String japanizeFormat, String lineFormat) {
 
-        task = new JapanizeConvertTask(org, type, japanizeFormat);
+        task = new JapanizeConvertTask(org, type, japanizeFormat, channel, player);
         this.channel = channel;
         this.player = player;
         this.lineFormat = lineFormat;

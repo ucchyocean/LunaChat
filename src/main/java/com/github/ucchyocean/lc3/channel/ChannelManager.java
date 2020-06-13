@@ -17,6 +17,7 @@ import com.github.ucchyocean.lc3.LunaChatAPI;
 import com.github.ucchyocean.lc3.LunaChatMode;
 import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.YamlConfig;
+import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.japanize.JapanizeType;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 
@@ -399,15 +400,12 @@ public class ChannelManager implements LunaChatAPI {
     @Override
     public Channel createChannel(String channelName, ChannelMember member) {
 
-        // イベントコール
-//        LunaChatChannelCreateEvent event =
-//                new LunaChatChannelCreateEvent(channelName, sender);
-//        Bukkit.getPluginManager().callEvent(event);
-//        if ( event.isCancelled() ) {
-//            return null;
-//        }
-//        String name = event.getChannelName();
-        String name = channelName;
+        // LunaChatChannelCreateEvent イベントコール
+        EventResult result = LunaChat.getEventSender().sendLunaChatChannelCreateEvent(channelName, member);
+        if ( result.isCancelled() ) {
+            return null;
+        }
+        String name = result.getChannelName();
 
         Channel channel = null;
         if ( LunaChat.getMode() == LunaChatMode.BUKKIT ) {
@@ -445,13 +443,11 @@ public class ChannelManager implements LunaChatAPI {
 
         channelName = channelName.toLowerCase();
 
-        // イベントコール
-//        LunaChatChannelRemoveEvent event =
-//                new LunaChatChannelRemoveEvent(channelName, sender);
-//        Bukkit.getPluginManager().callEvent(event);
-//        if ( event.isCancelled() ) {
-//            return false;
-//        }
+        // LunaChatChannelRemoveEvent イベントコール
+        EventResult result = LunaChat.getEventSender().sendLunaChatChannelRemoveEvent(channelName, member);
+        if ( result.isCancelled() ) {
+            return false;
+        }
 
         Channel channel = getChannel(channelName);
         if ( channel != null ) {
@@ -615,7 +611,7 @@ public class ChannelManager implements LunaChatAPI {
         }
 
         // Japanize変換
-        JapanizeConvertTask task = new JapanizeConvertTask(message, type, "%japanize");
+        JapanizeConvertTask task = new JapanizeConvertTask(message, type, "%japanize", null, null);
         if ( task.runSync() ) {
             return task.getResult();
         }
