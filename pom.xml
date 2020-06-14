@@ -116,6 +116,11 @@
       <url>http://repo.onarandombox.com/content/repositories/multiverse/</url>
     </repository>
     <repository>
+      <id>codemc-repo</id>
+      <name>mcMMO Repository</name>
+      <url>https://repo.codemc.org/repository/maven-public/</url>
+    </repository>
+    <repository>
       <id>md5-repo</id>
       <name>MD5 repository</name>
       <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
@@ -164,7 +169,7 @@
     <dependency>
       <groupId>com.gmail.nossr50.mcMMO</groupId>
       <artifactId>mcMMO</artifactId>
-      <version>1.5.00</version>
+      <version>2.1.128</version>
       <optional>true</optional>
       <scope>provided</scope>
     </dependency>

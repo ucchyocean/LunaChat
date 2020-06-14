@@ -5,6 +5,7 @@
  */
 package com.github.ucchyocean.lc3.bridge;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -72,7 +73,7 @@ public class McMMOBridge implements Listener {
         // 2byteコードを含むなら、Japanize変換は行わない
         String kanaTemp = Utility.stripColorCode(message);
         if ( !skipJapanize &&
-                ( kanaTemp.getBytes().length > kanaTemp.length() ||
+                ( kanaTemp.getBytes(StandardCharsets.UTF_8).length > kanaTemp.length() ||
                         kanaTemp.matches("[ \\uFF61-\\uFF9F]+") ) ) {
             skipJapanize = true;
         }
