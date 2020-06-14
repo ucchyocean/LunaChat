@@ -362,7 +362,7 @@ public class Channel {
      * @deprecated Legacy Version
      */
     public Map<ChannelPlayer, Long> getBanExpires() {
-        return convertMemberListToPlayerList(channel.getBanExpires());
+        return convertMemberMapToPlayerMap(channel.getBanExpires());
     }
 
     /**
@@ -371,7 +371,7 @@ public class Channel {
      * @deprecated Legacy Version
      */
     public Map<ChannelPlayer, Long> getMuteExpires() {
-        return convertMemberListToPlayerList(channel.getMuteExpires());
+        return convertMemberMapToPlayerMap(channel.getMuteExpires());
     }
 
     /**
@@ -557,11 +557,11 @@ public class Channel {
     }
 
     /**
-     * ChannelMemberのマップをChannelPlayerのリストに変換する
-     * @param list
+     * ChannelMemberのマップをChannelPlayerのマップに変換する
+     * @param map
      * @return
      */
-    private Map<ChannelPlayer, Long> convertMemberListToPlayerList(Map<ChannelMember, Long> map) {
+    private Map<ChannelPlayer, Long> convertMemberMapToPlayerMap(Map<ChannelMember, Long> map) {
         Map<ChannelPlayer, Long> result = new HashMap<ChannelPlayer, Long>();
         for ( ChannelMember member : map.keySet() ) {
             ChannelPlayer player = convertChannelMemberToChannelPlayer(member);

@@ -41,5 +41,4 @@ public abstract class ChannelMemberBungee extends ChannelMember {
             return new ChannelMemberBungeeConsole((CommandSender)sender);
         }
     }
-
 }

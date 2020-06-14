@@ -5,7 +5,7 @@
  */
 package com.github.ucchyocean.lc3.bukkit.event;
 
-import org.bukkit.command.CommandSender;
+import com.github.ucchyocean.lc3.member.ChannelMember;
 
 /**
  * チャンネル削除イベント
@@ -13,18 +13,18 @@ import org.bukkit.command.CommandSender;
  */
 public class LunaChatBukkitChannelRemoveEvent extends LunaChatBukkitBaseCancellableEvent {
 
-    private CommandSender sender;
+    private ChannelMember member;
 
-    public LunaChatBukkitChannelRemoveEvent(String channelName, CommandSender sender) {
+    public LunaChatBukkitChannelRemoveEvent(String channelName, ChannelMember member) {
         super(channelName);
-        this.sender = sender;
+        this.member = member;
     }
 
     /**
      * チャンネルを削除した人を取得する。
-     * @return チャンネルを削除したCommandSender
+     * @return チャンネルを削除したChannelMember
      */
-    public CommandSender getSender() {
-        return sender;
+    public ChannelMember getMember() {
+        return member;
     }
 }

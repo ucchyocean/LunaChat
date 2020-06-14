@@ -6,8 +6,9 @@
 package com.github.ucchyocean.lc3.bukkit.event;
 
 import java.util.HashMap;
+import java.util.Map;
 
-import org.bukkit.command.CommandSender;
+import com.github.ucchyocean.lc3.member.ChannelMember;
 
 /**
  * オプション変更イベント
@@ -15,13 +16,13 @@ import org.bukkit.command.CommandSender;
  */
 public class LunaChatBukkitChannelOptionChangedEvent extends LunaChatBukkitBaseCancellableEvent {
 
-    private CommandSender sender;
-    private HashMap<String, String> options;
+    private ChannelMember member;
+    private Map<String, String> options;
 
     public LunaChatBukkitChannelOptionChangedEvent(String channelName,
-            CommandSender sender, HashMap<String, String> options) {
+            ChannelMember member, Map<String, String> options) {
         super(channelName);
-        this.sender = sender;
+        this.member = member;
         this.options = options;
     }
 
@@ -29,7 +30,7 @@ public class LunaChatBukkitChannelOptionChangedEvent extends LunaChatBukkitBaseC
      * 変更後のオプションリストをかえす
      * @return オプションリスト
      */
-    public HashMap<String, String> getOptions() {
+    public Map<String, String> getOptions() {
         return options;
     }
 
@@ -43,9 +44,9 @@ public class LunaChatBukkitChannelOptionChangedEvent extends LunaChatBukkitBaseC
 
     /**
      * チャンネルのオプションを変更した人を取得する。
-     * @return チャンネルのオプションを変更したCommandSender
+     * @return チャンネルのオプションを変更したChannelMember
      */
-    public CommandSender getSender() {
-        return sender;
+    public ChannelMember getMember() {
+        return member;
     }
 }

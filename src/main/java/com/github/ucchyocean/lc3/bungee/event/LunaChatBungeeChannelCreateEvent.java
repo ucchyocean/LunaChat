@@ -6,8 +6,7 @@
 package com.github.ucchyocean.lc3.bungee.event;
 
 import com.github.ucchyocean.lc3.channel.Channel;
-
-import net.md_5.bungee.api.CommandSender;
+import com.github.ucchyocean.lc3.member.ChannelMember;
 
 /**
  * チャンネル作成イベント
@@ -15,11 +14,11 @@ import net.md_5.bungee.api.CommandSender;
  */
 public class LunaChatBungeeChannelCreateEvent extends LunaChatBungeeBaseCancellableEvent {
 
-    private CommandSender sender;
+    private ChannelMember member;
 
-    public LunaChatBungeeChannelCreateEvent(String channelName, CommandSender sender) {
+    public LunaChatBungeeChannelCreateEvent(String channelName, ChannelMember member) {
         super(channelName);
-        this.sender = sender;
+        this.member = member;
     }
 
     /**
@@ -32,10 +31,10 @@ public class LunaChatBungeeChannelCreateEvent extends LunaChatBungeeBaseCancella
 
     /**
      * チャンネルを作成した人を取得する。
-     * @return チャンネルを作成したCommandSender
+     * @return チャンネルを作成したChannelMember
      */
-    public CommandSender getSender() {
-        return sender;
+    public ChannelMember getMember() {
+        return member;
     }
 
     /**

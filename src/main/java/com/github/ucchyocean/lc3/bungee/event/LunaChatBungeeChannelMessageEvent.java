@@ -6,6 +6,7 @@
 package com.github.ucchyocean.lc3.bungee.event;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.github.ucchyocean.lc3.member.ChannelMember;
 
@@ -18,12 +19,12 @@ public class LunaChatBungeeChannelMessageEvent extends LunaChatBungeeBaseEvent {
 
     private ChannelMember player;
     private String message;
-    private ArrayList<ChannelMember> recipients;
+    private List<ChannelMember> recipients;
     private String displayName;
     private String originalMessage;
 
     public LunaChatBungeeChannelMessageEvent(String channelName,
-            ChannelMember player, String message, ArrayList<ChannelMember> recipients,
+            ChannelMember player, String message, List<ChannelMember> recipients,
             String displayName, String originalMessage) {
         super(channelName);
         this.player = player;
@@ -53,7 +54,7 @@ public class LunaChatBungeeChannelMessageEvent extends LunaChatBungeeBaseEvent {
      * メッセージを受信するプレイヤーリスト
      * @return recipients プレイヤーリスト
      */
-    public ArrayList<ChannelMember> getRecipients() {
+    public List<ChannelMember> getRecipients() {
         return recipients;
     }
 

@@ -448,6 +448,7 @@ public class ChannelManager implements LunaChatAPI {
         if ( result.isCancelled() ) {
             return false;
         }
+        channelName = result.getChannelName();
 
         Channel channel = getChannel(channelName);
         if ( channel != null ) {

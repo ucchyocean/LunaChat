@@ -9,6 +9,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.github.ucchyocean.lc3.bungee.event.LunaChatBungeeChannelChatEvent;
+import com.github.ucchyocean.lc3.bungee.event.LunaChatBungeeChannelCreateEvent;
+import com.github.ucchyocean.lc3.bungee.event.LunaChatBungeeChannelMemberChangedEvent;
+import com.github.ucchyocean.lc3.bungee.event.LunaChatBungeeChannelMessageEvent;
+import com.github.ucchyocean.lc3.bungee.event.LunaChatBungeeChannelOptionChangedEvent;
+import com.github.ucchyocean.lc3.bungee.event.LunaChatBungeeChannelRemoveEvent;
+import com.github.ucchyocean.lc3.bungee.event.LunaChatBungeePostJapanizeEvent;
+import com.github.ucchyocean.lc3.bungee.event.LunaChatBungeePreChatEvent;
 import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.event.EventSenderInterface;
 import com.github.ucchyocean.lc3.member.ChannelMember;
@@ -35,13 +42,13 @@ public class BungeeEventSender implements EventSenderInterface {
     public EventResult sendLunaChatChannelChatEvent(String channelName, ChannelMember member, String originalMessage,
             String ngMaskedMessage, String messageFormat) {
 
-        LunaChatBungeeChannelChatEvent event = new LunaChatBungeeChannelChatEvent(
-                channelName, member, originalMessage, ngMaskedMessage, messageFormat);
+        LunaChatBungeeChannelChatEvent event =
+                new LunaChatBungeeChannelChatEvent(
+                        channelName, member, originalMessage, ngMaskedMessage, messageFormat);
         event = ProxyServer.getInstance().getPluginManager().callEvent(event);
 
         EventResult result = new EventResult();
         result.setCancelled(event.isCancelled());
-        result.setChannelName(event.getChannelName());
         result.setNgMaskedMessage(event.getNgMaskedMessage());
         result.setMessageFormat(event.getMessageFormat());
         return result;
@@ -56,8 +63,15 @@ public class BungeeEventSender implements EventSenderInterface {
      */
     @Override
     public EventResult sendLunaChatChannelCreateEvent(String channelName, ChannelMember member) {
-        // TODO 未実装
-        return null;
+
+        LunaChatBungeeChannelCreateEvent event =
+                new LunaChatBungeeChannelCreateEvent(channelName, member);
+        event = ProxyServer.getInstance().getPluginManager().callEvent(event);
+
+        EventResult result = new EventResult();
+        result.setCancelled(event.isCancelled());
+        result.setChannelName(event.getChannelName());
+        return result;
     }
 
     /**
@@ -71,8 +85,14 @@ public class BungeeEventSender implements EventSenderInterface {
     @Override
     public EventResult sendLunaChatChannelMemberChangedEvent(String channelName, List<ChannelMember> before,
             List<ChannelMember> after) {
-        // TODO 未実装
-        return null;
+
+        LunaChatBungeeChannelMemberChangedEvent event =
+                new LunaChatBungeeChannelMemberChangedEvent(channelName, before, after);
+        event = ProxyServer.getInstance().getPluginManager().callEvent(event);
+
+        EventResult result = new EventResult();
+        result.setCancelled(event.isCancelled());
+        return result;
     }
 
     /**
@@ -89,9 +109,17 @@ public class BungeeEventSender implements EventSenderInterface {
     @Override
     public EventResult sendLunaChatChannelMessageEvent(String channelName, ChannelMember member, String message,
             List<ChannelMember> recipients, String displayName, String originalMessage) {
-        // TODO 未実装
-        return null;
-    }
+
+        LunaChatBungeeChannelMessageEvent event =
+                new LunaChatBungeeChannelMessageEvent(
+                        channelName, member, message, recipients, displayName, originalMessage);
+        event = ProxyServer.getInstance().getPluginManager().callEvent(event);
+
+        EventResult result = new EventResult();
+        result.setMessage(event.getMessage());
+        result.setRecipients(event.getRecipients());
+        return result;
+     }
 
     /**
      * オプション変更イベント
@@ -104,8 +132,15 @@ public class BungeeEventSender implements EventSenderInterface {
     @Override
     public EventResult sendLunaChatChannelOptionChangedEvent(String channelName, ChannelMember member,
             Map<String, String> options) {
-        // TODO 未実装
-        return null;
+
+        LunaChatBungeeChannelOptionChangedEvent event =
+                new LunaChatBungeeChannelOptionChangedEvent(channelName, member, options);
+        event = ProxyServer.getInstance().getPluginManager().callEvent(event);
+
+        EventResult result = new EventResult();
+        result.setCancelled(event.isCancelled());
+        result.setOptions(event.getOptions());
+        return result;
     }
 
     /**
@@ -117,8 +152,14 @@ public class BungeeEventSender implements EventSenderInterface {
      */
     @Override
     public EventResult sendLunaChatChannelRemoveEvent(String channelName, ChannelMember member) {
-        // TODO 未実装
-        return null;
+
+        LunaChatBungeeChannelRemoveEvent event = new LunaChatBungeeChannelRemoveEvent(channelName, member);
+        event = ProxyServer.getInstance().getPluginManager().callEvent(event);
+
+        EventResult result = new EventResult();
+        result.setCancelled(event.isCancelled());
+        result.setChannelName(event.getChannelName());
+        return result;
     }
 
     /**
@@ -133,8 +174,15 @@ public class BungeeEventSender implements EventSenderInterface {
     @Override
     public EventResult sendLunaChatPostJapanizeEvent(String channelName, ChannelMember member, String original,
             String japanized) {
-        // TODO 未実装
-        return null;
+
+        LunaChatBungeePostJapanizeEvent event =
+                new LunaChatBungeePostJapanizeEvent(channelName, member, original, japanized);
+        event = ProxyServer.getInstance().getPluginManager().callEvent(event);
+
+        EventResult result = new EventResult();
+        result.setCancelled(event.isCancelled());
+        result.setJapanized(event.getJapanized());
+        return result;
     }
 
     /**
@@ -147,7 +195,14 @@ public class BungeeEventSender implements EventSenderInterface {
      */
     @Override
     public EventResult sendLunaChatPreChatEvent(String channelName, ChannelMember member, String message) {
-        // TODO 未実装
-        return null;
+
+        LunaChatBungeePreChatEvent event =
+                new LunaChatBungeePreChatEvent(channelName, member, message);
+        event = ProxyServer.getInstance().getPluginManager().callEvent(event);
+
+        EventResult result = new EventResult();
+        result.setCancelled(event.isCancelled());
+        result.setMessage(event.getMessage());
+        return result;
     }
 }

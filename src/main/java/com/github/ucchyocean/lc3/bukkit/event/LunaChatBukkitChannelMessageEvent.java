@@ -5,7 +5,7 @@
  */
 package com.github.ucchyocean.lc3.bukkit.event;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.github.ucchyocean.lc3.member.ChannelMember;
 
@@ -18,12 +18,12 @@ public class LunaChatBukkitChannelMessageEvent extends LunaChatBukkitBaseEvent {
 
     private ChannelMember player;
     private String message;
-    private ArrayList<ChannelMember> recipients;
+    private List<ChannelMember> recipients;
     private String displayName;
     private String originalMessage;
 
     public LunaChatBukkitChannelMessageEvent(String channelName,
-            ChannelMember player, String message, ArrayList<ChannelMember> recipients,
+            ChannelMember player, String message, List<ChannelMember> recipients,
             String displayName, String originalMessage) {
         super(channelName);
         this.player = player;
@@ -53,7 +53,7 @@ public class LunaChatBukkitChannelMessageEvent extends LunaChatBukkitBaseEvent {
      * メッセージを受信するプレイヤーリスト
      * @return recipients プレイヤーリスト
      */
-    public ArrayList<ChannelMember> getRecipients() {
+    public List<ChannelMember> getRecipients() {
         return recipients;
     }
 
@@ -85,7 +85,7 @@ public class LunaChatBukkitChannelMessageEvent extends LunaChatBukkitBaseEvent {
      * メッセージ受信者を上書き設定する
      * @param recipients メッセージ受信者
      */
-    public void setRecipients(ArrayList<ChannelMember> recipients) {
+    public void setRecipients(List<ChannelMember> recipients) {
         this.recipients = recipients;
     }
 }
