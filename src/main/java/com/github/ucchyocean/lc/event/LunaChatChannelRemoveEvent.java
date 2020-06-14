@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 /**
  * チャンネル削除イベント
  * @author ucchy
+ * @deprecated Legacy Version
  */
 public class LunaChatChannelRemoveEvent extends LunaChatBaseCancellableEvent {
 

@@ -6,7 +6,7 @@ Build Status : [![Build Status](https://travis-ci.org/ucchyocean/LunaChat.svg?br
 チャンネルチャットプラグイン<br />
 <br />
 ダウンロードはこちらから<br />
-http://forum.minecraftuser.jp/viewtopic.php?f=38&t=13739<br />
+https://github.com/ucchyocean/LunaChat/releases<br />
 <br />
 コマンドリファレンスや、設定リファレンスは、こちらから<br />
 https://github.com/ucchyocean/LunaChat/wiki/Commands<br />

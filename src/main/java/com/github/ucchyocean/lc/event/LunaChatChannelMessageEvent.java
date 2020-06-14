@@ -13,6 +13,7 @@ import com.github.ucchyocean.lc.channel.ChannelPlayer;
  * チャンネルチャットのメッセージイベント、
  * このイベントはキャンセルできない。
  * @author ucchy
+ * @deprecated Legacy Version
  */
 public class LunaChatChannelMessageEvent extends LunaChatBaseEvent {
 

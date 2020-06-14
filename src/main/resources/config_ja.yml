@@ -1,10 +1,13 @@
 # ${project.name} v${project.version}
 # @author     ucchy
 # @license    LGPLv3
-# @copyright  Copyright ucchy 2013
+# @copyright  Copyright ucchy 2020
 
 
 # -------------------- 全般設定 --------------------
+
+# 言語設定
+lang: ja
 
 # チャンネルチャット機能を利用可能にするかどうか
 # Japanize機能のみを利用したい場合は、falseにしてください。
@@ -24,15 +27,6 @@ noJoinAsGlobal: true
 
 # チャンネルチャットの発言内容を、ログに残すかどうか
 loggingChat: true
-
-# チャンネルチャットの発言内容を、HawkEyeに記録するかどうか
-# この設定を利用する場合は、HawkEyeのconfig.ymlで、log: セクションの chat の設定を true にしてください。
-loggingChatToHawkEye: true
-
-# チャンネルチャットの発言内容を、Prismに記録するかどうか
-# この設定を利用する場合は、Prismのconfig.ymlで、
-# tracking: セクションの player-chat の設定を true にしてください。
-loggingChatToPrism: true
 
 # チャンネルチャットの発言内容を、サーバーコンソールに表示するかどうか
 displayChatOnConsole: true
@@ -108,14 +102,17 @@ quickChannelChatSeparator: ':'
 # %ch       : チャンネル名（「%player>%to」と同一です。）
 # %username : 発言者表示名
 # %player   : 発言者ID
+# %server   : 発言者の接続サーバー名（BungeeCord側に導入したときに有効です。）
 # %to       : 発言の相手（受信者）のID
-# %world    : 発言したワールド名
+# %recieverserver : 受信者の接続サーバー名（BungeeCord側に導入したときに有効です。）
+# %world    : 発言したワールド名（spigot側に導入したときに有効です。MultiVerseが導入されている場合は、ワールドの表示名を取得して使用します。）
 # %prefix   : プレフィックス（VaultとPermissionsExが導入されている場合に置き換えられます）
 # %suffix   : サフィックス（VaultとPermissionsExが導入されている場合に置き換えられます）
 # %date     : 日付
 # %time     : 時刻
 # %msg      : 発言内容（Japanize変換された場合は、Japanize結果を含みます。）
 defaultFormatForPrivateMessage: '&7[%player -> %to]&f %msg'
+#defaultFormatForPrivateMessage: '&7[%player@%server > %to@%recieverserver] %msg'
 
 
 # -------------------- dynmap連携設定 --------------------
@@ -141,7 +138,8 @@ dynmapChannel: ''
 
 # NGワード設定。正規表現が指定可能です。
 # ここに設定されたワードを発言したプレイヤーは、NGワード部分がマスクされます。
-ngword: ['ちん(こ|ぽ|ちん)']
+ngword: 
+- 'ちん(こ|ぽ|ちん)'
 
 # NGワード発言時の動作設定。mask、mute、kick、ban の4つのいずれかが設定可能。
 # mask : NGワードをマスクする
@@ -156,23 +154,22 @@ ngwordAction: mask
 
 # -------------------- チャット装飾設定 --------------------
 
-# チャンネルチャット機能を利用しないユーザーのための設定です。
-
 # 通常チャット（非チャンネルチャット）の装飾を、LunaChatから行うかどうか。
-# Vault がロードされていない場合は、この設定は無視される（false扱い）。
 enableNormalChatMessageFormat: true
 
 # チャット装飾のフォーマット設定。
 # フォーマット設定には、下記のキーワードが使用できます。
 # %username : 発言者表示名
 # %player   : 発言者ID
-# %world    : 発言したワールド名
-# %prefix   : プレフィックス（VaultとPermissionsExが導入されている場合に置き換えられます）
-# %suffix   : サフィックス（VaultとPermissionsExが導入されている場合に置き換えられます）
+# %world    : 発言したワールド名（spigot側に導入したときに有効です。MultiVerseが導入されている場合は、ワールドの表示名を取得して使用します。）
+# %server   : 発言者の接続サーバー名（BungeeCord側に導入したときに有効です。）
+# %prefix   : プレフィックス（VaultとPrefix/Suffixプラグインが導入されている場合に置き換えられます）
+# %suffix   : サフィックス（VaultとPrefix/Suffixプラグインが導入されている場合に置き換えられます）
 # %date     : 日付
 # %time     : 時刻
 # %msg      : 発言内容（Japanize変換された場合は、Japanize結果を含みます。）
 normalChatMessageFormat: '&f%prefix%username%suffix&a:&f %msg'
+#normalChatMessageFormat: '&f%username@%server&a:&f %msg'
 
 # 通常チャット（非チャンネルチャット）で、カラーコード（&aや&bなど）を
 # 使用可能にするかどうか。falseに設定すると、カラーコードは変換されません。
@@ -217,3 +214,6 @@ japanizeIgnorePlayerName: true
 # ノンジャパナイズマーカー。
 # これが発言の頭に入っている場合は、一時的にJapanize変換を実行しない。
 noneJapanizeMarker: '#'
+
+
+# -------------------- BungeeCord用設定 --------------------

@@ -10,12 +10,10 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.LunaChat;
-import com.github.ucchyocean.lc.bridge.VaultChatBridge;
-
 /**
  * 名前管理のプレイヤー
  * @author ucchy
+ * @deprecated Legacy Version
  */
 public class ChannelPlayerName extends ChannelPlayer {
 
@@ -70,14 +68,6 @@ public class ChannelPlayerName extends ChannelPlayer {
      */
     @Override
     public String getPrefix() {
-        VaultChatBridge vault = LunaChat.getInstance().getVaultChat();
-        if ( vault == null ) {
-            return "";
-        }
-        Player player = getPlayer();
-        if ( player != null ) {
-            return vault.getPlayerPrefix(player);
-        }
         return "";
     }
 
@@ -88,14 +78,6 @@ public class ChannelPlayerName extends ChannelPlayer {
      */
     @Override
     public String getSuffix() {
-        VaultChatBridge vault = LunaChat.getInstance().getVaultChat();
-        if ( vault == null ) {
-            return "";
-        }
-        Player player = getPlayer();
-        if ( player != null ) {
-            return vault.getPlayerSuffix(player);
-        }
         return "";
     }
 

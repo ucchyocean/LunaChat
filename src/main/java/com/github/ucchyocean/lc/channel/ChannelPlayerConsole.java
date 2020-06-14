@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 /**
  * コンソール
  * @author ucchy
+ * @deprecated Legacy Version
  */
 public class ChannelPlayerConsole extends ChannelPlayer {
 

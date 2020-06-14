@@ -10,6 +10,7 @@ import org.bukkit.event.Cancellable;
 /**
  * 基底のキャンセル可能イベントクラス
  * @author ucchy
+ * @deprecated Legacy Version
  */
 public class LunaChatBaseCancellableEvent extends LunaChatBaseEvent implements Cancellable {
 

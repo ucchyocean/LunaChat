@@ -15,6 +15,7 @@ import com.github.ucchyocean.lc.channel.Channel;
 /**
  * 基底イベントクラス
  * @author ucchy
+ * @deprecated Legacy Version
  */
 public abstract class LunaChatBaseEvent extends Event {
 

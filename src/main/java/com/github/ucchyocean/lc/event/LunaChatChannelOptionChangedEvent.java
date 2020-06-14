@@ -12,6 +12,7 @@ import org.bukkit.command.CommandSender;
 /**
  * オプション変更イベント
  * @author ucchy
+ * @deprecated Legacy Version
  */
 public class LunaChatChannelOptionChangedEvent extends LunaChatBaseCancellableEvent {
 

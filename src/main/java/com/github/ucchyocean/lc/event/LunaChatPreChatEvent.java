@@ -11,6 +11,7 @@ import com.github.ucchyocean.lc.channel.ChannelPlayer;
 /**
  * チャンネルチャットへの発言前に発生するイベント
  * @author ucchy
+ * @deprecated Legacy Version
  */
 public class LunaChatPreChatEvent extends LunaChatBaseCancellableEvent {
 

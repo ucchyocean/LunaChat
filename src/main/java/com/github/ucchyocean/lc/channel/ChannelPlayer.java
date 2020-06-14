@@ -11,11 +11,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc.Utility;
-
 /**
  * プレイヤーの抽象クラス
  * @author ucchy
+ * @deprecated Legacy Version
  */
 public abstract class ChannelPlayer implements Comparable<ChannelPlayer> {
 
@@ -136,12 +135,10 @@ public abstract class ChannelPlayer implements Comparable<ChannelPlayer> {
             String id = nameOrUuid.substring(1);
             return new ChannelPlayerUUID(id);
         }
-        if ( Utility.isCB178orLater() ) {
-            ChannelPlayer player =
-                    ChannelPlayerUUID.getChannelPlayerUUIDFromName(nameOrUuid);
-            if ( player != null ) {
-                return player;
-            }
+        ChannelPlayer player =
+                ChannelPlayerUUID.getChannelPlayerUUIDFromName(nameOrUuid);
+        if ( player != null ) {
+            return player;
         }
         return new ChannelPlayerName(nameOrUuid);
     }
@@ -158,9 +155,7 @@ public abstract class ChannelPlayer implements Comparable<ChannelPlayer> {
             return new ChannelPlayerBlock((BlockCommandSender)sender);
         } else if ( sender instanceof ConsoleCommandSender ) {
             return new ChannelPlayerConsole((ConsoleCommandSender)sender);
-        } else if ( Utility.isCB178orLater() ) {
-            return ChannelPlayerUUID.getChannelPlayer(sender);
         }
-        return new ChannelPlayerName(sender.getName());
+        return ChannelPlayerUUID.getChannelPlayer(sender);
     }
 }
