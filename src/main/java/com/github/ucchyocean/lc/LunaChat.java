@@ -13,7 +13,7 @@ public class LunaChat {
 
     private static LunaChat instance = new LunaChat();
     @SuppressWarnings("deprecation")
-    private LunaChatAPI api = new LunaChatAPI();
+    private LunaChatAPI api = new LunaChatAPIImpl();
 
     /**
      * LunaChatのインスタンスを返す
