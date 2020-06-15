@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 
+import com.github.ucchyocean.lc3.bridge.BungeePermsBridge;
 import com.github.ucchyocean.lc3.bungee.BungeeEventListener;
 import com.github.ucchyocean.lc3.bungee.BungeeEventSender;
 import com.github.ucchyocean.lc3.bungee.JapanizeCommandBungee;
@@ -37,6 +38,8 @@ public class LunaChatBungee extends Plugin implements PluginInterface {
     private UUIDCacheData uuidCacheData;
     private LunaChatLogger normalChatLogger;
 
+    private BungeePermsBridge bungeeperms;
+
     /**
      * プラグインが有効化されたときに呼び出されるメソッド
      * @see net.md_5.bungee.api.plugin.Plugin#onEnable()
@@ -60,6 +63,9 @@ public class LunaChatBungee extends Plugin implements PluginInterface {
         if ( !config.isEnableChannelChat() ) {
             manager.removeAllDefaultChannels();
         }
+
+        // BungeePermsのロード
+        bungeeperms = BungeePermsBridge.load();
 
         // コマンド登録
         getProxy().getPluginManager().registerCommand(this,
@@ -195,5 +201,13 @@ public class LunaChatBungee extends Plugin implements PluginInterface {
     @Override
     public void runAsyncTask(Runnable task) {
         ProxyServer.getInstance().getScheduler().runAsync(this, task);
+    }
+
+    /**
+     * BungeePerms連携クラスを取得する
+     * @return BungeePerms連携クラス
+     */
+    public BungeePermsBridge getBungeePerms() {
+        return bungeeperms;
     }
 }

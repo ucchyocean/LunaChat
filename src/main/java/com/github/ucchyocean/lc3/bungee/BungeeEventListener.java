@@ -21,6 +21,7 @@ import com.github.ucchyocean.lc3.LunaChatBungee;
 import com.github.ucchyocean.lc3.LunaChatConfig;
 import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.Utility;
+import com.github.ucchyocean.lc3.bridge.BungeePermsBridge;
 import com.github.ucchyocean.lc3.channel.Channel;
 import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.japanize.Japanizer;
@@ -412,9 +413,16 @@ public class BungeeEventListener implements Listener {
         }
 
         if ( format.contains("%prefix") || format.contains("%suffix") ) {
-            // TODO 未実装
-            format = format.replace("%prefix", "");
-            format = format.replace("%suffix", "");
+
+            String prefix = "";
+            String suffix = "";
+            BungeePermsBridge bungeeperms = LunaChatBungee.getInstance().getBungeePerms();
+            if ( bungeeperms != null ) {
+                prefix = bungeeperms.userPrefix(player.getUniqueId().toString(), null, null);
+                suffix = bungeeperms.userSuffix(player.getUniqueId().toString(), null, null);
+            }
+            format = format.replace("%prefix", prefix);
+            format = format.replace("%suffix", suffix);
         }
 
         if ( format.contains("%world") ) {

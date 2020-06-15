@@ -10,6 +10,8 @@ import java.util.UUID;
 import org.jetbrains.annotations.Nullable;
 
 import com.github.ucchyocean.lc3.LunaChat;
+import com.github.ucchyocean.lc3.LunaChatBungee;
+import com.github.ucchyocean.lc3.bridge.BungeePermsBridge;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -49,7 +51,6 @@ public class ChannelMemberProxiedPlayer extends ChannelMemberBungee {
         if ( nameOrUuid.startsWith("$") ) {
             return new ChannelMemberProxiedPlayer(UUID.fromString(nameOrUuid.substring(1)));
         } else {
-            // TODO オフラインのプレイヤー取得について検討する
             ProxiedPlayer player = ProxyServer.getInstance().getPlayer(nameOrUuid);
             if ( player != null ) return new ChannelMemberProxiedPlayer(player.getUniqueId());
         }
@@ -104,10 +105,11 @@ public class ChannelMemberProxiedPlayer extends ChannelMemberBungee {
      */
     @Override
     public String getPrefix() {
-
-        // TODO 未実装
-
-        return "";
+        BungeePermsBridge bungeeperms = LunaChatBungee.getInstance().getBungeePerms();
+        if ( bungeeperms == null ) {
+            return "";
+        }
+        return bungeeperms.userPrefix(id.toString(), null, null);
     }
 
     /**
@@ -117,10 +119,11 @@ public class ChannelMemberProxiedPlayer extends ChannelMemberBungee {
      */
     @Override
     public String getSuffix() {
-
-        // TODO 未実装
-
-        return "";
+        BungeePermsBridge bungeeperms = LunaChatBungee.getInstance().getBungeePerms();
+        if ( bungeeperms == null ) {
+            return "";
+        }
+        return bungeeperms.userSuffix(id.toString(), null, null);
     }
 
     /**
@@ -171,7 +174,6 @@ public class ChannelMemberProxiedPlayer extends ChannelMemberBungee {
      */
     @Override
     public boolean isPermissionSet(String node) {
-        // TODO 要テスト
         ProxiedPlayer player = getPlayer();
         if ( player != null ) {
             return player.getPermissions().contains(node);
