@@ -66,12 +66,19 @@ public class YamlConfig {
     }
 
     public static YamlConfig load(File file) {
+
+        // 対象ファイルが存在しない場合やからっぽの場合は、からっぽのYamlConfigを返す
+        if ( !file.exists() || !file.isFile() || file.length() == 0 ) return new YamlConfig();
+
+        // 読み込む
         try ( InputStreamReader reader = new InputStreamReader(new FileInputStream(file), "UTF-8") ) {
             return load(reader);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+
+        // 読み込みに失敗した場合は、からっぽのYamlConfigを返す
+        return new YamlConfig();
     }
 
     public void save(File file) throws IOException {
@@ -148,6 +155,10 @@ public class YamlConfig {
     }
 
     public void addDefaults(YamlConfig defaults) {
-        this.defaults = defaults.map;
+        if (defaults == null) {
+            this.defaults = new HashMap<String, Object>();
+        } else {
+            this.defaults = defaults.map;
+        }
     }
 }
