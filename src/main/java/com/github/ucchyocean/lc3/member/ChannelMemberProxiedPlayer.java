@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatBungee;
 import com.github.ucchyocean.lc3.bridge.BungeePermsBridge;
+import com.github.ucchyocean.lc3.bridge.LuckPermsBridge;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -105,11 +106,16 @@ public class ChannelMemberProxiedPlayer extends ChannelMemberBungee {
      */
     @Override
     public String getPrefix() {
-        BungeePermsBridge bungeeperms = LunaChatBungee.getInstance().getBungeePerms();
-        if ( bungeeperms == null ) {
-            return "";
+
+        LuckPermsBridge luckperms = LunaChatBungee.getInstance().getLuckPerms();
+        if ( luckperms != null ) {
+            return luckperms.getPlayerPrefix(id);
         }
-        return bungeeperms.userPrefix(id.toString(), null, null);
+        BungeePermsBridge bungeeperms = LunaChatBungee.getInstance().getBungeePerms();
+        if ( bungeeperms != null ) {
+            return bungeeperms.userPrefix(id.toString(), null, null);
+        }
+        return "";
     }
 
     /**
@@ -119,11 +125,16 @@ public class ChannelMemberProxiedPlayer extends ChannelMemberBungee {
      */
     @Override
     public String getSuffix() {
-        BungeePermsBridge bungeeperms = LunaChatBungee.getInstance().getBungeePerms();
-        if ( bungeeperms == null ) {
-            return "";
+
+        LuckPermsBridge luckperms = LunaChatBungee.getInstance().getLuckPerms();
+        if ( luckperms != null ) {
+            return luckperms.getPlayerPrefix(id);
         }
-        return bungeeperms.userSuffix(id.toString(), null, null);
+        BungeePermsBridge bungeeperms = LunaChatBungee.getInstance().getBungeePerms();
+        if ( bungeeperms != null ) {
+            return bungeeperms.userPrefix(id.toString(), null, null);
+        }
+        return "";
     }
 
     /**

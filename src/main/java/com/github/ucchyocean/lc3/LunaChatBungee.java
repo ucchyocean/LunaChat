@@ -12,6 +12,7 @@ import java.util.TreeSet;
 import java.util.logging.Level;
 
 import com.github.ucchyocean.lc3.bridge.BungeePermsBridge;
+import com.github.ucchyocean.lc3.bridge.LuckPermsBridge;
 import com.github.ucchyocean.lc3.bungee.BungeeEventListener;
 import com.github.ucchyocean.lc3.bungee.BungeeEventSender;
 import com.github.ucchyocean.lc3.bungee.JapanizeCommandBungee;
@@ -39,6 +40,7 @@ public class LunaChatBungee extends Plugin implements PluginInterface {
     private LunaChatLogger normalChatLogger;
 
     private BungeePermsBridge bungeeperms;
+    private LuckPermsBridge luckperms;
 
     /**
      * プラグインが有効化されたときに呼び出されるメソッド
@@ -65,7 +67,16 @@ public class LunaChatBungee extends Plugin implements PluginInterface {
         }
 
         // BungeePermsのロード
-        bungeeperms = BungeePermsBridge.load();
+        Plugin temp = getProxy().getPluginManager().getPlugin("BungeePerms");
+        if ( temp != null ) {
+            bungeeperms = BungeePermsBridge.load(temp);
+        }
+
+        // LuckPermsのロード
+        temp = getProxy().getPluginManager().getPlugin("LuckPerms");
+        if ( temp != null ) {
+            luckperms = LuckPermsBridge.load(temp);
+        }
 
         // コマンド登録
         getProxy().getPluginManager().registerCommand(this,
@@ -209,5 +220,13 @@ public class LunaChatBungee extends Plugin implements PluginInterface {
      */
     public BungeePermsBridge getBungeePerms() {
         return bungeeperms;
+    }
+
+    /**
+     * LuckPerms連携クラスを取得する
+     * @return LuckPerms連携クラス
+     */
+    public LuckPermsBridge getLuckPerms() {
+        return luckperms;
     }
 }

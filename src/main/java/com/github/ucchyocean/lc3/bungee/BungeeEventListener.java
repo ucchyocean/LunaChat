@@ -22,6 +22,7 @@ import com.github.ucchyocean.lc3.LunaChatConfig;
 import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.Utility;
 import com.github.ucchyocean.lc3.bridge.BungeePermsBridge;
+import com.github.ucchyocean.lc3.bridge.LuckPermsBridge;
 import com.github.ucchyocean.lc3.channel.Channel;
 import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.japanize.Japanizer;
@@ -416,6 +417,11 @@ public class BungeeEventListener implements Listener {
 
             String prefix = "";
             String suffix = "";
+            LuckPermsBridge luckperms = LunaChatBungee.getInstance().getLuckPerms();
+            if ( luckperms != null ) {
+                prefix = luckperms.getPlayerPrefix(player.getUniqueId());
+                suffix = luckperms.getPlayerSuffix(player.getUniqueId());
+            }
             BungeePermsBridge bungeeperms = LunaChatBungee.getInstance().getBungeePerms();
             if ( bungeeperms != null ) {
                 prefix = bungeeperms.userPrefix(player.getUniqueId().toString(), null, null);
