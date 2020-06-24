@@ -87,10 +87,11 @@ public class Messages {
     public static String joinMessage(Object color, Object channel, Object player) {
         String msg = resources.getString("joinMessage");
         if ( msg == null ) return "";
-        msg = msg.replace("%color%", color.toString());
-        msg = msg.replace("%channel%", channel.toString());
-        msg = msg.replace("%player%", player.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%color%", color.toString());
+        kr.replace("%channel%", channel.toString());
+        kr.replace("%player%", player.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -99,10 +100,11 @@ public class Messages {
     public static String quitMessage(Object color, Object channel, Object player) {
         String msg = resources.getString("quitMessage");
         if ( msg == null ) return "";
-        msg = msg.replace("%color%", color.toString());
-        msg = msg.replace("%channel%", channel.toString());
-        msg = msg.replace("%player%", player.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%color%", color.toString());
+        kr.replace("%channel%", channel.toString());
+        kr.replace("%player%", player.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -111,9 +113,10 @@ public class Messages {
     public static String breakupMessage(Object color, Object channel) {
         String msg = resources.getString("breakupMessage");
         if ( msg == null ) return "";
-        msg = msg.replace("%color%", color.toString());
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%color%", color.toString());
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -122,10 +125,11 @@ public class Messages {
     public static String banMessage(Object color, Object channel, Object player) {
         String msg = resources.getString("banMessage");
         if ( msg == null ) return "";
-        msg = msg.replace("%color%", color.toString());
-        msg = msg.replace("%channel%", channel.toString());
-        msg = msg.replace("%player%", player.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%color%", color.toString());
+        kr.replace("%channel%", channel.toString());
+        kr.replace("%player%", player.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -134,10 +138,11 @@ public class Messages {
     public static String kickMessage(Object color, Object channel, Object player) {
         String msg = resources.getString("kickMessage");
         if ( msg == null ) return "";
-        msg = msg.replace("%color%", color.toString());
-        msg = msg.replace("%channel%", channel.toString());
-        msg = msg.replace("%player%", player.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%color%", color.toString());
+        kr.replace("%channel%", channel.toString());
+        kr.replace("%player%", player.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -146,10 +151,11 @@ public class Messages {
     public static String muteMessage(Object color, Object channel, Object player) {
         String msg = resources.getString("muteMessage");
         if ( msg == null ) return "";
-        msg = msg.replace("%color%", color.toString());
-        msg = msg.replace("%channel%", channel.toString());
-        msg = msg.replace("%player%", player.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%color%", color.toString());
+        kr.replace("%channel%", channel.toString());
+        kr.replace("%player%", player.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -158,10 +164,11 @@ public class Messages {
     public static String banNGWordMessage(Object color, Object channel, Object player) {
         String msg = resources.getString("banNGWordMessage");
         if ( msg == null ) return "";
-        msg = msg.replace("%color%", color.toString());
-        msg = msg.replace("%channel%", channel.toString());
-        msg = msg.replace("%player%", player.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%color%", color.toString());
+        kr.replace("%channel%", channel.toString());
+        kr.replace("%player%", player.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -170,10 +177,11 @@ public class Messages {
     public static String kickNGWordMessage(Object color, Object channel, Object player) {
         String msg = resources.getString("kickNGWordMessage");
         if ( msg == null ) return "";
-        msg = msg.replace("%color%", color.toString());
-        msg = msg.replace("%channel%", channel.toString());
-        msg = msg.replace("%player%", player.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%color%", color.toString());
+        kr.replace("%channel%", channel.toString());
+        kr.replace("%player%", player.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -182,10 +190,11 @@ public class Messages {
     public static String muteNGWordMessage(Object color, Object channel, Object player) {
         String msg = resources.getString("muteNGWordMessage");
         if ( msg == null ) return "";
-        msg = msg.replace("%color%", color.toString());
-        msg = msg.replace("%channel%", channel.toString());
-        msg = msg.replace("%player%", player.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%color%", color.toString());
+        kr.replace("%channel%", channel.toString());
+        kr.replace("%player%", player.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -194,11 +203,12 @@ public class Messages {
     public static String banWithExpireMessage(Object color, Object channel, Object player, Object minutes) {
         String msg = resources.getString("banWithExpireMessage");
         if ( msg == null ) return "";
-        msg = msg.replace("%color%", color.toString());
-        msg = msg.replace("%channel%", channel.toString());
-        msg = msg.replace("%player%", player.toString());
-        msg = msg.replace("%minutes%", minutes.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%color%", color.toString());
+        kr.replace("%channel%", channel.toString());
+        kr.replace("%player%", player.toString());
+        kr.replace("%minutes%", minutes.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -207,11 +217,12 @@ public class Messages {
     public static String muteWithExpireMessage(Object color, Object channel, Object player, Object minutes) {
         String msg = resources.getString("muteWithExpireMessage");
         if ( msg == null ) return "";
-        msg = msg.replace("%color%", color.toString());
-        msg = msg.replace("%channel%", channel.toString());
-        msg = msg.replace("%player%", player.toString());
-        msg = msg.replace("%minutes%", minutes.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%color%", color.toString());
+        kr.replace("%channel%", channel.toString());
+        kr.replace("%player%", player.toString());
+        kr.replace("%minutes%", minutes.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -220,10 +231,11 @@ public class Messages {
     public static String pardonMessage(Object color, Object channel, Object player) {
         String msg = resources.getString("pardonMessage");
         if ( msg == null ) return "";
-        msg = msg.replace("%color%", color.toString());
-        msg = msg.replace("%channel%", channel.toString());
-        msg = msg.replace("%player%", player.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%color%", color.toString());
+        kr.replace("%channel%", channel.toString());
+        kr.replace("%player%", player.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -232,10 +244,11 @@ public class Messages {
     public static String unmuteMessage(Object color, Object channel, Object player) {
         String msg = resources.getString("unmuteMessage");
         if ( msg == null ) return "";
-        msg = msg.replace("%color%", color.toString());
-        msg = msg.replace("%channel%", channel.toString());
-        msg = msg.replace("%player%", player.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%color%", color.toString());
+        kr.replace("%channel%", channel.toString());
+        kr.replace("%player%", player.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -244,10 +257,11 @@ public class Messages {
     public static String expiredBanMessage(Object color, Object channel, Object player) {
         String msg = resources.getString("expiredBanMessage");
         if ( msg == null ) return "";
-        msg = msg.replace("%color%", color.toString());
-        msg = msg.replace("%channel%", channel.toString());
-        msg = msg.replace("%player%", player.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%color%", color.toString());
+        kr.replace("%channel%", channel.toString());
+        kr.replace("%player%", player.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -256,10 +270,11 @@ public class Messages {
     public static String expiredMuteMessage(Object color, Object channel, Object player) {
         String msg = resources.getString("expiredMuteMessage");
         if ( msg == null ) return "";
-        msg = msg.replace("%color%", color.toString());
-        msg = msg.replace("%channel%", channel.toString());
-        msg = msg.replace("%player%", player.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%color%", color.toString());
+        kr.replace("%channel%", channel.toString());
+        kr.replace("%player%", player.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -268,10 +283,11 @@ public class Messages {
     public static String addModeratorMessage(Object color, Object channel, Object player) {
         String msg = resources.getString("addModeratorMessage");
         if ( msg == null ) return "";
-        msg = msg.replace("%color%", color.toString());
-        msg = msg.replace("%channel%", channel.toString());
-        msg = msg.replace("%player%", player.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%color%", color.toString());
+        kr.replace("%channel%", channel.toString());
+        kr.replace("%player%", player.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -280,10 +296,11 @@ public class Messages {
     public static String removeModeratorMessage(Object color, Object channel, Object player) {
         String msg = resources.getString("removeModeratorMessage");
         if ( msg == null ) return "";
-        msg = msg.replace("%color%", color.toString());
-        msg = msg.replace("%channel%", channel.toString());
-        msg = msg.replace("%player%", player.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%color%", color.toString());
+        kr.replace("%channel%", channel.toString());
+        kr.replace("%player%", player.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -292,9 +309,10 @@ public class Messages {
     public static String noRecipientMessage(Object color, Object channel) {
         String msg = resources.getString("noRecipientMessage");
         if ( msg == null ) return "";
-        msg = msg.replace("%color%", color.toString());
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%color%", color.toString());
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -303,7 +321,8 @@ public class Messages {
     public static String listFirstLine() {
         String msg = resources.getString("listFirstLine");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -312,9 +331,10 @@ public class Messages {
     public static String listFirstLinePaging(Object page, Object max) {
         String msg = resources.getString("listFirstLinePaging");
         if ( msg == null ) return "";
-        msg = msg.replace("%page%", page.toString());
-        msg = msg.replace("%max%", max.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%page%", page.toString());
+        kr.replace("%max%", max.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -323,7 +343,8 @@ public class Messages {
     public static String listEndLine() {
         String msg = resources.getString("listEndLine");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -332,11 +353,12 @@ public class Messages {
     public static String listFormat(Object channel, Object online, Object total, Object topic) {
         String msg = resources.getString("listFormat");
         if ( msg == null ) return "";
-        msg = msg.replace("%channel%", channel.toString());
-        msg = msg.replace("%online%", online.toString());
-        msg = msg.replace("%total%", total.toString());
-        msg = msg.replace("%topic%", topic.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%channel%", channel.toString());
+        kr.replace("%online%", online.toString());
+        kr.replace("%total%", total.toString());
+        kr.replace("%topic%", topic.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -345,7 +367,8 @@ public class Messages {
     public static String listPlainPrefix() {
         String msg = resources.getString("listPlainPrefix");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -354,7 +377,8 @@ public class Messages {
     public static String channelInfoFirstLine() {
         String msg = resources.getString("channelInfoFirstLine");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -363,7 +387,8 @@ public class Messages {
     public static String channelInfoPrefix() {
         String msg = resources.getString("channelInfoPrefix");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -372,7 +397,8 @@ public class Messages {
     public static String channelInfoAlias() {
         String msg = resources.getString("channelInfoAlias");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -381,7 +407,8 @@ public class Messages {
     public static String channelInfoGlobal() {
         String msg = resources.getString("channelInfoGlobal");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -390,7 +417,8 @@ public class Messages {
     public static String channelInfoBroadcast() {
         String msg = resources.getString("channelInfoBroadcast");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -399,7 +427,8 @@ public class Messages {
     public static String channelInfoSecret() {
         String msg = resources.getString("channelInfoSecret");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -408,7 +437,8 @@ public class Messages {
     public static String channelInfoPassword() {
         String msg = resources.getString("channelInfoPassword");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -417,7 +447,8 @@ public class Messages {
     public static String channelInfoWorldChat() {
         String msg = resources.getString("channelInfoWorldChat");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -426,8 +457,9 @@ public class Messages {
     public static String channelInfoRangeChat(Object block) {
         String msg = resources.getString("channelInfoRangeChat");
         if ( msg == null ) return "";
-        msg = msg.replace("%block%", block.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%block%", block.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -436,7 +468,8 @@ public class Messages {
     public static String channelInfoFormat() {
         String msg = resources.getString("channelInfoFormat");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -445,7 +478,8 @@ public class Messages {
     public static String channelInfoBanned() {
         String msg = resources.getString("channelInfoBanned");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -454,7 +488,8 @@ public class Messages {
     public static String channelInfoMuted() {
         String msg = resources.getString("channelInfoMuted");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -463,7 +498,8 @@ public class Messages {
     public static String motdFirstLine() {
         String msg = resources.getString("motdFirstLine");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -472,7 +508,8 @@ public class Messages {
     public static String hideChannelFirstLine() {
         String msg = resources.getString("hideChannelFirstLine");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -481,7 +518,8 @@ public class Messages {
     public static String hidePlayerFirstLine() {
         String msg = resources.getString("hidePlayerFirstLine");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -490,8 +528,9 @@ public class Messages {
     public static String logDisplayFirstLine(Object channel) {
         String msg = resources.getString("logDisplayFirstLine");
         if ( msg == null ) return "";
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -500,7 +539,8 @@ public class Messages {
     public static String logDisplayEndLine() {
         String msg = resources.getString("logDisplayEndLine");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -509,10 +549,11 @@ public class Messages {
     public static String logDisplayFormat(Object date, Object player, Object message) {
         String msg = resources.getString("logDisplayFormat");
         if ( msg == null ) return "";
-        msg = msg.replace("%date%", date.toString());
-        msg = msg.replace("%player%", player.toString());
-        msg = msg.replace("%message%", message.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%date%", date.toString());
+        kr.replace("%player%", player.toString());
+        kr.replace("%message%", message.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -521,7 +562,8 @@ public class Messages {
     public static String infoPrefix() {
         String msg = resources.getString("infoPrefix");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -530,7 +572,8 @@ public class Messages {
     public static String errorPrefix() {
         String msg = resources.getString("errorPrefix");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -539,8 +582,9 @@ public class Messages {
     public static String cmdmsgJoin(Object channel) {
         String msg = resources.getString("cmdmsgJoin");
         if ( msg == null ) return "";
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -549,8 +593,9 @@ public class Messages {
     public static String cmdmsgSet(Object channel) {
         String msg = resources.getString("cmdmsgSet");
         if ( msg == null ) return "";
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -559,8 +604,9 @@ public class Messages {
     public static String cmdmsgSetTopic(Object topic) {
         String msg = resources.getString("cmdmsgSetTopic");
         if ( msg == null ) return "";
-        msg = msg.replace("%topic%", topic.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%topic%", topic.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -569,7 +615,8 @@ public class Messages {
     public static String cmdmsgSetHide() {
         String msg = resources.getString("cmdmsgSetHide");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -578,8 +625,9 @@ public class Messages {
     public static String cmdmsgLeave(Object channel) {
         String msg = resources.getString("cmdmsgLeave");
         if ( msg == null ) return "";
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -588,9 +636,10 @@ public class Messages {
     public static String cmdmsgInvite(Object player, Object channel) {
         String msg = resources.getString("cmdmsgInvite");
         if ( msg == null ) return "";
-        msg = msg.replace("%player%", player.toString());
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%player%", player.toString());
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -599,9 +648,10 @@ public class Messages {
     public static String cmdmsgInvited1(Object player, Object channel) {
         String msg = resources.getString("cmdmsgInvited1");
         if ( msg == null ) return "";
-        msg = msg.replace("%player%", player.toString());
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%player%", player.toString());
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -610,7 +660,8 @@ public class Messages {
     public static String cmdmsgInvited2() {
         String msg = resources.getString("cmdmsgInvited2");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -619,7 +670,8 @@ public class Messages {
     public static String cmdmsgDeny() {
         String msg = resources.getString("cmdmsgDeny");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -628,7 +680,8 @@ public class Messages {
     public static String cmdmsgDenyed() {
         String msg = resources.getString("cmdmsgDenyed");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -637,9 +690,10 @@ public class Messages {
     public static String cmdmsgKick(Object player, Object channel) {
         String msg = resources.getString("cmdmsgKick");
         if ( msg == null ) return "";
-        msg = msg.replace("%player%", player.toString());
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%player%", player.toString());
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -648,8 +702,9 @@ public class Messages {
     public static String cmdmsgKicked(Object channel) {
         String msg = resources.getString("cmdmsgKicked");
         if ( msg == null ) return "";
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -658,9 +713,10 @@ public class Messages {
     public static String cmdmsgBan(Object player, Object channel) {
         String msg = resources.getString("cmdmsgBan");
         if ( msg == null ) return "";
-        msg = msg.replace("%player%", player.toString());
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%player%", player.toString());
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -669,10 +725,11 @@ public class Messages {
     public static String cmdmsgBanWithExpire(Object player, Object channel, Object minutes) {
         String msg = resources.getString("cmdmsgBanWithExpire");
         if ( msg == null ) return "";
-        msg = msg.replace("%player%", player.toString());
-        msg = msg.replace("%channel%", channel.toString());
-        msg = msg.replace("%minutes%", minutes.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%player%", player.toString());
+        kr.replace("%channel%", channel.toString());
+        kr.replace("%minutes%", minutes.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -681,8 +738,9 @@ public class Messages {
     public static String cmdmsgBanned(Object channel) {
         String msg = resources.getString("cmdmsgBanned");
         if ( msg == null ) return "";
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -691,9 +749,10 @@ public class Messages {
     public static String cmdmsgPardon(Object player, Object channel) {
         String msg = resources.getString("cmdmsgPardon");
         if ( msg == null ) return "";
-        msg = msg.replace("%player%", player.toString());
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%player%", player.toString());
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -702,8 +761,9 @@ public class Messages {
     public static String cmdmsgPardoned(Object channel) {
         String msg = resources.getString("cmdmsgPardoned");
         if ( msg == null ) return "";
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -712,9 +772,10 @@ public class Messages {
     public static String cmdmsgMute(Object player, Object channel) {
         String msg = resources.getString("cmdmsgMute");
         if ( msg == null ) return "";
-        msg = msg.replace("%player%", player.toString());
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%player%", player.toString());
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -723,10 +784,11 @@ public class Messages {
     public static String cmdmsgMuteWithExpire(Object player, Object channel, Object minutes) {
         String msg = resources.getString("cmdmsgMuteWithExpire");
         if ( msg == null ) return "";
-        msg = msg.replace("%player%", player.toString());
-        msg = msg.replace("%channel%", channel.toString());
-        msg = msg.replace("%minutes%", minutes.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%player%", player.toString());
+        kr.replace("%channel%", channel.toString());
+        kr.replace("%minutes%", minutes.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -735,8 +797,9 @@ public class Messages {
     public static String cmdmsgMuted(Object channel) {
         String msg = resources.getString("cmdmsgMuted");
         if ( msg == null ) return "";
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -745,9 +808,10 @@ public class Messages {
     public static String cmdmsgUnmute(Object player, Object channel) {
         String msg = resources.getString("cmdmsgUnmute");
         if ( msg == null ) return "";
-        msg = msg.replace("%player%", player.toString());
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%player%", player.toString());
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -756,8 +820,9 @@ public class Messages {
     public static String cmdmsgUnmuted(Object channel) {
         String msg = resources.getString("cmdmsgUnmuted");
         if ( msg == null ) return "";
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -766,8 +831,9 @@ public class Messages {
     public static String cmdmsgHided(Object channel) {
         String msg = resources.getString("cmdmsgHided");
         if ( msg == null ) return "";
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -776,8 +842,9 @@ public class Messages {
     public static String cmdmsgHidedPlayer(Object player) {
         String msg = resources.getString("cmdmsgHidedPlayer");
         if ( msg == null ) return "";
-        msg = msg.replace("%player%", player.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%player%", player.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -786,8 +853,9 @@ public class Messages {
     public static String cmdmsgUnhided(Object channel) {
         String msg = resources.getString("cmdmsgUnhided");
         if ( msg == null ) return "";
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -796,8 +864,9 @@ public class Messages {
     public static String cmdmsgUnhidedPlayer(Object channel) {
         String msg = resources.getString("cmdmsgUnhidedPlayer");
         if ( msg == null ) return "";
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -806,7 +875,8 @@ public class Messages {
     public static String cmdmsgReload() {
         String msg = resources.getString("cmdmsgReload");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -815,8 +885,9 @@ public class Messages {
     public static String cmdmsgCreate(Object channel) {
         String msg = resources.getString("cmdmsgCreate");
         if ( msg == null ) return "";
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -825,8 +896,9 @@ public class Messages {
     public static String cmdmsgRemove(Object channel) {
         String msg = resources.getString("cmdmsgRemove");
         if ( msg == null ) return "";
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -835,8 +907,9 @@ public class Messages {
     public static String cmdmsgFormat(Object format) {
         String msg = resources.getString("cmdmsgFormat");
         if ( msg == null ) return "";
-        msg = msg.replace("%format%", format.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%format%", format.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -845,9 +918,10 @@ public class Messages {
     public static String cmdmsgModerator(Object player, Object channel) {
         String msg = resources.getString("cmdmsgModerator");
         if ( msg == null ) return "";
-        msg = msg.replace("%player%", player.toString());
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%player%", player.toString());
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -856,9 +930,10 @@ public class Messages {
     public static String cmdmsgModeratorMinus(Object player, Object channel) {
         String msg = resources.getString("cmdmsgModeratorMinus");
         if ( msg == null ) return "";
-        msg = msg.replace("%player%", player.toString());
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%player%", player.toString());
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -867,9 +942,10 @@ public class Messages {
     public static String cmdmsgDictionaryAdd(Object key, Object value) {
         String msg = resources.getString("cmdmsgDictionaryAdd");
         if ( msg == null ) return "";
-        msg = msg.replace("%key%", key.toString());
-        msg = msg.replace("%value%", value.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%key%", key.toString());
+        kr.replace("%value%", value.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -878,8 +954,9 @@ public class Messages {
     public static String cmdmsgDictionaryRemove(Object key) {
         String msg = resources.getString("cmdmsgDictionaryRemove");
         if ( msg == null ) return "";
-        msg = msg.replace("%key%", key.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%key%", key.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -888,9 +965,10 @@ public class Messages {
     public static String cmdmsgOption(Object key, Object value) {
         String msg = resources.getString("cmdmsgOption");
         if ( msg == null ) return "";
-        msg = msg.replace("%key%", key.toString());
-        msg = msg.replace("%value%", value.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%key%", key.toString());
+        kr.replace("%value%", value.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -899,9 +977,10 @@ public class Messages {
     public static String cmdmsgTemplate(Object index, Object value) {
         String msg = resources.getString("cmdmsgTemplate");
         if ( msg == null ) return "";
-        msg = msg.replace("%index%", index.toString());
-        msg = msg.replace("%value%", value.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%index%", index.toString());
+        kr.replace("%value%", value.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -910,8 +989,9 @@ public class Messages {
     public static String cmdmsgTemplateRemove(Object index) {
         String msg = resources.getString("cmdmsgTemplateRemove");
         if ( msg == null ) return "";
-        msg = msg.replace("%index%", index.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%index%", index.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -920,9 +1000,10 @@ public class Messages {
     public static String cmdmsgSetDefault(Object player, Object channel) {
         String msg = resources.getString("cmdmsgSetDefault");
         if ( msg == null ) return "";
-        msg = msg.replace("%player%", player.toString());
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%player%", player.toString());
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -931,8 +1012,9 @@ public class Messages {
     public static String cmdmsgPlayerJapanize(Object value) {
         String msg = resources.getString("cmdmsgPlayerJapanize");
         if ( msg == null ) return "";
-        msg = msg.replace("%value%", value.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%value%", value.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -941,9 +1023,10 @@ public class Messages {
     public static String cmdmsgPlayerJapanizeOther(Object player, Object value) {
         String msg = resources.getString("cmdmsgPlayerJapanizeOther");
         if ( msg == null ) return "";
-        msg = msg.replace("%player%", player.toString());
-        msg = msg.replace("%value%", value.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%player%", player.toString());
+        kr.replace("%value%", value.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -952,9 +1035,10 @@ public class Messages {
     public static String cmdmsgReplyInviter(Object inviter, Object invited) {
         String msg = resources.getString("cmdmsgReplyInviter");
         if ( msg == null ) return "";
-        msg = msg.replace("%inviter%", inviter.toString());
-        msg = msg.replace("%invited%", invited.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%inviter%", inviter.toString());
+        kr.replace("%invited%", invited.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -963,8 +1047,9 @@ public class Messages {
     public static String cmdmsgReplyInviterNone(Object inviter) {
         String msg = resources.getString("cmdmsgReplyInviterNone");
         if ( msg == null ) return "";
-        msg = msg.replace("%inviter%", inviter.toString());
-        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%inviter%", inviter.toString());
+        return Utility.replaceColorCode(resources.getString("infoPrefix", "") + kr.toString());
     }
 
     /**
@@ -973,7 +1058,8 @@ public class Messages {
     public static String errmsgIngame() {
         String msg = resources.getString("errmsgIngame");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -982,7 +1068,8 @@ public class Messages {
     public static String errmsgCommand() {
         String msg = resources.getString("errmsgCommand");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -991,7 +1078,8 @@ public class Messages {
     public static String errmsgNotExist() {
         String msg = resources.getString("errmsgNotExist");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1000,7 +1088,8 @@ public class Messages {
     public static String errmsgNotExistChannelAndPlayer() {
         String msg = resources.getString("errmsgNotExistChannelAndPlayer");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1009,7 +1098,8 @@ public class Messages {
     public static String errmsgNotExistOrNotSpecified() {
         String msg = resources.getString("errmsgNotExistOrNotSpecified");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1018,7 +1108,8 @@ public class Messages {
     public static String errmsgExist() {
         String msg = resources.getString("errmsgExist");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1027,7 +1118,8 @@ public class Messages {
     public static String errmsgNomember() {
         String msg = resources.getString("errmsgNomember");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1036,7 +1128,8 @@ public class Messages {
     public static String errmsgNomemberOther() {
         String msg = resources.getString("errmsgNomemberOther");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1045,8 +1138,9 @@ public class Messages {
     public static String errmsgNotfoundPlayer(Object player) {
         String msg = resources.getString("errmsgNotfoundPlayer");
         if ( msg == null ) return "";
-        msg = msg.replace("%player%", player.toString());
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%player%", player.toString());
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1055,7 +1149,8 @@ public class Messages {
     public static String errmsgNotInvited() {
         String msg = resources.getString("errmsgNotInvited");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1064,7 +1159,8 @@ public class Messages {
     public static String errmsgNotfoundChannel() {
         String msg = resources.getString("errmsgNotfoundChannel");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1073,8 +1169,9 @@ public class Messages {
     public static String errmsgInvitedAlreadyExist(Object player) {
         String msg = resources.getString("errmsgInvitedAlreadyExist");
         if ( msg == null ) return "";
-        msg = msg.replace("%player%", player.toString());
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%player%", player.toString());
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1083,7 +1180,8 @@ public class Messages {
     public static String errmsgInvitedAlreadyJoin() {
         String msg = resources.getString("errmsgInvitedAlreadyJoin");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1092,7 +1190,8 @@ public class Messages {
     public static String errmsgNoJoin() {
         String msg = resources.getString("errmsgNoJoin");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1101,7 +1200,8 @@ public class Messages {
     public static String errmsgBanned() {
         String msg = resources.getString("errmsgBanned");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1110,7 +1210,8 @@ public class Messages {
     public static String errmsgMuted() {
         String msg = resources.getString("errmsgMuted");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1119,7 +1220,8 @@ public class Messages {
     public static String errmsgAlreadyBanned() {
         String msg = resources.getString("errmsgAlreadyBanned");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1128,7 +1230,8 @@ public class Messages {
     public static String errmsgAlreadyMuted() {
         String msg = resources.getString("errmsgAlreadyMuted");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1137,7 +1240,8 @@ public class Messages {
     public static String errmsgAlreadyHided() {
         String msg = resources.getString("errmsgAlreadyHided");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1146,7 +1250,8 @@ public class Messages {
     public static String errmsgAlreadyHidedPlayer() {
         String msg = resources.getString("errmsgAlreadyHidedPlayer");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1155,7 +1260,8 @@ public class Messages {
     public static String errmsgAlreadyUnhided() {
         String msg = resources.getString("errmsgAlreadyUnhided");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1164,7 +1270,8 @@ public class Messages {
     public static String errmsgAlreadyUnhidedPlayer() {
         String msg = resources.getString("errmsgAlreadyUnhidedPlayer");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1173,7 +1280,8 @@ public class Messages {
     public static String errmsgCannotJoinPersonal() {
         String msg = resources.getString("errmsgCannotJoinPersonal");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1182,7 +1290,8 @@ public class Messages {
     public static String errmsgNotModerator() {
         String msg = resources.getString("errmsgNotModerator");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1191,7 +1300,8 @@ public class Messages {
     public static String errmsgNotBanned() {
         String msg = resources.getString("errmsgNotBanned");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1200,7 +1310,8 @@ public class Messages {
     public static String errmsgNotMuted() {
         String msg = resources.getString("errmsgNotMuted");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1209,7 +1320,8 @@ public class Messages {
     public static String errmsgInvalidOptions() {
         String msg = resources.getString("errmsgInvalidOptions");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1218,7 +1330,8 @@ public class Messages {
     public static String errmsgPassword1() {
         String msg = resources.getString("errmsgPassword1");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1227,7 +1340,8 @@ public class Messages {
     public static String errmsgPassword2() {
         String msg = resources.getString("errmsgPassword2");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1236,7 +1350,8 @@ public class Messages {
     public static String errmsgPassword3() {
         String msg = resources.getString("errmsgPassword3");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1245,7 +1360,8 @@ public class Messages {
     public static String errmsgPasswordNotmatch() {
         String msg = resources.getString("errmsgPasswordNotmatch");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1254,8 +1370,9 @@ public class Messages {
     public static String errmsgPermission(Object permission) {
         String msg = resources.getString("errmsgPermission");
         if ( msg == null ) return "";
-        msg = msg.replace("%permission%", permission.toString());
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%permission%", permission.toString());
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1264,8 +1381,9 @@ public class Messages {
     public static String errmsgCannotLeaveGlobal(Object channel) {
         String msg = resources.getString("errmsgCannotLeaveGlobal");
         if ( msg == null ) return "";
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1274,8 +1392,9 @@ public class Messages {
     public static String errmsgCannotKickGlobal(Object channel) {
         String msg = resources.getString("errmsgCannotKickGlobal");
         if ( msg == null ) return "";
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1284,8 +1403,9 @@ public class Messages {
     public static String errmsgCannotBANGlobal(Object channel) {
         String msg = resources.getString("errmsgCannotBANGlobal");
         if ( msg == null ) return "";
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1294,8 +1414,9 @@ public class Messages {
     public static String errmsgCannotRemoveGlobal(Object channel) {
         String msg = resources.getString("errmsgCannotRemoveGlobal");
         if ( msg == null ) return "";
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1304,8 +1425,9 @@ public class Messages {
     public static String errmsgCannotModeratorGlobal(Object channel) {
         String msg = resources.getString("errmsgCannotModeratorGlobal");
         if ( msg == null ) return "";
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1314,8 +1436,9 @@ public class Messages {
     public static String errmsgCannotLeaveForceJoin(Object channel) {
         String msg = resources.getString("errmsgCannotLeaveForceJoin");
         if ( msg == null ) return "";
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1324,7 +1447,8 @@ public class Messages {
     public static String errmsgNotfoundPM() {
         String msg = resources.getString("errmsgNotfoundPM");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1333,7 +1457,8 @@ public class Messages {
     public static String errmsgCannotSendPMSelf() {
         String msg = resources.getString("errmsgCannotSendPMSelf");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1342,8 +1467,9 @@ public class Messages {
     public static String errmsgCannotUseForChannel(Object channel) {
         String msg = resources.getString("errmsgCannotUseForChannel");
         if ( msg == null ) return "";
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1352,9 +1478,10 @@ public class Messages {
     public static String errmsgCannotUseForChannelTooShort(Object channel, Object min) {
         String msg = resources.getString("errmsgCannotUseForChannelTooShort");
         if ( msg == null ) return "";
-        msg = msg.replace("%channel%", channel.toString());
-        msg = msg.replace("%min%", min.toString());
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%channel%", channel.toString());
+        kr.replace("%min%", min.toString());
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1363,9 +1490,10 @@ public class Messages {
     public static String errmsgCannotUseForChannelTooLong(Object channel, Object max) {
         String msg = resources.getString("errmsgCannotUseForChannelTooLong");
         if ( msg == null ) return "";
-        msg = msg.replace("%channel%", channel.toString());
-        msg = msg.replace("%max%", max.toString());
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%channel%", channel.toString());
+        kr.replace("%max%", max.toString());
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1374,8 +1502,9 @@ public class Messages {
     public static String errmsgCannotUseForGlobal(Object word) {
         String msg = resources.getString("errmsgCannotUseForGlobal");
         if ( msg == null ) return "";
-        msg = msg.replace("%word%", word.toString());
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%word%", word.toString());
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1384,8 +1513,9 @@ public class Messages {
     public static String errmsgInvalidColorCode(Object value) {
         String msg = resources.getString("errmsgInvalidColorCode");
         if ( msg == null ) return "";
-        msg = msg.replace("%value%", value.toString());
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%value%", value.toString());
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1394,7 +1524,8 @@ public class Messages {
     public static String errmsgInvalidTemplateNumber() {
         String msg = resources.getString("errmsgInvalidTemplateNumber");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1403,8 +1534,9 @@ public class Messages {
     public static String errmsgToolongDescription(Object max) {
         String msg = resources.getString("errmsgToolongDescription");
         if ( msg == null ) return "";
-        msg = msg.replace("%max%", max.toString());
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%max%", max.toString());
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1413,8 +1545,9 @@ public class Messages {
     public static String errmsgToolongAlias(Object max) {
         String msg = resources.getString("errmsgToolongAlias");
         if ( msg == null ) return "";
-        msg = msg.replace("%max%", max.toString());
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%max%", max.toString());
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1423,8 +1556,9 @@ public class Messages {
     public static String errmsgToolongPassword(Object max) {
         String msg = resources.getString("errmsgToolongPassword");
         if ( msg == null ) return "";
-        msg = msg.replace("%max%", max.toString());
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%max%", max.toString());
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1433,8 +1567,9 @@ public class Messages {
     public static String errmsgInvalidBooleanOption(Object key) {
         String msg = resources.getString("errmsgInvalidBooleanOption");
         if ( msg == null ) return "";
-        msg = msg.replace("%key%", key.toString());
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%key%", key.toString());
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1443,7 +1578,8 @@ public class Messages {
     public static String errmsgInvalidRangeOption() {
         String msg = resources.getString("errmsgInvalidRangeOption");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1452,9 +1588,10 @@ public class Messages {
     public static String errmsgInvalidJapanizeOption(Object key, Object value) {
         String msg = resources.getString("errmsgInvalidJapanizeOption");
         if ( msg == null ) return "";
-        msg = msg.replace("%key%", key.toString());
-        msg = msg.replace("%value%", value.toString());
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%key%", key.toString());
+        kr.replace("%value%", value.toString());
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1463,7 +1600,8 @@ public class Messages {
     public static String errmsgCannotOffGlobalBroadcast() {
         String msg = resources.getString("errmsgCannotOffGlobalBroadcast");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1472,8 +1610,9 @@ public class Messages {
     public static String errmsgFormatConstraint(Object key) {
         String msg = resources.getString("errmsgFormatConstraint");
         if ( msg == null ) return "";
-        msg = msg.replace("%key%", key.toString());
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%key%", key.toString());
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1482,7 +1621,8 @@ public class Messages {
     public static String errmsgInvalidBanExpireParameter() {
         String msg = resources.getString("errmsgInvalidBanExpireParameter");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1491,7 +1631,8 @@ public class Messages {
     public static String errmsgInvalidMuteExpireParameter() {
         String msg = resources.getString("errmsgInvalidMuteExpireParameter");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1500,7 +1641,8 @@ public class Messages {
     public static String errmsgCannotHideSelf() {
         String msg = resources.getString("errmsgCannotHideSelf");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1509,9 +1651,10 @@ public class Messages {
     public static String errmsgDuplicatedAlias(Object aliase, Object channel) {
         String msg = resources.getString("errmsgDuplicatedAlias");
         if ( msg == null ) return "";
-        msg = msg.replace("%aliase%", aliase.toString());
-        msg = msg.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%aliase%", aliase.toString());
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1520,8 +1663,9 @@ public class Messages {
     public static String errmsgNotPermission(Object permission) {
         String msg = resources.getString("errmsgNotPermission");
         if ( msg == null ) return "";
-        msg = msg.replace("%permission%", permission.toString());
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%permission%", permission.toString());
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1530,7 +1674,8 @@ public class Messages {
     public static String errmsgChannelChatDisabled() {
         String msg = resources.getString("errmsgChannelChatDisabled");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(resources.getString("errorPrefix", "") + kr.toString());
     }
 
     /**
@@ -1539,8 +1684,9 @@ public class Messages {
     public static String usageJoin(Object label) {
         String msg = resources.getString("usageJoin");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1549,8 +1695,9 @@ public class Messages {
     public static String usageLeave(Object label) {
         String msg = resources.getString("usageLeave");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1559,8 +1706,9 @@ public class Messages {
     public static String usageList(Object label) {
         String msg = resources.getString("usageList");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1569,8 +1717,9 @@ public class Messages {
     public static String usageInvite(Object label) {
         String msg = resources.getString("usageInvite");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1579,8 +1728,9 @@ public class Messages {
     public static String usageAccept(Object label) {
         String msg = resources.getString("usageAccept");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1589,8 +1739,9 @@ public class Messages {
     public static String usageDeny(Object label) {
         String msg = resources.getString("usageDeny");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1599,8 +1750,9 @@ public class Messages {
     public static String usageKick(Object label) {
         String msg = resources.getString("usageKick");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1609,8 +1761,9 @@ public class Messages {
     public static String usageBan(Object label) {
         String msg = resources.getString("usageBan");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1619,8 +1772,9 @@ public class Messages {
     public static String usageBan2(Object label) {
         String msg = resources.getString("usageBan2");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1629,8 +1783,9 @@ public class Messages {
     public static String usagePardon(Object label) {
         String msg = resources.getString("usagePardon");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1639,8 +1794,9 @@ public class Messages {
     public static String usageMute(Object label) {
         String msg = resources.getString("usageMute");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1649,8 +1805,9 @@ public class Messages {
     public static String usageMute2(Object label) {
         String msg = resources.getString("usageMute2");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1659,8 +1816,9 @@ public class Messages {
     public static String usageUnmute(Object label) {
         String msg = resources.getString("usageUnmute");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1669,8 +1827,9 @@ public class Messages {
     public static String usageHide(Object label) {
         String msg = resources.getString("usageHide");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1679,8 +1838,9 @@ public class Messages {
     public static String usageHidePlayer(Object label) {
         String msg = resources.getString("usageHidePlayer");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1689,8 +1849,9 @@ public class Messages {
     public static String usageUnhide(Object label) {
         String msg = resources.getString("usageUnhide");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1699,8 +1860,9 @@ public class Messages {
     public static String usageUnhidePlayer(Object label) {
         String msg = resources.getString("usageUnhidePlayer");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1709,8 +1871,9 @@ public class Messages {
     public static String usageInfo(Object label) {
         String msg = resources.getString("usageInfo");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1719,8 +1882,9 @@ public class Messages {
     public static String usageLog(Object label) {
         String msg = resources.getString("usageLog");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1729,8 +1893,9 @@ public class Messages {
     public static String usageCreate(Object label) {
         String msg = resources.getString("usageCreate");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1739,8 +1904,9 @@ public class Messages {
     public static String usageRemove(Object label) {
         String msg = resources.getString("usageRemove");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1749,8 +1915,9 @@ public class Messages {
     public static String usageFormat(Object label) {
         String msg = resources.getString("usageFormat");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1759,8 +1926,9 @@ public class Messages {
     public static String usageModerator(Object label) {
         String msg = resources.getString("usageModerator");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1769,8 +1937,9 @@ public class Messages {
     public static String usageMod(Object label) {
         String msg = resources.getString("usageMod");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1779,8 +1948,9 @@ public class Messages {
     public static String usageDictionary(Object label) {
         String msg = resources.getString("usageDictionary");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1789,8 +1959,9 @@ public class Messages {
     public static String usageDic(Object label) {
         String msg = resources.getString("usageDic");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1799,8 +1970,9 @@ public class Messages {
     public static String usageOption(Object label) {
         String msg = resources.getString("usageOption");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1809,8 +1981,9 @@ public class Messages {
     public static String usageTemplate(Object label) {
         String msg = resources.getString("usageTemplate");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1819,8 +1992,9 @@ public class Messages {
     public static String usageCheck1(Object label) {
         String msg = resources.getString("usageCheck1");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1829,8 +2003,9 @@ public class Messages {
     public static String usageCheck2(Object label) {
         String msg = resources.getString("usageCheck2");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1839,8 +2014,9 @@ public class Messages {
     public static String usageReload(Object label) {
         String msg = resources.getString("usageReload");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1849,8 +2025,9 @@ public class Messages {
     public static String usageHelp(Object label) {
         String msg = resources.getString("usageHelp");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1859,8 +2036,9 @@ public class Messages {
     public static String usageSet1(Object label) {
         String msg = resources.getString("usageSet1");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1869,8 +2047,9 @@ public class Messages {
     public static String usageMessage(Object label) {
         String msg = resources.getString("usageMessage");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1879,8 +2058,9 @@ public class Messages {
     public static String usageReply(Object label) {
         String msg = resources.getString("usageReply");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1889,8 +2069,9 @@ public class Messages {
     public static String usageJapanize(Object label) {
         String msg = resources.getString("usageJapanize");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1899,8 +2080,9 @@ public class Messages {
     public static String usageJapanizeOther(Object label) {
         String msg = resources.getString("usageJapanizeOther");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1909,10 +2091,11 @@ public class Messages {
     public static String usageTop(Object type, Object num, Object max) {
         String msg = resources.getString("usageTop");
         if ( msg == null ) return "";
-        msg = msg.replace("%type%", type.toString());
-        msg = msg.replace("%num%", num.toString());
-        msg = msg.replace("%max%", max.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%type%", type.toString());
+        kr.replace("%num%", num.toString());
+        kr.replace("%max%", max.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1921,7 +2104,8 @@ public class Messages {
     public static String usageFoot() {
         String msg = resources.getString("usageFoot");
         if ( msg == null ) return "";
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        return Utility.replaceColorCode(kr.toString());
     }
 
     /**
@@ -1930,10 +2114,11 @@ public class Messages {
     public static String usageNoticeNextPage(Object label, Object type, Object next) {
         String msg = resources.getString("usageNoticeNextPage");
         if ( msg == null ) return "";
-        msg = msg.replace("%label%", label.toString());
-        msg = msg.replace("%type%", type.toString());
-        msg = msg.replace("%next%", next.toString());
-        return Utility.replaceColorCode(msg);
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%label%", label.toString());
+        kr.replace("%type%", type.toString());
+        kr.replace("%next%", next.toString());
+        return Utility.replaceColorCode(kr.toString());
     }
     // === Auto-generated methods area end. ===
 }

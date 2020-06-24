@@ -16,6 +16,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import com.github.ucchyocean.lc3.KeywordReplacer;
 import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatAPI;
 import com.github.ucchyocean.lc3.LunaChatBukkit;
@@ -265,43 +266,43 @@ public class BukkitChannel extends Channel {
 
         LunaChatAPI api = LunaChat.getAPI();
 
-        String msg = format;
+        KeywordReplacer msg = new KeywordReplacer(format);
 
         // テンプレートのキーワードを、まず最初に置き換える
         for ( int i=0; i<=9; i++ ) {
             String key = "%" + i;
             if ( msg.contains(key) ) {
                 if ( api.getTemplate("" + i) != null ) {
-                    msg = msg.replace(key, api.getTemplate("" + i));
+                    msg.replace(key, api.getTemplate("" + i));
                     break;
                 }
             }
         }
 
-        msg = msg.replace("%ch", getName());
-        //msg = msg.replace("%msg", message);
-        msg = msg.replace("%color", getColorCode());
+        msg.replace("%ch", getName());
+        //msg.replace("%msg", message);
+        msg.replace("%color", getColorCode());
         if ( getPrivateMessageTo() != null ) {
-            msg = msg.replace("%to", getPrivateMessageTo().getDisplayName());
+            msg.replace("%to", getPrivateMessageTo().getDisplayName());
         } else {
-            msg = msg.replace("%to", "");
+            msg.replace("%to", "");
         }
-        msg = msg.replace("%recieverserver", "");
+        msg.replace("%recieverserver", "");
 
         if ( msg.contains("%date") ) {
-            msg = msg.replace("%date", dateFormat.format(new Date()));
+            msg.replace("%date", dateFormat.format(new Date()));
         }
         if ( msg.contains("%time") ) {
-            msg = msg.replace("%time", timeFormat.format(new Date()));
+            msg.replace("%time", timeFormat.format(new Date()));
         }
 
         if ( player != null ) {
-            msg = msg.replace("%username", player.getDisplayName());
-            msg = msg.replace("%player", player.getName());
+            msg.replace("%username", player.getDisplayName());
+            msg.replace("%player", player.getName());
 
             if ( msg.contains("%prefix") || msg.contains("%suffix") ) {
-                msg = msg.replace("%prefix", player.getPrefix());
-                msg = msg.replace("%suffix", player.getSuffix());
+                msg.replace("%prefix", player.getPrefix());
+                msg.replace("%suffix", player.getSuffix());
             }
 
             if ( msg.contains("%world") ) {
@@ -313,21 +314,21 @@ public class BukkitChannel extends Channel {
                 if ( worldname == null || worldname.equals("") ) {
                     worldname = player.getWorldName();
                 }
-                msg = msg.replace("%world", worldname);
+                msg.replace("%world", worldname);
             }
 
-            msg = msg.replace("%server", "");
+            msg.replace("%server", "");
 
         } else {
-            msg = msg.replace("%username", "");
-            msg = msg.replace("%player", "");
-            msg = msg.replace("%prefix", "");
-            msg = msg.replace("%suffix", "");
-            msg = msg.replace("%world", "");
-            msg = msg.replace("%server", "");
+            msg.replace("%username", "");
+            msg.replace("%player", "");
+            msg.replace("%prefix", "");
+            msg.replace("%suffix", "");
+            msg.replace("%world", "");
+            msg.replace("%server", "");
         }
 
-        return Utility.replaceColorCode(msg);
+        return Utility.replaceColorCode(msg.toString());
     }
 
     /**

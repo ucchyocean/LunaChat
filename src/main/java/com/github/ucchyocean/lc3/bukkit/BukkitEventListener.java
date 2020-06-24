@@ -22,6 +22,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import com.github.ucchyocean.lc3.KeywordReplacer;
 import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatAPI;
 import com.github.ucchyocean.lc3.LunaChatBukkit;
@@ -455,16 +456,16 @@ public class BukkitEventListener implements Listener {
      */
     private String replaceNormalChatFormatKeywords(String org, Player player) {
 
-        String format = org;
-        format = format.replace("%username", "%1$s");
-        format = format.replace("%msg", "%2$s");
-        format = format.replace("%player", player.getName());
+        KeywordReplacer format = new KeywordReplacer(org);
+        format.replace("%username", "%1$s");
+        format.replace("%msg", "%2$s");
+        format.replace("%player", player.getName());
 
         if ( format.contains("%date") ) {
-            format = format.replace("%date", dateFormat.format(new Date()));
+            format.replace("%date", dateFormat.format(new Date()));
         }
         if ( format.contains("%time") ) {
-            format = format.replace("%time", timeFormat.format(new Date()));
+            format.replace("%time", timeFormat.format(new Date()));
         }
 
         if ( format.contains("%prefix") || format.contains("%suffix") ) {
@@ -476,8 +477,8 @@ public class BukkitEventListener implements Listener {
                 prefix = vaultchat.getPlayerPrefix(player);
                 suffix = vaultchat.getPlayerSuffix(player);
             }
-            format = format.replace("%prefix", prefix);
-            format = format.replace("%suffix", suffix);
+            format.replace("%prefix", prefix);
+            format.replace("%suffix", suffix);
         }
 
         if ( format.contains("%world") ) {
@@ -489,12 +490,12 @@ public class BukkitEventListener implements Listener {
             if ( worldname == null || worldname.equals("") ) {
                 worldname = player.getWorld().getName();
             }
-            format = format.replace("%world", worldname);
+            format.replace("%world", worldname);
         }
 
-        format = format.replace("%server", "");
+        format.replace("%server", "");
 
-        return Utility.replaceColorCode(format);
+        return Utility.replaceColorCode(format.toString());
     }
 
     /**

@@ -15,6 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.github.ucchyocean.lc3.ChatColor;
+import com.github.ucchyocean.lc3.KeywordReplacer;
 import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatAPI;
 import com.github.ucchyocean.lc3.LunaChatBungee;
@@ -401,16 +402,16 @@ public class BungeeEventListener implements Listener {
      */
     private String replaceNormalChatFormatKeywords(String org, ProxiedPlayer player, String msg) {
 
-        String format = org;
-        format = format.replace("%username", player.getDisplayName());
-        format = format.replace("%msg", msg);
-        format = format.replace("%player", player.getName());
+        KeywordReplacer format = new KeywordReplacer(org);
+        format.replace("%username", player.getDisplayName());
+        format.replace("%msg", msg);
+        format.replace("%player", player.getName());
 
         if ( format.contains("%date") ) {
-            format = format.replace("%date", dateFormat.format(new Date()));
+            format.replace("%date", dateFormat.format(new Date()));
         }
         if ( format.contains("%time") ) {
-            format = format.replace("%time", timeFormat.format(new Date()));
+            format.replace("%time", timeFormat.format(new Date()));
         }
 
         if ( format.contains("%prefix") || format.contains("%suffix") ) {
@@ -427,19 +428,19 @@ public class BungeeEventListener implements Listener {
                 prefix = bungeeperms.userPrefix(player.getUniqueId().toString(), null, null);
                 suffix = bungeeperms.userSuffix(player.getUniqueId().toString(), null, null);
             }
-            format = format.replace("%prefix", prefix);
-            format = format.replace("%suffix", suffix);
+            format.replace("%prefix", prefix);
+            format.replace("%suffix", suffix);
         }
 
         if ( format.contains("%world") ) {
-            format = format.replace("%world", "");
+            format.replace("%world", "");
         }
 
         if ( format.contains("%server") ) {
-            format = format.replace("%server", player.getServer().getInfo().getName());
+            format.replace("%server", player.getServer().getInfo().getName());
         }
 
-        return Utility.replaceColorCode(format);
+        return Utility.replaceColorCode(format.toString());
     }
 
     /**
