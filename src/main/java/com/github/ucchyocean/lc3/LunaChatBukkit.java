@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -65,6 +66,9 @@ public class LunaChatBukkit extends JavaPlugin implements PluginInterface {
 
         LunaChat.setPlugin(this);
         LunaChat.setMode(LunaChatMode.BUKKIT);
+
+        // Metrics
+        new Metrics(this, 7936);
 
         // 変数などの初期化
         config = new LunaChatConfig(getDataFolder(), getFile());

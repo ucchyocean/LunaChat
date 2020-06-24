@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.ucchyocean</groupId>
   <artifactId>LunaChat</artifactId>
-  <version>3.0.1</version>
+  <version>3.0.2</version>
   <description>A powerfull chat channel plugin with IME (Kana-Kanji conversion) support</description>
   <url>https://github.com/ucchyocean/LunaChat</url>
 
@@ -91,6 +91,10 @@
                   <pattern>org.jetbrains</pattern>
                   <shadedPattern>com.github.ucchyocean.lc.lib.org.jetbrains</shadedPattern>
                 </relocation>
+                <relocation>
+                  <pattern>org.bstats</pattern>
+                  <shadedPattern>com.github.ucchyocean.lc.lib.org.bstats</shadedPattern>
+                </relocation>
               </relocations>
             </configuration>
           </execution>
@@ -117,7 +121,7 @@
     </repository>
     <repository>
       <id>codemc-repo</id>
-      <name>mcMMO Repository</name>
+      <name>CodeMC Repository</name>
       <url>https://repo.codemc.org/repository/maven-public/</url>
     </repository>
     <repository>
@@ -177,6 +181,28 @@
       <version>2.1.128</version>
       <optional>true</optional>
       <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.maven.scm</groupId>
+          <artifactId>maven-scm-provider-gitexe</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.bstats</groupId>
+          <artifactId>bstats-bukkit</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.spigotmc</groupId>
+          <artifactId>spigot-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.sk89q.worldguard</groupId>
+          <artifactId>worldguard-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.sk89q.worldguard</groupId>
+          <artifactId>worldguard-legacy</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>net.alpenblock</groupId>
@@ -191,6 +217,18 @@
       <version>5.1</version>
       <optional>true</optional>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.bstats</groupId>
+      <artifactId>bstats-bukkit</artifactId>
+      <version>1.7</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.bstats</groupId>
+      <artifactId>bstats-bungeecord</artifactId>
+      <version>1.7</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.google.code.gson</groupId>

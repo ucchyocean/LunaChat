@@ -11,6 +11,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 
+import org.bstats.bungeecord.Metrics;
+
 import com.github.ucchyocean.lc3.bridge.BungeePermsBridge;
 import com.github.ucchyocean.lc3.bridge.LuckPermsBridge;
 import com.github.ucchyocean.lc3.bungee.BungeeEventListener;
@@ -51,6 +53,9 @@ public class LunaChatBungee extends Plugin implements PluginInterface {
 
         LunaChat.setPlugin(this);
         LunaChat.setMode(LunaChatMode.BUNGEE);
+
+        // Metrics
+        new Metrics(this, 7936);
 
         // 初期化
         config = new LunaChatConfig(getDataFolder(), getFile());
