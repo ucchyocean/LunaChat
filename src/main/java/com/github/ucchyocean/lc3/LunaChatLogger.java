@@ -19,6 +19,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 
+import com.github.ucchyocean.lc3.util.Utility;
+
 /**
  * LunaChatロガー
  * @author ucchy

@@ -12,6 +12,9 @@ import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 import com.github.ucchyocean.lc3.japanize.JapanizeType;
+import com.github.ucchyocean.lc3.util.EventPriority;
+import com.github.ucchyocean.lc3.util.Utility;
+import com.github.ucchyocean.lc3.util.YamlConfig;
 
 /**
  * LunaChatのコンフィグクラス

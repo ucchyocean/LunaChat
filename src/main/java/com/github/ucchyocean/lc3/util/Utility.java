@@ -3,7 +3,7 @@
  * @license    LGPLv3
  * @copyright  Copyright ucchy 2020
  */
-package com.github.ucchyocean.lc3;
+package com.github.ucchyocean.lc3.util;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -16,6 +16,9 @@ import java.io.OutputStreamWriter;
 import java.util.Locale;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
+
+import com.github.ucchyocean.lc3.LunaChat;
+import com.github.ucchyocean.lc3.LunaChatMode;
 
 /**
  * ユーティリティクラス
@@ -176,7 +179,12 @@ public class Utility {
      * @return 接続したことがあるかどうか
      */
     public static boolean existsOfflinePlayer(String name) {
-        // TODO 未実装
+        if ( LunaChat.getUUIDCacheData().getUUIDFromName(name) != null ) {
+            return true;
+        }
+        if ( LunaChat.getMode() == LunaChatMode.BUKKIT ) {
+            return UtilityBukkit.existsOfflinePlayer(name);
+        }
         return false;
     }
 

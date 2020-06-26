@@ -10,6 +10,10 @@ import java.io.IOException;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
+import com.github.ucchyocean.lc3.util.KeywordReplacer;
+import com.github.ucchyocean.lc3.util.Utility;
+import com.github.ucchyocean.lc3.util.YamlConfig;
+
 /**
  * プラグインのメッセージリソース管理クラス
  * @author ucchy

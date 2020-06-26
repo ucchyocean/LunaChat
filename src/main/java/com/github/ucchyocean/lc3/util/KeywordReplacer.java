@@ -3,7 +3,7 @@
  * @license    LGPLv3
  * @copyright  Copyright ucchy 2020
  */
-package com.github.ucchyocean.lc3;
+package com.github.ucchyocean.lc3.util;
 
 /**
  * 文字列のキーワード置き換えを行うユーティリティクラス

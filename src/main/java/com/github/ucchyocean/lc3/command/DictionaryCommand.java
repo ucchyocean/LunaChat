@@ -7,9 +7,9 @@ package com.github.ucchyocean.lc3.command;
 
 import java.util.Map;
 
-import com.github.ucchyocean.lc3.ChatColor;
 import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.member.ChannelMember;
+import com.github.ucchyocean.lc3.util.ChatColor;
 
 /**
  * dictionaryコマンドの実行クラス

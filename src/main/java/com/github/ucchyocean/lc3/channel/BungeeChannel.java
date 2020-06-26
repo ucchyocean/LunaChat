@@ -10,15 +10,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.github.ucchyocean.lc3.KeywordReplacer;
 import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatAPI;
 import com.github.ucchyocean.lc3.LunaChatBungee;
 import com.github.ucchyocean.lc3.LunaChatConfig;
-import com.github.ucchyocean.lc3.Utility;
 import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 import com.github.ucchyocean.lc3.member.ChannelMemberProxiedPlayer;
+import com.github.ucchyocean.lc3.util.KeywordReplacer;
+import com.github.ucchyocean.lc3.util.Utility;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;

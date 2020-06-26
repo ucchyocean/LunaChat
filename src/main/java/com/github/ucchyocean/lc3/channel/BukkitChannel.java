@@ -16,18 +16,18 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import com.github.ucchyocean.lc3.KeywordReplacer;
 import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatAPI;
 import com.github.ucchyocean.lc3.LunaChatBukkit;
 import com.github.ucchyocean.lc3.LunaChatConfig;
 import com.github.ucchyocean.lc3.Messages;
-import com.github.ucchyocean.lc3.Utility;
-import com.github.ucchyocean.lc3.UtilityBukkit;
 import com.github.ucchyocean.lc3.bridge.DynmapBridge;
 import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 import com.github.ucchyocean.lc3.member.ChannelMemberBukkit;
+import com.github.ucchyocean.lc3.util.KeywordReplacer;
+import com.github.ucchyocean.lc3.util.Utility;
+import com.github.ucchyocean.lc3.util.UtilityBukkit;
 
 /**
  * チャンネルの実装クラス
@@ -81,6 +81,8 @@ public class BukkitChannel extends Channel {
                     // 範囲チャット
 
                     if ( player instanceof ChannelMemberBukkit ) {
+                        // ↑常にtrueだと思うが、念のため。
+
                         Location origin = ((ChannelMemberBukkit)player).getLocation();
                         for ( Player p : Bukkit.getOnlinePlayers() ) {
                             ChannelMember cp = ChannelMember.getChannelMember(p);
@@ -90,8 +92,6 @@ public class BukkitChannel extends Channel {
                                 recipients.add(ChannelMember.getChannelMember(p));
                             }
                         }
-                    } else {
-                        // TODO 何かするか？検討する
                     }
 
                 } else {

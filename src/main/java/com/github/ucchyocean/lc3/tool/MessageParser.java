@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.github.ucchyocean.lc3.YamlConfig;
+import com.github.ucchyocean.lc3.util.YamlConfig;
 
 /**
  * messages_ja.yml を読んで、Messagesクラス用のメソッドを生成するツール
