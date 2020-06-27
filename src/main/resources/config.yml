@@ -203,4 +203,4 @@ japanizeIgnorePlayerName: true
 
 # Non-Japanese marker.
 # If this is at the beginning of your remark, do not temporarily perform Japanize conversion.
-noneJapanizeMarker: '#'
+noneJapanizeMarker: '$'

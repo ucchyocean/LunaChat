@@ -3,7 +3,7 @@
  * @license    LGPLv3
  * @copyright  Copyright ucchy 2020
  */
-package com.github.ucchyocean.lc3;
+package com.github.ucchyocean.lc3.util;
 
 import java.util.Collection;
 
@@ -54,5 +54,14 @@ public class UtilityBukkit {
      */
     public static Player getPlayerExact(String name) {
         return Bukkit.getPlayer(Utility.stripColorCode(name));
+    }
+
+    /**
+     * 指定された名前のプレイヤーが接続したことがあるかどうかを検索する
+     * @param name プレイヤー名
+     * @return 接続したことがあるかどうか
+     */
+    public static boolean existsOfflinePlayer(String name) {
+        return (getOfflinePlayer(name) != null);
     }
 }

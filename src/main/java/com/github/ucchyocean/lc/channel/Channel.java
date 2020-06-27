@@ -90,7 +90,6 @@ public class Channel {
      * @deprecated Legacy Version
      */
     public void chat(ChannelPlayer player, String message) {
-        // TODO player.getPlayer()で問題ないか、要確認
         channel.chat(ChannelMember.getChannelMember(player.getPlayer()), message);
     }
 

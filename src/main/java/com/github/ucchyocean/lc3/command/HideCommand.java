@@ -8,9 +8,9 @@ package com.github.ucchyocean.lc3.command;
 import java.util.ArrayList;
 
 import com.github.ucchyocean.lc3.Messages;
-import com.github.ucchyocean.lc3.Utility;
 import com.github.ucchyocean.lc3.channel.Channel;
 import com.github.ucchyocean.lc3.member.ChannelMember;
+import com.github.ucchyocean.lc3.util.Utility;
 
 /**
  * hideコマンドの実行クラス

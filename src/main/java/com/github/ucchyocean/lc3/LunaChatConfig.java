@@ -12,6 +12,9 @@ import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 import com.github.ucchyocean.lc3.japanize.JapanizeType;
+import com.github.ucchyocean.lc3.util.EventPriority;
+import com.github.ucchyocean.lc3.util.Utility;
+import com.github.ucchyocean.lc3.util.YamlConfig;
 
 /**
  * LunaChatのコンフィグクラス
@@ -247,7 +250,7 @@ public class LunaChatConfig {
         japanizeLine1Format = config.getString("japanizeLine1Format", "%msg &6(%japanize)");
         japanizeLine2Format = config.getString("japanizeLine2Format", "&6[JP] %japanize");
         japanizeIgnorePlayerName = config.getBoolean("japanizeIgnorePlayerName", true);
-        noneJapanizeMarker = config.getString("noneJapanizeMarker", "#");
+        noneJapanizeMarker = config.getString("noneJapanizeMarker", "$");
         japanizeWait = config.getInt("japanizeWait", 1);
 
         // globalチャンネルが、使用可能なチャンネル名かどうかを調べる

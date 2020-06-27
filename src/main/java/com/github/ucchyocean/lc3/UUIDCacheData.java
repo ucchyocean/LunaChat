@@ -10,6 +10,8 @@ import java.io.IOException;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.github.ucchyocean.lc3.util.YamlConfig;
+
 /**
  * UUIDのキャッシュデータを管理するクラス
  * @author ucchy
@@ -79,5 +81,21 @@ public class UUIDCacheData {
      */
     public @Nullable String get(String uuid) {
         return cache.getString(uuid);
+    }
+
+    /**
+     * プレイヤー名からUUIDを取得する
+     * @param name プレイヤー名
+     * @return UUID（キャッシュされていない場合はnullが返される）
+     */
+    public @Nullable String getUUIDFromName(String name) {
+        if ( name == null ) return null;
+        for ( String uuid : cache.getKeys(false) ) {
+            String n = cache.getString(uuid);
+            if ( name.equalsIgnoreCase(n) ) {
+                return uuid;
+            }
+        }
+        return null;
     }
 }

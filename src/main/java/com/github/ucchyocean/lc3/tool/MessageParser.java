@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.github.ucchyocean.lc3.YamlConfig;
+import com.github.ucchyocean.lc3.util.YamlConfig;
 
 /**
  * messages_ja.yml を読んで、Messagesクラス用のメソッドを生成するツール
@@ -109,17 +109,18 @@ public class MessageParser {
                     "        String msg = resources.getString(\"%s\");", key));
             result.add(String.format(
                     "        if ( msg == null ) return \"\";", key));
+            result.add("        KeywordReplacer kr = new KeywordReplacer(msg);");
 
             for ( String keyword : keywords ) {
                 result.add(String.format(
-                        "        msg = msg.replace(\"%%%s%%\", %s.toString());", keyword, keyword));
+                        "        kr.replace(\"%%%s%%\", %s.toString());", keyword, keyword));
             }
             if ( key.startsWith("errmsg") ) {
-                result.add("        return Utility.replaceColorCode(resources.getString(\"errorPrefix\", \"\") + msg);");
+                result.add("        return Utility.replaceColorCode(resources.getString(\"errorPrefix\", \"\") + kr.toString());");
             } else if ( key.startsWith("cmdmsg") ) {
-                result.add("        return Utility.replaceColorCode(resources.getString(\"infoPrefix\", \"\") + msg);");
+                result.add("        return Utility.replaceColorCode(resources.getString(\"infoPrefix\", \"\") + kr.toString());");
             } else {
-                result.add("        return Utility.replaceColorCode(msg);");
+                result.add("        return Utility.replaceColorCode(kr.toString());");
             }
             result.add("    }");
         }

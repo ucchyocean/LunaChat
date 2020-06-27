@@ -83,7 +83,7 @@ public class LunaChatStandalone implements PluginInterface {
 
     @Override
     public void log(Level level, String msg) {
-        // TODO 未実装
+        // TODO Standaloneサーバーのログ出力 未実装
     }
 
     /**

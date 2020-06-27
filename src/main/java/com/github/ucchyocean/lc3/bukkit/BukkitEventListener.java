@@ -27,13 +27,14 @@ import com.github.ucchyocean.lc3.LunaChatAPI;
 import com.github.ucchyocean.lc3.LunaChatBukkit;
 import com.github.ucchyocean.lc3.LunaChatConfig;
 import com.github.ucchyocean.lc3.Messages;
-import com.github.ucchyocean.lc3.Utility;
 import com.github.ucchyocean.lc3.bridge.VaultChatBridge;
 import com.github.ucchyocean.lc3.channel.Channel;
 import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.japanize.JapanizeType;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 import com.github.ucchyocean.lc3.member.ChannelMemberBukkit;
+import com.github.ucchyocean.lc3.util.KeywordReplacer;
+import com.github.ucchyocean.lc3.util.Utility;
 
 /**
  * Bukkit関連のイベントを監視するリスナ
@@ -455,16 +456,16 @@ public class BukkitEventListener implements Listener {
      */
     private String replaceNormalChatFormatKeywords(String org, Player player) {
 
-        String format = org;
-        format = format.replace("%username", "%1$s");
-        format = format.replace("%msg", "%2$s");
-        format = format.replace("%player", player.getName());
+        KeywordReplacer format = new KeywordReplacer(org);
+        format.replace("%username", "%1$s");
+        format.replace("%msg", "%2$s");
+        format.replace("%player", player.getName());
 
         if ( format.contains("%date") ) {
-            format = format.replace("%date", dateFormat.format(new Date()));
+            format.replace("%date", dateFormat.format(new Date()));
         }
         if ( format.contains("%time") ) {
-            format = format.replace("%time", timeFormat.format(new Date()));
+            format.replace("%time", timeFormat.format(new Date()));
         }
 
         if ( format.contains("%prefix") || format.contains("%suffix") ) {
@@ -476,8 +477,8 @@ public class BukkitEventListener implements Listener {
                 prefix = vaultchat.getPlayerPrefix(player);
                 suffix = vaultchat.getPlayerSuffix(player);
             }
-            format = format.replace("%prefix", prefix);
-            format = format.replace("%suffix", suffix);
+            format.replace("%prefix", prefix);
+            format.replace("%suffix", suffix);
         }
 
         if ( format.contains("%world") ) {
@@ -489,12 +490,12 @@ public class BukkitEventListener implements Listener {
             if ( worldname == null || worldname.equals("") ) {
                 worldname = player.getWorld().getName();
             }
-            format = format.replace("%world", worldname);
+            format.replace("%world", worldname);
         }
 
-        format = format.replace("%server", "");
+        format.replace("%server", "");
 
-        return Utility.replaceColorCode(format);
+        return Utility.replaceColorCode(format.toString());
     }
 
     /**

@@ -6,7 +6,7 @@
 package com.github.ucchyocean.lc3.bridge;
 
 import net.alpenblock.bungeeperms.BungeePermsAPI;
-import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.plugin.Plugin;
 
 /**
  * BungeePerms連携クラス
@@ -20,12 +20,13 @@ public class BungeePermsBridge {
 
     /**
      * BungeePermsをロードする
+     * @param plugin BungeePermsのインスタンス
      * @return ロードされたBungeePermsBridge
      */
-    public static BungeePermsBridge load() {
+    public static BungeePermsBridge load(Plugin plugin) {
 
-        // BungeePermsが動作しているかどうか確認
-        boolean loaded = ProxyServer.getInstance().getPluginManager().getPlugin("BungeePerms") != null;
+        // BungeePermsが指定されたかどうかを確認
+        boolean loaded = (plugin != null);
 
         // ロードされているならBungeePermsBridgeのインスタンスを、ロードされていないならnullを返す
         return loaded ? new BungeePermsBridge() : null;

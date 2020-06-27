@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.github.ucchyocean.lc3.ChatColor;
 import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatAPI;
 import com.github.ucchyocean.lc3.LunaChatConfig;
@@ -24,11 +23,12 @@ import com.github.ucchyocean.lc3.LunaChatLogger;
 import com.github.ucchyocean.lc3.LunaChatMode;
 import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.NGWordAction;
-import com.github.ucchyocean.lc3.Utility;
-import com.github.ucchyocean.lc3.YamlConfig;
 import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.japanize.JapanizeType;
 import com.github.ucchyocean.lc3.member.ChannelMember;
+import com.github.ucchyocean.lc3.util.ChatColor;
+import com.github.ucchyocean.lc3.util.Utility;
+import com.github.ucchyocean.lc3.util.YamlConfig;
 
 /**
  * チャンネル

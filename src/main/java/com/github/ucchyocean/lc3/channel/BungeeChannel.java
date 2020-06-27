@@ -14,10 +14,11 @@ import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatAPI;
 import com.github.ucchyocean.lc3.LunaChatBungee;
 import com.github.ucchyocean.lc3.LunaChatConfig;
-import com.github.ucchyocean.lc3.Utility;
 import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 import com.github.ucchyocean.lc3.member.ChannelMemberProxiedPlayer;
+import com.github.ucchyocean.lc3.util.KeywordReplacer;
+import com.github.ucchyocean.lc3.util.Utility;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -195,71 +196,71 @@ public class BungeeChannel extends Channel {
 
         LunaChatAPI api = LunaChat.getAPI();
 
-        String msg = format;
+        KeywordReplacer msg = new KeywordReplacer(format);
 
         // テンプレートのキーワードを、まず最初に置き換える
         for ( int i=0; i<=9; i++ ) {
             String key = "%" + i;
             if ( msg.contains(key) ) {
                 if ( api.getTemplate("" + i) != null ) {
-                    msg = msg.replace(key, api.getTemplate("" + i));
+                    msg.replace(key, api.getTemplate("" + i));
                     break;
                 }
             }
         }
 
-        msg = msg.replace("%ch", getName());
-        //msg = msg.replace("%msg", message);
-        msg = msg.replace("%color", getColorCode());
+        msg.replace("%ch", getName());
+        //msg.replace("%msg", message);
+        msg.replace("%color", getColorCode());
         if ( getPrivateMessageTo() != null ) {
-            msg = msg.replace("%to", getPrivateMessageTo().getDisplayName());
+            msg.replace("%to", getPrivateMessageTo().getDisplayName());
             if ( getPrivateMessageTo() instanceof ChannelMemberProxiedPlayer ) {
                 ChannelMemberProxiedPlayer cm = (ChannelMemberProxiedPlayer)getPrivateMessageTo();
-                msg = msg.replace("%recieverserver", cm.getServer().getInfo().getName());
+                msg.replace("%recieverserver", cm.getServer().getInfo().getName());
             } else {
-                msg = msg.replace("%recieverserver", "");
+                msg.replace("%recieverserver", "");
             }
         } else {
-            msg = msg.replace("%to", "");
-            msg = msg.replace("%recieverserver", "");
+            msg.replace("%to", "");
+            msg.replace("%recieverserver", "");
         }
 
         if ( msg.contains("%date") ) {
-            msg = msg.replace("%date", dateFormat.format(new Date()));
+            msg.replace("%date", dateFormat.format(new Date()));
         }
         if ( msg.contains("%time") ) {
-            msg = msg.replace("%time", timeFormat.format(new Date()));
+            msg.replace("%time", timeFormat.format(new Date()));
         }
 
         if ( player != null ) {
-            msg = msg.replace("%username", player.getDisplayName());
-            msg = msg.replace("%player", player.getName());
+            msg.replace("%username", player.getDisplayName());
+            msg.replace("%player", player.getName());
 
             if ( msg.contains("%prefix") || msg.contains("%suffix") ) {
-                msg = msg.replace("%prefix", player.getPrefix());
-                msg = msg.replace("%suffix", player.getSuffix());
+                msg.replace("%prefix", player.getPrefix());
+                msg.replace("%suffix", player.getSuffix());
             }
 
-            msg = msg.replace("%world", "");
+            msg.replace("%world", "");
 
             if ( msg.contains("%server") ) {
                 if ( player instanceof ChannelMemberProxiedPlayer ) {
                     String serverName = ((ChannelMemberProxiedPlayer)player).getServer().getInfo().getName();
-                    msg = msg.replace("%server", serverName);
+                    msg.replace("%server", serverName);
                 }
-                msg = msg.replace("%server", "");
+                msg.replace("%server", "");
             }
 
         } else {
-            msg = msg.replace("%username", "");
-            msg = msg.replace("%player", "");
-            msg = msg.replace("%prefix", "");
-            msg = msg.replace("%suffix", "");
-            msg = msg.replace("%world", "");
-            msg = msg.replace("%server", "");
+            msg.replace("%username", "");
+            msg.replace("%player", "");
+            msg.replace("%prefix", "");
+            msg.replace("%suffix", "");
+            msg.replace("%world", "");
+            msg.replace("%server", "");
         }
 
-        return Utility.replaceColorCode(msg);
+        return Utility.replaceColorCode(msg.toString());
     }
 
     /**

@@ -11,11 +11,11 @@ import java.util.Map;
 
 import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.Messages;
-import com.github.ucchyocean.lc3.Utility;
 import com.github.ucchyocean.lc3.channel.Channel;
 import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.japanize.JapanizeType;
 import com.github.ucchyocean.lc3.member.ChannelMember;
+import com.github.ucchyocean.lc3.util.Utility;
 
 /**
  * optionコマンドの実行クラス
@@ -198,16 +198,19 @@ public class OptionCommand extends LunaChatSubCommand {
             } else {
 
                 String code = options.get("color");
+                String colorForMsg = options.get("color").replace("&", "＆").replace("#", "＃");
 
                 if ( Utility.isValidColor(code) ) {
                     code = Utility.changeToColorCode(code);
                 }
                 if ( Utility.isAltColorCode(code) ) {
                     channel.setColorCode(code);
-                    sender.sendMessage(Messages.cmdmsgOption("color", options.get("color")));
+                    sender.sendMessage(Messages.cmdmsgOption("color", colorForMsg)
+                            .replace("＃", "#").replace("＆", "&"));
                     setOption = true;
                 } else {
-                    sender.sendMessage(Messages.errmsgInvalidColorCode(options.get("color")));
+                    sender.sendMessage(Messages.errmsgInvalidColorCode(colorForMsg)
+                            .replace("＃", "#").replace("＆", "&"));
                 }
             }
         }
