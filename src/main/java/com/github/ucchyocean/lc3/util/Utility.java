@@ -79,7 +79,23 @@ public class Utility {
      */
     public static String replaceColorCode(String source) {
         if (source == null) return null;
-        return source.replaceAll("&([0-9a-fk-or])", "\u00A7$1");
+        return replaceWebColorCode(source)
+                .replaceAll("&([0-9a-fk-orA-FK-OR])", "\u00A7$1");
+    }
+
+    /**
+     * Webカラーコード（#99AABBなど）を、カラーコードに置き換えする
+     * @param source 置き換え元の文字列
+     * @return 置き換え後の文字列
+     */
+    private static String replaceWebColorCode(String source) {
+        return source
+                .replaceAll(
+                        "#([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])",
+                        "\u00A7x\u00A7$1\u00A7$2\u00A7$3\u00A7$4\u00A7$5\u00A7$6")
+                .replaceAll(
+                        "#([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])",
+                        "\u00A7x\u00A7$1\u00A7$1\u00A7$2\u00A7$2\u00A7$3\u00A7$3");
     }
 
     /**
@@ -89,7 +105,7 @@ public class Utility {
      */
     public static String stripColorCode(String source) {
         if (source == null) return null;
-        return stripAltColorCode(source).replaceAll("\u00A7([0-9a-fk-or])", "").replaceAll("&([0-9a-fk-or])", "");
+        return stripAltColorCode(source).replaceAll("\u00A7([0-9a-fk-orxA-FK-ORX])", "");
     }
 
     /**
@@ -99,7 +115,8 @@ public class Utility {
      */
     public static String stripAltColorCode(String source) {
         if (source == null) return null;
-        return source.replaceAll("&([0-9a-fk-or])", "");
+        source = source.replaceAll("#[0-9a-fA-F]{6}", "").replaceAll("#[0-9a-fA-F]{3}", "");
+        return source.replaceAll("&([0-9a-fk-orxA-FK-ORX])", "");
     }
 
     /**
@@ -109,7 +126,7 @@ public class Utility {
      */
     public static boolean isColorCode(String code) {
         if (code == null) return false;
-        return code.matches("\u00A7[0-9a-fk-orA-FK-OR]");
+        return code.matches("\u00A7[0-9a-fk-orxA-FK-ORX]");
     }
 
     /**
@@ -119,7 +136,7 @@ public class Utility {
      */
     public static boolean isAltColorCode(String code) {
         if (code == null) return false;
-        return code.matches("&[0-9a-fk-orA-FK-OR]");
+        return code.matches("(&[0-9a-fk-orA-FK-OR]|#[0-9a-fA-F]{3}|#[0-9a-fA-F]{6})");
     }
 
     /**
@@ -138,12 +155,11 @@ public class Utility {
     }
 
     /**
-     * カラー表記の文字列を、カラーコードに変換する
+     * カラー表記の文字列（REDとかGREENとか）を、カラーコード候補（&a）に変換する
      * @param color カラー表記の文字列
-     * @return カラーコード
+     * @return カラーコード候補
      */
     public static String changeToColorCode(String color) {
-
         return "&" + changeToChatColor(color).getChar();
     }
 
@@ -153,7 +169,6 @@ public class Utility {
      * @return ChatColorクラス
      */
     public static ChatColor changeToChatColor(String color) {
-
         if (isValidColor(color)) {
             return ChatColor.valueOf(color.toUpperCase());
         }

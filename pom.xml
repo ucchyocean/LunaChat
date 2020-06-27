@@ -143,15 +143,24 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.bukkit</groupId>
-      <artifactId>bukkit</artifactId>
-      <version>1.15.2-R0.1-SNAPSHOT</version>
+      <groupId>org.spigotmc</groupId>
+      <artifactId>spigot-api</artifactId>
+      <version>1.16.1-R0.1-SNAPSHOT</version>
+      <optional>true</optional>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>net.md-5</groupId>
       <artifactId>bungeecord-api</artifactId>
-      <version>1.15-SNAPSHOT</version>
+      <version>1.16-R0.2-SNAPSHOT</version>
+      <optional>true</optional>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.md-5</groupId>
+      <artifactId>bungeecord-chat</artifactId>
+      <version>1.16-R0.1</version>
+      <optional>true</optional>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -160,6 +169,12 @@
       <version>1.7</version>
       <optional>true</optional>
       <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.bukkit</groupId>
+          <artifactId>bukkit</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.dynmap</groupId>
@@ -167,6 +182,12 @@
       <version>2.0</version>
       <optional>true</optional>
       <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.bukkit</groupId>
+          <artifactId>bukkit</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.onarandombox.multiversecore</groupId>
