@@ -32,9 +32,17 @@ public abstract class ChannelMemberBukkit extends ChannelMember {
 
     /**
      * 発言者が今いるワールドを取得する
-     * @return 発言者の位置
+     * @return 発言者が今いるワールド
      */
     public abstract World getWorld();
+
+    /**
+     * 発言者が今いるサーバーのサーバー名を取得する
+     * @return サーバー名
+     */
+    public String getServerName() {
+        return "";
+    }
 
     /**
      * CommandSenderから、ChannelMemberを作成して返す

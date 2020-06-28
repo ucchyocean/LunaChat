@@ -6,9 +6,7 @@
 package com.github.ucchyocean.lc3.bungee;
 
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -19,14 +17,12 @@ import com.github.ucchyocean.lc3.LunaChatAPI;
 import com.github.ucchyocean.lc3.LunaChatBungee;
 import com.github.ucchyocean.lc3.LunaChatConfig;
 import com.github.ucchyocean.lc3.Messages;
-import com.github.ucchyocean.lc3.bridge.BungeePermsBridge;
-import com.github.ucchyocean.lc3.bridge.LuckPermsBridge;
 import com.github.ucchyocean.lc3.channel.Channel;
 import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.japanize.Japanizer;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 import com.github.ucchyocean.lc3.util.ChatColor;
-import com.github.ucchyocean.lc3.util.KeywordReplacer;
+import com.github.ucchyocean.lc3.util.ChatFormatter;
 import com.github.ucchyocean.lc3.util.Utility;
 
 import net.md_5.bungee.api.CommandSender;
@@ -46,11 +42,6 @@ import net.md_5.bungee.event.EventPriority;
  */
 public class BungeeEventListener implements Listener {
 
-    private static final String DATE_FORMAT_PATTERN = "yyyy/MM/dd";
-    private static final String TIME_FORMAT_PATTERN = "HH:mm:ss";
-
-    private SimpleDateFormat dateFormat;
-    private SimpleDateFormat timeFormat;
     private LunaChatBungee parent;
     private LunaChatConfig config;
     private LunaChatAPI api;
@@ -63,8 +54,6 @@ public class BungeeEventListener implements Listener {
         this.parent = parent;
         config = parent.getConfig();
         api = parent.getLunaChatAPI();
-        dateFormat = new SimpleDateFormat(DATE_FORMAT_PATTERN);
-        timeFormat = new SimpleDateFormat(TIME_FORMAT_PATTERN);
     }
 
     /**
@@ -323,7 +312,9 @@ public class BungeeEventListener implements Listener {
         if ( config.isEnableNormalChatMessageFormat() ) {
             // チャットフォーマット装飾を適用する場合
             String format = config.getNormalChatMessageFormat();
-            result = replaceNormalChatFormatKeywords(format, sender, message);
+//            result = replaceNormalChatFormatKeywords(format, sender, message);
+            result = ChatFormatter.replaceKeywordsForEvent(format, ChannelMember.getChannelMember(sender));
+            result = result.replace("%msg", message);
 
             // イベントをキャンセルする
             event.setCancelled(true);
@@ -391,56 +382,6 @@ public class BungeeEventListener implements Listener {
 
         // ログに記録する
         LunaChat.getNormalChatLogger().log(Utility.stripColorCode(result), sender.getName());
-    }
-
-    /**
-     * 通常チャットのフォーマット設定のキーワードを置き換えして返す
-     * @param org フォーマット設定
-     * @param player 発言プレイヤー
-     * @param msg 発言内容
-     * @return キーワード置き換え済みの文字列
-     */
-    private String replaceNormalChatFormatKeywords(String org, ProxiedPlayer player, String msg) {
-
-        KeywordReplacer format = new KeywordReplacer(org);
-        format.replace("%username", player.getDisplayName());
-        format.replace("%msg", msg);
-        format.replace("%player", player.getName());
-
-        if ( format.contains("%date") ) {
-            format.replace("%date", dateFormat.format(new Date()));
-        }
-        if ( format.contains("%time") ) {
-            format.replace("%time", timeFormat.format(new Date()));
-        }
-
-        if ( format.contains("%prefix") || format.contains("%suffix") ) {
-
-            String prefix = "";
-            String suffix = "";
-            LuckPermsBridge luckperms = LunaChatBungee.getInstance().getLuckPerms();
-            if ( luckperms != null ) {
-                prefix = luckperms.getPlayerPrefix(player.getUniqueId());
-                suffix = luckperms.getPlayerSuffix(player.getUniqueId());
-            }
-            BungeePermsBridge bungeeperms = LunaChatBungee.getInstance().getBungeePerms();
-            if ( bungeeperms != null ) {
-                prefix = bungeeperms.userPrefix(player.getUniqueId().toString(), null, null);
-                suffix = bungeeperms.userSuffix(player.getUniqueId().toString(), null, null);
-            }
-            format.replace("%prefix", prefix);
-            format.replace("%suffix", suffix);
-        }
-
-        if ( format.contains("%world") ) {
-            format.replace("%world", "");
-        }
-
-        if ( format.contains("%server") ) {
-            format.replace("%server", player.getServer().getInfo().getName());
-        }
-
-        return Utility.replaceColorCode(format.toString());
     }
 
     /**
@@ -604,7 +545,10 @@ public class BungeeEventListener implements Listener {
      */
     private void sendMessage(CommandSender reciever, String message) {
         if ( message == null ) return;
-        reciever.sendMessage(TextComponent.fromLegacyText(message));
+        ChannelMember cm = ChannelMember.getChannelMember(reciever);
+        if ( cm != null ) {
+            cm.sendMessage(ChatFormatter.replaceTextComponent(message));
+        }
     }
 
     /**

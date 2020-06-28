@@ -8,6 +8,8 @@ package com.github.ucchyocean.lc3.member;
 import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatMode;
 
+import net.md_5.bungee.api.chat.BaseComponent;
+
 /**
  * チャンネルメンバーの抽象クラス
  * @author ucchy
@@ -51,10 +53,22 @@ public abstract class ChannelMember implements Comparable<ChannelMember> {
     public abstract void sendMessage(String message);
 
     /**
+     * メッセージを送る
+     * @param message 送るメッセージ
+     */
+    public abstract void sendMessage(BaseComponent[] message);
+
+    /**
      * 発言者が今いるワールドのワールド名を取得する
      * @return ワールド名
      */
     public abstract String getWorldName();
+
+    /**
+     * 発言者が今いるサーバーのサーバー名を取得する
+     * @return サーバー名
+     */
+    public abstract String getServerName();
 
     /**
      * 指定されたパーミッションノードの権限を持っているかどうかを取得する

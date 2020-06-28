@@ -27,6 +27,7 @@ import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.japanize.JapanizeType;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 import com.github.ucchyocean.lc3.util.ChatColor;
+import com.github.ucchyocean.lc3.util.ChatFormatter;
 import com.github.ucchyocean.lc3.util.Utility;
 import com.github.ucchyocean.lc3.util.YamlConfig;
 
@@ -563,7 +564,9 @@ public abstract class Channel {
      * @param player プレイヤー
      * @return 置き換え結果
      */
-    protected abstract String replaceKeywords(String format, ChannelMember player);
+    protected String replaceKeywords(String format, ChannelMember player) {
+        return ChatFormatter.replaceKeywordsForChannel(format, player, this);
+    }
 
     /**
      * チャンネル情報を返す

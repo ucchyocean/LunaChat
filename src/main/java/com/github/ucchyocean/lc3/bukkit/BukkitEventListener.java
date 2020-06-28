@@ -6,9 +6,7 @@
 package com.github.ucchyocean.lc3.bukkit;
 
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,31 +25,21 @@ import com.github.ucchyocean.lc3.LunaChatAPI;
 import com.github.ucchyocean.lc3.LunaChatBukkit;
 import com.github.ucchyocean.lc3.LunaChatConfig;
 import com.github.ucchyocean.lc3.Messages;
-import com.github.ucchyocean.lc3.bridge.VaultChatBridge;
 import com.github.ucchyocean.lc3.channel.Channel;
 import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.japanize.JapanizeType;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 import com.github.ucchyocean.lc3.member.ChannelMemberBukkit;
-import com.github.ucchyocean.lc3.util.KeywordReplacer;
+import com.github.ucchyocean.lc3.util.ChatFormatter;
 import com.github.ucchyocean.lc3.util.Utility;
+
+import net.md_5.bungee.api.chat.BaseComponent;
 
 /**
  * Bukkit関連のイベントを監視するリスナ
  * @author ucchy
  */
 public class BukkitEventListener implements Listener {
-
-    private SimpleDateFormat dateFormat;
-    private SimpleDateFormat timeFormat;
-
-    /**
-     * コンストラクタ
-     */
-    public BukkitEventListener() {
-        dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-        timeFormat = new SimpleDateFormat("HH:mm:ss");
-    }
 
     /**
      * プレイヤーがチャット発言したときに呼び出されるメソッド
@@ -310,10 +298,17 @@ public class BukkitEventListener implements Listener {
             }
 
             // チャットフォーマット装飾の適用
+            String format;
             if ( config.isEnableNormalChatMessageFormat() ) {
-                String format = config.getNormalChatMessageFormat();
-                format = replaceNormalChatFormatKeywords(format, event.getPlayer());
-                event.setFormat(format);
+                format = config.getNormalChatMessageFormat();
+//                format = replaceNormalChatFormatKeywords(format, event.getPlayer());
+                format = ChatFormatter.replaceKeywordsForEvent(
+                        format, ChannelMember.getChannelMember(event.getPlayer()));
+//                event.setFormat(format);
+            } else {
+                format = event.getFormat()
+                        .replace("%1$s", event.getPlayer().getDisplayName())
+                        .replace("%2$s", "%msg");
             }
 
             // カラーコード置き換え
@@ -379,7 +374,19 @@ public class BukkitEventListener implements Listener {
             }
 
             // 発言内容の設定
-            event.setMessage(message);
+//            event.setMessage(message);
+
+            // 発言内容の送信
+            BaseComponent[] comps = ChatFormatter.replaceTextComponent(format.replace("%msg", message));
+            for ( Player recipient : event.getRecipients() ) {
+                ChannelMember cm = ChannelMember.getChannelMember(recipient);
+                if ( cm != null ) {
+                    cm.sendMessage(comps);
+                }
+            }
+
+            // イベントのキャンセル
+            event.setCancelled(true); // TODO いろいろテストが必要
 
             // ロギング
             logNormalChat(message, player.getName());
@@ -440,62 +447,12 @@ public class BukkitEventListener implements Listener {
                 channel.addMember(cp);
             }
 
-            // デフォルト発言先が無いなら、グローバルチャンネルに設定する
+            // デフォルト発言先が無いなら、デフォルトチャンネルに設定する
             Channel dchannel = api.getDefaultChannel(player.getName());
             if ( dchannel == null ) {
                 api.setDefaultChannel(player.getName(), cname);
             }
         }
-    }
-
-    /**
-     * 通常チャットのフォーマット設定のキーワードを置き換えして返す
-     * @param org フォーマット設定
-     * @param player 発言プレイヤー
-     * @return キーワード置き換え済みの文字列
-     */
-    private String replaceNormalChatFormatKeywords(String org, Player player) {
-
-        KeywordReplacer format = new KeywordReplacer(org);
-        format.replace("%username", "%1$s");
-        format.replace("%msg", "%2$s");
-        format.replace("%player", player.getName());
-
-        if ( format.contains("%date") ) {
-            format.replace("%date", dateFormat.format(new Date()));
-        }
-        if ( format.contains("%time") ) {
-            format.replace("%time", timeFormat.format(new Date()));
-        }
-
-        if ( format.contains("%prefix") || format.contains("%suffix") ) {
-
-            String prefix = "";
-            String suffix = "";
-            VaultChatBridge vaultchat = LunaChatBukkit.getInstance().getVaultChat();
-            if ( vaultchat != null ) {
-                prefix = vaultchat.getPlayerPrefix(player);
-                suffix = vaultchat.getPlayerSuffix(player);
-            }
-            format.replace("%prefix", prefix);
-            format.replace("%suffix", suffix);
-        }
-
-        if ( format.contains("%world") ) {
-
-            String worldname = null;
-            if ( LunaChatBukkit.getInstance().getMultiverseCore() != null ) {
-                worldname = LunaChatBukkit.getInstance().getMultiverseCore().getWorldAlias(player.getWorld());
-            }
-            if ( worldname == null || worldname.equals("") ) {
-                worldname = player.getWorld().getName();
-            }
-            format.replace("%world", worldname);
-        }
-
-        format.replace("%server", "");
-
-        return Utility.replaceColorCode(format.toString());
     }
 
     /**

@@ -11,6 +11,8 @@ import org.bukkit.World;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.entity.Player;
 
+import net.md_5.bungee.api.chat.BaseComponent;
+
 /**
  * ChannelMemberのBukkit-BlockCommandSender実装
  * @author ucchy
@@ -88,6 +90,15 @@ public class ChannelMemberBlock extends ChannelMemberBukkit {
     }
 
     /**
+     * メッセージを送る、実際は何もせずにメッセージを捨てる
+     * @param message 送るメッセージ
+     * @see com.github.ucchyocean.lc3.member.ChannelMember#sendMessage(net.md_5.bungee.api.chat.BaseComponent[])
+     */
+    public void sendMessage(BaseComponent[] message) {
+        // do nothing.
+    }
+
+    /**
      * BukkitのPlayerを取得する
      * @return 常にnullが返される
      * @see com.github.ucchyocean.lc.channel.ChannelPlayer#getPlayer()
@@ -99,12 +110,12 @@ public class ChannelMemberBlock extends ChannelMemberBukkit {
 
     /**
      * 発言者が今いるワールドのワールド名を取得する
-     * @return 常に "-" が返される。
+     * @return 常に空文字列
      * @see com.github.ucchyocean.lc.channel.ChannelPlayer#getWorldName()
      */
     @Override
     public String getWorldName() {
-        return "-";
+        return "";
     }
 
     /**
@@ -148,7 +159,7 @@ public class ChannelMemberBlock extends ChannelMemberBukkit {
      * @see com.github.ucchyocean.lc3.member.ChannelMember#chat(java.lang.String)
      */
     public void chat(String message) {
-        Bukkit.broadcastMessage("<" + getName() + ">" + message);
+        Bukkit.broadcastMessage("<" + getName() + "> " + message);
     }
 
     /**

@@ -62,7 +62,7 @@ formatConstraint: ['%username', '%msg']
 # フォーマット設定には、下記のキーワードが使用できます。
 # %ch       : チャンネル名
 # %color    : チャンネルカラー
-# %username : 発言者表示名
+# %displayname : 発言者表示名
 # %player   : 発言者ID
 # %world    : 発言したワールド名
 # %prefix   : プレフィックス（VaultとPermissionsExが導入されている場合に置き換えられます）
@@ -70,7 +70,7 @@ formatConstraint: ['%username', '%msg']
 # %date     : 日付
 # %time     : 時刻
 # %msg      : 発言内容（Japanize変換された場合は、Japanize結果を含みます。）
-defaultFormat: '&f[%color%ch&f]%prefix%username%suffix&a:&f %msg'
+defaultFormat: '&f[%color%ch&f]%prefix%displayname%suffix&a:&f %msg'
 
 # OPの画面に、全チャンネルの発言内容を表示する設定。
 opListenAllChannel: false
@@ -100,7 +100,7 @@ quickChannelChatSeparator: ':'
 # 適用されるフォーマット設定。
 # フォーマット設定には、下記のキーワードが使用できます。
 # %ch       : チャンネル名（「%player>%to」と同一です。）
-# %username : 発言者表示名
+# %displayname : 発言者表示名
 # %player   : 発言者ID
 # %server   : 発言者の接続サーバー名（BungeeCord側に導入したときに有効です。）
 # %to       : 発言の相手（受信者）のID
@@ -159,7 +159,7 @@ enableNormalChatMessageFormat: true
 
 # チャット装飾のフォーマット設定。
 # フォーマット設定には、下記のキーワードが使用できます。
-# %username : 発言者表示名
+# %displayname : 発言者表示名
 # %player   : 発言者ID
 # %world    : 発言したワールド名（spigot側に導入したときに有効です。MultiVerseが導入されている場合は、ワールドの表示名を取得して使用します。）
 # %server   : 発言者の接続サーバー名（BungeeCord側に導入したときに有効です。）
@@ -168,8 +168,8 @@ enableNormalChatMessageFormat: true
 # %date     : 日付
 # %time     : 時刻
 # %msg      : 発言内容（Japanize変換された場合は、Japanize結果を含みます。）
-normalChatMessageFormat: '&f%prefix%username%suffix&a:&f %msg'
-#normalChatMessageFormat: '&f%username@%server&a:&f %msg'
+normalChatMessageFormat: '&f%prefix%displayname%suffix&a:&f %msg'
+#normalChatMessageFormat: '&f%displayname@%server&a:&f %msg'
 
 # 通常チャット（非チャンネルチャット）で、カラーコード（&aや&bなど）を
 # 使用可能にするかどうか。falseに設定すると、カラーコードは変換されません。

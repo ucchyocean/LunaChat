@@ -2124,5 +2124,27 @@ public class Messages {
         kr.replace("%next%", next.toString());
         return Utility.replaceColorCode(kr.toString());
     }
+
+    /**
+     * 発言先を%channel%にする
+     */
+    public static String hoverChannelName(Object channel) {
+        String msg = resources.getString("hoverChannelName");
+        if ( msg == null ) return "";
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%channel%", channel.toString());
+        return Utility.replaceColorCode(kr.toString());
+    }
+
+    /**
+     * %player%にプライベートメッセージを送る
+     */
+    public static String hoverPlayerName(Object player) {
+        String msg = resources.getString("hoverPlayerName");
+        if ( msg == null ) return "";
+        KeywordReplacer kr = new KeywordReplacer(msg);
+        kr.replace("%player%", player.toString());
+        return Utility.replaceColorCode(kr.toString());
+    }
     // === Auto-generated methods area end. ===
 }

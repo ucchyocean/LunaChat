@@ -206,3 +206,6 @@ usageJapanizeOther: '&6/%label% (player) on|off &7- Turn on/off the Japanize con
 usageTop: '&e----- &6LunaChat %type% command (&c%num%&6/&c%max%&6) &e-----'
 usageFoot: '&e-----------------------------------------'
 usageNoticeNextPage: '&6次のページを見るには、&c/%label% help %type% %next%&6 と実行してください。'
+
+hoverChannelName: '発言先を%channel%にする'
+hoverPlayerName: '%player%にプライベートメッセージを送る'

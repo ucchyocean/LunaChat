@@ -5,9 +5,7 @@
  */
 package com.github.ucchyocean.lc3.channel;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -25,9 +23,10 @@ import com.github.ucchyocean.lc3.bridge.DynmapBridge;
 import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 import com.github.ucchyocean.lc3.member.ChannelMemberBukkit;
-import com.github.ucchyocean.lc3.util.KeywordReplacer;
-import com.github.ucchyocean.lc3.util.Utility;
+import com.github.ucchyocean.lc3.util.ChatFormatter;
 import com.github.ucchyocean.lc3.util.UtilityBukkit;
+
+import net.md_5.bungee.api.chat.BaseComponent;
 
 /**
  * チャンネルの実装クラス
@@ -35,19 +34,12 @@ import com.github.ucchyocean.lc3.util.UtilityBukkit;
  */
 public class BukkitChannel extends Channel {
 
-    private SimpleDateFormat dateFormat;
-    private SimpleDateFormat timeFormat;
-
     /**
      * コンストラクタ
      * @param name チャンネル名
      */
     protected BukkitChannel(String name) {
-
         super(name);
-
-        dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-        timeFormat = new SimpleDateFormat("HH:mm:ss");
     }
 
     /**
@@ -161,6 +153,7 @@ public class BukkitChannel extends Channel {
         }
 
         // LunaChatChannelMessageEvent イベントコール
+        // TODO messageがクリックイベント用のプレースホルダ―入りになっているが、問題ないか
         EventResult result = LunaChat.getEventSender().sendLunaChatChannelMessageEvent(
                 getName(), player, message, recipients, name, originalMessage);
         message = result.getMessage();
@@ -184,8 +177,9 @@ public class BukkitChannel extends Channel {
         }
 
         // 送信する
+        BaseComponent[] comps = ChatFormatter.replaceTextComponent(message);
         for ( ChannelMember p : recipients ) {
-            p.sendMessage(message);
+            p.sendMessage(comps);
         }
 
         // 設定に応じて、コンソールに出力する
@@ -253,82 +247,6 @@ public class BukkitChannel extends Channel {
         }
 
         return super.getMembers();
-    }
-
-    /**
-     * チャットフォーマット内のキーワードを置き換えする
-     * @param format チャットフォーマット
-     * @param player プレイヤー
-     * @return 置き換え結果
-     */
-    @Override
-    protected String replaceKeywords(String format, ChannelMember player) {
-
-        LunaChatAPI api = LunaChat.getAPI();
-
-        KeywordReplacer msg = new KeywordReplacer(format);
-
-        // テンプレートのキーワードを、まず最初に置き換える
-        for ( int i=0; i<=9; i++ ) {
-            String key = "%" + i;
-            if ( msg.contains(key) ) {
-                if ( api.getTemplate("" + i) != null ) {
-                    msg.replace(key, api.getTemplate("" + i));
-                    break;
-                }
-            }
-        }
-
-        msg.replace("%ch", getName());
-        //msg.replace("%msg", message);
-        msg.replace("%color", getColorCode());
-        if ( getPrivateMessageTo() != null ) {
-            msg.replace("%to", getPrivateMessageTo().getDisplayName());
-        } else {
-            msg.replace("%to", "");
-        }
-        msg.replace("%recieverserver", "");
-
-        if ( msg.contains("%date") ) {
-            msg.replace("%date", dateFormat.format(new Date()));
-        }
-        if ( msg.contains("%time") ) {
-            msg.replace("%time", timeFormat.format(new Date()));
-        }
-
-        if ( player != null ) {
-            msg.replace("%username", player.getDisplayName());
-            msg.replace("%player", player.getName());
-
-            if ( msg.contains("%prefix") || msg.contains("%suffix") ) {
-                msg.replace("%prefix", player.getPrefix());
-                msg.replace("%suffix", player.getSuffix());
-            }
-
-            if ( msg.contains("%world") ) {
-
-                String worldname = null;
-                if ( LunaChatBukkit.getInstance().getMultiverseCore() != null ) {
-                    worldname = LunaChatBukkit.getInstance().getMultiverseCore().getWorldAlias(player.getWorldName());
-                }
-                if ( worldname == null || worldname.equals("") ) {
-                    worldname = player.getWorldName();
-                }
-                msg.replace("%world", worldname);
-            }
-
-            msg.replace("%server", "");
-
-        } else {
-            msg.replace("%username", "");
-            msg.replace("%player", "");
-            msg.replace("%prefix", "");
-            msg.replace("%suffix", "");
-            msg.replace("%world", "");
-            msg.replace("%server", "");
-        }
-
-        return Utility.replaceColorCode(msg.toString());
     }
 
     /**

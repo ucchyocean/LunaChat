@@ -11,6 +11,8 @@ import org.bukkit.World;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
+import net.md_5.bungee.api.chat.BaseComponent;
+
 /**
  * ChannelMemberのBukkit-ConsoleCommandSender実装
  * @author ucchy
@@ -86,6 +88,16 @@ public class ChannelMemberBukkitConsole extends ChannelMemberBukkit {
     public void sendMessage(String message) {
         if ( message == null || message.isEmpty() ) return;
         sender.sendMessage(message);
+    }
+
+    /**
+     * メッセージを送る
+     * @param message 送るメッセージ
+     * @see com.github.ucchyocean.lc3.member.ChannelMember#sendMessage(net.md_5.bungee.api.chat.BaseComponent[])
+     */
+    public void sendMessage(BaseComponent[] message) {
+        if ( message == null || message.length == 0 ) return;
+        sender.spigot().sendMessage(message);
     }
 
     /**
