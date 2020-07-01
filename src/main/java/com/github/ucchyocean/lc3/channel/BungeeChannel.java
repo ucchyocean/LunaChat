@@ -8,13 +8,15 @@ package com.github.ucchyocean.lc3.channel;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatAPI;
 import com.github.ucchyocean.lc3.LunaChatBungee;
 import com.github.ucchyocean.lc3.LunaChatConfig;
 import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.member.ChannelMember;
-import com.github.ucchyocean.lc3.util.ChatFormatter;
+import com.github.ucchyocean.lc3.util.ClickableFormat;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -40,11 +42,10 @@ public class BungeeChannel extends Channel {
      * @param message メッセージ
      * @param format フォーマット
      * @param sendDynmap dynmapへ送信するかどうか
-     * @param name 発言者名
      */
     @Override
     protected void sendMessage(ChannelMember player, String message,
-            String format, boolean sendDynmap, String name) {
+            @Nullable ClickableFormat format, boolean sendDynmap) {
 
         LunaChatConfig config = LunaChat.getConfig();
 
@@ -98,21 +99,25 @@ public class BungeeChannel extends Channel {
         }
 
         // フォーマットがある場合は置き換える
-        if ( format != null ) {
-            message = format.replace("%msg", message);
-        }
 
         // LunaChatChannelMessageEvent イベントコール
-        // TODO messageがクリックイベント用のプレースホルダ―入りになっているが、問題ないか
+        String name = (player != null) ? player.getDisplayName() : "<null>";
         EventResult result = LunaChat.getEventSender().sendLunaChatChannelMessageEvent(
                 getName(), player, message, recipients, name, originalMessage);
         message = result.getMessage();
         recipients = result.getRecipients();
 
         // 送信する
-        BaseComponent[] comps = ChatFormatter.replaceTextComponent(message);
-        for ( ChannelMember p : recipients ) {
-            p.sendMessage(comps);
+        if ( format != null ) {
+            format.replace("%msg", message);
+            BaseComponent[] comps = format.makeTextComponent();
+            for ( ChannelMember p : recipients ) {
+                p.sendMessage(comps);
+            }
+        } else {
+            for ( ChannelMember p : recipients ) {
+                p.sendMessage(message);
+            }
         }
 
         // 設定に応じて、コンソールに出力する
@@ -121,7 +126,7 @@ public class BungeeChannel extends Channel {
         }
 
         // ロギング
-        log(originalMessage, name, player);
+        log(originalMessage, name);
     }
 
     /**
@@ -181,9 +186,8 @@ public class BungeeChannel extends Channel {
      * ログを記録する
      * @param name 発言者
      * @param message 記録するメッセージ
-     * @param player プレイヤー
      */
-    private void log(String message, String name, ChannelMember player) {
+    private void log(String message, String name) {
 
         // LunaChatのチャットログへ記録
         LunaChatConfig config = LunaChat.getConfig();

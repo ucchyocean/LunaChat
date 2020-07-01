@@ -28,7 +28,7 @@ public class Messages {
      * Jarファイル内から直接 messages_en.yml をdefaultMessagesとしてロードし、
      * langに対応するメッセージをファイルからロードする。
      * @param messagesFolder メッセージ格納フォルダ
-     * @param jar jarファイル
+     * @param jar jarファイル（JTestからの実行時はnullを指定可）
      * @param lang デフォルト言語
      */
     public static void initialize(File messagesFolder, File jar, String lang) {
@@ -50,17 +50,19 @@ public class Messages {
 
         // デフォルトメッセージを、jarファイル内からロードする
         YamlConfig defaultMessages = null;
-        try (JarFile jarFile = new JarFile(_jar)) {
+        if ( _jar != null ) {
+            try (JarFile jarFile = new JarFile(_jar)) {
 
-            ZipEntry zipEntry = jarFile.getEntry(String.format("messages_%s.yml", lang));
-            if (zipEntry == null) {
-                zipEntry = jarFile.getEntry("messages_en.yml");
+                ZipEntry zipEntry = jarFile.getEntry(String.format("messages_%s.yml", lang));
+                if (zipEntry == null) {
+                    zipEntry = jarFile.getEntry("messages_en.yml");
+                }
+
+                defaultMessages = YamlConfig.load(jarFile.getInputStream(zipEntry));
+
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-            defaultMessages = YamlConfig.load(jarFile.getInputStream(zipEntry));
-
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
         // 対応する言語のメッセージをロードする
@@ -366,7 +368,7 @@ public class Messages {
     }
 
     /**
-     * &7| 
+     * &7|
      */
     public static String listPlainPrefix() {
         String msg = resources.getString("listPlainPrefix");
@@ -386,7 +388,7 @@ public class Messages {
     }
 
     /**
-     * &7| 
+     * &7|
      */
     public static String channelInfoPrefix() {
         String msg = resources.getString("channelInfoPrefix");

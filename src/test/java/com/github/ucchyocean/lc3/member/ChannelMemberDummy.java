@@ -73,7 +73,10 @@ public class ChannelMemberDummy extends ChannelMember {
      */
     @Override
     public void sendMessage(BaseComponent[] message) {
-        System.out.println(message);
+        for ( BaseComponent comp : message ) {
+            System.out.print(comp.toLegacyText());
+        }
+        System.out.println();
     }
 
     /**

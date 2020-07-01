@@ -16,6 +16,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatAPI;
 import com.github.ucchyocean.lc3.LunaChatConfig;
@@ -26,8 +28,10 @@ import com.github.ucchyocean.lc3.NGWordAction;
 import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.japanize.JapanizeType;
 import com.github.ucchyocean.lc3.member.ChannelMember;
+import com.github.ucchyocean.lc3.member.ChannelMemberOther;
+import com.github.ucchyocean.lc3.member.ChannelMemberSystem;
 import com.github.ucchyocean.lc3.util.ChatColor;
-import com.github.ucchyocean.lc3.util.ChatFormatter;
+import com.github.ucchyocean.lc3.util.ClickableFormat;
 import com.github.ucchyocean.lc3.util.Utility;
 import com.github.ucchyocean.lc3.util.YamlConfig;
 
@@ -257,7 +261,7 @@ public abstract class Channel {
         }
 
         // キーワード置き換え
-        String msgFormat = replaceKeywords(getFormat(), player);
+        ClickableFormat cf = ClickableFormat.makeFormat(getFormat(), player, this, true);
 
         // カラーコード置き換え
         // チャンネルで許可されていて、発言者がパーミッションを持っている場合に置き換える
@@ -267,11 +271,11 @@ public abstract class Channel {
 
         // LunaChatChannelChatEvent イベントコール
         EventResult result = LunaChat.getEventSender().sendLunaChatChannelChatEvent(
-                getName(), player, message, maskedMessage, msgFormat);
+                getName(), player, message, maskedMessage, cf.toLegacyText());
         if ( result.isCancelled() ) {
             return;
         }
-        msgFormat = result.getMessageFormat();
+//        msgFormat = result.getMessageFormat();
         maskedMessage = result.getNgMaskedMessage();
 
         // 2byteコードを含むか、半角カタカナのみなら、Japanize変換は行わない
@@ -295,10 +299,10 @@ public abstract class Channel {
 
             int lineType = config.getJapanizeDisplayLine();
             String jpFormat;
-            String messageFormat = null;
+            ClickableFormat messageFormat = null;
             if ( lineType == 1 ) {
                 jpFormat = Utility.replaceColorCode(config.getJapanizeLine1Format());
-                messageFormat = msgFormat;
+                messageFormat = cf;
                 isIncludeSyncChat = false;
             } else {
                 jpFormat = Utility.replaceColorCode(config.getJapanizeLine2Format());
@@ -311,7 +315,7 @@ public abstract class Channel {
 
         if ( isIncludeSyncChat ) {
             // メッセージの送信
-            sendMessage(player, maskedMessage, msgFormat, true, player.getDisplayName());
+            sendMessage(player, maskedMessage, cf, true);
         }
 
         // 非同期実行タスクがある場合、追加で実行する
@@ -330,7 +334,7 @@ public abstract class Channel {
                     if ( !Messages.banNGWordMessage("", "", "").isEmpty() ) {
                         String m = Messages.banNGWordMessage(getColorCode(), getName(), player.getName());
                         player.sendMessage(m);
-                        sendMessage(null, m, null, true, "system");
+                        sendMessage(ChannelMemberSystem.getInstance(), m, null, true);
                     }
                 }
 
@@ -342,7 +346,7 @@ public abstract class Channel {
                     if ( !Messages.kickNGWordMessage("", "", "").isEmpty() ) {
                         String m = Messages.kickNGWordMessage(getColorCode(), getName(), player.getName());
                         player.sendMessage(m);
-                        sendMessage(null, m, null, true, "system");
+                        sendMessage(ChannelMemberSystem.getInstance(), m, null, true);
                     }
                 }
 
@@ -354,7 +358,7 @@ public abstract class Channel {
                 if ( !Messages.muteNGWordMessage("", "", "").isEmpty() ) {
                     String m = Messages.muteNGWordMessage(getColorCode(), getName(), player.getName());
                     player.sendMessage(m);
-                    sendMessage(null, m, null, true, "system");
+                    sendMessage(ChannelMemberSystem.getInstance(), m, null, true);
                 }
             }
         }
@@ -366,7 +370,7 @@ public abstract class Channel {
      * @param source 連携元を判別する文字列
      * @param message メッセージ
      */
-    public void chatFromOtherSource(String player, String source, String message) {
+    public void chatFromOtherSource(String player, @Nullable String source, String message) {
 
         LunaChatConfig config = LunaChat.getConfig();
 
@@ -389,9 +393,7 @@ public abstract class Channel {
         }
 
         // キーワード置き換え
-        String msgFormat = replaceKeywordsForSystemMessages(getFormat(), name);
-        msgFormat = msgFormat.replace("%prefix", "");
-        msgFormat = msgFormat.replace("%suffix", "");
+        ClickableFormat msgFormat = ClickableFormat.makeFormat(getFormat(), new ChannelMemberOther(name));
 
         // カラーコード置き換え チャンネルで許可されている場合に置き換える。
         if ( isAllowCC() ) {
@@ -400,7 +402,7 @@ public abstract class Channel {
 
         // メッセージの送信
         boolean sendDynmap = source == null || !source.equals("web");
-        sendMessage(null, maskedMessage, msgFormat, sendDynmap, name);
+        sendMessage(new ChannelMemberOther(name), maskedMessage, msgFormat, sendDynmap);
     }
 
     /**
@@ -410,7 +412,7 @@ public abstract class Channel {
      * @param name 発言者の表示名
      */
     public void sendSystemMessage(String message, boolean sendDynmap, String name) {
-        sendMessage(null, message, null, sendDynmap, name);
+        sendMessage(new ChannelMemberOther(name), message, null, sendDynmap);
     }
 
     /**
@@ -549,23 +551,22 @@ public abstract class Channel {
 
     /**
      * メッセージを表示します。指定したプレイヤーの発言として処理されます。
-     * @param player プレイヤー（ワールドチャット、範囲チャットの場合は必須です）
+     * @param member 発言者（ワールドチャット、範囲チャットの場合は必須です）
      * @param message メッセージ
      * @param format フォーマット
      * @param sendDynmap dynmapへ送信するかどうか
-     * @param displayName 発言者の表示名（APIに使用されます）
      */
     protected abstract void sendMessage(
-            ChannelMember player, String message, String format, boolean sendDynmap, String displayName);
+            ChannelMember member, String message, @Nullable ClickableFormat format, boolean sendDynmap);
 
     /**
      * チャットフォーマット内のキーワードを置き換えする
      * @param format チャットフォーマット
-     * @param player プレイヤー
+     * @param member プレイヤー
      * @return 置き換え結果
      */
-    protected String replaceKeywords(String format, ChannelMember player) {
-        return ChatFormatter.replaceKeywordsForChannel(format, player, this);
+    protected ClickableFormat replaceKeywords(String format, ChannelMember member) {
+        return ClickableFormat.makeFormat(format, member, this, true);
     }
 
     /**
@@ -714,7 +715,7 @@ public abstract class Channel {
                     // メッセージ通知を流す
                     String msg = Messages.expiredBanMessage(getColorCode(), getName(), cp.getName());
                     if ( !msg.isEmpty() ) {
-                        sendMessage(null, msg, null, false, "system");
+                        sendMessage(ChannelMemberSystem.getInstance(), msg, null, true);
                     }
 
                     msg = Messages.cmdmsgPardoned(getName());
@@ -738,7 +739,7 @@ public abstract class Channel {
                     // メッセージ通知を流す
                     String msg = Messages.expiredMuteMessage(getColorCode(), getName(), cp.getName());
                     if ( !msg.isEmpty() ) {
-                        sendMessage(null, msg, null, false, "system");
+                        sendMessage(ChannelMemberSystem.getInstance(), msg, null, true);
                     }
 
                     msg = Messages.cmdmsgUnmuted(getName());
@@ -1197,23 +1198,6 @@ public abstract class Channel {
         }
 
         return result;
-    }
-
-    /**
-     * チャットフォーマット内のキーワードを置き換えする
-     * @param format チャットフォーマット
-     * @param playerName プレイヤー名
-     * @return 置き換え結果
-     */
-    private String replaceKeywordsForSystemMessages(String format, String playerName) {
-
-        String msg = format;
-        msg = msg.replace("%ch", getName());
-        msg = msg.replace("%color", getColorCode());
-        msg = msg.replace("%username", playerName);
-        msg = msg.replace("%player", playerName);
-
-        return Utility.replaceColorCode(msg);
     }
 
     /**

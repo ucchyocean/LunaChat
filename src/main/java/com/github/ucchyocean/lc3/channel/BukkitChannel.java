@@ -13,6 +13,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatAPI;
@@ -23,7 +24,7 @@ import com.github.ucchyocean.lc3.bridge.DynmapBridge;
 import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 import com.github.ucchyocean.lc3.member.ChannelMemberBukkit;
-import com.github.ucchyocean.lc3.util.ChatFormatter;
+import com.github.ucchyocean.lc3.util.ClickableFormat;
 import com.github.ucchyocean.lc3.util.UtilityBukkit;
 
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -48,11 +49,11 @@ public class BukkitChannel extends Channel {
      * @param message メッセージ
      * @param format フォーマット
      * @param sendDynmap dynmapへ送信するかどうか
-     * @param name 発言者名
      */
     @Override
-    protected void sendMessage(ChannelMember player, String message,
-            String format, boolean sendDynmap, String name) {
+    protected void sendMessage(
+            ChannelMember player, String message,
+            @Nullable ClickableFormat format, boolean sendDynmap) {
 
         LunaChatConfig config = LunaChat.getConfig();
 
@@ -147,13 +148,8 @@ public class BukkitChannel extends Channel {
             }
         }
 
-        // フォーマットがある場合は置き換える
-        if ( format != null ) {
-            message = format.replace("%msg", message);
-        }
-
         // LunaChatChannelMessageEvent イベントコール
-        // TODO messageがクリックイベント用のプレースホルダ―入りになっているが、問題ないか
+        String name = (player != null) ? player.getDisplayName() : "<null>";
         EventResult result = LunaChat.getEventSender().sendLunaChatChannelMessageEvent(
                 getName(), player, message, recipients, name, originalMessage);
         message = result.getMessage();
@@ -177,9 +173,16 @@ public class BukkitChannel extends Channel {
         }
 
         // 送信する
-        BaseComponent[] comps = ChatFormatter.replaceTextComponent(message);
-        for ( ChannelMember p : recipients ) {
-            p.sendMessage(comps);
+        if ( format != null ) {
+            format.replace("%msg", message);
+            BaseComponent[] comps = format.makeTextComponent();
+            for ( ChannelMember p : recipients ) {
+                p.sendMessage(comps);
+            }
+        } else {
+            for ( ChannelMember p : recipients ) {
+                p.sendMessage(message);
+            }
         }
 
         // 設定に応じて、コンソールに出力する
@@ -193,7 +196,7 @@ public class BukkitChannel extends Channel {
         }
 
         // ロギング
-        log(originalMessage, name, player);
+        log(originalMessage, name);
     }
 
     /**
@@ -253,9 +256,8 @@ public class BukkitChannel extends Channel {
      * ログを記録する
      * @param name 発言者
      * @param message 記録するメッセージ
-     * @param player プレイヤー
      */
-    private void log(String message, String name, ChannelMember player) {
+    private void log(String message, String name) {
 
         // LunaChatのチャットログへ記録
         LunaChatConfig config = LunaChat.getConfig();

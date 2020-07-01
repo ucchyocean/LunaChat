@@ -22,10 +22,11 @@ import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.japanize.Japanizer;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 import com.github.ucchyocean.lc3.util.ChatColor;
-import com.github.ucchyocean.lc3.util.ChatFormatter;
+import com.github.ucchyocean.lc3.util.ClickableFormat;
 import com.github.ucchyocean.lc3.util.Utility;
 
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -275,8 +276,9 @@ public class BungeeEventListener implements Listener {
         boolean skipJapanize = !LunaChat.getAPI().isPlayerJapanize(sender.getName());
 
         // 一時的なJapanizeスキップが指定されているか確認する
-        if ( message.startsWith(config.getNoneJapanizeMarker()) ) {
-            message = message.substring(config.getNoneJapanizeMarker().length());
+        String marker = config.getNoneJapanizeMarker();
+        if ( !marker.equals("") && message.startsWith(marker) ) {
+            message = message.substring(marker.length());
             skipJapanize = true;
         }
 
@@ -309,28 +311,32 @@ public class BungeeEventListener implements Listener {
         }
 
         String result;
+
         if ( config.isEnableNormalChatMessageFormat() ) {
             // チャットフォーマット装飾を適用する場合
-            String format = config.getNormalChatMessageFormat();
-//            result = replaceNormalChatFormatKeywords(format, sender, message);
-            result = ChatFormatter.replaceKeywordsForEvent(format, ChannelMember.getChannelMember(sender));
-            result = result.replace("%msg", message);
+            String f = config.getNormalChatMessageFormat();
+            ClickableFormat format = ClickableFormat.makeFormat(f, ChannelMember.getChannelMember(sender));
+            format.replace("%msg", message);
 
             // イベントをキャンセルする
             event.setCancelled(true);
 
             // hideされているプレイヤーを除くすべてのプレイヤーに、
             // 発言内容を送信する。
+            BaseComponent[] msg = format.makeTextComponent();
             List<ChannelMember> hidelist = api.getHidelist(ChannelMember.getChannelMember(sender));
+
             for ( String server : parent.getProxy().getServers().keySet() ) {
 
                 ServerInfo info = parent.getProxy().getServerInfo(server);
                 for ( ProxiedPlayer player : info.getPlayers() ) {
                     if ( !containsHideList(player, hidelist) ) {
-                        sendMessage(player, result);
+                        sendMessage(player, msg);
                     }
                 }
             }
+
+            result = format.toLegacyText();
 
         } else {
             // チャットフォーマットを適用しない場合
@@ -547,7 +553,20 @@ public class BungeeEventListener implements Listener {
         if ( message == null ) return;
         ChannelMember cm = ChannelMember.getChannelMember(reciever);
         if ( cm != null ) {
-            cm.sendMessage(ChatFormatter.replaceTextComponent(message));
+            cm.sendMessage(message);
+        }
+    }
+
+    /**
+     * 指定した対象にメッセージを送信する
+     * @param reciever 送信先
+     * @param message メッセージ
+     */
+    private void sendMessage(CommandSender reciever, BaseComponent[] message) {
+        if ( message == null ) return;
+        ChannelMember cm = ChannelMember.getChannelMember(reciever);
+        if ( cm != null ) {
+            cm.sendMessage(message);
         }
     }
 

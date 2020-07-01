@@ -30,7 +30,7 @@ import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.japanize.JapanizeType;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 import com.github.ucchyocean.lc3.member.ChannelMemberBukkit;
-import com.github.ucchyocean.lc3.util.ChatFormatter;
+import com.github.ucchyocean.lc3.util.ClickableFormat;
 import com.github.ucchyocean.lc3.util.Utility;
 
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -298,17 +298,16 @@ public class BukkitEventListener implements Listener {
             }
 
             // チャットフォーマット装飾の適用
-            String format;
+            ClickableFormat format;
             if ( config.isEnableNormalChatMessageFormat() ) {
-                format = config.getNormalChatMessageFormat();
-//                format = replaceNormalChatFormatKeywords(format, event.getPlayer());
-                format = ChatFormatter.replaceKeywordsForEvent(
-                        format, ChannelMember.getChannelMember(event.getPlayer()));
+                String f = config.getNormalChatMessageFormat();
+                format = ClickableFormat.makeFormat(f, ChannelMember.getChannelMember(event.getPlayer()));
 //                event.setFormat(format);
             } else {
-                format = event.getFormat()
-                        .replace("%1$s", event.getPlayer().getDisplayName())
+                String f = event.getFormat()
+                        .replace("%1$s", "%displayName")
                         .replace("%2$s", "%msg");
+                format = ClickableFormat.makeFormat(f, ChannelMember.getChannelMember(event.getPlayer()));
             }
 
             // カラーコード置き換え
@@ -377,7 +376,8 @@ public class BukkitEventListener implements Listener {
 //            event.setMessage(message);
 
             // 発言内容の送信
-            BaseComponent[] comps = ChatFormatter.replaceTextComponent(format.replace("%msg", message));
+            format.replace("%msg", message);
+            BaseComponent[] comps = format.makeTextComponent();
             for ( Player recipient : event.getRecipients() ) {
                 ChannelMember cm = ChannelMember.getChannelMember(recipient);
                 if ( cm != null ) {
@@ -386,7 +386,7 @@ public class BukkitEventListener implements Listener {
             }
 
             // イベントのキャンセル
-            event.setCancelled(true); // TODO いろいろテストが必要
+            event.setCancelled(true);
 
             // ロギング
             logNormalChat(message, player.getName());

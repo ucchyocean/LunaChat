@@ -11,7 +11,7 @@ import junit.framework.TestCase;
  *
  * @author ucchy
  */
-public class UtilityTester extends TestCase {
+public class UtilityTest extends TestCase {
 
     public void testColorCode() {
 
