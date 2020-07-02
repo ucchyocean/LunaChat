@@ -149,6 +149,19 @@ public class ClickableFormat {
         return new ClickableFormat(msg);
     }
 
+    public static ClickableFormat makeChannelClickableMessage(String format, String channelName) {
+
+        KeywordReplacer msg = new KeywordReplacer(format);
+
+        msg.replace("%channel%", String.format(
+                PLACEHOLDER_RUN_COMMAND,
+                channelName,
+                Messages.hoverChannelName(channelName),
+                String.format(JOIN_COMMAND_TEMPLATE, channelName)));
+
+        return new ClickableFormat(msg);
+    }
+
 
     public BaseComponent[] makeTextComponent() {
 

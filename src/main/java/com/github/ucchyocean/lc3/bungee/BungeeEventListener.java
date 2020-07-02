@@ -1,5 +1,5 @@
 /*
- * @author     ucchy
+  * @author     ucchy
  * @license    LGPLv3
  * @copyright  Copyright ucchy 2020
  */
@@ -7,6 +7,8 @@ package com.github.ucchyocean.lc3.bungee;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -42,6 +44,8 @@ import net.md_5.bungee.event.EventPriority;
  * @author ucchy
  */
 public class BungeeEventListener implements Listener {
+
+    private static final int MAX_LIST_ITEMS = 8;
 
     private LunaChatBungee parent;
     private LunaChatConfig config;
@@ -136,9 +140,8 @@ public class BungeeEventListener implements Listener {
 
         // チャンネルチャット情報を表示する
         if ( config.isShowListOnJoin() ) {
-            ArrayList<String> list = getListForMotd(player);
-            for ( String msg : list ) {
-                player.sendMessage(TextComponent.fromLegacyText(msg));
+            for ( BaseComponent[] msg : getListForMotd(player) ) {
+                player.sendMessage(msg);
             }
         }
     }
@@ -499,7 +502,7 @@ public class BungeeEventListener implements Listener {
      * @param player プレイヤー
      * @return リスト
      */
-    private ArrayList<String> getListForMotd(ProxiedPlayer player) {
+    private ArrayList<BaseComponent[]> getListForMotd(ProxiedPlayer player) {
 
         ChannelMember cp = ChannelMember.getChannelMember(player);
         LunaChatAPI api = LunaChat.getAPI();
@@ -509,9 +512,18 @@ public class BungeeEventListener implements Listener {
             dchannel = dc.getName().toLowerCase();
         }
 
-        ArrayList<String> items = new ArrayList<String>();
-        items.add(Messages.motdFirstLine());
-        for ( Channel channel : api.getChannels() ) {
+        // チャンネル一覧を取得して、参加人数でソートする
+        ArrayList<Channel> channels = new ArrayList<>(api.getChannels());
+        Collections.sort(channels, new Comparator<Channel>() {
+            public int compare(Channel c1, Channel c2) {
+                return c1.getOnlineNum() - c2.getOnlineNum();
+            }
+        });
+
+        int count = 0;
+        ArrayList<BaseComponent[]> items = new ArrayList<>();
+        items.add(TextComponent.fromLegacyText(Messages.motdFirstLine()));
+        for ( Channel channel : channels ) {
 
             // BANされているチャンネルは表示しない
             if ( channel.getBanned().contains(cp) ) {
@@ -536,10 +548,14 @@ public class BungeeEventListener implements Listener {
             String desc = channel.getDescription();
             int onlineNum = channel.getOnlineNum();
             int memberNum = channel.getTotalNum();
-            String item = Messages.listFormat(disp, onlineNum, memberNum, desc);
-            items.add(item);
+            items.add(Messages.listFormat(disp, onlineNum, memberNum, desc));
+            count++;
+
+            if ( count > MAX_LIST_ITEMS ) {
+                break;
+            }
         }
-        items.add(Messages.listEndLine());
+        items.add(TextComponent.fromLegacyText(Messages.listEndLine()));
 
         return items;
     }

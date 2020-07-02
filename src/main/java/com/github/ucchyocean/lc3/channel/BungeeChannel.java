@@ -187,7 +187,8 @@ public class BungeeChannel extends Channel {
      * @param name 発言者
      * @param message 記録するメッセージ
      */
-    private void log(String message, String name) {
+    @Override
+    protected void log(String message, String name) {
 
         // LunaChatのチャットログへ記録
         LunaChatConfig config = LunaChat.getConfig();

@@ -30,6 +30,18 @@ public class MessageParser {
     private static final String START_MARKER = "    // === Auto-generated methods area start. ===";
     private static final String END_MARKER = "    // === Auto-generated methods area end. ===";
 
+    private static final List<String> CLICKABLE_MESSAGES;
+    static {
+        CLICKABLE_MESSAGES = new ArrayList<>();
+        for ( String s : new String[] {
+                "joinMessage", "quitMessage", "banMessage", "kickMessage",
+                "muteMessage", "banNGWordMessage", "kickNGWordMessage", "muteNGWordMessage", "banWithExpireMessage",
+                "muteWithExpireMessage", "pardonMessage", "unmuteMessage", "expiredBanMessage", "expiredMuteMessage",
+                "addModeratorMessage", "removeModeratorMessage", "noRecipientMessage", "listFormat", } ) {
+            CLICKABLE_MESSAGES.add(s);
+        }
+    }
+
     public static void main(String[] args) {
 
         // 自動生成メソッドを作成する
@@ -99,30 +111,53 @@ public class MessageParser {
             }
 
             // 出力
-            result.add("");
-            result.add("    /**");
-            result.add("     * " + value);
-            result.add("     */");
-            result.add(String.format(
-                    "    public static String %s(%s) {", key, arguments));
-            result.add(String.format(
-                    "        String msg = resources.getString(\"%s\");", key));
-            result.add(String.format(
-                    "        if ( msg == null ) return \"\";", key));
-            result.add("        KeywordReplacer kr = new KeywordReplacer(msg);");
-
-            for ( String keyword : keywords ) {
+            if ( !CLICKABLE_MESSAGES.contains(key) ) {
+                result.add("");
+                result.add("    /**");
+                result.add("     * " + value);
+                result.add("     */");
                 result.add(String.format(
-                        "        kr.replace(\"%%%s%%\", %s.toString());", keyword, keyword));
-            }
-            if ( key.startsWith("errmsg") ) {
-                result.add("        return Utility.replaceColorCode(resources.getString(\"errorPrefix\", \"\") + kr.toString());");
-            } else if ( key.startsWith("cmdmsg") ) {
-                result.add("        return Utility.replaceColorCode(resources.getString(\"infoPrefix\", \"\") + kr.toString());");
+                        "    public static String %s(%s) {", key, arguments));
+                result.add(String.format(
+                        "        String msg = resources.getString(\"%s\");", key));
+                result.add(String.format(
+                        "        if ( msg == null ) return \"\";", key));
+                result.add("        KeywordReplacer kr = new KeywordReplacer(msg);");
+
+                for ( String keyword : keywords ) {
+                    result.add(String.format(
+                            "        kr.replace(\"%%%s%%\", %s.toString());", keyword, keyword));
+                }
+                if ( key.startsWith("errmsg") ) {
+                    result.add("        return Utility.replaceColorCode(resources.getString(\"errorPrefix\", \"\") + kr.toString());");
+                } else if ( key.startsWith("cmdmsg") ) {
+                    result.add("        return Utility.replaceColorCode(resources.getString(\"infoPrefix\", \"\") + kr.toString());");
+                } else {
+                    result.add("        return Utility.replaceColorCode(kr.toString());");
+                }
+                result.add("    }");
             } else {
-                result.add("        return Utility.replaceColorCode(kr.toString());");
+                result.add("");
+                result.add("    /**");
+                result.add("     * " + value);
+                result.add("     */");
+                result.add(String.format(
+                        "    public static BaseComponent[] %s(%s) {", key, arguments));
+                result.add(String.format(
+                        "        String msg = resources.getString(\"%s\");", key));
+                result.add(String.format(
+                        "        if ( msg == null ) return new BaseComponent[0];", key));
+                result.add("        ClickableFormat cf = ClickableFormat.makeChannelClickableMessage(msg, channel.toString());");
+
+                for ( String keyword : keywords ) {
+                    if ( keyword.equals("%channel%") ) continue;
+                    result.add(String.format(
+                            "        cf.replace(\"%%%s%%\", %s.toString());", keyword, keyword));
+                }
+                result.add("        return cf.makeTextComponent();");
+                result.add("    }");
+
             }
-            result.add("    }");
         }
 
         return result;

@@ -99,7 +99,7 @@ public class BukkitChannel extends Channel {
                 }
 
                 // 受信者が自分以外いない場合は、メッセージを表示する
-                if ( !Messages.noRecipientMessage("", "").isEmpty() && (
+                if ( Messages.noRecipientMessage("", "").length > 0 && (
                         recipients.size() == 0 ||
                         (recipients.size() == 1 &&
                          recipients.get(0).getName().equals(player.getName()) ) ) ) {
@@ -257,7 +257,8 @@ public class BukkitChannel extends Channel {
      * @param name 発言者
      * @param message 記録するメッセージ
      */
-    private void log(String message, String name) {
+    @Override
+    protected void log(String message, String name) {
 
         // LunaChatのチャットログへ記録
         LunaChatConfig config = LunaChat.getConfig();

@@ -16,24 +16,30 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
 import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatAPI;
+import com.github.ucchyocean.lc3.LunaChatBukkit;
 import com.github.ucchyocean.lc3.LunaChatConfig;
 import com.github.ucchyocean.lc3.LunaChatLogger;
 import com.github.ucchyocean.lc3.LunaChatMode;
 import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.NGWordAction;
+import com.github.ucchyocean.lc3.bridge.DynmapBridge;
 import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.japanize.JapanizeType;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 import com.github.ucchyocean.lc3.member.ChannelMemberOther;
-import com.github.ucchyocean.lc3.member.ChannelMemberSystem;
 import com.github.ucchyocean.lc3.util.ChatColor;
 import com.github.ucchyocean.lc3.util.ClickableFormat;
 import com.github.ucchyocean.lc3.util.Utility;
 import com.github.ucchyocean.lc3.util.YamlConfig;
+
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 /**
  * チャンネル
@@ -331,10 +337,10 @@ public abstract class Channel {
                 if ( !isGlobalChannel() ) {
                     getBanned().add(player);
                     removeMember(player);
-                    if ( !Messages.banNGWordMessage("", "", "").isEmpty() ) {
-                        String m = Messages.banNGWordMessage(getColorCode(), getName(), player.getName());
+                    if ( Messages.banNGWordMessage("", "", "").length > 0 ) {
+                        BaseComponent[] m = Messages.banNGWordMessage(getColorCode(), getName(), player.getName());
                         player.sendMessage(m);
-                        sendMessage(ChannelMemberSystem.getInstance(), m, null, true);
+                        sendSystemMessage(m, true, "system");
                     }
                 }
 
@@ -343,10 +349,10 @@ public abstract class Channel {
 
                 if ( !isGlobalChannel() ) {
                     removeMember(player);
-                    if ( !Messages.kickNGWordMessage("", "", "").isEmpty() ) {
-                        String m = Messages.kickNGWordMessage(getColorCode(), getName(), player.getName());
+                    if ( Messages.kickNGWordMessage("", "", "").length > 0 ) {
+                        BaseComponent[] m = Messages.kickNGWordMessage(getColorCode(), getName(), player.getName());
                         player.sendMessage(m);
-                        sendMessage(ChannelMemberSystem.getInstance(), m, null, true);
+                        sendSystemMessage(m, true, "system");
                     }
                 }
 
@@ -355,10 +361,10 @@ public abstract class Channel {
 
                 getMuted().add(player);
                 save();
-                if ( !Messages.muteNGWordMessage("", "", "").isEmpty() ) {
-                    String m = Messages.muteNGWordMessage(getColorCode(), getName(), player.getName());
+                if ( Messages.muteNGWordMessage("", "", "").length > 0 ) {
+                    BaseComponent[] m = Messages.muteNGWordMessage(getColorCode(), getName(), player.getName());
                     player.sendMessage(m);
-                    sendMessage(ChannelMemberSystem.getInstance(), m, null, true);
+                    sendSystemMessage(m, true, "system");
                 }
             }
         }
@@ -412,7 +418,63 @@ public abstract class Channel {
      * @param name 発言者の表示名
      */
     public void sendSystemMessage(String message, boolean sendDynmap, String name) {
-        sendMessage(new ChannelMemberOther(name), message, null, sendDynmap);
+        sendSystemMessage(TextComponent.fromLegacyText(message), sendDynmap, name);
+    }
+
+    /**
+     * チャンネルにシステムメッセージを送信する。
+     * @param message メッセージ
+     * @param sendDynmap Dynmapにも表示するかどうか
+     * @param name 発言者の表示名
+     */
+    public void sendSystemMessage(BaseComponent[] message, boolean sendDynmap, String name) {
+
+        LunaChatConfig config = LunaChat.getConfig();
+
+        // 受信者（＝メンバー全員からhideしているプレイヤーを除く）
+        List<ChannelMember> recipients = new ArrayList<>(getMembers());
+        for ( ChannelMember cp : getHided() ) {
+            if ( recipients.contains(cp) ) {
+                recipients.remove(cp);
+            }
+        }
+
+        // opListenAllChannel 設定がある場合は、
+        // パーミッション lunachat-admin.listen-all-channels を持つプレイヤーを
+        // 受信者に加える。
+        if ( config.isOpListenAllChannel() ) {
+            for ( Player p : Bukkit.getOnlinePlayers() ) {
+                ChannelMember cp = ChannelMember.getChannelMember(p);
+                if ( cp.hasPermission("lunachat-admin.listen-all-channels")
+                        && !recipients.contains(cp) ) {
+                    recipients.add(cp);
+                }
+            }
+        }
+
+        // 通常ブロードキャストなら、設定に応じてdynmapへ送信する
+        DynmapBridge dynmap = LunaChatBukkit.getInstance().getDynmap();
+        if ( config.isSendBroadcastChannelChatToDynmap() &&
+                sendDynmap &&
+                dynmap != null &&
+                isBroadcastChannel() &&
+                !isWorldRange() ) {
+
+            dynmap.broadcast(makeLegacyText(message));
+        }
+
+        // 送信する
+        for ( ChannelMember p : recipients ) {
+            p.sendMessage(message);
+        }
+
+        // 設定に応じて、コンソールに出力する
+        if ( config.isDisplayChatOnConsole() ) {
+            Bukkit.getLogger().info(makePlainText(message));
+        }
+
+        // ロギング
+        log(makePlainText(message), name);
     }
 
     /**
@@ -560,6 +622,13 @@ public abstract class Channel {
             ChannelMember member, String message, @Nullable ClickableFormat format, boolean sendDynmap);
 
     /**
+     * ログを記録する
+     * @param name 発言者
+     * @param message 記録するメッセージ
+     */
+    protected abstract void log(String message, String name);
+
+    /**
      * チャットフォーマット内のキーワードを置き換えする
      * @param format チャットフォーマット
      * @param member プレイヤー
@@ -580,7 +649,7 @@ public abstract class Channel {
         info.add(Messages.channelInfoFirstLine());
 
         // チャンネル名、参加人数、総人数、チャンネル説明文
-        info.add(Messages.listFormat(getName(), getOnlineNum(), getTotalNum(), getDescription()));
+        info.add(makeLegacyText(Messages.listFormat(getName(), getOnlineNum(), getTotalNum(), getDescription())));
 
         // チャンネル別名
         String alias = getAlias();
@@ -713,14 +782,14 @@ public abstract class Channel {
                     save();
 
                     // メッセージ通知を流す
-                    String msg = Messages.expiredBanMessage(getColorCode(), getName(), cp.getName());
-                    if ( !msg.isEmpty() ) {
-                        sendMessage(ChannelMemberSystem.getInstance(), msg, null, true);
+                    BaseComponent[] msg = Messages.expiredBanMessage(getColorCode(), getName(), cp.getName());
+                    if ( msg.length > 0 ) {
+                        sendSystemMessage(msg, true, "system");
                     }
 
-                    msg = Messages.cmdmsgPardoned(getName());
-                    if ( cp.isOnline() && !msg.isEmpty() ) {
-                        cp.sendMessage(msg);
+                    String pardonedMsg = Messages.cmdmsgPardoned(getName());
+                    if ( cp.isOnline() && !pardonedMsg.isEmpty() ) {
+                        cp.sendMessage(pardonedMsg);
                     }
                 }
             }
@@ -737,14 +806,14 @@ public abstract class Channel {
                     save();
 
                     // メッセージ通知を流す
-                    String msg = Messages.expiredMuteMessage(getColorCode(), getName(), cp.getName());
-                    if ( !msg.isEmpty() ) {
-                        sendMessage(ChannelMemberSystem.getInstance(), msg, null, true);
+                    BaseComponent[] msg = Messages.expiredMuteMessage(getColorCode(), getName(), cp.getName());
+                    if ( msg.length > 0 ) {
+                        sendSystemMessage(msg, true, "system");
                     }
 
-                    msg = Messages.cmdmsgUnmuted(getName());
-                    if ( cp.isOnline() && !msg.isEmpty() ) {
-                        cp.sendMessage(msg);
+                    String unmutedMsg = Messages.cmdmsgUnmuted(getName());
+                    if ( cp.isOnline() && !unmutedMsg.isEmpty() ) {
+                        cp.sendMessage(unmutedMsg);
                     }
                 }
             }
@@ -1310,5 +1379,21 @@ public abstract class Channel {
             return new HashMap<String, Long>();
         }
         return (Map<String, Long>)obj;
+    }
+
+    private static String makeLegacyText(BaseComponent[] comps) {
+        StringBuilder builder = new StringBuilder();
+        for ( BaseComponent comp : comps ) {
+            builder.append(comp.toLegacyText());
+        }
+        return builder.toString();
+    }
+
+    private static String makePlainText(BaseComponent[] comps) {
+        StringBuilder builder = new StringBuilder();
+        for ( BaseComponent comp : comps ) {
+            builder.append(comp.toPlainText());
+        }
+        return builder.toString();
     }
 }

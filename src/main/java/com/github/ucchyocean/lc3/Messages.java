@@ -10,9 +10,12 @@ import java.io.IOException;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
+import com.github.ucchyocean.lc3.util.ClickableFormat;
 import com.github.ucchyocean.lc3.util.KeywordReplacer;
 import com.github.ucchyocean.lc3.util.Utility;
 import com.github.ucchyocean.lc3.util.YamlConfig;
+
+import net.md_5.bungee.api.chat.BaseComponent;
 
 /**
  * プラグインのメッセージリソース管理クラス
@@ -90,27 +93,27 @@ public class Messages {
     /**
      * &f[%color%%channel%&f]&7%player% さんがチャンネルに参加しました。
      */
-    public static String joinMessage(Object color, Object channel, Object player) {
+    public static BaseComponent[] joinMessage(Object color, Object channel, Object player) {
         String msg = resources.getString("joinMessage");
-        if ( msg == null ) return "";
-        KeywordReplacer kr = new KeywordReplacer(msg);
-        kr.replace("%color%", color.toString());
-        kr.replace("%channel%", channel.toString());
-        kr.replace("%player%", player.toString());
-        return Utility.replaceColorCode(kr.toString());
+        if ( msg == null ) return new BaseComponent[0];
+        ClickableFormat cf = ClickableFormat.makeChannelClickableMessage(msg, channel.toString());
+        cf.replace("%color%", color.toString());
+        cf.replace("%channel%", channel.toString());
+        cf.replace("%player%", player.toString());
+        return cf.makeTextComponent();
     }
 
     /**
      * &f[%color%%channel%&f]&7%player% さんがチャンネルから退出しました。
      */
-    public static String quitMessage(Object color, Object channel, Object player) {
+    public static BaseComponent[] quitMessage(Object color, Object channel, Object player) {
         String msg = resources.getString("quitMessage");
-        if ( msg == null ) return "";
-        KeywordReplacer kr = new KeywordReplacer(msg);
-        kr.replace("%color%", color.toString());
-        kr.replace("%channel%", channel.toString());
-        kr.replace("%player%", player.toString());
-        return Utility.replaceColorCode(kr.toString());
+        if ( msg == null ) return new BaseComponent[0];
+        ClickableFormat cf = ClickableFormat.makeChannelClickableMessage(msg, channel.toString());
+        cf.replace("%color%", color.toString());
+        cf.replace("%channel%", channel.toString());
+        cf.replace("%player%", player.toString());
+        return cf.makeTextComponent();
     }
 
     /**
@@ -128,197 +131,197 @@ public class Messages {
     /**
      * &f[%color%%channel%&f]&7%player% さんをチャンネルからBANしました。
      */
-    public static String banMessage(Object color, Object channel, Object player) {
+    public static BaseComponent[] banMessage(Object color, Object channel, Object player) {
         String msg = resources.getString("banMessage");
-        if ( msg == null ) return "";
-        KeywordReplacer kr = new KeywordReplacer(msg);
-        kr.replace("%color%", color.toString());
-        kr.replace("%channel%", channel.toString());
-        kr.replace("%player%", player.toString());
-        return Utility.replaceColorCode(kr.toString());
+        if ( msg == null ) return new BaseComponent[0];
+        ClickableFormat cf = ClickableFormat.makeChannelClickableMessage(msg, channel.toString());
+        cf.replace("%color%", color.toString());
+        cf.replace("%channel%", channel.toString());
+        cf.replace("%player%", player.toString());
+        return cf.makeTextComponent();
     }
 
     /**
      * &f[%color%%channel%&f]&7%player% さんをチャンネルからキックしました。
      */
-    public static String kickMessage(Object color, Object channel, Object player) {
+    public static BaseComponent[] kickMessage(Object color, Object channel, Object player) {
         String msg = resources.getString("kickMessage");
-        if ( msg == null ) return "";
-        KeywordReplacer kr = new KeywordReplacer(msg);
-        kr.replace("%color%", color.toString());
-        kr.replace("%channel%", channel.toString());
-        kr.replace("%player%", player.toString());
-        return Utility.replaceColorCode(kr.toString());
+        if ( msg == null ) return new BaseComponent[0];
+        ClickableFormat cf = ClickableFormat.makeChannelClickableMessage(msg, channel.toString());
+        cf.replace("%color%", color.toString());
+        cf.replace("%channel%", channel.toString());
+        cf.replace("%player%", player.toString());
+        return cf.makeTextComponent();
     }
 
     /**
      * &f[%color%%channel%&f]&7%player% さんをチャンネルからMuteしました。
      */
-    public static String muteMessage(Object color, Object channel, Object player) {
+    public static BaseComponent[] muteMessage(Object color, Object channel, Object player) {
         String msg = resources.getString("muteMessage");
-        if ( msg == null ) return "";
-        KeywordReplacer kr = new KeywordReplacer(msg);
-        kr.replace("%color%", color.toString());
-        kr.replace("%channel%", channel.toString());
-        kr.replace("%player%", player.toString());
-        return Utility.replaceColorCode(kr.toString());
+        if ( msg == null ) return new BaseComponent[0];
+        ClickableFormat cf = ClickableFormat.makeChannelClickableMessage(msg, channel.toString());
+        cf.replace("%color%", color.toString());
+        cf.replace("%channel%", channel.toString());
+        cf.replace("%player%", player.toString());
+        return cf.makeTextComponent();
     }
 
     /**
      * &f[%color%%channel%&f]&7NGワード発言により、%player% さんをチャンネルから自動BANしました。
      */
-    public static String banNGWordMessage(Object color, Object channel, Object player) {
+    public static BaseComponent[] banNGWordMessage(Object color, Object channel, Object player) {
         String msg = resources.getString("banNGWordMessage");
-        if ( msg == null ) return "";
-        KeywordReplacer kr = new KeywordReplacer(msg);
-        kr.replace("%color%", color.toString());
-        kr.replace("%channel%", channel.toString());
-        kr.replace("%player%", player.toString());
-        return Utility.replaceColorCode(kr.toString());
+        if ( msg == null ) return new BaseComponent[0];
+        ClickableFormat cf = ClickableFormat.makeChannelClickableMessage(msg, channel.toString());
+        cf.replace("%color%", color.toString());
+        cf.replace("%channel%", channel.toString());
+        cf.replace("%player%", player.toString());
+        return cf.makeTextComponent();
     }
 
     /**
      * &f[%color%%channel%&f]&7NGワード発言により、%player% さんをチャンネルから自動キックしました。
      */
-    public static String kickNGWordMessage(Object color, Object channel, Object player) {
+    public static BaseComponent[] kickNGWordMessage(Object color, Object channel, Object player) {
         String msg = resources.getString("kickNGWordMessage");
-        if ( msg == null ) return "";
-        KeywordReplacer kr = new KeywordReplacer(msg);
-        kr.replace("%color%", color.toString());
-        kr.replace("%channel%", channel.toString());
-        kr.replace("%player%", player.toString());
-        return Utility.replaceColorCode(kr.toString());
+        if ( msg == null ) return new BaseComponent[0];
+        ClickableFormat cf = ClickableFormat.makeChannelClickableMessage(msg, channel.toString());
+        cf.replace("%color%", color.toString());
+        cf.replace("%channel%", channel.toString());
+        cf.replace("%player%", player.toString());
+        return cf.makeTextComponent();
     }
 
     /**
      * &f[%color%%channel%&f]&7NGワード発言により、%player% さんをチャンネルから自動Muteしました。
      */
-    public static String muteNGWordMessage(Object color, Object channel, Object player) {
+    public static BaseComponent[] muteNGWordMessage(Object color, Object channel, Object player) {
         String msg = resources.getString("muteNGWordMessage");
-        if ( msg == null ) return "";
-        KeywordReplacer kr = new KeywordReplacer(msg);
-        kr.replace("%color%", color.toString());
-        kr.replace("%channel%", channel.toString());
-        kr.replace("%player%", player.toString());
-        return Utility.replaceColorCode(kr.toString());
+        if ( msg == null ) return new BaseComponent[0];
+        ClickableFormat cf = ClickableFormat.makeChannelClickableMessage(msg, channel.toString());
+        cf.replace("%color%", color.toString());
+        cf.replace("%channel%", channel.toString());
+        cf.replace("%player%", player.toString());
+        return cf.makeTextComponent();
     }
 
     /**
      * &f[%color%%channel%&f]&7%player% さんを期限 %minutes% 分でチャンネルからBANしました。
      */
-    public static String banWithExpireMessage(Object color, Object channel, Object player, Object minutes) {
+    public static BaseComponent[] banWithExpireMessage(Object color, Object channel, Object player, Object minutes) {
         String msg = resources.getString("banWithExpireMessage");
-        if ( msg == null ) return "";
-        KeywordReplacer kr = new KeywordReplacer(msg);
-        kr.replace("%color%", color.toString());
-        kr.replace("%channel%", channel.toString());
-        kr.replace("%player%", player.toString());
-        kr.replace("%minutes%", minutes.toString());
-        return Utility.replaceColorCode(kr.toString());
+        if ( msg == null ) return new BaseComponent[0];
+        ClickableFormat cf = ClickableFormat.makeChannelClickableMessage(msg, channel.toString());
+        cf.replace("%color%", color.toString());
+        cf.replace("%channel%", channel.toString());
+        cf.replace("%player%", player.toString());
+        cf.replace("%minutes%", minutes.toString());
+        return cf.makeTextComponent();
     }
 
     /**
      * &f[%color%%channel%&f]&7%player% さんを期限 %minutes% 分でチャンネルからMuteしました。
      */
-    public static String muteWithExpireMessage(Object color, Object channel, Object player, Object minutes) {
+    public static BaseComponent[] muteWithExpireMessage(Object color, Object channel, Object player, Object minutes) {
         String msg = resources.getString("muteWithExpireMessage");
-        if ( msg == null ) return "";
-        KeywordReplacer kr = new KeywordReplacer(msg);
-        kr.replace("%color%", color.toString());
-        kr.replace("%channel%", channel.toString());
-        kr.replace("%player%", player.toString());
-        kr.replace("%minutes%", minutes.toString());
-        return Utility.replaceColorCode(kr.toString());
+        if ( msg == null ) return new BaseComponent[0];
+        ClickableFormat cf = ClickableFormat.makeChannelClickableMessage(msg, channel.toString());
+        cf.replace("%color%", color.toString());
+        cf.replace("%channel%", channel.toString());
+        cf.replace("%player%", player.toString());
+        cf.replace("%minutes%", minutes.toString());
+        return cf.makeTextComponent();
     }
 
     /**
      * &f[%color%%channel%&f]&7%player% さんのBANが解除されました。
      */
-    public static String pardonMessage(Object color, Object channel, Object player) {
+    public static BaseComponent[] pardonMessage(Object color, Object channel, Object player) {
         String msg = resources.getString("pardonMessage");
-        if ( msg == null ) return "";
-        KeywordReplacer kr = new KeywordReplacer(msg);
-        kr.replace("%color%", color.toString());
-        kr.replace("%channel%", channel.toString());
-        kr.replace("%player%", player.toString());
-        return Utility.replaceColorCode(kr.toString());
+        if ( msg == null ) return new BaseComponent[0];
+        ClickableFormat cf = ClickableFormat.makeChannelClickableMessage(msg, channel.toString());
+        cf.replace("%color%", color.toString());
+        cf.replace("%channel%", channel.toString());
+        cf.replace("%player%", player.toString());
+        return cf.makeTextComponent();
     }
 
     /**
      * &f[%color%%channel%&f]&7%player% さんのMuteが解除されました。
      */
-    public static String unmuteMessage(Object color, Object channel, Object player) {
+    public static BaseComponent[] unmuteMessage(Object color, Object channel, Object player) {
         String msg = resources.getString("unmuteMessage");
-        if ( msg == null ) return "";
-        KeywordReplacer kr = new KeywordReplacer(msg);
-        kr.replace("%color%", color.toString());
-        kr.replace("%channel%", channel.toString());
-        kr.replace("%player%", player.toString());
-        return Utility.replaceColorCode(kr.toString());
+        if ( msg == null ) return new BaseComponent[0];
+        ClickableFormat cf = ClickableFormat.makeChannelClickableMessage(msg, channel.toString());
+        cf.replace("%color%", color.toString());
+        cf.replace("%channel%", channel.toString());
+        cf.replace("%player%", player.toString());
+        return cf.makeTextComponent();
     }
 
     /**
      * &f[%color%%channel%&f]&7%player% さんの期限付きBANが解除されました。
      */
-    public static String expiredBanMessage(Object color, Object channel, Object player) {
+    public static BaseComponent[] expiredBanMessage(Object color, Object channel, Object player) {
         String msg = resources.getString("expiredBanMessage");
-        if ( msg == null ) return "";
-        KeywordReplacer kr = new KeywordReplacer(msg);
-        kr.replace("%color%", color.toString());
-        kr.replace("%channel%", channel.toString());
-        kr.replace("%player%", player.toString());
-        return Utility.replaceColorCode(kr.toString());
+        if ( msg == null ) return new BaseComponent[0];
+        ClickableFormat cf = ClickableFormat.makeChannelClickableMessage(msg, channel.toString());
+        cf.replace("%color%", color.toString());
+        cf.replace("%channel%", channel.toString());
+        cf.replace("%player%", player.toString());
+        return cf.makeTextComponent();
     }
 
     /**
      * &f[%color%%channel%&f]&7%player% さんの期限付きMuteが解除されました。
      */
-    public static String expiredMuteMessage(Object color, Object channel, Object player) {
+    public static BaseComponent[] expiredMuteMessage(Object color, Object channel, Object player) {
         String msg = resources.getString("expiredMuteMessage");
-        if ( msg == null ) return "";
-        KeywordReplacer kr = new KeywordReplacer(msg);
-        kr.replace("%color%", color.toString());
-        kr.replace("%channel%", channel.toString());
-        kr.replace("%player%", player.toString());
-        return Utility.replaceColorCode(kr.toString());
+        if ( msg == null ) return new BaseComponent[0];
+        ClickableFormat cf = ClickableFormat.makeChannelClickableMessage(msg, channel.toString());
+        cf.replace("%color%", color.toString());
+        cf.replace("%channel%", channel.toString());
+        cf.replace("%player%", player.toString());
+        return cf.makeTextComponent();
     }
 
     /**
      * &f[%color%%channel%&f]&7%player% さんがチャンネルのモデレーターになりました。
      */
-    public static String addModeratorMessage(Object color, Object channel, Object player) {
+    public static BaseComponent[] addModeratorMessage(Object color, Object channel, Object player) {
         String msg = resources.getString("addModeratorMessage");
-        if ( msg == null ) return "";
-        KeywordReplacer kr = new KeywordReplacer(msg);
-        kr.replace("%color%", color.toString());
-        kr.replace("%channel%", channel.toString());
-        kr.replace("%player%", player.toString());
-        return Utility.replaceColorCode(kr.toString());
+        if ( msg == null ) return new BaseComponent[0];
+        ClickableFormat cf = ClickableFormat.makeChannelClickableMessage(msg, channel.toString());
+        cf.replace("%color%", color.toString());
+        cf.replace("%channel%", channel.toString());
+        cf.replace("%player%", player.toString());
+        return cf.makeTextComponent();
     }
 
     /**
      * &f[%color%%channel%&f]&7%player% さんがチャンネルのモデレーターから外れました。
      */
-    public static String removeModeratorMessage(Object color, Object channel, Object player) {
+    public static BaseComponent[] removeModeratorMessage(Object color, Object channel, Object player) {
         String msg = resources.getString("removeModeratorMessage");
-        if ( msg == null ) return "";
-        KeywordReplacer kr = new KeywordReplacer(msg);
-        kr.replace("%color%", color.toString());
-        kr.replace("%channel%", channel.toString());
-        kr.replace("%player%", player.toString());
-        return Utility.replaceColorCode(kr.toString());
+        if ( msg == null ) return new BaseComponent[0];
+        ClickableFormat cf = ClickableFormat.makeChannelClickableMessage(msg, channel.toString());
+        cf.replace("%color%", color.toString());
+        cf.replace("%channel%", channel.toString());
+        cf.replace("%player%", player.toString());
+        return cf.makeTextComponent();
     }
 
     /**
      * &f[%color%%channel%&f]&7あなたの発言は、誰にも届きませんでした。
      */
-    public static String noRecipientMessage(Object color, Object channel) {
+    public static BaseComponent[] noRecipientMessage(Object color, Object channel) {
         String msg = resources.getString("noRecipientMessage");
-        if ( msg == null ) return "";
-        KeywordReplacer kr = new KeywordReplacer(msg);
-        kr.replace("%color%", color.toString());
-        kr.replace("%channel%", channel.toString());
-        return Utility.replaceColorCode(kr.toString());
+        if ( msg == null ) return new BaseComponent[0];
+        ClickableFormat cf = ClickableFormat.makeChannelClickableMessage(msg, channel.toString());
+        cf.replace("%color%", color.toString());
+        cf.replace("%channel%", channel.toString());
+        return cf.makeTextComponent();
     }
 
     /**
@@ -356,19 +359,19 @@ public class Messages {
     /**
      * &7| &f%channel%&7(&c%online%&7/&c%total%&7) &a%topic%
      */
-    public static String listFormat(Object channel, Object online, Object total, Object topic) {
+    public static BaseComponent[] listFormat(Object channel, Object online, Object total, Object topic) {
         String msg = resources.getString("listFormat");
-        if ( msg == null ) return "";
-        KeywordReplacer kr = new KeywordReplacer(msg);
-        kr.replace("%channel%", channel.toString());
-        kr.replace("%online%", online.toString());
-        kr.replace("%total%", total.toString());
-        kr.replace("%topic%", topic.toString());
-        return Utility.replaceColorCode(kr.toString());
+        if ( msg == null ) return new BaseComponent[0];
+        ClickableFormat cf = ClickableFormat.makeChannelClickableMessage(msg, channel.toString());
+        cf.replace("%channel%", channel.toString());
+        cf.replace("%online%", online.toString());
+        cf.replace("%total%", total.toString());
+        cf.replace("%topic%", topic.toString());
+        return cf.makeTextComponent();
     }
 
     /**
-     * &7|
+     * &7| 
      */
     public static String listPlainPrefix() {
         String msg = resources.getString("listPlainPrefix");
@@ -388,7 +391,7 @@ public class Messages {
     }
 
     /**
-     * &7|
+     * &7| 
      */
     public static String channelInfoPrefix() {
         String msg = resources.getString("channelInfoPrefix");

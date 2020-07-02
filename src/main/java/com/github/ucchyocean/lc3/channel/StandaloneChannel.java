@@ -31,4 +31,14 @@ public class StandaloneChannel extends Channel {
         // TODO チャンネルのメンバーに送信
 
     }
+
+    @Override
+    protected void log(String message, String name) {
+
+        // デバッグ表示メッセージ
+        System.out.println(String.format("room=%s, name=%s, message=%s",
+                getName(), name, message));
+
+        // TODO ログファイルを出力
+    }
 }

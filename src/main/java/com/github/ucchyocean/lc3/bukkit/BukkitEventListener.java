@@ -7,6 +7,8 @@ package com.github.ucchyocean.lc3.bukkit;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,12 +36,15 @@ import com.github.ucchyocean.lc3.util.ClickableFormat;
 import com.github.ucchyocean.lc3.util.Utility;
 
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 /**
  * Bukkit関連のイベントを監視するリスナ
  * @author ucchy
  */
 public class BukkitEventListener implements Listener {
+
+    private static final int MAX_LIST_ITEMS = 8;
 
     /**
      * プレイヤーがチャット発言したときに呼び出されるメソッド
@@ -120,9 +125,8 @@ public class BukkitEventListener implements Listener {
 
         // チャンネルチャット情報を表示する
         if ( config.isShowListOnJoin() ) {
-            ArrayList<String> list = getListForMotd(player);
-            for ( String msg : list ) {
-                player.sendMessage(msg);
+            for ( BaseComponent[] msg : getListForMotd(player) ) {
+                ChannelMember.getChannelMember(player).sendMessage(msg);
             }
         }
     }
@@ -460,7 +464,7 @@ public class BukkitEventListener implements Listener {
      * @param player プレイヤー
      * @return リスト
      */
-    private ArrayList<String> getListForMotd(Player player) {
+    private ArrayList<BaseComponent[]> getListForMotd(Player player) {
 
         ChannelMember cp = ChannelMember.getChannelMember(player);
         LunaChatAPI api = LunaChat.getAPI();
@@ -470,9 +474,18 @@ public class BukkitEventListener implements Listener {
             dchannel = dc.getName().toLowerCase();
         }
 
-        ArrayList<String> items = new ArrayList<String>();
-        items.add(Messages.motdFirstLine());
-        for ( Channel channel : api.getChannels() ) {
+        // チャンネル一覧を取得して、参加人数でソートする
+        ArrayList<Channel> channels = new ArrayList<>(api.getChannels());
+        Collections.sort(channels, new Comparator<Channel>() {
+            public int compare(Channel c1, Channel c2) {
+                return c1.getOnlineNum() - c2.getOnlineNum();
+            }
+        });
+
+        int count = 0;
+        ArrayList<BaseComponent[]> items = new ArrayList<>();
+        items.add(TextComponent.fromLegacyText(Messages.motdFirstLine()));
+        for ( Channel channel : channels ) {
 
             // BANされているチャンネルは表示しない
             if ( channel.getBanned().contains(cp) ) {
@@ -497,10 +510,14 @@ public class BukkitEventListener implements Listener {
             String desc = channel.getDescription();
             int onlineNum = channel.getOnlineNum();
             int memberNum = channel.getTotalNum();
-            String item = Messages.listFormat(disp, onlineNum, memberNum, desc);
-            items.add(item);
+            items.add(Messages.listFormat(disp, onlineNum, memberNum, desc));
+            count++;
+
+            if ( count > MAX_LIST_ITEMS ) {
+                break;
+            }
         }
-        items.add(Messages.listEndLine());
+        items.add(TextComponent.fromLegacyText(Messages.listEndLine()));
 
         return items;
     }
