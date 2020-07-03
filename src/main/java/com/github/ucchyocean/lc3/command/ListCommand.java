@@ -82,7 +82,7 @@ public class ListCommand extends LunaChatSubCommand {
     public boolean runCommand(
             ChannelMember sender, String label, String[] args) {
 
-        int page = 0;
+        int page = 1;
         if ( args.length >= 2 && args[1].matches("[0-9]") ) {
             page = Integer.parseInt(args[1]);
         }
@@ -147,7 +147,8 @@ public class ListCommand extends LunaChatSubCommand {
         ArrayList<Channel> channels = new ArrayList<>(api.getChannels());
         Collections.sort(channels, new Comparator<Channel>() {
             public int compare(Channel c1, Channel c2) {
-                return c1.getOnlineNum() - c2.getOnlineNum();
+                if ( c1.getOnlineNum() == c2.getOnlineNum() ) return c1.getName().compareTo(c2.getName());
+                return c2.getOnlineNum() - c1.getOnlineNum();
             }
         });
 

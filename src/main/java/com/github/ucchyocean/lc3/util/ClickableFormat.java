@@ -152,12 +152,12 @@ public class ClickableFormat {
     public static ClickableFormat makeChannelClickableMessage(String format, String channelName) {
 
         KeywordReplacer msg = new KeywordReplacer(format);
-
+        String stripped = Utility.stripColorCode(channelName);
         msg.replace("%channel%", String.format(
                 PLACEHOLDER_RUN_COMMAND,
                 channelName,
-                Messages.hoverChannelName(channelName),
-                String.format(JOIN_COMMAND_TEMPLATE, channelName)));
+                Messages.hoverChannelName(stripped),
+                String.format(JOIN_COMMAND_TEMPLATE, stripped)));
 
         return new ClickableFormat(msg);
     }
