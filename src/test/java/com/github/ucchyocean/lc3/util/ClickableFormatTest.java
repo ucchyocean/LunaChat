@@ -34,7 +34,7 @@ public class ClickableFormatTest extends TestCase {
         LunaChatStandalone lunachat = new LunaChatStandalone(dataFolder);
         lunachat.onEnable();
 
-        Messages.initialize(new File("target\\classes"), null, "ja");
+        Messages.initialize(new File("src\\main\\resources"), null, "ja");
 
         String format = "&f[%color%ch&f]%prefix%displayname%suffix&a:&f %msg";
         ChannelMember member = new ChannelMemberDummy();
@@ -59,7 +59,7 @@ public class ClickableFormatTest extends TestCase {
         String format = "&f%prefix%displayname%suffix&a:&f %msg";
         ChannelMember member = new ChannelMemberDummy();
 
-        Messages.initialize(new File("target\\classes"), null, "ja");
+        Messages.initialize(new File("src\\main\\resources"), null, "ja");
 
         ClickableFormat f = ClickableFormat.makeFormat(format, member);
 
