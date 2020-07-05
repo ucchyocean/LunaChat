@@ -23,9 +23,12 @@ import net.md_5.bungee.api.chat.BaseComponent;
  */
 public class ClickableFormatTest extends TestCase {
 
+    private static final String DATA_FOLDER = "target" + File.separator + "LunaChatTest";
+    private static final String MESSAGES_FOLDER = "target" + File.separator + "classes";
+
     public void testChannelChatKeyword() {
 
-        File dataFolder = new File("target\\LunaChatTest");
+        File dataFolder = new File(DATA_FOLDER);
         System.out.println("dataFolder : " + dataFolder.getAbsolutePath());
         if ( !dataFolder.exists() ) {
             dataFolder.mkdirs();
@@ -34,7 +37,7 @@ public class ClickableFormatTest extends TestCase {
         LunaChatStandalone lunachat = new LunaChatStandalone(dataFolder);
         lunachat.onEnable();
 
-        Messages.initialize(new File("src\\main\\resources"), null, "ja");
+        Messages.initialize(new File(MESSAGES_FOLDER), null, "ja");
 
         String format = "&f[%color%ch&f]%prefix%displayname%suffix&a:&f %msg";
         ChannelMember member = new ChannelMemberDummy();
@@ -59,7 +62,7 @@ public class ClickableFormatTest extends TestCase {
         String format = "&f%prefix%displayname%suffix&a:&f %msg";
         ChannelMember member = new ChannelMemberDummy();
 
-        Messages.initialize(new File("src\\main\\resources"), null, "ja");
+        Messages.initialize(new File(MESSAGES_FOLDER), null, "ja");
 
         ClickableFormat f = ClickableFormat.makeFormat(format, member);
 
