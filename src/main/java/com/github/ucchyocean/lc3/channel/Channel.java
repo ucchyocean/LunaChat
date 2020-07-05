@@ -479,7 +479,7 @@ public abstract class Channel {
 
     /**
      * メンバーを追加する
-     * @param name 追加するプレイヤー
+     * @param player 追加するプレイヤー
      */
     public void addMember(ChannelMember player) {
 
@@ -513,7 +513,7 @@ public abstract class Channel {
 
     /**
      * メンバーを削除する
-     * @param name 削除するプレイヤー
+     * @param player 削除するプレイヤー
      */
     public void removeMember(ChannelMember player) {
 
@@ -1124,7 +1124,7 @@ public abstract class Channel {
 
     /**
      * 1:1チャットのときに、会話の相手先を設定する
-     * @param name 会話の相手のプレイヤー名
+     * @param to 会話の相手のプレイヤー名
      */
     public void setPrivateMessageTo(ChannelMember to) {
         this.privateMessageTo = to;
