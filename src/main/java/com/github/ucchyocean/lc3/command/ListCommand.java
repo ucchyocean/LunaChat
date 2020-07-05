@@ -14,6 +14,9 @@ import com.github.ucchyocean.lc3.channel.Channel;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 import com.github.ucchyocean.lc3.util.ChatColor;
 
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
+
 /**
  * listコマンドの実行クラス
  * @author ucchy
@@ -79,14 +82,13 @@ public class ListCommand extends LunaChatSubCommand {
     public boolean runCommand(
             ChannelMember sender, String label, String[] args) {
 
-        int page = 0;
+        int page = 1;
         if ( args.length >= 2 && args[1].matches("[0-9]") ) {
             page = Integer.parseInt(args[1]);
         }
 
         // リストを取得して表示する
-        ArrayList<String> list = getList(sender, page);
-        for (String msg : list) {
+        for (BaseComponent[] msg : getList(sender, page)) {
             sender.sendMessage(msg);
         }
         return true;
@@ -98,25 +100,25 @@ public class ListCommand extends LunaChatSubCommand {
      * @param page 表示するページ、0を指定した場合は全表示
      * @return リスト
      */
-    private ArrayList<String> getList(ChannelMember player, int page) {
+    private ArrayList<BaseComponent[]> getList(ChannelMember player, int page) {
 
-        ArrayList<String> list = getPlayerList(player);
+        ArrayList<BaseComponent[]> list = getPlayerList(player);
         int size = list.size();
         int maxPage = (int)(size / PAGE_SIZE) + 1;
 
         if ( page < 0 ) page = 0;
         if ( page > maxPage ) page = maxPage;
 
-        ArrayList<String> items = new ArrayList<>();
+        ArrayList<BaseComponent[]> items = new ArrayList<>();
         if ( page == 0 ) { // 全表示
-            items.add(Messages.listFirstLine());
+            items.add(TextComponent.fromLegacyText(Messages.listFirstLine()));
             items.addAll(list);
-            items.add(Messages.listEndLine());
+            items.add(TextComponent.fromLegacyText(Messages.listEndLine()));
         } else { // ページ表示
-            items.add(Messages.listFirstLinePaging(page, maxPage));
+            items.add(TextComponent.fromLegacyText(Messages.listFirstLinePaging(page, maxPage)));
             int endIndex = (page * PAGE_SIZE > size) ? size : page * PAGE_SIZE;
             items.addAll(list.subList((page - 1) * PAGE_SIZE, endIndex));
-            items.add(Messages.listEndLine());
+            items.add(TextComponent.fromLegacyText(Messages.listEndLine()));
         }
 
         return items;
@@ -127,9 +129,8 @@ public class ListCommand extends LunaChatSubCommand {
      * @param player プレイヤー
      * @return チャンネルリスト
      */
-    private ArrayList<String> getPlayerList(ChannelMember player) {
+    private ArrayList<BaseComponent[]> getPlayerList(ChannelMember player) {
 
-        ArrayList<String> items = new ArrayList<String>();
         String dchannel = "";
         String playerName = "";
         if ( player != null ) {
@@ -142,15 +143,17 @@ public class ListCommand extends LunaChatSubCommand {
             }
         }
 
-        // チャンネルを取得して、チャンネル名でソートする
+        // チャンネルを取得して、参加人数でソートする
         ArrayList<Channel> channels = new ArrayList<>(api.getChannels());
         Collections.sort(channels, new Comparator<Channel>() {
             public int compare(Channel c1, Channel c2) {
-                return c1.getName().compareTo(c2.getName());
+                if ( c1.getOnlineNum() == c2.getOnlineNum() ) return c1.getName().compareTo(c2.getName());
+                return c2.getOnlineNum() - c1.getOnlineNum();
             }
         });
 
         // 指定されたプレイヤー名に合うように、フィルタ＆表示用整形する。
+        ArrayList<BaseComponent[]> items = new ArrayList<>();
         for ( Channel channel : channels ) {
 
             // BANされているチャンネルは表示しない
@@ -183,8 +186,7 @@ public class ListCommand extends LunaChatSubCommand {
             String desc = channel.getDescription();
             int onlineNum = channel.getOnlineNum();
             int memberNum = channel.getTotalNum();
-            String item = Messages.listFormat(disp, onlineNum, memberNum, desc);
-            items.add(item);
+            items.add(Messages.listFormat(disp, onlineNum, memberNum, desc));
         }
 
         return items;

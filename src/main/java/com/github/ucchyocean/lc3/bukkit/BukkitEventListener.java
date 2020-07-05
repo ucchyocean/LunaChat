@@ -6,9 +6,9 @@
 package com.github.ucchyocean.lc3.bukkit;
 
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,14 +27,16 @@ import com.github.ucchyocean.lc3.LunaChatAPI;
 import com.github.ucchyocean.lc3.LunaChatBukkit;
 import com.github.ucchyocean.lc3.LunaChatConfig;
 import com.github.ucchyocean.lc3.Messages;
-import com.github.ucchyocean.lc3.bridge.VaultChatBridge;
 import com.github.ucchyocean.lc3.channel.Channel;
 import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.japanize.JapanizeType;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 import com.github.ucchyocean.lc3.member.ChannelMemberBukkit;
-import com.github.ucchyocean.lc3.util.KeywordReplacer;
+import com.github.ucchyocean.lc3.util.ClickableFormat;
 import com.github.ucchyocean.lc3.util.Utility;
+
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 /**
  * Bukkit関連のイベントを監視するリスナ
@@ -42,16 +44,7 @@ import com.github.ucchyocean.lc3.util.Utility;
  */
 public class BukkitEventListener implements Listener {
 
-    private SimpleDateFormat dateFormat;
-    private SimpleDateFormat timeFormat;
-
-    /**
-     * コンストラクタ
-     */
-    public BukkitEventListener() {
-        dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-        timeFormat = new SimpleDateFormat("HH:mm:ss");
-    }
+    private static final int MAX_LIST_ITEMS = 8;
 
     /**
      * プレイヤーがチャット発言したときに呼び出されるメソッド
@@ -132,9 +125,8 @@ public class BukkitEventListener implements Listener {
 
         // チャンネルチャット情報を表示する
         if ( config.isShowListOnJoin() ) {
-            ArrayList<String> list = getListForMotd(player);
-            for ( String msg : list ) {
-                player.sendMessage(msg);
+            for ( BaseComponent[] msg : getListForMotd(player) ) {
+                ChannelMember.getChannelMember(player).sendMessage(msg);
             }
         }
     }
@@ -310,10 +302,16 @@ public class BukkitEventListener implements Listener {
             }
 
             // チャットフォーマット装飾の適用
+            ClickableFormat format;
             if ( config.isEnableNormalChatMessageFormat() ) {
-                String format = config.getNormalChatMessageFormat();
-                format = replaceNormalChatFormatKeywords(format, event.getPlayer());
-                event.setFormat(format);
+                String f = config.getNormalChatMessageFormat();
+                format = ClickableFormat.makeFormat(f, ChannelMember.getChannelMember(event.getPlayer()));
+//                event.setFormat(format);
+            } else {
+                String f = event.getFormat()
+                        .replace("%1$s", "%displayName")
+                        .replace("%2$s", "%msg");
+                format = ClickableFormat.makeFormat(f, ChannelMember.getChannelMember(event.getPlayer()));
             }
 
             // カラーコード置き換え
@@ -379,7 +377,20 @@ public class BukkitEventListener implements Listener {
             }
 
             // 発言内容の設定
-            event.setMessage(message);
+//            event.setMessage(message);
+
+            // 発言内容の送信
+            format.replace("%msg", message);
+            BaseComponent[] comps = format.makeTextComponent();
+            for ( Player recipient : event.getRecipients() ) {
+                ChannelMember cm = ChannelMember.getChannelMember(recipient);
+                if ( cm != null ) {
+                    cm.sendMessage(comps);
+                }
+            }
+
+            // イベントのキャンセル
+            event.setCancelled(true);
 
             // ロギング
             logNormalChat(message, player.getName());
@@ -440,7 +451,7 @@ public class BukkitEventListener implements Listener {
                 channel.addMember(cp);
             }
 
-            // デフォルト発言先が無いなら、グローバルチャンネルに設定する
+            // デフォルト発言先が無いなら、デフォルトチャンネルに設定する
             Channel dchannel = api.getDefaultChannel(player.getName());
             if ( dchannel == null ) {
                 api.setDefaultChannel(player.getName(), cname);
@@ -449,61 +460,11 @@ public class BukkitEventListener implements Listener {
     }
 
     /**
-     * 通常チャットのフォーマット設定のキーワードを置き換えして返す
-     * @param org フォーマット設定
-     * @param player 発言プレイヤー
-     * @return キーワード置き換え済みの文字列
-     */
-    private String replaceNormalChatFormatKeywords(String org, Player player) {
-
-        KeywordReplacer format = new KeywordReplacer(org);
-        format.replace("%username", "%1$s");
-        format.replace("%msg", "%2$s");
-        format.replace("%player", player.getName());
-
-        if ( format.contains("%date") ) {
-            format.replace("%date", dateFormat.format(new Date()));
-        }
-        if ( format.contains("%time") ) {
-            format.replace("%time", timeFormat.format(new Date()));
-        }
-
-        if ( format.contains("%prefix") || format.contains("%suffix") ) {
-
-            String prefix = "";
-            String suffix = "";
-            VaultChatBridge vaultchat = LunaChatBukkit.getInstance().getVaultChat();
-            if ( vaultchat != null ) {
-                prefix = vaultchat.getPlayerPrefix(player);
-                suffix = vaultchat.getPlayerSuffix(player);
-            }
-            format.replace("%prefix", prefix);
-            format.replace("%suffix", suffix);
-        }
-
-        if ( format.contains("%world") ) {
-
-            String worldname = null;
-            if ( LunaChatBukkit.getInstance().getMultiverseCore() != null ) {
-                worldname = LunaChatBukkit.getInstance().getMultiverseCore().getWorldAlias(player.getWorld());
-            }
-            if ( worldname == null || worldname.equals("") ) {
-                worldname = player.getWorld().getName();
-            }
-            format.replace("%world", worldname);
-        }
-
-        format.replace("%server", "");
-
-        return Utility.replaceColorCode(format.toString());
-    }
-
-    /**
      * プレイヤーのサーバー参加時用の参加チャンネルリストを返す
      * @param player プレイヤー
      * @return リスト
      */
-    private ArrayList<String> getListForMotd(Player player) {
+    private ArrayList<BaseComponent[]> getListForMotd(Player player) {
 
         ChannelMember cp = ChannelMember.getChannelMember(player);
         LunaChatAPI api = LunaChat.getAPI();
@@ -513,9 +474,19 @@ public class BukkitEventListener implements Listener {
             dchannel = dc.getName().toLowerCase();
         }
 
-        ArrayList<String> items = new ArrayList<String>();
-        items.add(Messages.motdFirstLine());
-        for ( Channel channel : api.getChannels() ) {
+        // チャンネル一覧を取得して、参加人数でソートする
+        ArrayList<Channel> channels = new ArrayList<>(api.getChannels());
+        Collections.sort(channels, new Comparator<Channel>() {
+            public int compare(Channel c1, Channel c2) {
+                if ( c1.getOnlineNum() == c2.getOnlineNum() ) return c1.getName().compareTo(c2.getName());
+                return c2.getOnlineNum() - c1.getOnlineNum();
+            }
+        });
+
+        int count = 0;
+        ArrayList<BaseComponent[]> items = new ArrayList<>();
+        items.add(TextComponent.fromLegacyText(Messages.motdFirstLine()));
+        for ( Channel channel : channels ) {
 
             // BANされているチャンネルは表示しない
             if ( channel.getBanned().contains(cp) ) {
@@ -540,10 +511,14 @@ public class BukkitEventListener implements Listener {
             String desc = channel.getDescription();
             int onlineNum = channel.getOnlineNum();
             int memberNum = channel.getTotalNum();
-            String item = Messages.listFormat(disp, onlineNum, memberNum, desc);
-            items.add(item);
+            items.add(Messages.listFormat(disp, onlineNum, memberNum, desc));
+            count++;
+
+            if ( count > MAX_LIST_ITEMS ) {
+                break;
+            }
         }
-        items.add(Messages.listEndLine());
+        items.add(TextComponent.fromLegacyText(Messages.listEndLine()));
 
         return items;
     }

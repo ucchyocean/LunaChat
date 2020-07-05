@@ -6,9 +6,12 @@
 package com.github.ucchyocean.lc3;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.Callable;
 import java.util.logging.Level;
 
 import org.bstats.bukkit.Metrics;
@@ -68,7 +71,17 @@ public class LunaChatBukkit extends JavaPlugin implements PluginInterface {
         LunaChat.setMode(LunaChatMode.BUKKIT);
 
         // Metrics
-        new Metrics(this, 7936);
+        Metrics metrics = new Metrics(this, 7936);
+        metrics.addCustomChart(new Metrics.DrilldownPie(
+                "minecraft_server_version", new Callable<Map<String, Map<String, Integer>>>() {
+            public Map<String, Map<String, Integer>> call() throws Exception {
+                Map<String, Map<String, Integer>> map = new HashMap<>();
+                Map<String, Integer> sub = new HashMap<>();
+                sub.put(Bukkit.getVersion(), 1);
+                map.put(Bukkit.getName(), sub);
+                return map;
+            }
+        }));
 
         // 変数などの初期化
         config = new LunaChatConfig(getDataFolder(), getFile());

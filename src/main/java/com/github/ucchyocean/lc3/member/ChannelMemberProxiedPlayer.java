@@ -15,6 +15,7 @@ import com.github.ucchyocean.lc3.bridge.BungeePermsBridge;
 import com.github.ucchyocean.lc3.bridge.LuckPermsBridge;
 
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.connection.Server;
@@ -152,13 +153,16 @@ public class ChannelMemberProxiedPlayer extends ChannelMemberBungee {
     }
 
     /**
-     * 発言者が今いるワールドのワールド名を取得する
-     * @return ワールド名
-     * @see com.github.ucchyocean.lc.channel.ChannelPlayer#getWorldName()
+     * メッセージを送る
+     * @param message 送るメッセージ
+     * @see com.github.ucchyocean.lc3.member.ChannelMember#sendMessage(net.md_5.bungee.api.chat.BaseComponent[])
      */
-    @Override
-    public String getWorldName() {
-        return "-";
+    public void sendMessage(BaseComponent[] message) {
+        if ( message == null || message.length == 0 ) return;
+        ProxiedPlayer player = getPlayer();
+        if ( player != null ) {
+            player.sendMessage(message);
+        }
     }
 
     /**

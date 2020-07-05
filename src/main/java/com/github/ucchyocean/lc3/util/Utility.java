@@ -19,6 +19,7 @@ import java.util.zip.ZipEntry;
 
 import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatMode;
+import com.google.common.io.Files;
 
 /**
  * ユーティリティクラス
@@ -41,34 +42,46 @@ public class Utility {
             parent.mkdirs();
         }
 
-        try ( JarFile jar = new JarFile(jarFile) ) {
-            ZipEntry zipEntry = jar.getEntry(sourceFilePath);
-            InputStream is = jar.getInputStream(zipEntry);
+        if ( jarFile.isDirectory() ) {
+            File file = new File(jarFile, sourceFilePath);
 
-            try ( FileOutputStream fos = new FileOutputStream(targetFile) ) {
+            try {
+                Files.copy(file, targetFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-                if (isBinary) {
-                    byte[] buf = new byte[8192];
-                    int len;
-                    while ((len = is.read(buf)) != -1) {
-                        fos.write(buf, 0, len);
-                    }
+        } else {
 
-                } else {
+            try ( JarFile jar = new JarFile(jarFile) ) {
+                ZipEntry zipEntry = jar.getEntry(sourceFilePath);
+                InputStream is = jar.getInputStream(zipEntry);
 
-                    try ( BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-                            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos, "UTF-8")) ) {
+                try ( FileOutputStream fos = new FileOutputStream(targetFile) ) {
 
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                            writer.write(line);
-                            writer.newLine();
+                    if (isBinary) {
+                        byte[] buf = new byte[8192];
+                        int len;
+                        while ((len = is.read(buf)) != -1) {
+                            fos.write(buf, 0, len);
+                        }
+
+                    } else {
+
+                        try ( BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+                                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos, "UTF-8")) ) {
+
+                            String line;
+                            while ((line = reader.readLine()) != null) {
+                                writer.write(line);
+                                writer.newLine();
+                            }
                         }
                     }
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -109,7 +122,7 @@ public class Utility {
     }
 
     /**
-     * 文字列に含まれているカラーコード候補（&a）を除去して返す
+     * 文字列に含まれているカラーコード候補（&aや#99AABB）を除去して返す
      * @param source 置き換え元の文字列
      * @return 置き換え後の文字列
      */
@@ -130,7 +143,7 @@ public class Utility {
     }
 
     /**
-     * カラーコード候補（&a）かどうかを判断する
+     * カラーコード候補（&aや#99AABB）かどうかを判断する
      * @param color カラーコード候補
      * @return カラーコード候補かどうか
      */

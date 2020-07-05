@@ -18,6 +18,8 @@ import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatBukkit;
 import com.github.ucchyocean.lc3.bridge.VaultChatBridge;
 
+import net.md_5.bungee.api.chat.BaseComponent;
+
 /**
  * ChannelMemberのBukkitPlayer実装
  * @author ucchy
@@ -170,6 +172,19 @@ public class ChannelMemberPlayer extends ChannelMemberBukkit {
     }
 
     /**
+     * メッセージを送る
+     * @param message 送るメッセージ
+     * @see com.github.ucchyocean.lc3.member.ChannelMember#sendMessage(net.md_5.bungee.api.chat.BaseComponent[])
+     */
+    public void sendMessage(BaseComponent[] message) {
+        if ( message == null || message.length == 0 ) return;
+        Player player = getPlayer();
+        if ( player != null ) {
+            player.spigot().sendMessage(message);
+        }
+    }
+
+    /**
      * BukkitのPlayerを取得する
      * @return Player
      * @see com.github.ucchyocean.lc.channel.ChannelPlayer#getPlayer()
@@ -180,17 +195,30 @@ public class ChannelMemberPlayer extends ChannelMemberBukkit {
     }
 
     /**
+     * 発言者が今いるワールドを取得する
+     * @return 発言者が今いるワールド
+     * @see com.github.ucchyocean.lc3.member.ChannelMemberBukkit#getWorld()
+     */
+    @Override
+    public World getWorld() {
+        Player player = getPlayer();
+        if ( player != null ) return player.getWorld();
+        return null;
+    }
+
+    /**
      * 発言者が今いるワールドのワールド名を取得する
      * @return ワールド名
      * @see com.github.ucchyocean.lc.channel.ChannelPlayer#getWorldName()
      */
     @Override
     public String getWorldName() {
-        Player player = getPlayer();
-        if ( player != null ) {
-            return player.getWorld().getName();
+        World world = getWorld();
+        if ( world == null ) return "";
+        if ( LunaChatBukkit.getInstance().getMultiverseCore() != null ) {
+            return LunaChatBukkit.getInstance().getMultiverseCore().getWorldAlias(world.getName());
         }
-        return "-";
+        return world.getName();
     }
 
     /**
@@ -259,13 +287,6 @@ public class ChannelMemberPlayer extends ChannelMemberBukkit {
     @Override
     public String toString() {
         return "$" + id.toString();
-    }
-
-    @Override
-    public World getWorld() {
-        Player player = getPlayer();
-        if ( player != null ) return player.getWorld();
-        return null;
     }
 
     public static ChannelMemberPlayer getChannelMember(String nameOrUuid) {

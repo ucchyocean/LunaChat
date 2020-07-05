@@ -28,6 +28,28 @@ public abstract class ChannelMemberBungee extends ChannelMember {
     public abstract Server getServer();
 
     /**
+     * 発言者が今いるサーバーのサーバー名を取得する
+     * @return サーバー名
+     */
+    public String getServerName() {
+        Server server = getServer();
+        if ( server != null ) {
+            return server.getInfo().getName();
+        }
+        return "";
+    }
+
+    /**
+     * 発言者が今いるワールド名を返す
+     * @return 常に空文字列が返される
+     * @see com.github.ucchyocean.lc3.member.ChannelMember#getWorldName()
+     */
+    @Override
+    public String getWorldName() {
+        return "";
+    }
+
+    /**
      * CommandSenderから、ChannelMemberを作成して返す
      * @param sender
      * @return ChannelMember

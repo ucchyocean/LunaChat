@@ -21,6 +21,11 @@ public class LunaChatStandalone implements PluginInterface {
     private LunaChatConfig config;
     private ChannelManager manager;
     private UUIDCacheData uuidCacheData;
+    private File dataFolder;
+
+    public LunaChatStandalone(File dataFolder) {
+        this.dataFolder = dataFolder;
+    }
 
     public void onEnable() {
 
@@ -33,7 +38,7 @@ public class LunaChatStandalone implements PluginInterface {
         // コンフィグ取得
         config = new LunaChatConfig(getDataFolder(), getPluginJarFile());
 
-        // UUIDキャッシュデータ （これ要る？）
+        // UUIDキャッシュデータ
         uuidCacheData = new UUIDCacheData(getDataFolder());
     }
 
@@ -60,12 +65,7 @@ public class LunaChatStandalone implements PluginInterface {
 
     @Override
     public File getDataFolder() {
-
-        // 現在のフォルダ下にLunaChatフォルダを作成して返す
-        String cd = new File(".").getAbsoluteFile().getParent();
-        File folder = new File(cd, "LunaChat");
-        if ( !folder.exists() ) folder.mkdirs();
-        return folder;
+        return dataFolder;
     }
 
     @Override
@@ -83,7 +83,8 @@ public class LunaChatStandalone implements PluginInterface {
 
     @Override
     public void log(Level level, String msg) {
-        // TODO Standaloneサーバーのログ出力 未実装
+        // 画面に表示する
+        System.out.println(String.format("[%s]%s", level.toString(), msg));
     }
 
     /**

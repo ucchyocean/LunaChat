@@ -14,7 +14,7 @@ import junit.framework.TestCase;
  * YamlConfigのテスト
  * @author ucchy
  */
-public class YamlConfigTester extends TestCase {
+public class YamlConfigTest extends TestCase {
 
     public void testYamlConfig() {
 

@@ -5,9 +5,7 @@
  */
 package com.github.ucchyocean.lc3.channel;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -15,6 +13,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatAPI;
@@ -25,9 +24,10 @@ import com.github.ucchyocean.lc3.bridge.DynmapBridge;
 import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 import com.github.ucchyocean.lc3.member.ChannelMemberBukkit;
-import com.github.ucchyocean.lc3.util.KeywordReplacer;
-import com.github.ucchyocean.lc3.util.Utility;
+import com.github.ucchyocean.lc3.util.ClickableFormat;
 import com.github.ucchyocean.lc3.util.UtilityBukkit;
+
+import net.md_5.bungee.api.chat.BaseComponent;
 
 /**
  * チャンネルの実装クラス
@@ -35,19 +35,12 @@ import com.github.ucchyocean.lc3.util.UtilityBukkit;
  */
 public class BukkitChannel extends Channel {
 
-    private SimpleDateFormat dateFormat;
-    private SimpleDateFormat timeFormat;
-
     /**
      * コンストラクタ
      * @param name チャンネル名
      */
     protected BukkitChannel(String name) {
-
         super(name);
-
-        dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-        timeFormat = new SimpleDateFormat("HH:mm:ss");
     }
 
     /**
@@ -56,11 +49,11 @@ public class BukkitChannel extends Channel {
      * @param message メッセージ
      * @param format フォーマット
      * @param sendDynmap dynmapへ送信するかどうか
-     * @param name 発言者名
      */
     @Override
-    protected void sendMessage(ChannelMember player, String message,
-            String format, boolean sendDynmap, String name) {
+    protected void sendMessage(
+            ChannelMember player, String message,
+            @Nullable ClickableFormat format, boolean sendDynmap) {
 
         LunaChatConfig config = LunaChat.getConfig();
 
@@ -106,7 +99,7 @@ public class BukkitChannel extends Channel {
                 }
 
                 // 受信者が自分以外いない場合は、メッセージを表示する
-                if ( !Messages.noRecipientMessage("", "").isEmpty() && (
+                if ( Messages.noRecipientMessage("", "").length > 0 && (
                         recipients.size() == 0 ||
                         (recipients.size() == 1 &&
                          recipients.get(0).getName().equals(player.getName()) ) ) ) {
@@ -155,12 +148,8 @@ public class BukkitChannel extends Channel {
             }
         }
 
-        // フォーマットがある場合は置き換える
-        if ( format != null ) {
-            message = format.replace("%msg", message);
-        }
-
         // LunaChatChannelMessageEvent イベントコール
+        String name = (player != null) ? player.getDisplayName() : "<null>";
         EventResult result = LunaChat.getEventSender().sendLunaChatChannelMessageEvent(
                 getName(), player, message, recipients, name, originalMessage);
         message = result.getMessage();
@@ -184,8 +173,16 @@ public class BukkitChannel extends Channel {
         }
 
         // 送信する
-        for ( ChannelMember p : recipients ) {
-            p.sendMessage(message);
+        if ( format != null ) {
+            format.replace("%msg", message);
+            BaseComponent[] comps = format.makeTextComponent();
+            for ( ChannelMember p : recipients ) {
+                p.sendMessage(comps);
+            }
+        } else {
+            for ( ChannelMember p : recipients ) {
+                p.sendMessage(message);
+            }
         }
 
         // 設定に応じて、コンソールに出力する
@@ -199,7 +196,7 @@ public class BukkitChannel extends Channel {
         }
 
         // ロギング
-        log(originalMessage, name, player);
+        log(originalMessage, name);
     }
 
     /**
@@ -256,88 +253,12 @@ public class BukkitChannel extends Channel {
     }
 
     /**
-     * チャットフォーマット内のキーワードを置き換えする
-     * @param format チャットフォーマット
-     * @param player プレイヤー
-     * @return 置き換え結果
-     */
-    @Override
-    protected String replaceKeywords(String format, ChannelMember player) {
-
-        LunaChatAPI api = LunaChat.getAPI();
-
-        KeywordReplacer msg = new KeywordReplacer(format);
-
-        // テンプレートのキーワードを、まず最初に置き換える
-        for ( int i=0; i<=9; i++ ) {
-            String key = "%" + i;
-            if ( msg.contains(key) ) {
-                if ( api.getTemplate("" + i) != null ) {
-                    msg.replace(key, api.getTemplate("" + i));
-                    break;
-                }
-            }
-        }
-
-        msg.replace("%ch", getName());
-        //msg.replace("%msg", message);
-        msg.replace("%color", getColorCode());
-        if ( getPrivateMessageTo() != null ) {
-            msg.replace("%to", getPrivateMessageTo().getDisplayName());
-        } else {
-            msg.replace("%to", "");
-        }
-        msg.replace("%recieverserver", "");
-
-        if ( msg.contains("%date") ) {
-            msg.replace("%date", dateFormat.format(new Date()));
-        }
-        if ( msg.contains("%time") ) {
-            msg.replace("%time", timeFormat.format(new Date()));
-        }
-
-        if ( player != null ) {
-            msg.replace("%username", player.getDisplayName());
-            msg.replace("%player", player.getName());
-
-            if ( msg.contains("%prefix") || msg.contains("%suffix") ) {
-                msg.replace("%prefix", player.getPrefix());
-                msg.replace("%suffix", player.getSuffix());
-            }
-
-            if ( msg.contains("%world") ) {
-
-                String worldname = null;
-                if ( LunaChatBukkit.getInstance().getMultiverseCore() != null ) {
-                    worldname = LunaChatBukkit.getInstance().getMultiverseCore().getWorldAlias(player.getWorldName());
-                }
-                if ( worldname == null || worldname.equals("") ) {
-                    worldname = player.getWorldName();
-                }
-                msg.replace("%world", worldname);
-            }
-
-            msg.replace("%server", "");
-
-        } else {
-            msg.replace("%username", "");
-            msg.replace("%player", "");
-            msg.replace("%prefix", "");
-            msg.replace("%suffix", "");
-            msg.replace("%world", "");
-            msg.replace("%server", "");
-        }
-
-        return Utility.replaceColorCode(msg.toString());
-    }
-
-    /**
      * ログを記録する
      * @param name 発言者
      * @param message 記録するメッセージ
-     * @param player プレイヤー
      */
-    private void log(String message, String name, ChannelMember player) {
+    @Override
+    protected void log(String message, String name) {
 
         // LunaChatのチャットログへ記録
         LunaChatConfig config = LunaChat.getConfig();

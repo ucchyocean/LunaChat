@@ -7,6 +7,7 @@ package com.github.ucchyocean.lc3.member;
 
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.connection.Server;
@@ -104,17 +105,18 @@ public class ChannelMemberBungeeConsole extends ChannelMemberBungee {
      */
     @Override
     public void sendMessage(String message) {
+        if ( message == null || message.isEmpty() ) return;
         sender.sendMessage(TextComponent.fromLegacyText(message));
     }
 
     /**
-     * 発言者が今いるワールド名を返す
-     * @return 常に"-"が返される
-     * @see com.github.ucchyocean.lc3.member.ChannelMember#getWorldName()
+     * メッセージを送る
+     * @param message 送るメッセージ
+     * @see com.github.ucchyocean.lc3.member.ChannelMember#sendMessage(net.md_5.bungee.api.chat.BaseComponent[])
      */
-    @Override
-    public String getWorldName() {
-        return "-";
+    public void sendMessage(BaseComponent[] message) {
+        if ( message == null || message.length == 0 ) return;
+        sender.sendMessage(message);
     }
 
     /**

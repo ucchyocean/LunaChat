@@ -412,8 +412,9 @@ public class ChannelManager implements LunaChatAPI {
             channel = new BukkitChannel(name);
         } else if ( LunaChat.getMode() == LunaChatMode.BUNGEE ) {
             channel = new BungeeChannel(name);
+        } else {
+            channel = new StandaloneChannel(name);
         }
-        // TODO Standalone のチャンネル作成
 
         channels.put(name.toLowerCase(), channel);
         channel.save();
