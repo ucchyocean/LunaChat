@@ -165,7 +165,7 @@ public class LunaChatBukkit extends JavaPlugin implements PluginInterface {
             return messageCommand.execute(ChannelMember.getChannelMember(sender), label, args);
         } else if ( command.getName().equals("reply") ) {
             return replyCommand.execute(ChannelMember.getChannelMember(sender), label, args);
-        } else if ( command.getName().equals("lcjapanize") ) {
+        } else if ( command.getName().equals("japanize") ) {
             return lcjapanizeCommand.execute(ChannelMember.getChannelMember(sender), label, args);
         }
 
