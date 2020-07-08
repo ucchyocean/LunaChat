@@ -2,7 +2,7 @@
 name: Bug report/バグ報告
 about: Create a report to help us improve/バグ報告をしたい場合はこちらを選択してください
 title: ''
-labels: ''
+labels: バグ
 assignees: ''
 
 ---

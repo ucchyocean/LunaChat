@@ -2,7 +2,7 @@
 name: Feature request/機能追加リクエスト
 about: Suggest an idea for this project/機能追加要望をしたい場合はこちらを選択してください
 title: ''
-labels: ''
+labels: 機能追加・要望
 assignees: ''
 
 ---
