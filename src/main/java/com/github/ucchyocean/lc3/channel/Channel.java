@@ -399,7 +399,7 @@ public abstract class Channel {
         }
 
         // キーワード置き換え
-        ClickableFormat msgFormat = ClickableFormat.makeFormat(getFormat(), new ChannelMemberOther(name));
+        ClickableFormat msgFormat = ClickableFormat.makeFormat(getFormat(), new ChannelMemberOther(name), this, false);
 
         // カラーコード置き換え チャンネルで許可されている場合に置き換える。
         if ( isAllowCC() ) {
