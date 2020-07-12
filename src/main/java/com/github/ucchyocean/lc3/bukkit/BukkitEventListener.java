@@ -32,6 +32,9 @@ import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.japanize.JapanizeType;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 import com.github.ucchyocean.lc3.member.ChannelMemberBukkit;
+import com.github.ucchyocean.lc3.member.ChannelMemberOther;
+import com.github.ucchyocean.lc3.member.ChannelMemberPlayer;
+import com.github.ucchyocean.lc3.messaging.BukkitChatMessage;
 import com.github.ucchyocean.lc3.util.ClickableFormat;
 import com.github.ucchyocean.lc3.util.Utility;
 
@@ -173,6 +176,18 @@ public class BukkitEventListener implements Listener {
 
         LunaChatConfig config = LunaChat.getConfig();
         LunaChatAPI api = LunaChat.getAPI();
+
+        // Bungeeパススルーモードなら、メッセージを返送して終了する
+        if ( config.isBungeePassThroughMode() ) {
+            ChannelMember player = ChannelMember.getChannelMember(event.getPlayer());
+            if ( player instanceof ChannelMemberPlayer ) {
+                ChannelMemberOther other = ((ChannelMemberPlayer)player).toChannelMemberOther();
+                BukkitChatMessage msg = new BukkitChatMessage(other, event.getMessage());
+                LunaChatBukkit.getInstance().sendPluginMessage(msg.toByteArray());
+                event.setCancelled(true);
+                return;
+            }
+        }
 
         // 頭にglobalMarkerが付いている場合は、グローバル発言にする
         if ( config.getGlobalMarker() != null &&

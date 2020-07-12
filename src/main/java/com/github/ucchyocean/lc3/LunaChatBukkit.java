@@ -42,6 +42,9 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  */
 public class LunaChatBukkit extends JavaPlugin implements PluginInterface {
 
+    /** Bukkit-BungeeCord間の送受信に使用するチャンネル名 */
+    private static final String CHANNEL = "lunachat:message";
+
     private static LunaChatBukkit instance;
 
     private LunaChatConfig config;
@@ -136,6 +139,9 @@ public class LunaChatBukkit extends JavaPlugin implements PluginInterface {
 
         // イベント実行クラスの登録
         LunaChat.setEventSender(new BukkitEventSender());
+
+        // プラグインチャンネル登録
+        getServer().getMessenger().registerOutgoingPluginChannel(this, CHANNEL);
     }
 
     /**
@@ -306,5 +312,13 @@ public class LunaChatBukkit extends JavaPlugin implements PluginInterface {
     @Override
     public void runAsyncTask(Runnable task) {
         Bukkit.getScheduler().runTaskAsynchronously(this, task);
+    }
+
+    /**
+     * プラグインメッセージを送信する
+     * @param bytes 送信内容
+     */
+    public void sendPluginMessage(byte[] bytes) {
+        getServer().sendPluginMessage(this, CHANNEL, bytes);
     }
 }

@@ -443,6 +443,7 @@ public abstract class Channel {
         // パーミッション lunachat-admin.listen-all-channels を持つプレイヤーを
         // 受信者に加える。
         if ( config.isOpListenAllChannel() ) {
+            // TODO Bukkit参照しているのでNGなのでは
             for ( Player p : Bukkit.getOnlinePlayers() ) {
                 ChannelMember cp = ChannelMember.getChannelMember(p);
                 if ( cp.hasPermission("lunachat-admin.listen-all-channels")
@@ -470,6 +471,7 @@ public abstract class Channel {
 
         // 設定に応じて、コンソールに出力する
         if ( config.isDisplayChatOnConsole() ) {
+            // TODO Bukkit参照しているのでNGなのでは
             Bukkit.getLogger().info(makePlainText(message));
         }
 

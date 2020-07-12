@@ -204,3 +204,12 @@ japanizeIgnorePlayerName: true
 # Non-Japanese marker.
 # If this is at the beginning of your remark, do not temporarily perform Japanize conversion.
 noneJapanizeMarker: '$'
+
+
+
+# -------------------- BungeeCord settings --------------------
+
+# When plugged in BungeeCord, chat events are sent to the spigot server under it,
+# It is a mode to process after receiving it back.
+# All spigot servers need to have LunaChat installed.
+bungeePassThroughMode: false

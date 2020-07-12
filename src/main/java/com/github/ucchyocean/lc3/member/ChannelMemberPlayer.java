@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatBukkit;
 import com.github.ucchyocean.lc3.bridge.VaultChatBridge;
+import com.github.ucchyocean.lc3.util.BlockLocation;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 
@@ -298,5 +299,16 @@ public class ChannelMemberPlayer extends ChannelMemberBukkit {
             if ( op == null ) return null;
             return new ChannelMemberPlayer(op.getUniqueId());
         }
+    }
+
+    public ChannelMemberOther toChannelMemberOther() {
+        return new ChannelMemberOther(getName(), getDisplayName(), getPrefix(), getSuffix(),
+                getBlockLocation(), id.toString());
+    }
+
+    private BlockLocation getBlockLocation() {
+        Location loc = getLocation();
+        if ( loc == null ) return null;
+        return new BlockLocation(getWorldName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
     }
 }

@@ -16,8 +16,7 @@ enableChannelChat: true
 # イベント処理の優先度を設定できます。
 # 他のプラグインとの組み合わせでうまく動かないときに使用してください。
 # LOWEST, LOW, NORMAL, HIGH, HIGHEST のどれかを指定できます。
-# よくわからない場合は、デフォルトのHIGHのままにしてください。
-playerChatEventListenerPriority: 'HIGH'
+playerChatEventListenerPriority: 'HIGHEST'
 
 
 # -------------------- チャンネルチャット設定 --------------------
@@ -216,3 +215,10 @@ japanizeIgnorePlayerName: true
 noneJapanizeMarker: '$'
 
 
+
+# -------------------- BungeeCord設定 --------------------
+
+# BungeeCord構成のときに、チャットイベントを配下のspigotサーバーに流し、
+# 返送してもらってから処理を行うモードです。
+# 配下のすべてのspigotサーバーにも、LunaChatの導入が必要です。
+bungeePassThroughMode: false

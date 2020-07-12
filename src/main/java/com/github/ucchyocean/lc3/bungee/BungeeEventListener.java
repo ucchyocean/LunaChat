@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,6 +22,7 @@ import com.github.ucchyocean.lc3.channel.Channel;
 import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.japanize.Japanizer;
 import com.github.ucchyocean.lc3.member.ChannelMember;
+import com.github.ucchyocean.lc3.messaging.BukkitChatMessage;
 import com.github.ucchyocean.lc3.util.ChatColor;
 import com.github.ucchyocean.lc3.util.ClickableFormat;
 import com.github.ucchyocean.lc3.util.Utility;
@@ -34,6 +34,7 @@ import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
+import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
@@ -44,6 +45,9 @@ import net.md_5.bungee.event.EventPriority;
  * @author ucchy
  */
 public class BungeeEventListener implements Listener {
+
+    /** Bukkit-BungeeCord間の送受信に使用するチャンネル名 */
+    private static final String CHANNEL = "lunachat:message";
 
     private static final int MAX_LIST_ITEMS = 8;
 
@@ -181,10 +185,46 @@ public class BungeeEventListener implements Listener {
     }
 
     /**
+     * プラグインメッセージを受信したときに呼び出される
+     * @param event
+     */
+    @EventHandler
+    public void onPluginMessageReceived(PluginMessageEvent event) {
+
+        // 自分のチャンネルメッセージでない場合は無視する
+        if ( !event.getTag().equals(CHANNEL) ) {
+            return;
+        }
+
+        // データをメッセージに復元する
+        BukkitChatMessage msg = BukkitChatMessage.fromByteArray(event.getData());
+        if ( msg == null ) return;
+
+        // 受信者と発言者が一致しない場合は無視する
+        if ( event.getReceiver() instanceof ProxiedPlayer ) {
+            ProxiedPlayer receiver = (ProxiedPlayer)event.getReceiver();
+            if ( !receiver.getName().equals(msg.getMember().getName()) ) {
+                return;
+            }
+        } else {
+            return;
+        }
+
+
+        // 発言先チャンネルを取得して発言する
+        processChat(msg.getMember(), msg.getMessage());
+    }
+
+    /**
      * プレイヤーのチャットごとに呼び出されるメソッド
      * @param event チャットイベント
      */
     private void processChatEvent(ChatEvent event) {
+
+        // Bungeeパススルーモードなら何もしない
+        if ( config.isBungeePassThroughMode() ) {
+            return;
+        }
 
         // コマンド実行の場合は、そのまま無視する
         if ( event.isCommand() ) {
@@ -196,15 +236,24 @@ public class BungeeEventListener implements Listener {
             return;
         }
 
+        // 発言内容を処理する
+        processChat(ChannelMember.getChannelMember(event.getSender()), event.getMessage());
+
+        // イベントをキャンセル
+        event.setCancelled(true);
+    }
+
+    private void processChat(ChannelMember member, String message) {
+
         // 頭にglobalMarkerが付いている場合は、グローバル発言にする
         if ( config.getGlobalMarker() != null &&
                 !config.getGlobalMarker().equals("") &&
-                event.getMessage().startsWith(config.getGlobalMarker()) &&
-                event.getMessage().length() > config.getGlobalMarker().length() ) {
+                message.startsWith(config.getGlobalMarker()) &&
+                message.length() > config.getGlobalMarker().length() ) {
 
             int offset = config.getGlobalMarker().length();
-            event.setMessage( event.getMessage().substring(offset) );
-            chatGlobal(event);
+            message = message.substring(offset);
+            chatGlobal(member, message);
             return;
         }
 
@@ -212,8 +261,8 @@ public class BungeeEventListener implements Listener {
         // クイックチャンネルチャットとして処理する。
         if ( config.isEnableQuickChannelChat() ) {
             String separator = config.getQuickChannelChatSeparator();
-            if ( event.getMessage().contains(separator) ) {
-                String[] temp = event.getMessage().split(separator, 2);
+            if ( message.contains(separator) ) {
+                String[] temp = message.split(separator, 2);
                 String name = temp[0];
                 String value = "";
                 if ( temp.length > 0 ) {
@@ -221,62 +270,49 @@ public class BungeeEventListener implements Listener {
                 }
 
                 Channel channel = api.getChannel(name);
-                if ( channel != null && !channel.isPersonalChat()
-                        && event.getSender() instanceof ProxiedPlayer ) {
-                    ChannelMember player =
-                            ChannelMember.getChannelMember(event.getSender());
-                    if ( !channel.getMembers().contains(player) ) {
+                if ( channel != null ) {
+
+                    if ( !channel.getMembers().contains(member) ) {
                         // 指定されたチャンネルに参加していないなら、エラーを表示して何も発言せずに終了する。
-                        ((ProxiedPlayer)event.getSender()).sendMessage(
+                        member.sendMessage(
                                 TextComponent.fromLegacyText(Messages.errmsgNomember()));
-                        event.setCancelled(true);
                         return;
                     }
 
                     // 指定されたチャンネルに発言して終了する。
-                    chatToChannelWithEvent(player, channel, value);
-                    event.setCancelled(true);
+                    chatToChannelWithEvent(member, channel, value);
                     return;
                 }
             }
         }
 
-        ChannelMember player =
-                ChannelMember.getChannelMember(event.getSender());
-        Channel channel = api.getDefaultChannel(player.getName());
+        Channel channel = api.getDefaultChannel(member.getName());
 
         // デフォルトの発言先が無い場合
         if ( channel == null ) {
             if ( config.isNoJoinAsGlobal() ) {
                 // グローバル発言にする
-                chatGlobal(event);
+                chatGlobal(member, message);
                 return;
 
             } else {
-                // 発言をキャンセルして終了する
-                event.setCancelled(true);
+                // 何もせずに終了する
                 return;
             }
         }
 
-        chatToChannelWithEvent(player, channel, event.getMessage());
-
-        // もとのイベントをキャンセル
-        event.setCancelled(true);
+        chatToChannelWithEvent(member, channel, message);
     }
 
-    private void chatGlobal(ChatEvent event) {
+    private void chatGlobal(ChannelMember member, String message) {
 
-        // 発言者と発言サーバーと発言内容の取得
-        final ProxiedPlayer sender = (ProxiedPlayer)event.getSender();
-        String message = event.getMessage();
         LunaChatConfig config = LunaChat.getConfig();
 
         // NGワードのマスク
         message = maskNGWord(message, config.getNgwordCompiled());
 
         // Japanizeをスキップするかどうかフラグ
-        boolean skipJapanize = !LunaChat.getAPI().isPlayerJapanize(sender.getName());
+        boolean skipJapanize = !LunaChat.getAPI().isPlayerJapanize(member.getName());
 
         // 一時的なJapanizeスキップが指定されているか確認する
         String marker = config.getNoneJapanizeMarker();
@@ -315,74 +351,24 @@ public class BungeeEventListener implements Listener {
 
         String result;
 
-        if ( config.isEnableNormalChatMessageFormat() ) {
-            // チャットフォーマット装飾を適用する場合
-            String f = config.getNormalChatMessageFormat();
-            ClickableFormat format = ClickableFormat.makeFormat(f, ChannelMember.getChannelMember(sender));
-            format.replace("%msg", message);
+        String f = config.getNormalChatMessageFormat();
+        ClickableFormat format = ClickableFormat.makeFormat(f, member);
+        format.replace("%msg", message);
 
-            // イベントをキャンセルする
-            event.setCancelled(true);
+        // hideされているプレイヤーを除くすべてのプレイヤーに、
+        // 発言内容を送信する。
+        BaseComponent[] msg = format.makeTextComponent();
+        List<ChannelMember> hidelist = api.getHidelist(member);
 
-            // hideされているプレイヤーを除くすべてのプレイヤーに、
-            // 発言内容を送信する。
-            BaseComponent[] msg = format.makeTextComponent();
-            List<ChannelMember> hidelist = api.getHidelist(ChannelMember.getChannelMember(sender));
-
-            for ( String server : parent.getProxy().getServers().keySet() ) {
-
-                ServerInfo info = parent.getProxy().getServerInfo(server);
-                for ( ProxiedPlayer player : info.getPlayers() ) {
-                    if ( !containsHideList(player, hidelist) ) {
-                        sendMessage(player, msg);
-                    }
-                }
-            }
-
-            result = format.toLegacyText();
-
-        } else {
-            // チャットフォーマットを適用しない場合
-            // NOTE: ChatEvent経由で送信する都合上、hideは適用しない（できない）仕様とする。
-
-            // NOTE: 改行がサポートされないので、改行を含む場合は、
-            // \nで分割して前半をセットし、後半は150ミリ秒後に送信する。
-            if ( !message.contains("\n") ) {
-                event.setMessage(Utility.stripColorCode(message));
-            } else {
-                int index = message.indexOf("\n");
-                String pre = message.substring(0, index);
-                final String post = Utility.replaceColorCode(
-                        message.substring(index + "\n".length()));
-                event.setMessage(Utility.stripColorCode(pre));
-
-                parent.getProxy().getScheduler().schedule(parent, new Runnable() {
-                    @Override
-                    public void run() {
-                        for ( ProxiedPlayer p : sender.getServer().getInfo().getPlayers() ) {
-                            sendMessage(p, post);
-                        }
-                    }
-                }, 150, TimeUnit.MILLISECONDS);
-            }
-
-            result = Utility.replaceColorCode(message);
-
-            // 発言したプレイヤーがいるサーバー"以外"のサーバーに、
-            // 発言内容を送信する。
-            for ( String server : parent.getProxy().getServers().keySet() ) {
-
-                String senderServer = sender.getServer().getInfo().getName();
-                if ( server.equals(senderServer) ) {
-                    continue;
-                }
-
-                ServerInfo info = parent.getProxy().getServerInfo(server);
-                for ( ProxiedPlayer player : info.getPlayers() ) {
-                    sendMessage(player, result);
+        for ( ServerInfo info : parent.getProxy().getServers().values() ) {
+            for ( ProxiedPlayer player : info.getPlayers() ) {
+                if ( !containsHideList(player, hidelist) ) {
+                    sendMessage(player, msg);
                 }
             }
         }
+
+        result = format.toLegacyText();
 
         // コンソールに表示設定なら、コンソールに表示する
         if ( config.isDisplayChatOnConsole() ) {
@@ -390,7 +376,7 @@ public class BungeeEventListener implements Listener {
         }
 
         // ログに記録する
-        LunaChat.getNormalChatLogger().log(Utility.stripColorCode(result), sender.getName());
+        LunaChat.getNormalChatLogger().log(Utility.stripColorCode(result), member.getName());
     }
 
     /**
@@ -559,19 +545,6 @@ public class BungeeEventListener implements Listener {
         items.add(TextComponent.fromLegacyText(Messages.listEndLine()));
 
         return items;
-    }
-
-    /**
-     * 指定した対象にメッセージを送信する
-     * @param reciever 送信先
-     * @param message メッセージ
-     */
-    private void sendMessage(CommandSender reciever, String message) {
-        if ( message == null ) return;
-        ChannelMember cm = ChannelMember.getChannelMember(reciever);
-        if ( cm != null ) {
-            cm.sendMessage(message);
-        }
     }
 
     /**
