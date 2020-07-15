@@ -301,19 +301,6 @@ public class BukkitEventListener implements Listener {
                 }
             }
 
-            // チャットフォーマット装飾の適用
-            ClickableFormat format;
-            if ( config.isEnableNormalChatMessageFormat() ) {
-                String f = config.getNormalChatMessageFormat();
-                format = ClickableFormat.makeFormat(f, ChannelMember.getChannelMember(event.getPlayer()));
-//                event.setFormat(format);
-            } else {
-                String f = event.getFormat()
-                        .replace("%1$s", "%displayName")
-                        .replace("%2$s", "%msg");
-                format = ClickableFormat.makeFormat(f, ChannelMember.getChannelMember(event.getPlayer()));
-            }
-
             // カラーコード置き換え
             // 置き換え設定になっていて、発言者がパーミッションを持っているなら、置き換えする
             if ( config.isEnableNormalChatColorCode() &&
@@ -376,21 +363,48 @@ public class BukkitEventListener implements Listener {
                 }
             }
 
-            // 発言内容の設定
-//            event.setMessage(message);
+            if ( config.isEnableNormalChatClickable() ) {
+                // クリック可能チャットで発言
 
-            // 発言内容の送信
-            format.replace("%msg", message);
-            BaseComponent[] comps = format.makeTextComponent();
-            for ( Player recipient : event.getRecipients() ) {
-                ChannelMember cm = ChannelMember.getChannelMember(recipient);
-                if ( cm != null ) {
-                    cm.sendMessage(comps);
+                // チャットフォーマット装飾の適用
+                ClickableFormat format;
+                if ( config.isEnableNormalChatMessageFormat() ) {
+                    String f = config.getNormalChatMessageFormat();
+                    format = ClickableFormat.makeFormat(f, ChannelMember.getChannelMember(event.getPlayer()));
+                } else {
+                    String f = event.getFormat()
+                            .replace("%1$s", "%displayName")
+                            .replace("%2$s", "%msg");
+                    format = ClickableFormat.makeFormat(f, ChannelMember.getChannelMember(event.getPlayer()));
                 }
-            }
 
-            // イベントのキャンセル
-            event.setCancelled(true);
+                // 発言内容の送信
+                format.replace("%msg", message);
+                BaseComponent[] comps = format.makeTextComponent();
+                for ( Player recipient : event.getRecipients() ) {
+                    ChannelMember cm = ChannelMember.getChannelMember(recipient);
+                    if ( cm != null ) {
+                        cm.sendMessage(comps);
+                    }
+                }
+
+                // イベントのキャンセル
+                event.setCancelled(true);
+
+            } else {
+                // 通常チャットイベントで発言
+
+                // チャットフォーマット装飾の適用
+                if ( config.isEnableNormalChatMessageFormat() ) {
+                    String f = config.getNormalChatMessageFormat();
+                    f = ClickableFormat.replaceForNormalChatFormat(
+                            f, ChannelMember.getChannelMember(event.getPlayer()));
+                    event.setFormat(Utility.replaceColorCode(f));
+                }
+
+                // 発言内容の設定
+                event.setMessage(message);
+            }
 
             // ロギング
             logNormalChat(message, player.getName());

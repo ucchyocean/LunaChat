@@ -149,6 +149,12 @@ public class ClickableFormat {
         return new ClickableFormat(msg);
     }
 
+    /**
+     * チャンネルチャットのメッセージ用のフォーマットを置き換えする
+     * @param format フォーマット
+     * @param channelName チャンネル名
+     * @return 置き換え結果
+     */
     public static ClickableFormat makeChannelClickableMessage(String format, String channelName) {
 
         KeywordReplacer msg = new KeywordReplacer(format);
@@ -162,6 +168,18 @@ public class ClickableFormat {
         return new ClickableFormat(msg);
     }
 
+    /**
+     * チャットフォーマット内のキーワードをBukkitの通常チャットイベント用に置き換えする
+     * @param format 置き換え元のチャットフォーマット
+     * @param member 発言者
+     * @return 置き換え結果
+     */
+    public static String replaceForNormalChatFormat(String format, ChannelMember member) {
+        format = format.replace("%displayName", "%1$s");
+        format = format.replace("%username", "%1$s");
+        format = format.replace("%msg", "%2$s");
+        return makeFormat(format, member, null, false).toLegacyText();
+    }
 
     public BaseComponent[] makeTextComponent() {
 
