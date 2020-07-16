@@ -148,6 +148,9 @@ public class LunaChatConfig {
 
     // === 以下、BungeeCord用設定 ===
 
+    /** Bungeeパススルーモード */
+    private boolean bungeePassThroughMode;
+
     /**
      * コンストラクタ
      * @param dataFolder コンフィグ格納フォルダ
@@ -178,7 +181,7 @@ public class LunaChatConfig {
         lang = config.getString("lang", "en");
         enableChannelChat = config.getBoolean("enableChannelChat", true);
         playerChatEventListenerPriority
-            = getEventPriority(config.getString("playerChatEventListenerPriority"), EventPriority.HIGH);
+            = getEventPriority(config.getString("playerChatEventListenerPriority"), EventPriority.HIGHEST);
         noJoinAsGlobal = config.getBoolean("noJoinAsGlobal", true);
         loggingChat = config.getBoolean("loggingChat", true);
         displayChatOnConsole = config.getBoolean("displayChatOnConsole", true);
@@ -257,6 +260,8 @@ public class LunaChatConfig {
         japanizeIgnorePlayerName = config.getBoolean("japanizeIgnorePlayerName", true);
         noneJapanizeMarker = config.getString("noneJapanizeMarker", "$");
         japanizeWait = config.getInt("japanizeWait", 1);
+
+        bungeePassThroughMode = config.getBoolean("bungeePassThroughMode", false);
 
         // globalチャンネルが、使用可能なチャンネル名かどうかを調べる
         if ( globalChannel != null && !globalChannel.equals("") &&
@@ -575,6 +580,14 @@ public class LunaChatConfig {
      */
     public boolean isEnableNormalChatClickable() {
         return enableNormalChatClickable;
+    }
+
+    /**
+     * Bungeeパススルーモードかどうかを返す
+     * @return bungeePassThroughMode
+     */
+    public boolean isBungeePassThroughMode() {
+        return bungeePassThroughMode;
     }
 
     /**
