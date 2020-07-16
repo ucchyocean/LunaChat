@@ -13,11 +13,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
 import com.github.ucchyocean.lc3.LunaChat;
@@ -443,10 +442,10 @@ public abstract class Channel {
         // パーミッション lunachat-admin.listen-all-channels を持つプレイヤーを
         // 受信者に加える。
         if ( config.isOpListenAllChannel() ) {
-            // TODO Bukkit参照しているのでNGなのでは
-            for ( Player p : Bukkit.getOnlinePlayers() ) {
-                ChannelMember cp = ChannelMember.getChannelMember(p);
-                if ( cp.hasPermission("lunachat-admin.listen-all-channels")
+            for ( String playerName : LunaChat.getPlugin().getOnlinePlayerNames() ) {
+                ChannelMember cp = ChannelMember.getChannelMember(playerName);
+                if ( cp != null
+                        && cp.hasPermission("lunachat-admin.listen-all-channels")
                         && !recipients.contains(cp) ) {
                     recipients.add(cp);
                 }
@@ -471,8 +470,7 @@ public abstract class Channel {
 
         // 設定に応じて、コンソールに出力する
         if ( config.isDisplayChatOnConsole() ) {
-            // TODO Bukkit参照しているのでNGなのでは
-            Bukkit.getLogger().info(makePlainText(message));
+            LunaChat.getPlugin().log(Level.INFO, makePlainText(message));
         }
 
         // ロギング

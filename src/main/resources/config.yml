@@ -147,7 +147,7 @@ ngword: []
 ngwordAction: mask
 
 
-# -------------------- Chat decoration settings --------------------
+# -------------------- Normal chat settings --------------------
 
 # Whether to decorate normal chat (non-channel chat) from LunaChat.
 enableNormalChatMessageFormat: true
@@ -170,6 +170,12 @@ normalChatMessageFormat: '&f%prefix%displayname%suffix&a:&f %msg'
 # Whether to enable. If set to false, color codes will not be converted.
 enableNormalChatColorCode: true
 
+# Whether normal chat (non-channel chat) is clickable.
+# If it is clickable, you can click the player name to send a private message, 
+# but plugin will cancel the normal chat and send another clickable message, 
+# so you may not use other chat related plugins.
+# Note that channel chats are always clickable, regardless of this setting.
+enableNormalChatClickable: false
 
 
 # -------------------- Japanize conversion settings --------------------

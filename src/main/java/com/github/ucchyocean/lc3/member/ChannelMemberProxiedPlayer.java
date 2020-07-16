@@ -129,11 +129,11 @@ public class ChannelMemberProxiedPlayer extends ChannelMemberBungee {
 
         LuckPermsBridge luckperms = LunaChatBungee.getInstance().getLuckPerms();
         if ( luckperms != null ) {
-            return luckperms.getPlayerPrefix(id);
+            return luckperms.getPlayerSuffix(id);
         }
         BungeePermsBridge bungeeperms = LunaChatBungee.getInstance().getBungeePerms();
         if ( bungeeperms != null ) {
-            return bungeeperms.userPrefix(id.toString(), null, null);
+            return bungeeperms.userSuffix(id.toString(), null, null);
         }
         return "";
     }

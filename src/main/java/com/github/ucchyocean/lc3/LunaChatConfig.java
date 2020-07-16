@@ -116,6 +116,9 @@ public class LunaChatConfig {
     /** 通常チャットで、カラーコードを使用可能にするかどうか */
     private boolean enableNormalChatColorCode;
 
+    /** 通常チャットを、クリック可能にするかどうか */
+    private boolean enableNormalChatClickable;
+
     /** Japanize変換のタイプ<br/>
      *  none = 日本語変換をしない<br/>
      *  kana = カナ変換のみする<br/>
@@ -144,9 +147,6 @@ public class LunaChatConfig {
     private int japanizeWait;
 
     // === 以下、BungeeCord用設定 ===
-
-    /** Bungeeパススルーモード */
-    private boolean bungeePassThroughMode;
 
     /**
      * コンストラクタ
@@ -178,7 +178,7 @@ public class LunaChatConfig {
         lang = config.getString("lang", "en");
         enableChannelChat = config.getBoolean("enableChannelChat", true);
         playerChatEventListenerPriority
-            = getEventPriority(config.getString("playerChatEventListenerPriority"), EventPriority.HIGHEST);
+            = getEventPriority(config.getString("playerChatEventListenerPriority"), EventPriority.HIGH);
         noJoinAsGlobal = config.getBoolean("noJoinAsGlobal", true);
         loggingChat = config.getBoolean("loggingChat", true);
         displayChatOnConsole = config.getBoolean("displayChatOnConsole", true);
@@ -244,6 +244,8 @@ public class LunaChatConfig {
                 config.getString("normalChatMessageFormat", "&f%prefix%username%suffix&a:&f %msg");
         enableNormalChatColorCode =
                 config.getBoolean("enableNormalChatColorCode", true);
+        enableNormalChatClickable =
+                config.getBoolean("enableNormalChatClickable", false);
 
         japanizeType = JapanizeType.fromID(config.getString("japanizeType"), null);
         japanizeDisplayLine = config.getInt("japanizeDisplayLine", 2);
@@ -255,8 +257,6 @@ public class LunaChatConfig {
         japanizeIgnorePlayerName = config.getBoolean("japanizeIgnorePlayerName", true);
         noneJapanizeMarker = config.getString("noneJapanizeMarker", "$");
         japanizeWait = config.getInt("japanizeWait", 1);
-
-        bungeePassThroughMode = config.getBoolean("bungeePassThroughMode", false);
 
         // globalチャンネルが、使用可能なチャンネル名かどうかを調べる
         if ( globalChannel != null && !globalChannel.equals("") &&
@@ -570,11 +570,11 @@ public class LunaChatConfig {
     }
 
     /**
-     * Bungeeパススルーモードかどうかを返す
-     * @return bungeePassThroughMode
+     * 通常チャットを、クリック可能にするかどうか
+     * @return enableNormalChatClickable
      */
-    public boolean isBungeePassThroughMode() {
-        return bungeePassThroughMode;
+    public boolean isEnableNormalChatClickable() {
+        return enableNormalChatClickable;
     }
 
     /**
