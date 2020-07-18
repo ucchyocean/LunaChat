@@ -13,12 +13,11 @@ import java.io.IOException;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.github.ucchyocean.lc3.member.ChannelMember;
 import com.github.ucchyocean.lc3.member.ChannelMemberOther;
 import com.github.ucchyocean.lc3.util.BlockLocation;
 
 /**
- * BukkitからBungeeCordへプレイヤーの発言を送信するためのメッセージクラス
+ * Bukkitで発生したプレイヤーのチャットイベントを、BungeeCordへ転送するためのメッセージクラス
  * @author ucchy
  */
 public class BukkitChatMessage {
@@ -40,7 +39,7 @@ public class BukkitChatMessage {
      * 発言者を取得する
      * @return member
      */
-    public ChannelMember getMember() {
+    public ChannelMemberOther getMember() {
         return member;
     }
 
@@ -63,7 +62,8 @@ public class BukkitChatMessage {
             out.writeUTF(member.getDisplayName());
             out.writeUTF(member.getPrefix());
             out.writeUTF(member.getSuffix());
-            out.writeUTF(member.getLocation() == null ? "null" : member.getLocation().toString());
+            out.writeUTF(member.getLocation() == null ? "<null>" : member.getLocation().toString());
+            out.writeUTF(member.getId() == null ? "<null>" : member.getId());
             out.writeUTF(message);
             return baos.toByteArray();
         } catch (IOException e) {
@@ -84,7 +84,9 @@ public class BukkitChatMessage {
             String prefix = in.readUTF();
             String suffix = in.readUTF();
             BlockLocation location = BlockLocation.fromString(in.readUTF());
-            ChannelMemberOther member = new ChannelMemberOther(name, displayName, prefix, suffix, location);
+            String id = in.readUTF();
+            if ( id.equals("<null>") ) id = null;
+            ChannelMemberOther member = new ChannelMemberOther(name, displayName, prefix, suffix, location, id);
             String message = in.readUTF();
             return new BukkitChatMessage(member, message);
         } catch (IOException e) {

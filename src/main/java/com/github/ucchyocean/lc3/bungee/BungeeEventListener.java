@@ -22,12 +22,14 @@ import com.github.ucchyocean.lc3.channel.Channel;
 import com.github.ucchyocean.lc3.event.EventResult;
 import com.github.ucchyocean.lc3.japanize.Japanizer;
 import com.github.ucchyocean.lc3.member.ChannelMember;
+import com.github.ucchyocean.lc3.member.ChannelMemberOther;
 import com.github.ucchyocean.lc3.messaging.BukkitChatMessage;
 import com.github.ucchyocean.lc3.util.ChatColor;
 import com.github.ucchyocean.lc3.util.ClickableFormat;
 import com.github.ucchyocean.lc3.util.Utility;
 
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -45,9 +47,6 @@ import net.md_5.bungee.event.EventPriority;
  * @author ucchy
  */
 public class BungeeEventListener implements Listener {
-
-    /** Bukkit-BungeeCord間の送受信に使用するチャンネル名 */
-    private static final String CHANNEL = "lunachat:message";
 
     private static final int MAX_LIST_ITEMS = 8;
 
@@ -192,7 +191,7 @@ public class BungeeEventListener implements Listener {
     public void onPluginMessageReceived(PluginMessageEvent event) {
 
         // 自分のチャンネルメッセージでない場合は無視する
-        if ( !event.getTag().equals(CHANNEL) ) {
+        if ( !event.getTag().equals(LunaChat.PMC_MESSAGE) ) {
             return;
         }
 
@@ -210,9 +209,15 @@ public class BungeeEventListener implements Listener {
             return;
         }
 
+        // 発言者を取得する　サーバー名を設定できる場合は設定する
+        ChannelMemberOther member = msg.getMember();
+        ProxiedPlayer player = ProxyServer.getInstance().getPlayer(member.getName());
+        if ( player != null ) {
+            member.setServerName(player.getServer().getInfo().getName());
+        }
 
-        // 発言先チャンネルを取得して発言する
-        processChat(msg.getMember(), msg.getMessage());
+        // 発言処理する
+        processChat(member, msg.getMessage());
     }
 
     /**

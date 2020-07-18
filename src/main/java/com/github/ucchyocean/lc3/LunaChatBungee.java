@@ -35,9 +35,6 @@ import net.md_5.bungee.api.plugin.Plugin;
  */
 public class LunaChatBungee extends Plugin implements PluginInterface {
 
-    /** Bukkit-BungeeCord間の送受信に使用するチャンネル名 */
-    private static final String CHANNEL = "lunachat:message";
-
     private static LunaChatBungee instance;
 
     private HashMap<String, String> history;
@@ -115,7 +112,7 @@ public class LunaChatBungee extends Plugin implements PluginInterface {
         LunaChat.setEventSender(new BungeeEventSender());
 
         // プラグインチャンネル登録
-        getProxy().registerChannel(CHANNEL);
+        getProxy().registerChannel(LunaChat.PMC_MESSAGE);
     }
 
     /**

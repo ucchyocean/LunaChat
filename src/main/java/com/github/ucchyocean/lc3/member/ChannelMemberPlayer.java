@@ -302,8 +302,10 @@ public class ChannelMemberPlayer extends ChannelMemberBukkit {
     }
 
     public ChannelMemberOther toChannelMemberOther() {
-        return new ChannelMemberOther(getName(), getDisplayName(), getPrefix(), getSuffix(),
-                getBlockLocation(), id.toString());
+        ChannelMemberOther other = new ChannelMemberOther(getName(), getDisplayName(),
+                getPrefix(), getSuffix(), getBlockLocation(), id.toString());
+        other.setWorldName(getWorldName());
+        return other;
     }
 
     private BlockLocation getBlockLocation() {

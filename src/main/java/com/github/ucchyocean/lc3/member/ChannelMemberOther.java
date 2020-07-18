@@ -1,5 +1,6 @@
 package com.github.ucchyocean.lc3.member;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.github.ucchyocean.lc3.util.BlockLocation;
@@ -18,27 +19,31 @@ public class ChannelMemberOther extends ChannelMember {
     private String prefix;
     private String suffix;
     private BlockLocation location;
+    private String serverName;
+    private String worldName;
 
-    public ChannelMemberOther(String name) {
+    public ChannelMemberOther(@NotNull String name) {
         this(name, name);
     }
 
-    public ChannelMemberOther(String name, String displayName) {
+    public ChannelMemberOther(@NotNull String name, @NotNull String displayName) {
         this(name, displayName, "", "");
     }
 
-    public ChannelMemberOther(String name, String displayName,
-            String prefix, String suffix) {
+    public ChannelMemberOther(@NotNull String name, @NotNull String displayName,
+            @NotNull String prefix, @NotNull String suffix) {
         this(name, displayName, prefix, suffix, null);
     }
 
-    public ChannelMemberOther(String name, String displayName,
-            String prefix, String suffix, BlockLocation location) {
+    public ChannelMemberOther(@NotNull String name, @NotNull String displayName,
+            @NotNull String prefix, @NotNull String suffix,
+            @Nullable BlockLocation location) {
         this(name, displayName, prefix, suffix, location, null);
     }
 
-    public ChannelMemberOther(String name, String displayName,
-            String prefix, String suffix, BlockLocation location, String id) {
+    public ChannelMemberOther(@NotNull String name, @NotNull String displayName,
+            @NotNull String prefix, @NotNull String suffix,
+            @Nullable BlockLocation location, @Nullable String id) {
         this.name = name;
         this.displayName = displayName;
         this.prefix = prefix;
@@ -84,10 +89,13 @@ public class ChannelMemberOther extends ChannelMember {
 
     @Override
     public String getWorldName() {
-        if ( location != null ) {
-            return location.getWorldName();
-        }
+        if ( worldName != null ) return worldName;
+        if ( location != null ) return location.getWorldName();
         return "";
+    }
+
+    public void setWorldName(String worldName) {
+        this.worldName = worldName;
     }
 
     public @Nullable BlockLocation getLocation() {
@@ -96,7 +104,14 @@ public class ChannelMemberOther extends ChannelMember {
 
     @Override
     public String getServerName() {
-        return "";
+        return serverName;
+    }
+
+    /**
+     * @param serverName serverName
+     */
+    public void setServerName(String serverName) {
+        this.serverName = serverName;
     }
 
     @Override
@@ -106,8 +121,9 @@ public class ChannelMemberOther extends ChannelMember {
 
     @Override
     public String toString() {
-        return String.format("%s:{name=%s, displayName=%s}",
-                this.getClass().toString(), name, displayName);
+        return String.format(
+                "%s:{id=%s, name=%s, displayName=%s, prefix=%s, suffix=%s, location={%s}, server=%s}",
+                this.getClass().toString(), id, name, displayName, prefix, suffix, location, serverName);
     }
 
     @Override
@@ -126,5 +142,4 @@ public class ChannelMemberOther extends ChannelMember {
     public String getId() {
         return id;
     }
-
 }
