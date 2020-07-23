@@ -261,18 +261,7 @@ public class BukkitEventListener implements Listener {
                 global = api.createChannel(config.getGlobalChannel());
             }
 
-            // LunaChatPreChatEvent イベントコール
-            EventResult result = LunaChat.getEventSender().sendLunaChatPreChatEvent(
-                    global.getName(), player, event.getMessage());
-            if ( result.isCancelled() ) {
-                event.setCancelled(true);
-                return;
-            }
-            Channel alt = result.getChannel();
-            if ( alt != null ) {
-                global = alt;
-            }
-            String message = result.getMessage();
+            String message = event.getMessage();
 
             // デフォルト発言先が無いなら、グローバルチャンネルに設定する
             Channel dchannel = api.getDefaultChannel(player.getName());
