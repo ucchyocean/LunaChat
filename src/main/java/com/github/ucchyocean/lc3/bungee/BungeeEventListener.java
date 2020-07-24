@@ -313,75 +313,99 @@ public class BungeeEventListener implements Listener {
 
         LunaChatConfig config = LunaChat.getConfig();
 
-        // NGワードのマスク
-        message = maskNGWord(message, config.getNgwordCompiled());
+        if ( !config.getGlobalChannel().equals("") ) {
+            // グローバルチャンネル設定がある場合
 
-        // Japanizeをスキップするかどうかフラグ
-        boolean skipJapanize = !LunaChat.getAPI().isPlayerJapanize(member.getName());
-
-        // 一時的なJapanizeスキップが指定されているか確認する
-        String marker = config.getNoneJapanizeMarker();
-        if ( !marker.equals("") && message.startsWith(marker) ) {
-            message = message.substring(marker.length());
-            skipJapanize = true;
-        }
-
-        // 2byteコードを含む、または、半角カタカナのみなら、Japanize変換は行わない
-        String kanaTemp = Utility.stripColorCode(message);
-
-        if ( !skipJapanize &&
-                ( kanaTemp.getBytes(StandardCharsets.UTF_8).length > kanaTemp.length() ||
-                        kanaTemp.matches("[ \\uFF61-\\uFF9F]+") ) ) {
-            skipJapanize = true;
-        }
-
-        // Japanizeの付加
-        if ( !skipJapanize ) {
-
-            String japanize = Japanizer.japanize(Utility.stripColorCode(message), config.getJapanizeType(),
-                    LunaChat.getAPI().getAllDictionary());
-            if ( japanize.length() > 0 ) {
-
-                // NGワードのマスク
-                japanize = maskNGWord(japanize, config.getNgwordCompiled());
-
-                // フォーマット化してメッセージを上書きする
-                String japanizeFormat = config.getJapanizeDisplayLine() == 1 ?
-                        config.getJapanizeLine1Format() :
-                        "%msg\n" + config.getJapanizeLine2Format();
-                String preMessage = new String(message);
-                message = japanizeFormat.replace("%msg", preMessage).replace("%japanize", japanize);
+            // グローバルチャンネルの取得、無ければ作成
+            Channel global = api.getChannel(config.getGlobalChannel());
+            if ( global == null ) {
+                global = api.createChannel(config.getGlobalChannel());
             }
-        }
 
-        String result;
+            // デフォルト発言先が無いなら、グローバルチャンネルに設定する
+            Channel dchannel = api.getDefaultChannel(member.getName());
+            if ( dchannel == null ) {
+                api.setDefaultChannel(member.getName(), global.getName());
+            }
 
-        String f = config.getNormalChatMessageFormat();
-        ClickableFormat format = ClickableFormat.makeFormat(f, member);
-        format.replace("%msg", message);
+            // チャンネルチャット発言
+            chatToChannelWithEvent(member, global, message);
 
-        // hideされているプレイヤーを除くすべてのプレイヤーに、
-        // 発言内容を送信する。
-        BaseComponent[] msg = format.makeTextComponent();
-        List<ChannelMember> hidelist = api.getHidelist(member);
+            return;
 
-        for ( ServerInfo info : parent.getProxy().getServers().values() ) {
-            for ( ProxiedPlayer player : info.getPlayers() ) {
-                if ( !containsHideList(player, hidelist) ) {
-                    sendMessage(player, msg);
+        } else {
+            // グローバルチャンネル設定が無い場合
+
+            // NGワードのマスク
+            message = maskNGWord(message, config.getNgwordCompiled());
+
+            // Japanizeをスキップするかどうかフラグ
+            boolean skipJapanize = !LunaChat.getAPI().isPlayerJapanize(member.getName());
+
+            // 一時的なJapanizeスキップが指定されているか確認する
+            String marker = config.getNoneJapanizeMarker();
+            if ( !marker.equals("") && message.startsWith(marker) ) {
+                message = message.substring(marker.length());
+                skipJapanize = true;
+            }
+
+            // 2byteコードを含む、または、半角カタカナのみなら、Japanize変換は行わない
+            String kanaTemp = Utility.stripColorCode(message);
+
+            if ( !skipJapanize &&
+                    ( kanaTemp.getBytes(StandardCharsets.UTF_8).length > kanaTemp.length() ||
+                            kanaTemp.matches("[ \\uFF61-\\uFF9F]+") ) ) {
+                skipJapanize = true;
+            }
+
+            // Japanizeの付加
+            if ( !skipJapanize ) {
+
+                String japanize = Japanizer.japanize(Utility.stripColorCode(message), config.getJapanizeType(),
+                        LunaChat.getAPI().getAllDictionary());
+                if ( japanize.length() > 0 ) {
+
+                    // NGワードのマスク
+                    japanize = maskNGWord(japanize, config.getNgwordCompiled());
+
+                    // フォーマット化してメッセージを上書きする
+                    String japanizeFormat = config.getJapanizeDisplayLine() == 1 ?
+                            config.getJapanizeLine1Format() :
+                            "%msg\n" + config.getJapanizeLine2Format();
+                    String preMessage = new String(message);
+                    message = japanizeFormat.replace("%msg", preMessage).replace("%japanize", japanize);
                 }
             }
+
+            String result;
+
+            String f = config.getNormalChatMessageFormat();
+            ClickableFormat format = ClickableFormat.makeFormat(f, member);
+            format.replace("%msg", message);
+
+            // hideされているプレイヤーを除くすべてのプレイヤーに、
+            // 発言内容を送信する。
+            BaseComponent[] msg = format.makeTextComponent();
+            List<ChannelMember> hidelist = api.getHidelist(member);
+
+            for ( ServerInfo info : parent.getProxy().getServers().values() ) {
+                for ( ProxiedPlayer player : info.getPlayers() ) {
+                    if ( !containsHideList(player, hidelist) ) {
+                        sendMessage(player, msg);
+                    }
+                }
+            }
+
+            result = format.toLegacyText();
+
+            // コンソールに表示設定なら、コンソールに表示する
+            if ( config.isDisplayChatOnConsole() ) {
+                parent.getLogger().info(result);
+            }
+
+            // ログに記録する
+            LunaChat.getNormalChatLogger().log(Utility.stripColorCode(result), member.getName());
         }
-
-        result = format.toLegacyText();
-
-        // コンソールに表示設定なら、コンソールに表示する
-        if ( config.isDisplayChatOnConsole() ) {
-            parent.getLogger().info(result);
-        }
-
-        // ログに記録する
-        LunaChat.getNormalChatLogger().log(Utility.stripColorCode(result), member.getName());
     }
 
     /**
