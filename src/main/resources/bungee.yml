@@ -1,5 +1,5 @@
 name: ${project.name}
 main: com.github.ucchyocean.lc3.LunaChatBungee
 version: ${project.version}
-author: ucchy, YukiLeafX, LazyGon
+author: ucchy, YukiLeafX, LazyGon, tomo1560
 description: ${project.description}
