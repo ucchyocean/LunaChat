@@ -18,12 +18,6 @@ public class LunaChat {
     /** Bukkit->BungeeCord チャット発言内容の転送に使用するプラグインメッセージチャンネル名 */
     public static final String PMC_MESSAGE = "lunachat:message";
 
-    /** Bukkit->BungeeCord API実行処理の転送に使用するプラグインメッセージチャンネル名 */
-    public static final String PMC_API = "lunachat:api";
-
-    /** BungeeCord->Bukkit イベント通知の転送に使用するプラグインメッセージチャンネル名 */
-    public static final String PMC_EVENT = "lunachat:event";
-
     private static PluginInterface instance;
     private static LunaChatMode mode;
     private static EventSenderInterface esender;
