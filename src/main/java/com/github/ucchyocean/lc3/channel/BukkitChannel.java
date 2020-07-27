@@ -179,6 +179,7 @@ public class BukkitChannel extends Channel {
             for ( ChannelMember p : recipients ) {
                 p.sendMessage(comps);
             }
+            message = format.toLegacyText();
         } else {
             for ( ChannelMember p : recipients ) {
                 p.sendMessage(message);
