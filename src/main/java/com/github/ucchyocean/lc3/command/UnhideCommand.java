@@ -106,7 +106,7 @@ public class UnhideCommand extends LunaChatSubCommand {
         Channel channel = api.getChannel(cname);
         if ( !isPlayerCommand && channel != null ) {
             isChannelCommand = true;
-        } else if ( Utility.existsOfflinePlayer(cname) ) {
+        } else if ( !Utility.existsOfflinePlayer(cname) ) {
             sender.sendMessage(Messages.errmsgNotExistChannelAndPlayer());
             return true;
         }
