@@ -11,6 +11,9 @@ import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.channel.Channel;
 import com.github.ucchyocean.lc3.member.ChannelMember;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 1:1チャット送信コマンド
  * @author ucchy
@@ -111,5 +114,38 @@ public class LunaChatMessageCommand {
      */
     private void printUsage(ChannelMember sender, String label) {
         sender.sendMessage(Messages.usageMessage(label));
+    }
+
+    /**
+     * TABキー補完が実行されたときに呼び出されるメソッド
+     * @param sender TABキー補完の実行者
+     * @param label 実行されたコマンドのラベル
+     * @param args 実行されたコマンドの引数
+     * @return 補完候補
+     */
+    public List<String> onTabComplete(ChannelMember sender, String label, String[] args) {
+        if ( args.length == 1 ) {
+            // プレイヤー名で補完する
+            String arg = args[0].toLowerCase();
+            return getListPlayerNames(arg);
+
+        }
+        return new ArrayList<>();
+    }
+
+    /**
+     * 送信者以外のオンラインプレイヤーのうち、プレイヤー名が指定された文字列と前方一致するものをリストにして返す
+     * @param pre 検索キー
+     * @return プレイヤー名リスト
+     */
+    private List<String> getListPlayerNames(String pre) {
+        String prefix = pre.toLowerCase();
+        List<String> items = new ArrayList<String>();
+        for ( String pname : LunaChat.getPlugin().getOnlinePlayerNames() ) {
+            if ( pname.toLowerCase().startsWith(prefix) ) {
+                items.add(pname);
+            }
+        }
+        return items;
     }
 }
