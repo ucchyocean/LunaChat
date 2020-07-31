@@ -906,8 +906,9 @@ public abstract class Channel {
             channel = new BukkitChannel(name);
         } else if ( LunaChat.getMode() == LunaChatMode.BUNGEE ) {
             channel = new BungeeChannel(name);
+        } else {
+            channel = new StandaloneChannel(name);
         }
-        // TODO Standalone のチャンネル作成
 
         channel.alias = castWithDefault(data.get(KEY_ALIAS), "");
         channel.description = castWithDefault(data.get(KEY_DESC), "");

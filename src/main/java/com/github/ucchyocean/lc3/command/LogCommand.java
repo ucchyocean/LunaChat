@@ -82,6 +82,9 @@ public class LogCommand extends LunaChatSubCommand {
         String argsDate = null;
         boolean reverse = false;
 
+        // senderがnullなら何もしない
+        if ( sender == null ) return true;
+
         int index = 1;
         if ( args.length >= 2 && !args[1].contains("=")) {
             cname = args[1];
@@ -101,7 +104,7 @@ public class LogCommand extends LunaChatSubCommand {
             }
         }
 
-        if ( sender != null && cname == null ) {
+        if ( cname == null ) {
             Channel def = api.getDefaultChannel(sender.getName());
             if ( def != null ) {
                 cname = def.getName();
@@ -138,7 +141,7 @@ public class LogCommand extends LunaChatSubCommand {
             }
 
             // BANされていないかどうか確認する
-            if ( sender != null && channel.getBanned().contains(sender) ) {
+            if ( channel.getBanned().contains(sender) ) {
                 sender.sendMessage(Messages.errmsgBanned());
                 return true;
             }
