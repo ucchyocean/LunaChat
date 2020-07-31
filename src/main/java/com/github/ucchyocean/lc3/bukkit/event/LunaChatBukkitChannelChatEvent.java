@@ -13,16 +13,16 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  */
 public class LunaChatBukkitChannelChatEvent extends LunaChatBukkitBaseCancellableEvent {
 
-    private ChannelMember player;
+    private ChannelMember member;
     private String originalMessage;
     private String ngMaskedMessage;
     private String messageFormat;
 
-    public LunaChatBukkitChannelChatEvent(String channelName, ChannelMember player,
+    public LunaChatBukkitChannelChatEvent(String channelName, ChannelMember member,
             String originalMessage, String ngMaskedMessage,
             String messageFormat) {
         super(channelName);
-        this.player = player;
+        this.member = member;
         this.originalMessage = originalMessage;
         this.ngMaskedMessage = ngMaskedMessage;
         this.messageFormat = messageFormat;
@@ -32,8 +32,8 @@ public class LunaChatBukkitChannelChatEvent extends LunaChatBukkitBaseCancellabl
      * 発言を行ったプレイヤーを取得します。
      * @return 発言したプレイヤー
      */
-    public ChannelMember getPlayer() {
-        return player;
+    public ChannelMember getMember() {
+        return member;
     }
 
     /**

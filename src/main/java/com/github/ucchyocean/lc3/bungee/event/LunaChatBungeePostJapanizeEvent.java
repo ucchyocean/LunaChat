@@ -13,21 +13,21 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  */
 public class LunaChatBungeePostJapanizeEvent extends LunaChatBungeeBaseCancellableEvent {
 
-    private ChannelMember player;
+    private ChannelMember member;
     private String original;
     private String japanized;
 
     /**
      * コンストラクタ
      * @param channelName チャンネル名
-     * @param player 発言したプレイヤー
+     * @param member 発言したプレイヤー
      * @param original 変換前の文字列
      * @param japanized 変換後の文字列
      */
-    public LunaChatBungeePostJapanizeEvent(String channelName, ChannelMember player,
+    public LunaChatBungeePostJapanizeEvent(String channelName, ChannelMember member,
             String original, String japanized) {
         super(channelName);
-        this.player = player;
+        this.member = member;
         this.original = original;
         this.japanized = japanized;
     }
@@ -36,8 +36,8 @@ public class LunaChatBungeePostJapanizeEvent extends LunaChatBungeeBaseCancellab
      * 発言を行ったプレイヤーを取得します。
      * @return 発言したプレイヤー
      */
-    public ChannelMember getPlayer() {
-        return player;
+    public ChannelMember getMember() {
+        return member;
     }
 
     /**

@@ -17,17 +17,17 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  */
 public class LunaChatBungeeChannelMessageEvent extends LunaChatBungeeBaseEvent {
 
-    private ChannelMember player;
+    private ChannelMember member;
     private String message;
     private List<ChannelMember> recipients;
     private String displayName;
     private String originalMessage;
 
     public LunaChatBungeeChannelMessageEvent(String channelName,
-            ChannelMember player, String message, List<ChannelMember> recipients,
+            ChannelMember member, String message, List<ChannelMember> recipients,
             String displayName, String originalMessage) {
         super(channelName);
-        this.player = player;
+        this.member = member;
         this.message = message;
         this.recipients = recipients;
         this.displayName = displayName;
@@ -38,8 +38,8 @@ public class LunaChatBungeeChannelMessageEvent extends LunaChatBungeeBaseEvent {
      * 発言したプレイヤー、システムメッセージの場合はnullになることに注意
      * @return player 発言プレイヤー
      */
-    public ChannelMember getPlayer() {
-        return player;
+    public ChannelMember getMember() {
+        return member;
     }
 
     /**

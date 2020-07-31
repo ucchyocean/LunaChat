@@ -14,12 +14,12 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  */
 public class LunaChatBungeePreChatEvent extends LunaChatBungeeBaseCancellableEvent {
 
-    private ChannelMember player;
+    private ChannelMember member;
     private String message;
 
-    public LunaChatBungeePreChatEvent(String channelName, ChannelMember player, String message) {
+    public LunaChatBungeePreChatEvent(String channelName, ChannelMember member, String message) {
         super(channelName);
-        this.player = player;
+        this.member = member;
         this.message = message;
     }
 
@@ -27,8 +27,8 @@ public class LunaChatBungeePreChatEvent extends LunaChatBungeeBaseCancellableEve
      * 発言を行ったプレイヤーを取得します。
      * @return 発言したプレイヤー
      */
-    public ChannelMember getPlayer() {
-        return player;
+    public ChannelMember getMember() {
+        return member;
     }
 
     /**
