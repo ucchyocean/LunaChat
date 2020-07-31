@@ -121,9 +121,8 @@ public class ChannelMemberOther extends ChannelMember {
 
     @Override
     public String toString() {
-        return String.format(
-                "%s:{id=%s, name=%s, displayName=%s, prefix=%s, suffix=%s, location={%s}, server=%s}",
-                this.getClass().toString(), id, name, displayName, prefix, suffix, location, serverName);
+        if ( id != null ) return "$" + id;
+        return name;
     }
 
     @Override
