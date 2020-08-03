@@ -63,7 +63,8 @@ formatConstraint: ['%username','%msg']
 # %color: Channel color
 # %displayname: Speaker display name
 # %player: Speaker ID
-# %world: world name
+# %server: Speaker's connection server name (valid when installed on BungeeCord side.)
+# %world : World name
 # %prefix: prefix (replaced if Vault and Prefix/Suffix plugin are installed)
 # %suffix: suffix (replaced if Vault and Prefix/Suffix plugin are installed)
 # %date: date

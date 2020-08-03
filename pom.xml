@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.ucchyocean</groupId>
   <artifactId>LunaChat</artifactId>
-  <version>3.0.8</version>
+  <version>3.0.9</version>
   <description>A powerfull chat channel plugin with IME (Kana-Kanji conversion) support</description>
   <url>https://github.com/ucchyocean/LunaChat</url>
 

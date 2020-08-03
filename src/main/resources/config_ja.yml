@@ -63,9 +63,10 @@ formatConstraint: ['%username', '%msg']
 # %color    : チャンネルカラー
 # %displayname : 発言者表示名
 # %player   : 発言者ID
+# %server   : 発言者の接続サーバー名（BungeeCord側に導入したときに有効です。）
 # %world    : 発言したワールド名
-# %prefix   : プレフィックス（VaultとPermissionsExが導入されている場合に置き換えられます）
-# %suffix   : サフィックス（VaultとPermissionsExが導入されている場合に置き換えられます）
+# %prefix   : プレフィックス（Vaultとパーミッション管理プラグインが導入されている場合に置き換えられます）
+# %suffix   : サフィックス（Vaultとパーミッション管理プラグインが導入されている場合に置き換えられます）
 # %date     : 日付
 # %time     : 時刻
 # %msg      : 発言内容（Japanize変換された場合は、Japanize結果を含みます。）
