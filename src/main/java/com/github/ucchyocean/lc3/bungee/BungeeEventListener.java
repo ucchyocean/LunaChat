@@ -399,7 +399,7 @@ public class BungeeEventListener implements Listener {
             result = format.toLegacyText();
 
             // コンソールに表示設定なら、コンソールに表示する
-            if ( config.isDisplayChatOnConsole() ) {
+            if ( config.isDisplayNormalChatOnConsole() ) {
                 parent.getLogger().info(result);
             }
 

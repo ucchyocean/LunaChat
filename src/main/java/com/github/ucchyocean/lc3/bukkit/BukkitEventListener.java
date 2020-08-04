@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -179,14 +180,26 @@ public class BukkitEventListener implements Listener {
 
         // Bungeeパススルーモードなら、メッセージを返送して終了する
         if ( config.isBungeePassThroughMode() ) {
-            ChannelMember player = ChannelMember.getChannelMember(event.getPlayer());
-            if ( player instanceof ChannelMemberPlayer ) {
-                ChannelMemberOther other = ((ChannelMemberPlayer)player).toChannelMemberOther();
+
+            // メッセージの返送
+            ChannelMember member = ChannelMember.getChannelMember(event.getPlayer());
+            if ( member instanceof ChannelMemberPlayer ) {
+                ChannelMemberOther other = ((ChannelMemberPlayer)member).toChannelMemberOther();
                 BukkitChatMessage msg = new BukkitChatMessage(other, event.getMessage());
                 LunaChatBukkit.getInstance().sendPluginMessage(msg.toByteArray());
-                event.setCancelled(true);
-                return;
+
+                // 設定が有効ならコンソールに表示する
+                if ( config.isDisplayNormalChatOnConsole() ) {
+                    String logmsg = event.getFormat()
+                            .replace("%1$s", member.getDisplayName())
+                            .replace("%2$s", event.getMessage());
+                    LunaChat.getPlugin().log(Level.INFO, logmsg);
+                }
             }
+
+            // イベントをキャンセルして終了する
+            event.setCancelled(true);
+            return;
         }
 
         // 頭にglobalMarkerが付いている場合は、グローバル発言にする
@@ -395,6 +408,11 @@ public class BukkitEventListener implements Listener {
                 // イベントのキャンセル
                 event.setCancelled(true);
 
+                // 設定が有効ならコンソールに表示する
+                if ( config.isDisplayNormalChatOnConsole() ) {
+                    LunaChat.getPlugin().log(Level.INFO, makeLegacyText(comps));
+                }
+
             } else {
                 // 通常チャットイベントで発言
 
@@ -585,5 +603,18 @@ public class BukkitEventListener implements Listener {
     private boolean matchesEventPriority(EventPriority priority) {
         String c = LunaChat.getConfig().getPlayerChatEventListenerPriority().name();
         return c.equals(priority.name());
+    }
+
+    /**
+     * BaseComponent配列を、カラーコードを含むStringに変換する
+     * @param comps BaseComponentの配列
+     * @return カラーコードを含むString
+     */
+    private static String makeLegacyText(BaseComponent[] comps) {
+        StringBuilder builder = new StringBuilder();
+        for ( BaseComponent comp : comps ) {
+            builder.append(comp.toLegacyText());
+        }
+        return builder.toString();
     }
 }

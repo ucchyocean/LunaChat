@@ -178,6 +178,10 @@ enableNormalChatColorCode: true
 # Note that channel chats are always clickable, regardless of this setting.
 enableNormalChatClickable: false
 
+# Whether to log normal chat (non-channel chat) to console.
+# Even if this item is set to false, it may be recorded in the console.
+displayNormalChatOnConsole: true
+
 
 # -------------------- Japanize conversion settings --------------------
 

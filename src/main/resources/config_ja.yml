@@ -182,6 +182,10 @@ enableNormalChatColorCode: true
 # なお、この設定に関係なく、チャンネルチャットは常にクリック可能です。
 enableNormalChatClickable: false
 
+# 通常チャット（非チャンネルチャット）をコンソールにログ出力するかどうか。
+# 本項目をfalseにしても、コンソールに記録される場合があります。
+displayNormalChatOnConsole: true
+
 
 # -------------------- Japanize変換設定 --------------------
 
