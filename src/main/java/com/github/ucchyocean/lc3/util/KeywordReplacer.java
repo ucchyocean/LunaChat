@@ -29,9 +29,10 @@ public class KeywordReplacer {
      * @param value 値
      */
     public void replace(String keyword, String value) {
-        int start;
-        while ( (start = str.indexOf(keyword)) > -1 ) {
-            str.replace(start, start + keyword.length(), value);
+        int index = 0;
+        while ( (index = str.indexOf(keyword, index)) > -1 ) {
+            str.replace(index, index + keyword.length(), value);
+            index += value.length();
         }
     }
 
