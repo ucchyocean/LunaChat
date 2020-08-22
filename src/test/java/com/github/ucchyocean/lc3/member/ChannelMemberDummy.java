@@ -37,7 +37,7 @@ public class ChannelMemberDummy extends ChannelMember {
      */
     @Override
     public String getDisplayName() {
-        return "うっちぃ";
+        return "&aうっちぃ";
     }
 
     /**

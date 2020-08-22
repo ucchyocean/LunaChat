@@ -39,11 +39,16 @@ public class ClickableFormatTest extends TestCase {
 
         Messages.initialize(new File(MESSAGES_FOLDER), null, "ja");
 
-        String format = "&f[%color%ch&f]%prefix%displayname%suffix&a:&f %msg";
+        //String format = "&f[%color%ch&f]%prefix%displayname%suffix&a:&f %msg";
+        String format = "&7[%color%ch&7]%prefix%username: &f%msg";
+        String jpFormat = "%japanize&7 $%msg";
+
         ChannelMember member = new ChannelMemberDummy();
         Channel channel = new StandaloneChannel("r");
+        channel.setColorCode(ChatColor.AQUA.toString());
 
         ClickableFormat f = ClickableFormat.makeFormat(format, member, channel, true);
+        f.replace("%msg", jpFormat);
 
         System.out.println("pre = " + f.toString() + ", legacy text = " + f.toLegacyText());
 

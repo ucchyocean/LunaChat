@@ -213,6 +213,13 @@ public class ClickableFormat {
             } else { // type.equals("SUGGEST_COMMAND")
                 tc.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command));
             }
+
+            // componentsの最後の要素のカラーコードを、TextComponentにも反映させる。 see issue #202
+            if ( components.size() > 0 ) {
+                BaseComponent last = components.get(components.size() - 1);
+                tc.setColor(last.getColor());
+            }
+
             components.add(tc);
 
             lastIndex = matcher.end();

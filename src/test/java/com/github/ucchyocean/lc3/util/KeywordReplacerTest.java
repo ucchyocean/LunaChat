@@ -15,7 +15,7 @@ public class KeywordReplacerTest extends TestCase {
 
     private static final int MAX = 10;
 
-    public void test() {
+    public void testSpeedOfReplacement() {
 
         String testee = "";
         for ( int i=1; i<=MAX; i++ ) {
@@ -43,7 +43,7 @@ public class KeywordReplacerTest extends TestCase {
         assertTrue(test1.equals(test2.toString()));
     }
 
-    public void testaaa() {
+    public void testSafetyOfRecursiveReplacement() {
 
         String testee = "%prefix%username&f: %msg";
         String keyword = "%msg";

@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -188,7 +187,7 @@ public class BukkitChannel extends Channel {
 
         // 設定に応じて、コンソールに出力する
         if ( config.isDisplayChatOnConsole() ) {
-            Bukkit.getLogger().info(ChatColor.stripColor(message));
+            Bukkit.getLogger().info(message);
         }
 
         // 受信者が自分以外いない場合は、メッセージを表示する
