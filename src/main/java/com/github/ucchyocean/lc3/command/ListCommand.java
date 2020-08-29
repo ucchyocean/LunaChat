@@ -83,7 +83,7 @@ public class ListCommand extends LunaChatSubCommand {
             ChannelMember sender, String label, String[] args) {
 
         int page = 1;
-        if ( args.length >= 2 && args[1].matches("[0-9]") ) {
+        if ( args.length >= 2 && args[1].matches("[0-9]+") ) {
             page = Integer.parseInt(args[1]);
         }
 
