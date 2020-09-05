@@ -179,7 +179,8 @@ public class BungeeEventListener implements Listener {
         }
 
         for ( Channel channel : deleteList ) {
-            LunaChat.getAPI().removeChannel(channel.getName());
+            LunaChat.getAPI().removeChannel(
+                    channel.getName(), ChannelMember.getChannelMember(player));
         }
     }
 
@@ -319,7 +320,7 @@ public class BungeeEventListener implements Listener {
             // グローバルチャンネルの取得、無ければ作成
             Channel global = api.getChannel(config.getGlobalChannel());
             if ( global == null ) {
-                global = api.createChannel(config.getGlobalChannel());
+                global = api.createChannel(config.getGlobalChannel(), member);
             }
 
             // デフォルト発言先が無いなら、グローバルチャンネルに設定する
@@ -468,7 +469,7 @@ public class BungeeEventListener implements Listener {
             // チャンネルが存在しない場合は作成する
             Channel channel = api.getChannel(cname);
             if ( channel == null ) {
-                channel = api.createChannel(cname);
+                channel = api.createChannel(cname, ChannelMember.getChannelMember(player));
             }
 
             // チャンネルのメンバーでないなら、参加する
@@ -500,7 +501,7 @@ public class BungeeEventListener implements Listener {
         // チャンネルが存在しない場合は作成する
         Channel global = api.getChannel(gcName);
         if ( global == null ) {
-            global = api.createChannel(gcName);
+            global = api.createChannel(gcName, ChannelMember.getChannelMember(player));
         }
 
         // デフォルト発言先が無いなら、グローバルチャンネルに設定する

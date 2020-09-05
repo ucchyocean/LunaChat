@@ -141,7 +141,7 @@ public class JoinCommand extends LunaChatSubCommand {
                 }
 
                 // チャンネル作成
-                Channel c = api.createChannel(channelName);
+                Channel c = api.createChannel(channelName, sender);
                 if ( c != null ) {
                     c.addMember(sender);
                     sender.sendMessage(Messages.cmdmsgCreate(channelName));

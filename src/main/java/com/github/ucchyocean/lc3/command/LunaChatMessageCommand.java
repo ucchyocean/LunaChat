@@ -5,14 +5,14 @@
  */
 package com.github.ucchyocean.lc3.command;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.github.ucchyocean.lc3.LunaChat;
 import com.github.ucchyocean.lc3.LunaChatAPI;
 import com.github.ucchyocean.lc3.Messages;
 import com.github.ucchyocean.lc3.channel.Channel;
 import com.github.ucchyocean.lc3.member.ChannelMember;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 1:1チャット送信コマンド
@@ -86,7 +86,7 @@ public class LunaChatMessageCommand {
         Channel channel = api.getChannel(cname);
         if ( channel == null ) {
             // チャンネルを作成して、送信者、受信者をメンバーにする
-            channel = api.createChannel(cname);
+            channel = api.createChannel(cname, inviter);
             channel.setVisible(false);
             channel.addMember(inviter);
             channel.addMember(invited);

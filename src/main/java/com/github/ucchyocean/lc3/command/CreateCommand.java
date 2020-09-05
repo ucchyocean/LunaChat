@@ -113,7 +113,7 @@ public class CreateCommand extends LunaChatSubCommand {
         }
 
         // チャンネル作成
-        Channel channel = api.createChannel(name);
+        Channel channel = api.createChannel(name, sender);
         if ( channel != null ) {
             channel.setDescription(desc);
             channel.save();

@@ -107,7 +107,7 @@ public class RemoveCommand extends LunaChatSubCommand {
         }
 
         // チャンネル削除
-        if ( api.removeChannel(cname) ) {
+        if ( api.removeChannel(cname, sender) ) {
             sender.sendMessage(Messages.cmdmsgRemove(cname));
         }
         return true;
