@@ -65,57 +65,12 @@ public class BukkitChannel extends Channel {
         if ( isBroadcastChannel() ) {
             // ブロードキャストチャンネル
 
-            if ( isWorldRange() && player.isOnline() && player.getWorldName() != null ) {
-
-                if ( player instanceof ChannelMemberBukkit ) {
-                    // ↑常にtrueだと思うが、念のため。
-
-                    World w = ((ChannelMemberBukkit)player).getWorld();
-
-                    if ( getChatRange() > 0 ) {
-                        // 範囲チャット
-
-                            Location origin = ((ChannelMemberBukkit)player).getLocation();
-                            for ( Player p : Bukkit.getOnlinePlayers() ) {
-                                ChannelMember cp = ChannelMember.getChannelMember(p);
-                                if ( p.getWorld().equals(w) &&
-                                        origin.distance(p.getLocation()) <= getChatRange() &&
-                                        !getHided().contains(cp) ) {
-                                    recipients.add(ChannelMember.getChannelMember(p));
-                                }
-                            }
-
-                    } else {
-                        // ワールドチャット
-
-                        for ( Player p : Bukkit.getOnlinePlayers() ) {
-                            ChannelMember cp = ChannelMember.getChannelMember(p);
-                            if ( p.getWorld().equals(w) && !getHided().contains(cp) ) {
-                                recipients.add(ChannelMember.getChannelMember(p));
-                            }
-                        }
-                    }
-
-                    // 受信者が自分以外いない場合は、メッセージを表示する
-                    if ( Messages.noRecipientMessage("", "").length > 0 && (
-                            recipients.size() == 0 ||
-                            (recipients.size() == 1 &&
-                             recipients.get(0).getName().equals(player.getName()) ) ) ) {
-                        sendNoRecipientMessage = true;
-                    }
-                }
-
-            } else {
-                // 通常ブロードキャスト（全員へ送信）
-
-                for ( Player p : Bukkit.getOnlinePlayers() ) {
-                    ChannelMember cp = ChannelMember.getChannelMember(p);
-                    if ( !getHided().contains(cp) ) {
-                        recipients.add(cp);
-                    }
+            for ( Player p : Bukkit.getOnlinePlayers() ) {
+                ChannelMember cp = ChannelMember.getChannelMember(p);
+                if ( !getHided().contains(cp) ) {
+                    recipients.add(cp);
                 }
             }
-
         } else {
             // 通常チャンネル
 
@@ -123,6 +78,47 @@ public class BukkitChannel extends Channel {
                 if ( mem != null && mem.isOnline() && !getHided().contains(mem) ) {
                     recipients.add(mem);
                 }
+            }
+        }
+
+        if ( isWorldRange() && player.isOnline() && player.getWorldName() != null ) {
+            // ワールドチャットや範囲チャットの場合は、範囲外のプレイヤーをrecipientsから抜く
+
+            List<ChannelMember> recipientsNew = new ArrayList<>();
+
+            if ( getChatRange() > 0 ) {
+                // 範囲チャット
+
+                @Nullable Location origin = ((ChannelMemberBukkit)player).getLocation();
+                for ( ChannelMember recipient : recipients ) {
+                    @Nullable Location target = ((ChannelMemberBukkit)recipient).getLocation();
+                    if ( origin != null && target != null &&
+                            origin.getWorld().equals(target.getWorld()) &&
+                            origin.distance(target) <= getChatRange() ) {
+                        recipientsNew.add(recipient);
+                    }
+                }
+
+            } else {
+                // ワールドチャット
+
+                @Nullable World w = ((ChannelMemberBukkit)player).getWorld();
+                for ( ChannelMember recipient : recipients ) {
+                    @Nullable World target = ((ChannelMemberBukkit)recipient).getWorld();
+                    if ( w != null && target != null && w.equals(target) ) {
+                        recipientsNew.add(recipient);
+                    }
+                }
+            }
+
+            recipients = recipientsNew;
+
+            // 受信者が自分以外いない場合は、メッセージを表示する
+            if ( Messages.noRecipientMessage("", "").length > 0 && (
+                    recipients.size() == 0 ||
+                    (recipients.size() == 1 &&
+                     recipients.get(0).getName().equals(player.getName()) ) ) ) {
+                sendNoRecipientMessage = true;
             }
         }
 
