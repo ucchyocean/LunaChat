@@ -272,6 +272,8 @@ public abstract class Channel {
         // チャンネルで許可されていて、発言者がパーミッションを持っている場合に置き換える
         if ( isAllowCC() && player.hasPermission("lunachat.allowcc") ) {
             maskedMessage = Utility.replaceColorCode(maskedMessage);
+        } else {
+            maskedMessage = Utility.stripColorCode(maskedMessage);
         }
 
         // LunaChatChannelChatEvent イベントコール
