@@ -67,42 +67,42 @@ public class BukkitChannel extends Channel {
 
             if ( isWorldRange() && player.isOnline() && player.getWorldName() != null ) {
 
-                World w = Bukkit.getWorld(player.getWorldName());
+                if ( player instanceof ChannelMemberBukkit ) {
+                    // ↑常にtrueだと思うが、念のため。
 
-                if ( getChatRange() > 0 ) {
-                    // 範囲チャット
+                    World w = ((ChannelMemberBukkit)player).getWorld();
 
-                    if ( player instanceof ChannelMemberBukkit ) {
-                        // ↑常にtrueだと思うが、念のため。
+                    if ( getChatRange() > 0 ) {
+                        // 範囲チャット
 
-                        Location origin = ((ChannelMemberBukkit)player).getLocation();
+                            Location origin = ((ChannelMemberBukkit)player).getLocation();
+                            for ( Player p : Bukkit.getOnlinePlayers() ) {
+                                ChannelMember cp = ChannelMember.getChannelMember(p);
+                                if ( p.getWorld().equals(w) &&
+                                        origin.distance(p.getLocation()) <= getChatRange() &&
+                                        !getHided().contains(cp) ) {
+                                    recipients.add(ChannelMember.getChannelMember(p));
+                                }
+                            }
+
+                    } else {
+                        // ワールドチャット
+
                         for ( Player p : Bukkit.getOnlinePlayers() ) {
                             ChannelMember cp = ChannelMember.getChannelMember(p);
-                            if ( p.getWorld().equals(w) &&
-                                    origin.distance(p.getLocation()) <= getChatRange() &&
-                                    !getHided().contains(cp) ) {
+                            if ( p.getWorld().equals(w) && !getHided().contains(cp) ) {
                                 recipients.add(ChannelMember.getChannelMember(p));
                             }
                         }
                     }
 
-                } else {
-                    // ワールドチャット
-
-                    for ( Player p : Bukkit.getOnlinePlayers() ) {
-                        ChannelMember cp = ChannelMember.getChannelMember(p);
-                        if ( p.getWorld().equals(w) && !getHided().contains(cp) ) {
-                            recipients.add(ChannelMember.getChannelMember(p));
-                        }
+                    // 受信者が自分以外いない場合は、メッセージを表示する
+                    if ( Messages.noRecipientMessage("", "").length > 0 && (
+                            recipients.size() == 0 ||
+                            (recipients.size() == 1 &&
+                             recipients.get(0).getName().equals(player.getName()) ) ) ) {
+                        sendNoRecipientMessage = true;
                     }
-                }
-
-                // 受信者が自分以外いない場合は、メッセージを表示する
-                if ( Messages.noRecipientMessage("", "").length > 0 && (
-                        recipients.size() == 0 ||
-                        (recipients.size() == 1 &&
-                         recipients.get(0).getName().equals(player.getName()) ) ) ) {
-                    sendNoRecipientMessage = true;
                 }
 
             } else {
