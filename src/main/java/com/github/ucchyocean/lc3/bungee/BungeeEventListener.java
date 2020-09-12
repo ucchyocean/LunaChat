@@ -242,8 +242,12 @@ public class BungeeEventListener implements Listener {
             return;
         }
 
-        // 発言内容を処理する
-        processChat(ChannelMember.getChannelMember(event.getSender()), event.getMessage());
+        // 発言内容を非同期で処理する
+        ProxyServer.getInstance().getScheduler().runAsync(LunaChatBungee.getInstance(), new Runnable() {
+            public void run() {
+                processChat(ChannelMember.getChannelMember(event.getSender()), event.getMessage());
+            }
+        });
 
         // イベントをキャンセル
         event.setCancelled(true);
