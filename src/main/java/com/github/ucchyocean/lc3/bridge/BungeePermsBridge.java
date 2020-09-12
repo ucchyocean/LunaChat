@@ -40,7 +40,8 @@ public class BungeePermsBridge {
      * @return the full prefix; may be null
      */
     public String userPrefix(String nameoruuid, String server, String world) {
-        return BungeePermsAPI.userPrefix(nameoruuid, server, world);
+        String prefix = BungeePermsAPI.userPrefix(nameoruuid, server, world);
+        return (prefix != null) ? prefix : "";
     }
 
     /**
@@ -51,6 +52,7 @@ public class BungeePermsBridge {
      * @return the full suffix; may be null
      */
     public String userSuffix(String nameoruuid, String server, String world) {
-        return BungeePermsAPI.userSuffix(nameoruuid, server, world);
+        String suffix = BungeePermsAPI.userSuffix(nameoruuid, server, world);
+        return (suffix != null) ? suffix : "";
     }
 }

@@ -49,7 +49,8 @@ public class VaultChatBridge {
      * @return プレイヤーのprefix
      */
     public String getPlayerPrefix(Player player) {
-        return chatPlugin.getPlayerPrefix(player);
+        String prefix = chatPlugin.getPlayerPrefix(player);
+        return (prefix != null) ? prefix : "";
     }
 
     /**
@@ -58,6 +59,7 @@ public class VaultChatBridge {
      * @return プレイヤーのsuffix
      */
     public String getPlayerSuffix(Player player) {
-        return chatPlugin.getPlayerSuffix(player);
+        String suffix = chatPlugin.getPlayerSuffix(player);
+        return (suffix != null) ? suffix : "";
     }
 }
