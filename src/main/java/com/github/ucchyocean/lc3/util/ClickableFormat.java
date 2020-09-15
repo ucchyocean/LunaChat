@@ -203,7 +203,7 @@ public class ClickableFormat {
             String text = matcher.group(2);
             String hover = matcher.group(3);
             String command = matcher.group(4);
-            TextComponent tc = new TextComponent(text);
+            TextComponent tc = new TextComponent(TextComponent.fromLegacyText(text));
             if ( !hover.isEmpty() ) {
                 tc.setHoverEvent(new HoverEvent(
                         HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(hover).create()));
