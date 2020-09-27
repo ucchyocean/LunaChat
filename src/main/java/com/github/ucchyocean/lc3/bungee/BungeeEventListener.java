@@ -70,6 +70,7 @@ public class BungeeEventListener implements Listener {
      */
     @EventHandler(priority=EventPriority.LOWEST)
     public void onAsyncPlayerChatLowest(ChatEvent event) {
+        if ( event.isCancelled() ) return;
         if ( matchesEventPriority(EventPriority.LOWEST) ) {
             processChatEvent(event);
         }
@@ -81,6 +82,7 @@ public class BungeeEventListener implements Listener {
      */
     @EventHandler(priority=EventPriority.LOW)
     public void onAsyncPlayerChatLow(ChatEvent event) {
+        if ( event.isCancelled() ) return;
         if ( matchesEventPriority(EventPriority.LOW) ) {
             processChatEvent(event);
         }
@@ -92,6 +94,7 @@ public class BungeeEventListener implements Listener {
      */
     @EventHandler(priority=EventPriority.NORMAL)
     public void onAsyncPlayerChatNormal(ChatEvent event) {
+        if ( event.isCancelled() ) return;
         if ( matchesEventPriority(EventPriority.NORMAL) ) {
             processChatEvent(event);
         }
@@ -103,6 +106,7 @@ public class BungeeEventListener implements Listener {
      */
     @EventHandler(priority=EventPriority.HIGH)
     public void onAsyncPlayerChatHigh(ChatEvent event) {
+        if ( event.isCancelled() ) return;
         if ( matchesEventPriority(EventPriority.HIGH) ) {
             processChatEvent(event);
         }
@@ -114,6 +118,7 @@ public class BungeeEventListener implements Listener {
      */
     @EventHandler(priority=EventPriority.HIGHEST)
     public void onAsyncPlayerChatHighest(ChatEvent event) {
+        if ( event.isCancelled() ) return;
         if ( matchesEventPriority(EventPriority.HIGHEST) ) {
             processChatEvent(event);
         }
