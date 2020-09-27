@@ -205,8 +205,13 @@ public class ClickableFormat {
             String command = matcher.group(4);
             TextComponent tc = new TextComponent(TextComponent.fromLegacyText(text));
             if ( !hover.isEmpty() ) {
-                tc.setHoverEvent(new HoverEvent(
-                        HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(hover).create()));
+                @SuppressWarnings("deprecation")
+                HoverEvent event = new HoverEvent(
+                        HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(hover).create());
+                // bungeecord-chat v1.16-R0.3 style.
+//                HoverEvent event = new HoverEvent(
+//                        HoverEvent.Action.SHOW_TEXT, new Text(hover));
+                tc.setHoverEvent(event);
             }
             if ( type.equals("RUN_COMMAND") ) {
                 tc.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
