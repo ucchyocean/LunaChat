@@ -261,7 +261,7 @@ public class ChannelManager implements LunaChatAPI {
     @Override
     public boolean isPlayerJapanize(String playerName) {
         if ( !japanize.containsKey(playerName) ) {
-            return true;
+            return LunaChat.getConfig().isJapanizePlayerDefault();
         }
         return japanize.get(playerName);
     }

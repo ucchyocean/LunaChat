@@ -145,6 +145,9 @@ public class LunaChatConfig {
     /** ノンジャパナイズマーカー これが発言の頭に入っている場合は、一時的にjapanizeを実行しない */
     private String noneJapanizeMarker;
 
+    /** プレイヤーのJapanize変換を、デフォルトでオンにするかオフにするかを設定する。 */
+    private boolean japanizePlayerDefault;
+
     /** 通常チャットで、JapanizeDisplayLine=2のとき、Japanize変換したあと表示するまでのウェイト(tick)
      *  隠し設定。 */
     private int japanizeWait;
@@ -264,6 +267,7 @@ public class LunaChatConfig {
         japanizeLine2Format = config.getString("japanizeLine2Format", "&6[JP] %japanize");
         japanizeIgnorePlayerName = config.getBoolean("japanizeIgnorePlayerName", true);
         noneJapanizeMarker = config.getString("noneJapanizeMarker", "$");
+        japanizePlayerDefault = config.getBoolean("japanizePlayerDefault", true);
         japanizeWait = config.getInt("japanizeWait", 1);
 
         bungeePassThroughMode = config.getBoolean("bungeePassThroughMode", false);
@@ -561,6 +565,14 @@ public class LunaChatConfig {
      */
     public String getNoneJapanizeMarker() {
         return noneJapanizeMarker;
+    }
+
+    /**
+     * プレイヤーのJapanize変換を、デフォルトでオンにするかオフにするかを設定する。
+     * @return japanizePlayerDefault
+     */
+    public boolean isJapanizePlayerDefault() {
+        return japanizePlayerDefault;
     }
 
     /**

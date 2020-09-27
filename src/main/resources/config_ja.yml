@@ -225,6 +225,8 @@ japanizeIgnorePlayerName: true
 # これが発言の頭に入っている場合は、一時的にJapanize変換を実行しない。
 noneJapanizeMarker: '$'
 
+# プレイヤーのJapanize変換を、デフォルトでオンにするかオフにするかを設定する。
+japanizePlayerDefault: true
 
 
 # -------------------- BungeeCord設定 --------------------

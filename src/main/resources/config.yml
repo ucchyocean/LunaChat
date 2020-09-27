@@ -216,6 +216,8 @@ japanizeIgnorePlayerName: true
 # If this is at the beginning of your remark, do not temporarily perform Japanize conversion.
 noneJapanizeMarker: '$'
 
+# Sets whether player's Japanize conversion on or off by default.
+japanizePlayerDefault: true
 
 
 # -------------------- BungeeCord settings --------------------
