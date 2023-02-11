@@ -42,6 +42,10 @@ pipeline {
         }
 
         stage('Deploy to reposilite') {
+	    environment {
+		USERNAME = credentials('repo-id')
+        	PASSWORD = credentials('repo-key')
+	    }
             steps {
                 sh "mvn deploy"
 
