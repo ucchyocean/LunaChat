@@ -5,21 +5,13 @@
  */
 package com.github.ucchyocean.lc3.util;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import com.github.ucchyocean.lc3.LunaChat;
+import com.google.common.io.Files;
+
+import java.io.*;
 import java.util.Locale;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
-
-import com.github.ucchyocean.lc3.LunaChat;
-import com.github.ucchyocean.lc3.LunaChatMode;
-import com.google.common.io.Files;
 
 /**
  * ユーティリティクラス
@@ -207,13 +199,7 @@ public class Utility {
      * @return 接続したことがあるかどうか
      */
     public static boolean existsOfflinePlayer(String name) {
-        if ( LunaChat.getUUIDCacheData().getUUIDFromName(name) != null ) {
-            return true;
-        }
-        if ( LunaChat.getMode() == LunaChatMode.BUKKIT ) {
-            return UtilityBukkit.existsOfflinePlayer(name);
-        }
-        return false;
+        return LunaChat.getUUIDCacheData().getUUIDFromName(name) != null;
     }
 
     /**
