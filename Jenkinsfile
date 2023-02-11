@@ -22,7 +22,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-		echo "java -version"
+		sh "java -version"
                 sh "mvn clean package"
 
             }
