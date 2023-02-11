@@ -17,11 +17,13 @@ pipeline {
 
     tools {
         maven "Maven-3.8.5"
+	jdk "openjdk17"
     }
 
     stages {
         stage('Build') {
             steps {
+		sh "java -version"
                 sh "mvn clean package"
 
             }
@@ -39,7 +41,11 @@ pipeline {
 
         }
 
-        stage('Push to reposilite') {
+        stage('Deploy to reposilite') {
+	    environment {
+		USERNAME = credentials('repo-id')
+        	PASSWORD = credentials('repo-key')
+	    }
             steps {
                 sh "mvn deploy"
 
