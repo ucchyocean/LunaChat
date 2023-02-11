@@ -39,7 +39,7 @@ pipeline {
 
         }
 
-        stage('Push to reposilite') {
+        stage('Deploy to reposilite') {
             steps {
                 sh "mvn deploy"
 
