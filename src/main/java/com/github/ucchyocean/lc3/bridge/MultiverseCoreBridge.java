@@ -8,9 +8,10 @@ package com.github.ucchyocean.lc3.bridge;
 import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
 
-import com.onarandombox.MultiverseCore.MultiverseCore;
-import com.onarandombox.MultiverseCore.api.Core;
-import com.onarandombox.MultiverseCore.api.MultiverseWorld;
+import org.mvplugins.multiverse.core.MultiverseCore;
+import org.mvplugins.multiverse.core.MultiverseCoreApi;
+import org.mvplugins.multiverse.core.world.MultiverseWorld;
+import org.mvplugins.multiverse.external.vavr.control.Option;
 
 /**
  * MultiverseCore連携クラス
@@ -19,7 +20,7 @@ import com.onarandombox.MultiverseCore.api.MultiverseWorld;
 public class MultiverseCoreBridge {
 
     /** MultiverseCore API クラス */
-    private Core mvc;
+    private MultiverseCoreApi mvc;
 
     /** コンストラクタは使用不可 */
     private MultiverseCoreBridge() {
@@ -28,13 +29,11 @@ public class MultiverseCoreBridge {
     /**
      * MultiverseCore-apiをロードする
      * @param plugin MultiverseCoreのプラグインインスタンス
-     * @param ロードしたかどうか
      */
     public static MultiverseCoreBridge load(Plugin plugin) {
-
         if ( plugin instanceof MultiverseCore ) {
             MultiverseCoreBridge bridge = new MultiverseCoreBridge();
-            bridge.mvc = (Core)plugin;
+            bridge.mvc = (MultiverseCoreApi) plugin;
             return bridge;
         } else {
             return null;
@@ -47,10 +46,10 @@ public class MultiverseCoreBridge {
      * @return エイリアス名、取得できない場合はnullが返される
      */
     public String getWorldAlias(String worldName) {
-
-        MultiverseWorld mvworld = mvc.getMVWorldManager().getMVWorld(worldName);
-        if ( mvworld != null ) {
-            if ( mvworld.getAlias().length() > 0 ) {
+        Option<MultiverseWorld> option = mvc.getWorldManager().getWorld(worldName);
+        if (option.isDefined()) {
+            MultiverseWorld mvworld = option.get();
+            if (!mvworld.getAlias().isEmpty()) {
                 return mvworld.getAlias();
             } else {
                 return mvworld.getName();
@@ -66,10 +65,10 @@ public class MultiverseCoreBridge {
      * @return エイリアス名、取得できない場合はnullが返される
      */
     public String getWorldAlias(World world) {
-
-        MultiverseWorld mvworld = mvc.getMVWorldManager().getMVWorld(world);
-        if ( mvworld != null ) {
-            if ( mvworld.getAlias().length() > 0 ) {
+        Option<MultiverseWorld> option = mvc.getWorldManager().getWorld(world);
+        if (option.isDefined()) {
+            MultiverseWorld mvworld = option.get();
+            if (!mvworld.getAlias().isEmpty()) {
                 return mvworld.getAlias();
             } else {
                 return mvworld.getName();

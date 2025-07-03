@@ -16,8 +16,8 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.version>1.8</java.version>
-    <java.version.short>8</java.version.short>
+    <java.version>17</java.version>
+    <java.version.short>17</java.version.short>
   </properties>
 
   <distributionManagement>
@@ -67,7 +67,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.2.1</version>
+        <version>3.5.1</version>
         <configuration>
           <createDependencyReducedPom>false</createDependencyReducedPom>
           <minimizeJar>true</minimizeJar>
@@ -107,9 +107,6 @@
         <version>2.12.4</version>
         <configuration>
           <junitArtifactName>junit:junit</junitArtifactName>
-          <encoding>UTF-8</encoding>
-          <inputEncoding>UTF-8</inputEncoding>
-          <outputEncoding>UTF-8</outputEncoding>
           <argLine>-Dfile.encoding=UTF-8</argLine>
         </configuration>
       </plugin>
@@ -133,9 +130,8 @@
       <url>https://repo.mikeprimm.com/</url>
     </repository>
     <repository>
-      <id>onarandombox-repo</id>
-      <name>Multiverse repository</name>
-      <url>http://repo.onarandombox.com/content/repositories/multiverse/</url>
+      <id>OnARandomBox</id>
+      <url>https://repo.onarandombox.com/content/groups/public/</url>
     </repository>
     <repository>
       <id>codemc-repo</id>
@@ -153,9 +149,8 @@
       <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
     </repository>
     <repository>
-      <id>BungeeCord-repo</id>
-      <name>sonatype repository</name>
-      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+      <id>bungeeperms-repo</id>
+      <url>https://repo.wea-ondara.net/repository/maven-releases/</url>
     </repository>
   </repositories>
 
@@ -208,11 +203,9 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>com.onarandombox.multiversecore</groupId>
-      <artifactId>Multiverse-Core</artifactId>
-      <version>4.1.0</version>
-      <optional>true</optional>
-      <scope>provided</scope>
+      <groupId>org.mvplugins.multiverse.core</groupId>
+      <artifactId>multiverse-core</artifactId>
+      <version>5.0.2</version>
     </dependency>
     <dependency>
       <groupId>com.gmail.nossr50.mcMMO</groupId>
@@ -246,9 +239,7 @@
     <dependency>
       <groupId>net.alpenblock</groupId>
       <artifactId>BungeePerms</artifactId>
-      <version>4.0-dev-114</version>
-      <optional>true</optional>
-      <scope>provided</scope>
+      <version>4.0-dev-108</version>
     </dependency>
     <dependency>
       <groupId>net.luckperms</groupId>
