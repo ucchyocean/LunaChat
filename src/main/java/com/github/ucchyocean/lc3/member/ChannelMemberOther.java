@@ -13,12 +13,12 @@ import net.md_5.bungee.api.chat.BaseComponent;
  */
 public class ChannelMemberOther extends ChannelMember {
 
-    private String id;
-    private String name;
-    private String displayName;
-    private String prefix;
-    private String suffix;
-    private BlockLocation location;
+    private final String id;
+    private final String name;
+    private final String displayName;
+    private final String prefix;
+    private final String suffix;
+    private final BlockLocation location;
     private String serverName;
     private String worldName;
 

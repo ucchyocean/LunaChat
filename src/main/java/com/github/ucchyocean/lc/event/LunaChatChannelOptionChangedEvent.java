@@ -16,7 +16,7 @@ import org.bukkit.command.CommandSender;
  */
 public class LunaChatChannelOptionChangedEvent extends LunaChatBaseCancellableEvent {
 
-    private CommandSender sender;
+    private final CommandSender sender;
     private HashMap<String, String> options;
 
     public LunaChatChannelOptionChangedEvent(String channelName,

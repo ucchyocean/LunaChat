@@ -27,11 +27,11 @@ public class JapanizeConvertTask {
 
     private static final String REGEX_URL = "https?://[\\w/:%#\\$&\\?\\(\\)~\\.=\\+\\-]+";
 
-    private String org;
-    private JapanizeType type;
-    private String format;
-    private Channel channel;
-    private ChannelMember player;
+    private final String org;
+    private final JapanizeType type;
+    private final String format;
+    private final Channel channel;
+    private final ChannelMember player;
     private String result;
 
     /**

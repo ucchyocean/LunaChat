@@ -14,8 +14,8 @@ import com.github.ucchyocean.lc.channel.ChannelPlayer;
  */
 public class LunaChatPostJapanizeEvent extends LunaChatBaseCancellableEvent {
 
-    private ChannelPlayer player;
-    private String original;
+    private final ChannelPlayer player;
+    private final String original;
     private String japanized;
 
     /**

@@ -112,7 +112,7 @@ public class YamlSection {
      */
     public boolean getBoolean(String key, boolean defaultValue) {
         Object val = get(key, defaults.get(key));
-        return ( val != null && val instanceof Boolean ) ? (boolean)val : defaultValue;
+        return (val instanceof Boolean) ? (boolean)val : defaultValue;
     }
 
     /**
@@ -132,7 +132,7 @@ public class YamlSection {
      */
     public int getInt(String key, int defaultValue) {
         Object val = get(key, defaults.get(key));
-        return ( val != null && val instanceof Integer ) ? (int)val : defaultValue;
+        return (val instanceof Integer) ? (int)val : defaultValue;
     }
 
     /**
@@ -173,7 +173,7 @@ public class YamlSection {
     @SuppressWarnings("unchecked")
     public List<String> getStringList(String key, ArrayList<String> defaultValue) {
         Object val = get(key, defaults.get(key));
-        return ( val != null && val instanceof ArrayList<?> ) ? (List<String>)val : defaultValue;
+        return (val instanceof ArrayList<?>) ? (List<String>)val : defaultValue;
     }
 
     /**
@@ -194,7 +194,7 @@ public class YamlSection {
     @SuppressWarnings("unchecked")
     public Map<String, Object> getMap(String key, Map<String, Object> defaultValue) {
         Object val = get(key, defaults.get(key));
-        return ( val != null && val instanceof Map<?, ?> ) ? (Map<String, Object>)val : defaultValue;
+        return (val instanceof Map<?, ?>) ? (Map<String, Object>)val : defaultValue;
     }
 
     /**

@@ -143,7 +143,7 @@ public abstract class ChannelMember implements Comparable<ChannelMember> {
      */
     public static ChannelMember getChannelMember(Object obj) {
 
-        if ( obj != null && obj instanceof ChannelMember ) return (ChannelMember)obj;
+        if (obj instanceof ChannelMember) return (ChannelMember)obj;
 
         if ( LunaChat.getMode() == LunaChatMode.BUKKIT ) {
             return ChannelMemberBukkit.getChannelMemberBukkit(obj);

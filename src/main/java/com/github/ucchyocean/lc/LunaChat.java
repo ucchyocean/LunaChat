@@ -11,9 +11,9 @@ package com.github.ucchyocean.lc;
  */
 public class LunaChat {
 
-    private static LunaChat instance = new LunaChat();
+    private static final LunaChat instance = new LunaChat();
     @SuppressWarnings("deprecation")
-    private LunaChatAPI api = new LunaChatAPIImpl();
+    private final LunaChatAPI api = new LunaChatAPIImpl();
 
     /**
      * LunaChatのインスタンスを返す

@@ -17,13 +17,13 @@ public class KeywordReplacerTest extends TestCase {
 
     public void testSpeedOfReplacement() {
 
-        String testee = "";
+        StringBuilder testee = new StringBuilder();
         for ( int i=1; i<=MAX; i++ ) {
-            testee += String.format("%%test%d%%%d", i, i);
+            testee.append(String.format("%%test%d%%%d", i, i));
         }
 
 
-        String test1 = new String(testee);
+        String test1 = testee.toString();
         long start = System.currentTimeMillis();
         for ( int i=1; i<=MAX; i++ ) {
             test1 = test1.replace("%test" + i + "%", i + "");
@@ -32,7 +32,7 @@ public class KeywordReplacerTest extends TestCase {
         System.out.println("test1 time = " + time);
 
 
-        KeywordReplacer test2 = new KeywordReplacer(testee);
+        KeywordReplacer test2 = new KeywordReplacer(testee.toString());
         start = System.currentTimeMillis();
         for ( int i=1; i<=MAX; i++ ) {
             test2.replace("%test" + i + "%", i + "");
@@ -60,7 +60,7 @@ public class KeywordReplacerTest extends TestCase {
         System.out.println("test1 time = " + time + ", str = " + test1.toString());
 
 
-        String test2 = new String(testee);
+        String test2 = testee;
         start = System.currentTimeMillis();
         test2 = test2.replace(keyword, val1);
         test2 = test2.replace(keyword, val2);

@@ -152,9 +152,8 @@ public class ChannelManager implements LunaChatAPI {
 
     /**
      * デフォルトチャンネル設定を保存する
-     * @return 保存したかどうか
      */
-    private boolean saveDefaults() {
+    private void saveDefaults() {
 
         try {
             YamlConfig config = new YamlConfig();
@@ -162,18 +161,15 @@ public class ChannelManager implements LunaChatAPI {
                 config.set(key, defaultChannels.get(key));
             }
             config.save(fileDefaults);
-            return true;
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
         }
     }
 
     /**
      * テンプレート設定を保存する
-     * @return 保存したかどうか
      */
-    private boolean saveTemplates() {
+    private void saveTemplates() {
 
         try {
             YamlConfig config = new YamlConfig();
@@ -181,18 +177,15 @@ public class ChannelManager implements LunaChatAPI {
                 config.set(key, templates.get(key));
             }
             config.save(fileTemplates);
-            return true;
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
         }
     }
 
     /**
      * Japanize設定を保存する
-     * @return 保存したかどうか
      */
-    private boolean saveJapanize() {
+    private void saveJapanize() {
 
         try {
             YamlConfig config = new YamlConfig();
@@ -200,18 +193,15 @@ public class ChannelManager implements LunaChatAPI {
                 config.set(key, japanize.get(key));
             }
             config.save(fileJapanize);
-            return true;
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
         }
     }
 
     /**
      * Dictionary設定を保存する
-     * @return 保存したかどうか
      */
-    private boolean saveDictionary() {
+    private void saveDictionary() {
 
         try {
             YamlConfig config = new YamlConfig();
@@ -219,18 +209,15 @@ public class ChannelManager implements LunaChatAPI {
                 config.set(key, dictionary.get(key));
             }
             config.save(fileDictionary);
-            return true;
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
         }
     }
 
     /**
      * Hidelist設定を保存する
-     * @return 保存したかどうか
      */
-    private boolean saveHidelist() {
+    private void saveHidelist() {
 
         try {
             YamlConfig config = new YamlConfig();
@@ -238,10 +225,8 @@ public class ChannelManager implements LunaChatAPI {
                 config.set(key, getIdList(hidelist.get(key)));
             }
             config.save(fileHidelist);
-            return true;
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
         }
     }
 
@@ -352,9 +337,7 @@ public class ChannelManager implements LunaChatAPI {
      */
     @Override
     public void removeDefaultChannel(String playerName) {
-        if ( defaultChannels.containsKey(playerName) ) {
-            defaultChannels.remove(playerName);
-        }
+        defaultChannels.remove(playerName);
         saveDefaults();
     }
 
@@ -371,7 +354,7 @@ public class ChannelManager implements LunaChatAPI {
         if ( channel != null ) return channel;
         for ( Channel ch : channels.values() ) {
             String alias = ch.getAlias();
-            if ( alias != null && alias.length() > 0
+            if ( alias != null && !alias.isEmpty()
                     && channelName.equalsIgnoreCase(ch.getAlias()) ) {
                 return ch;
             }
@@ -456,7 +439,7 @@ public class ChannelManager implements LunaChatAPI {
 
             // 強制解散のメッセージを、残ったメンバーに流す
             String message = Messages.breakupMessage(channel.getColorCode(), channel.getName());
-            if ( !channel.isPersonalChat() && !message.equals("") ) {
+            if ( !channel.isPersonalChat() && !message.isEmpty()) {
                 for ( ChannelMember cp : channel.getMembers() ) {
                     cp.sendMessage(message);
                 }

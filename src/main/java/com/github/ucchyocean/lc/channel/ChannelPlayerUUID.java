@@ -20,7 +20,7 @@ import org.bukkit.entity.Player;
  */
 public class ChannelPlayerUUID extends ChannelPlayer {
 
-    private UUID id;
+    private final UUID id;
 
     /**
      * コンストラクタ
@@ -49,10 +49,8 @@ public class ChannelPlayerUUID extends ChannelPlayer {
             return new ChannelPlayerUUID(player.getUniqueId());
         }
         OfflinePlayer offline = Bukkit.getOfflinePlayer(name);
-        if ( offline != null && offline.getUniqueId() != null ) {
-            return new ChannelPlayerUUID(offline.getUniqueId());
-        }
-        return null;
+        offline.getUniqueId();
+        return new ChannelPlayerUUID(offline.getUniqueId());
     }
 
     /**
@@ -89,11 +87,7 @@ public class ChannelPlayerUUID extends ChannelPlayer {
             return player.getName();
         }
         OfflinePlayer offlineplayer = Bukkit.getOfflinePlayer(id);
-        if ( offlineplayer != null ) {
-            String name = offlineplayer.getName();
-            return name;
-        }
-        return id.toString();
+        return offlineplayer.getName();
     }
 
     /**
@@ -221,10 +215,9 @@ public class ChannelPlayerUUID extends ChannelPlayer {
      */
     @Override
     public boolean equals(CommandSender sender) {
-        if ( sender == null || !(sender instanceof Player) ) {
+        if (!(sender instanceof Player player)) {
             return false;
         }
-        Player player = (Player)sender;
         return id.equals(player.getUniqueId());
     }
 

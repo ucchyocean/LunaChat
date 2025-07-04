@@ -13,8 +13,8 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  */
 public class LunaChatBukkitPostJapanizeEvent extends LunaChatBukkitBaseCancellableEvent {
 
-    private ChannelMember member;
-    private String original;
+    private final ChannelMember member;
+    private final String original;
     private String japanized;
 
     /**

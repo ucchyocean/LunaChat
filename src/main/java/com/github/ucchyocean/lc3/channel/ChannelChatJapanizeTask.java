@@ -15,11 +15,11 @@ import com.github.ucchyocean.lc3.util.ClickableFormat;
  */
 public class ChannelChatJapanizeTask implements Runnable {
 
-    private Channel channel;
-    private ChannelMember player;
-    private ClickableFormat lineFormat;
+    private final Channel channel;
+    private final ChannelMember player;
+    private final ClickableFormat lineFormat;
 
-    private JapanizeConvertTask task;
+    private final JapanizeConvertTask task;
 
     /**
      * コンストラクタ

@@ -15,8 +15,8 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  */
 public class LunaChatBukkitChannelMemberChangedEvent extends LunaChatBukkitBaseCancellableEvent {
 
-    private List<ChannelMember> before;
-    private List<ChannelMember> after;
+    private final List<ChannelMember> before;
+    private final List<ChannelMember> after;
 
     /**
      * コンストラクタ

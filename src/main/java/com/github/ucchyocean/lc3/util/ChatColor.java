@@ -37,7 +37,7 @@ public final class ChatColor {
     public static final ChatColor ITALIC = new ChatColor("ITALIC", 'o', 0x14, true);
     public static final ChatColor RESET = new ChatColor("RESET", 'r', 0x15);
 
-    public static final char COLOR_CHAR = '\u00A7';
+    public static final char COLOR_CHAR = '§';
 
     @SuppressWarnings("unused")
     private final int intCode;
@@ -89,7 +89,7 @@ public final class ChatColor {
         if ( code.matches("#[0-9a-fA-F]{3}") ) {
             return new ChatColor(code, code.replaceAll(
                     "#([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])",
-                    "\u00A7x\u00A7$1\u00A7$1\u00A7$2\u00A7$2\u00A7$3\u00A7$3"));
+                    "§x\u00A7$1\u00A7$1\u00A7$2\u00A7$2\u00A7$3\u00A7$3"));
         } else if ( code.matches("#[0-9a-fA-F]{6}") ) {
             return new ChatColor(code, code.replaceAll(
                     "#([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])",

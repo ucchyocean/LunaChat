@@ -14,7 +14,7 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  */
 public class LunaChatBungeePreChatEvent extends LunaChatBungeeBaseCancellableEvent {
 
-    private ChannelMember member;
+    private final ChannelMember member;
     private String message;
 
     public LunaChatBungeePreChatEvent(String channelName, ChannelMember member, String message) {

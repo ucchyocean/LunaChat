@@ -13,10 +13,10 @@ import org.jetbrains.annotations.Nullable;
  */
 public class BlockLocation {
 
-    private String worldName;
-    private int x;
-    private int y;
-    private int z;
+    private final String worldName;
+    private final int x;
+    private final int y;
+    private final int z;
 
     /**
      * コンストラクタ

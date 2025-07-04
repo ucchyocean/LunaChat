@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
@@ -68,8 +69,8 @@ public class Utility {
 
                     } else {
 
-                        try ( BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-                                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos, "UTF-8")) ) {
+                        try (BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+                             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos, StandardCharsets.UTF_8)) ) {
 
                             String line;
                             while ((line = reader.readLine()) != null) {
@@ -194,11 +195,7 @@ public class Utility {
      * @return 指定された文字数のアスタリスク
      */
     public static String getAstariskString(int length) {
-        StringBuilder buf = new StringBuilder();
-        for (int i = 0; i < length; i++) {
-            buf.append("*");
-        }
-        return buf.toString();
+        return "*".repeat(Math.max(0, length));
     }
 
     /**

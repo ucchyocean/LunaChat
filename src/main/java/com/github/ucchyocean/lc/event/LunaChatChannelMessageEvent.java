@@ -17,11 +17,11 @@ import com.github.ucchyocean.lc.channel.ChannelPlayer;
  */
 public class LunaChatChannelMessageEvent extends LunaChatBaseEvent {
 
-    private ChannelPlayer player;
+    private final ChannelPlayer player;
     private String message;
     private ArrayList<ChannelPlayer> recipients;
-    private String displayName;
-    private String originalMessage;
+    private final String displayName;
+    private final String originalMessage;
 
     public LunaChatChannelMessageEvent(String channelName,
             ChannelPlayer player, String message, ArrayList<ChannelPlayer> recipients,

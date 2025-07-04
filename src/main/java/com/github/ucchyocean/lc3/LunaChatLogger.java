@@ -12,6 +12,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,14 +28,14 @@ import com.github.ucchyocean.lc3.util.Utility;
  */
 public class LunaChatLogger {
 
-    private SimpleDateFormat lformat;
-    private SimpleDateFormat dformat;
+    private final SimpleDateFormat lformat;
+    private final SimpleDateFormat dformat;
 
-    private SimpleDateFormat logYearDateFormat;
+    private final SimpleDateFormat logYearDateFormat;
 
     private File file;
     private String dirPath;
-    private String name;
+    private final String name;
 
     /**
      * コンストラクタ
@@ -69,8 +70,8 @@ public class LunaChatLogger {
                 if ( msg == null ) msg = "";
                 msg = msg.replace(",", "，");
 
-                try ( OutputStreamWriter writer = new OutputStreamWriter(
-                        new FileOutputStream(file, true), "UTF-8"); ) {
+                try (OutputStreamWriter writer = new OutputStreamWriter(
+                        new FileOutputStream(file, true), StandardCharsets.UTF_8); ) {
 
                     String str = lformat.format(new Date()) + "," + msg + "," + player;
                     writer.write(str + "\r\n");
@@ -144,12 +145,12 @@ public class LunaChatLogger {
         if ( !file.exists() ) return data;
 
         try ( BufferedReader reader = new BufferedReader(
-                new InputStreamReader(new FileInputStream(file), "UTF-8")) ) {
+                new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)) ) {
 
             String line;
             while ( (line = reader.readLine()) != null ) {
                 line = line.trim();
-                if ( line.length() > 0 ) {
+                if (!line.isEmpty()) {
                     data.add(line);
                 }
             }

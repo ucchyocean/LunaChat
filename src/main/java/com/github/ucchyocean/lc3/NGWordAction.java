@@ -24,7 +24,7 @@ public enum NGWordAction {
     /** マスクしつつ、チャンネルからBANする */
     BAN("ban");
 
-    private String id;
+    private final String id;
 
     /**
      * コンストラクタ

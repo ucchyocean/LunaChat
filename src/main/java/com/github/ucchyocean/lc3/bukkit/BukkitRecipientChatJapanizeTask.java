@@ -22,9 +22,9 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  */
 public class BukkitRecipientChatJapanizeTask extends BukkitRunnable {
 
-    private List<Player> recipients;
+    private final List<Player> recipients;
 
-    private JapanizeConvertTask task;
+    private final JapanizeConvertTask task;
 
     /**
      * コンストラクタ

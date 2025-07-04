@@ -27,7 +27,7 @@ import com.github.ucchyocean.lc3.member.ChannelMemberPlayer;
  */
 public class Channel {
 
-    private com.github.ucchyocean.lc3.channel.Channel channel;
+    private final com.github.ucchyocean.lc3.channel.Channel channel;
 
     /**
      * コンストラクタ
@@ -532,8 +532,7 @@ public class Channel {
             return ChannelPlayer.getChannelPlayer(cm.toString());
         } else if ( cm instanceof ChannelMemberBukkitConsole ) {
             return new ChannelPlayerConsole(Bukkit.getConsoleSender());
-        } else if ( cm instanceof ChannelMemberBlock ) {
-            ChannelMemberBlock cmb = (ChannelMemberBlock)cm;
+        } else if (cm instanceof ChannelMemberBlock cmb) {
             if ( cmb.getBlockCommandSender() != null ) {
                 return new ChannelPlayerBlock(cmb.getBlockCommandSender());
             }

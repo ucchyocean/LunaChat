@@ -16,8 +16,8 @@ import com.github.ucchyocean.lc.channel.ChannelPlayer;
  */
 public class LunaChatChannelMemberChangedEvent extends LunaChatBaseCancellableEvent {
 
-    private List<ChannelPlayer> before;
-    private List<ChannelPlayer> after;
+    private final List<ChannelPlayer> before;
+    private final List<ChannelPlayer> after;
 
     /**
      * コンストラクタ

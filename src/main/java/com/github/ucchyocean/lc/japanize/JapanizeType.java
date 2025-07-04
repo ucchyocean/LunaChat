@@ -15,7 +15,7 @@ public enum JapanizeType {
     /** カナ変換後、GoogleIMEで漢字変換 */
     GOOGLE_IME("googleime");
 
-    private String id;
+    private final String id;
 
     /**
      * コンストラクタ

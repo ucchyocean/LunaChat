@@ -17,7 +17,7 @@ import org.bukkit.entity.Player;
  */
 public class ChannelPlayerName extends ChannelPlayer {
 
-    private String name;
+    private final String name;
 
     /**
      * コンストラクタ
@@ -172,10 +172,9 @@ public class ChannelPlayerName extends ChannelPlayer {
      */
     @Override
     public boolean equals(CommandSender sender) {
-        if ( sender == null || !(sender instanceof Player) ) {
+        if (!(sender instanceof Player player)) {
             return false;
         }
-        Player player = (Player)sender;
         return name.equals(player.getName());
     }
 

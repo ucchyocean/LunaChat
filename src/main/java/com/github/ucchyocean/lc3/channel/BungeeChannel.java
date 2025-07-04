@@ -49,7 +49,7 @@ public class BungeeChannel extends Channel {
 
         LunaChatConfig config = LunaChat.getConfig();
 
-        String originalMessage = new String(message);
+        String originalMessage = message;
 
         // 受信者を設定する
         List<ChannelMember> recipients = new ArrayList<ChannelMember>();
@@ -93,9 +93,7 @@ public class BungeeChannel extends Channel {
         // hideされている場合は、受信対象者から抜く。
         LunaChatAPI api = LunaChat.getAPI();
         for ( ChannelMember cp : api.getHidelist(player) )  {
-            if ( recipients.contains(cp) ) {
-                recipients.remove(cp);
-            }
+            recipients.remove(cp);
         }
 
         // フォーマットがある場合は置き換える

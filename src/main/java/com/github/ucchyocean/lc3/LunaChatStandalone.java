@@ -21,7 +21,7 @@ public class LunaChatStandalone implements PluginInterface {
     private LunaChatConfig config;
     private ChannelManager manager;
     private UUIDCacheData uuidCacheData;
-    private File dataFolder;
+    private final File dataFolder;
 
     public LunaChatStandalone(File dataFolder) {
         this.dataFolder = dataFolder;
@@ -84,7 +84,7 @@ public class LunaChatStandalone implements PluginInterface {
     @Override
     public void log(Level level, String msg) {
         // 画面に表示する
-        System.out.println(String.format("[%s]%s", level.toString(), msg));
+        System.out.printf("[%s]%s%n", level.toString(), msg);
     }
 
     /**

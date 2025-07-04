@@ -55,7 +55,7 @@ public abstract class ChannelMemberBungee extends ChannelMember {
      * @return ChannelMember
      */
     public static ChannelMemberBungee getChannelMemberBungee(Object sender) {
-        if ( sender == null || !(sender instanceof CommandSender) ) return null;
+        if (!(sender instanceof CommandSender)) return null;
         if ( sender instanceof ProxiedPlayer ) {
             return new ChannelMemberProxiedPlayer(((ProxiedPlayer)sender).getUniqueId());
         } else {

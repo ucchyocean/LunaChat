@@ -16,7 +16,7 @@ import com.github.ucchyocean.lc.channel.Channel;
  */
 public class LunaChatChannelCreateEvent extends LunaChatBaseCancellableEvent {
 
-    private CommandSender sender;
+    private final CommandSender sender;
 
     public LunaChatChannelCreateEvent(String channelName, CommandSender sender) {
         super(channelName);

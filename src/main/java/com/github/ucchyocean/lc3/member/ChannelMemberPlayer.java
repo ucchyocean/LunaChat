@@ -27,7 +27,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
  */
 public class ChannelMemberPlayer extends ChannelMemberBukkit {
 
-    private UUID id;
+    private final UUID id;
 
     /**
      * コンストラクタ
@@ -57,10 +57,8 @@ public class ChannelMemberPlayer extends ChannelMemberBukkit {
         }
         @SuppressWarnings("deprecation")
         OfflinePlayer offline = Bukkit.getOfflinePlayer(name);
-        if ( offline != null && offline.getUniqueId() != null ) {
-            return new ChannelMemberPlayer(offline.getUniqueId());
-        }
-        return null;
+        offline.getUniqueId();
+        return new ChannelMemberPlayer(offline.getUniqueId());
     }
 
     /**
@@ -101,11 +99,7 @@ public class ChannelMemberPlayer extends ChannelMemberBukkit {
             return player.getName();
         }
         OfflinePlayer offlineplayer = Bukkit.getOfflinePlayer(id);
-        if ( offlineplayer != null ) {
-            String name = offlineplayer.getName();
-            return name;
-        }
-        return id.toString();
+        return offlineplayer.getName();
     }
 
     /**
@@ -296,7 +290,6 @@ public class ChannelMemberPlayer extends ChannelMemberBukkit {
         } else {
             @SuppressWarnings("deprecation")
             OfflinePlayer op = Bukkit.getOfflinePlayer(nameOrUuid);
-            if ( op == null ) return null;
             return new ChannelMemberPlayer(op.getUniqueId());
         }
     }

@@ -50,7 +50,7 @@ public abstract class ChannelMemberBukkit extends ChannelMember {
      * @return ChannelMember
      */
     public static ChannelMemberBukkit getChannelMemberBukkit(Object sender) {
-        if ( sender == null || !(sender instanceof CommandSender) ) return null;
+        if (!(sender instanceof CommandSender)) return null;
         if ( sender instanceof BlockCommandSender ) {
             return new ChannelMemberBlock((BlockCommandSender)sender);
         } else if ( sender instanceof ConsoleCommandSender ) {

@@ -123,7 +123,7 @@ public class BukkitEventListener implements Listener {
         forceJoinToForceJoinChannels(player);
 
         // グローバルチャンネル設定がある場合
-        if ( !config.getGlobalChannel().equals("") ) {
+        if (!config.getGlobalChannel().isEmpty()) {
             tryJoinToGlobalChannel(player);
         }
 
@@ -205,7 +205,7 @@ public class BukkitEventListener implements Listener {
 
         // 頭にglobalMarkerが付いている場合は、グローバル発言にする
         if ( config.getGlobalMarker() != null &&
-                !config.getGlobalMarker().equals("") &&
+                !config.getGlobalMarker().isEmpty() &&
                 event.getMessage().startsWith(config.getGlobalMarker()) &&
                 event.getMessage().length() > config.getGlobalMarker().length() ) {
 
@@ -281,7 +281,7 @@ public class BukkitEventListener implements Listener {
         ChannelMember player =
                 ChannelMember.getChannelMember(event.getPlayer());
 
-        if ( !config.getGlobalChannel().equals("") ) {
+        if (!config.getGlobalChannel().isEmpty()) {
             // グローバルチャンネル設定がある場合
 
             // グローバルチャンネルの取得、無ければ作成
@@ -337,7 +337,7 @@ public class BukkitEventListener implements Listener {
             // 一時的にJapanizeスキップ設定かどうかを確認する
             boolean skipJapanize = false;
             String marker = config.getNoneJapanizeMarker();
-            if ( !marker.equals("") && message.startsWith(marker) ) {
+            if (!marker.isEmpty() && message.startsWith(marker) ) {
                 skipJapanize = true;
                 message = message.substring(marker.length());
             }
@@ -438,10 +438,10 @@ public class BukkitEventListener implements Listener {
 
     /**
      * 既定のチャンネルへの参加を試みる。
+     *
      * @param player プレイヤー
-     * @return 参加できたかどうか
      */
-    private boolean tryJoinToGlobalChannel(Player player) {
+    private void tryJoinToGlobalChannel(Player player) {
 
         LunaChatConfig config = LunaChat.getConfig();
         LunaChatAPI api = LunaChat.getAPI();
@@ -460,7 +460,6 @@ public class BukkitEventListener implements Listener {
             api.setDefaultChannel(player.getName(), gcName);
         }
 
-        return true;
     }
 
     /**
@@ -562,18 +561,18 @@ public class BukkitEventListener implements Listener {
 
     /**
      * チャンネルに発言処理を行う
-     * @param player プレイヤー
+     *
+     * @param player  プレイヤー
      * @param channel チャンネル
      * @param message 発言内容
-     * @return イベントでキャンセルされたかどうか
      */
-    private boolean chatToChannelWithEvent(ChannelMember player, Channel channel, String message) {
+    private void chatToChannelWithEvent(ChannelMember player, Channel channel, String message) {
 
         // LunaChatPreChatEvent イベントコール
         EventResult result = LunaChat.getEventSender().sendLunaChatPreChatEvent(
                 channel.getName(), player, message);
         if ( result.isCancelled() ) {
-            return true;
+            return;
         }
         Channel alt = result.getChannel();
         if ( alt != null ) {
@@ -584,7 +583,6 @@ public class BukkitEventListener implements Listener {
         // チャンネルチャット発言
         channel.chat(player, message);
 
-        return false;
     }
 
     /**

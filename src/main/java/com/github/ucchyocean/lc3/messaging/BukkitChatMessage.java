@@ -22,8 +22,8 @@ import com.github.ucchyocean.lc3.util.BlockLocation;
  */
 public class BukkitChatMessage {
 
-    private ChannelMemberOther member;
-    private String message;
+    private final ChannelMemberOther member;
+    private final String message;
 
     /**
      * コンストラクタ

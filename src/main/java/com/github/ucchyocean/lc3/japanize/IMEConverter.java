@@ -51,7 +51,7 @@ public class IMEConverter {
     // 変換の実行
     private static String conv(String org, boolean isGoogleIME) {
 
-        if ( org.length() == 0 ) {
+        if (org.isEmpty()) {
             return "";
         }
 
@@ -78,17 +78,12 @@ public class IMEConverter {
                     new InputStreamReader(urlconn.getInputStream(), encode));
 
             String json = CharStreams.toString(reader);
-            String parsed = GoogleIME.parseJson(json);
-//            if ( !Utility.isCB19orLater() ) {
+            //            if ( !Utility.isCB19orLater() ) {
 //                parsed = YukiKanaConverter.fixBrackets(parsed);
 //            }
 
-            return parsed;
+            return GoogleIME.parseJson(json);
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (ProtocolException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

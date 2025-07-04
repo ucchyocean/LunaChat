@@ -16,11 +16,11 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  */
 public class LunaChatBukkitChannelMessageEvent extends LunaChatBukkitBaseEvent {
 
-    private ChannelMember member;
+    private final ChannelMember member;
     private String message;
     private List<ChannelMember> recipients;
-    private String displayName;
-    private String originalMessage;
+    private final String displayName;
+    private final String originalMessage;
 
     public LunaChatBukkitChannelMessageEvent(String channelName,
             ChannelMember member, String message, List<ChannelMember> recipients,

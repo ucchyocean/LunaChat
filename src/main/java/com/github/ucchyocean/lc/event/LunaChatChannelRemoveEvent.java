@@ -14,7 +14,7 @@ import org.bukkit.command.CommandSender;
  */
 public class LunaChatChannelRemoveEvent extends LunaChatBaseCancellableEvent {
 
-    private CommandSender sender;
+    private final CommandSender sender;
 
     public LunaChatChannelRemoveEvent(String channelName, CommandSender sender) {
         super(channelName);

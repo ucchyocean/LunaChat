@@ -138,7 +138,7 @@ public class BanCommand extends LunaChatSubCommand {
         // BAN実行
         channel.getBanned().add(kicked);
         if ( expireMinutes != -1 ) {
-            long expire = System.currentTimeMillis() + expireMinutes * 60 * 1000;
+            long expire = System.currentTimeMillis() + (long) expireMinutes * 60 * 1000;
             channel.getBanExpires().put(kicked, expire);
         }
         channel.removeMember(kicked);

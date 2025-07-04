@@ -7,6 +7,7 @@ package com.github.ucchyocean.lc3.util;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -42,7 +43,7 @@ public class ClickableFormat {
     private static final String PLACEHOLDER_PATTERN =
             "＜type=(SUGGEST_COMMAND|RUN_COMMAND) text=\"([^\"]*)\" hover=\"([^\"]*)\" command=\"([^\"]*)\"＞";
 
-    private KeywordReplacer message;
+    private final KeywordReplacer message;
 
     private ClickableFormat(KeywordReplacer message) {
         this.message = message;
@@ -193,9 +194,7 @@ public class ClickableFormat {
 
             // マッチする箇所までの文字列を取得する
             if ( lastIndex < matcher.start() ) {
-                for ( BaseComponent c : TextComponent.fromLegacyText(message.substring(lastIndex, matcher.start())) ) {
-                    components.add(c);
-                }
+                Collections.addAll(components, TextComponent.fromLegacyText(message.substring(lastIndex, matcher.start())));
             }
 
             // マッチした箇所の文字列を解析して追加する
@@ -220,7 +219,7 @@ public class ClickableFormat {
             }
 
             // componentsの最後の要素のカラーコードを、TextComponentにも反映させる。 see issue #202
-            if ( components.size() > 0 ) {
+            if (!components.isEmpty()) {
                 BaseComponent last = components.get(components.size() - 1);
                 tc.setColor(last.getColor());
             }
@@ -232,9 +231,7 @@ public class ClickableFormat {
 
         if ( lastIndex < message.length() - 1 ) {
             // 残りの部分の文字列を取得する
-            for ( BaseComponent c : TextComponent.fromLegacyText(message.substring(lastIndex)) ) {
-                components.add(c);
-            }
+            Collections.addAll(components, TextComponent.fromLegacyText(message.substring(lastIndex)));
         }
 
         BaseComponent[] result = new BaseComponent[components.size()];

@@ -17,7 +17,7 @@ import net.md_5.bungee.api.plugin.Command;
  */
 public class ReplyCommandBungee extends Command {
 
-    private LunaChatReplyCommand command;
+    private final LunaChatReplyCommand command;
 
     /**
      * コンストラクタ

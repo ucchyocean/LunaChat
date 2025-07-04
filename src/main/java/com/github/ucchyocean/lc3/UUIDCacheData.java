@@ -23,7 +23,7 @@ public class UUIDCacheData {
     // キャッシュデータ key=UUID文字列、value=プレイヤー名
     private YamlConfig cache;
 
-    private File dataFolder;
+    private final File dataFolder;
 
     /**
      * コンストラクタ

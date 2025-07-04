@@ -86,7 +86,7 @@ public abstract class Channel {
     private List<ChannelMember> hided;
 
     /** チャンネルの名称 */
-    private String name;
+    private final String name;
 
     /** チャンネルの別名 */
     private String alias;
@@ -244,12 +244,12 @@ public abstract class Channel {
             return;
         }
 
-        String maskedMessage = new String(message);
+        String maskedMessage = message;
 
         // 一時的にJapanizeスキップ設定かどうかを確認する
         boolean skipJapanize = false;
         String marker = config.getNoneJapanizeMarker();
-        if ( !marker.equals("") && maskedMessage.startsWith(marker) ) {
+        if (!marker.isEmpty() && maskedMessage.startsWith(marker) ) {
             skipJapanize = true;
             maskedMessage = maskedMessage.substring(marker.length());
         }
@@ -390,7 +390,7 @@ public abstract class Channel {
         }
 
         // NGワード発言のマスク
-        String maskedMessage = new String(message);
+        String maskedMessage = message;
         for ( Pattern pattern : config.getNgwordCompiled() ) {
             Matcher matcher = pattern.matcher(maskedMessage);
             if ( matcher.find() ) {
@@ -435,9 +435,7 @@ public abstract class Channel {
         // 受信者（＝メンバー全員からhideしているプレイヤーを除く）
         List<ChannelMember> recipients = new ArrayList<>(getMembers());
         for ( ChannelMember cp : getHided() ) {
-            if ( recipients.contains(cp) ) {
-                recipients.remove(cp);
-            }
+            recipients.remove(cp);
         }
 
         // opListenAllChannel 設定がある場合は、
@@ -501,7 +499,7 @@ public abstract class Channel {
         }
 
         // メンバー更新
-        if ( members.size() == 0 && moderator.size() == 0 ) {
+        if (members.isEmpty() && moderator.isEmpty()) {
             moderator.add(player);
         }
         members = after;
@@ -655,7 +653,7 @@ public abstract class Channel {
 
         // チャンネル別名
         String alias = getAlias();
-        if ( alias != null && alias.length() > 0 ) {
+        if ( alias != null && !alias.isEmpty()) {
             info.add(Messages.channelInfoAlias() + alias);
         }
 
@@ -691,7 +689,7 @@ public abstract class Channel {
                 } else {
                     disp = ChatColor.GRAY + name;
                 }
-                buf.append(disp + ",");
+                buf.append(disp).append(",");
             }
 
             info.add(buf.toString());
@@ -703,7 +701,7 @@ public abstract class Channel {
         }
 
         // パスワード設定があるかどうか
-        if ( getPassword().length() > 0 ) {
+        if (!getPassword().isEmpty()) {
             if ( !forModerator ) {
                 info.add(Messages.channelInfoPassword());
             } else {
@@ -725,15 +723,15 @@ public abstract class Channel {
             info.add(Messages.channelInfoPrefix() + " " + ChatColor.WHITE + getFormat());
 
             // Muteリスト情報、5人ごとに表示する
-            if ( getMuted().size() > 0 ) {
+            if (!getMuted().isEmpty()) {
                 info.add(Messages.channelInfoMuted());
 
-                StringBuffer buf = new StringBuffer();
+                StringBuilder buf = new StringBuilder();
                 buf.append(Messages.channelInfoPrefix() + ChatColor.WHITE);
                 for ( int i=0; i<getMuted().size(); i++ ) {
                     if ( i%5 == 0 && i != 0 ) {
                         info.add(buf.toString());
-                        buf = new StringBuffer();
+                        buf = new StringBuilder();
                         buf.append(Messages.channelInfoPrefix() + ChatColor.WHITE);
                     }
                     buf.append(getMuted().get(i).getName() + ",");
@@ -743,15 +741,15 @@ public abstract class Channel {
             }
 
             // BANリスト情報、5人ごとに表示する
-            if ( getBanned().size() > 0 ) {
+            if (!getBanned().isEmpty()) {
                 info.add(Messages.channelInfoBanned());
 
-                StringBuffer buf = new StringBuffer();
+                StringBuilder buf = new StringBuilder();
                 buf.append(Messages.channelInfoPrefix() + ChatColor.WHITE);
                 for ( int i=0; i<getBanned().size(); i++ ) {
                     if ( i%5 == 0 && i != 0 ) {
                         info.add(buf.toString());
-                        buf = new StringBuffer();
+                        buf = new StringBuilder();
                         buf.append(Messages.channelInfoPrefix() + ChatColor.WHITE);
                     }
                     buf.append(getBanned().get(i).getName() + ",");

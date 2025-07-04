@@ -14,8 +14,8 @@ import com.github.ucchyocean.lc.channel.ChannelPlayer;
  */
 public class LunaChatChannelChatEvent extends LunaChatBaseCancellableEvent {
 
-    private ChannelPlayer player;
-    private String originalMessage;
+    private final ChannelPlayer player;
+    private final String originalMessage;
     private String ngMaskedMessage;
     private String messageFormat;
 

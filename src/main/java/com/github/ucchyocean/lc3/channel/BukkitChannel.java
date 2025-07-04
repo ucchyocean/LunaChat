@@ -56,7 +56,7 @@ public class BukkitChannel extends Channel {
 
         LunaChatConfig config = LunaChat.getConfig();
 
-        String originalMessage = new String(message);
+        String originalMessage = message;
 
         // 受信者を設定する
         List<ChannelMember> recipients = new ArrayList<ChannelMember>();
@@ -105,7 +105,7 @@ public class BukkitChannel extends Channel {
                 @Nullable World w = ((ChannelMemberBukkit)player).getWorld();
                 for ( ChannelMember recipient : recipients ) {
                     @Nullable World target = ((ChannelMemberBukkit)recipient).getWorld();
-                    if ( w != null && target != null && w.equals(target) ) {
+                    if (w != null && w.equals(target)) {
                         recipientsNew.add(recipient);
                     }
                 }
@@ -115,7 +115,7 @@ public class BukkitChannel extends Channel {
 
             // 受信者が自分以外いない場合は、メッセージを表示する
             if ( Messages.noRecipientMessage("", "").length > 0 && (
-                    recipients.size() == 0 ||
+                    recipients.isEmpty() ||
                     (recipients.size() == 1 &&
                      recipients.get(0).getName().equals(player.getName()) ) ) ) {
                 sendNoRecipientMessage = true;
@@ -138,9 +138,7 @@ public class BukkitChannel extends Channel {
         // hideされている場合は、受信対象者から抜く。
         LunaChatAPI api = LunaChat.getAPI();
         for ( ChannelMember cp : api.getHidelist(player) )  {
-            if ( recipients.contains(cp) ) {
-                recipients.remove(cp);
-            }
+            recipients.remove(cp);
         }
 
         // LunaChatChannelMessageEvent イベントコール
@@ -159,8 +157,8 @@ public class BukkitChannel extends Channel {
                 !isWorldRange() ) {
 
             String msg = config.isSendFormattedMessageToDynmap() ? message : originalMessage;
-            if ( player != null && player instanceof ChannelMemberBukkit
-                    && ((ChannelMemberBukkit)player).getPlayer() != null ) {
+            if (player instanceof ChannelMemberBukkit
+                    && ((ChannelMemberBukkit) player).getPlayer() != null) {
                 dynmap.chat(((ChannelMemberBukkit)player).getPlayer(), msg);
             } else {
                 dynmap.broadcast(msg);

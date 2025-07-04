@@ -187,7 +187,7 @@ public class LunaChatConfig {
         lang = config.getString("lang", "en");
         enableChannelChat = config.getBoolean("enableChannelChat", true);
         playerChatEventListenerPriority
-            = getEventPriority(config.getString("playerChatEventListenerPriority"), EventPriority.HIGHEST);
+            = getEventPriority(config.getString("playerChatEventListenerPriority"));
         noJoinAsGlobal = config.getBoolean("noJoinAsGlobal", true);
         loggingChat = config.getBoolean("loggingChat", true);
         displayChatOnConsole = config.getBoolean("displayChatOnConsole", true);
@@ -273,7 +273,7 @@ public class LunaChatConfig {
         bungeePassThroughMode = config.getBoolean("bungeePassThroughMode", false);
 
         // globalチャンネルが、使用可能なチャンネル名かどうかを調べる
-        if ( globalChannel != null && !globalChannel.equals("") &&
+        if ( globalChannel != null && !globalChannel.isEmpty() &&
                 !globalChannel.matches("[0-9a-zA-Z\\-_]{1,20}") ) {
 
             // コンソールに警告を表示する
@@ -617,13 +617,13 @@ public class LunaChatConfig {
 
     /**
      * 指定された文字列から、対応するEventPriorityを返す。
+     *
      * @param value 文字列
-     * @param def デフォルト
      * @return EventPriority
      */
-    private static EventPriority getEventPriority(String value, EventPriority def) {
+    private static EventPriority getEventPriority(String value) {
 
-        if ( value == null ) return def;
+        if ( value == null ) return EventPriority.HIGHEST;
 
         if ( value.equalsIgnoreCase("LOWEST") ) {
             return EventPriority.LOWEST;
@@ -637,6 +637,6 @@ public class LunaChatConfig {
             return EventPriority.HIGHEST;
         }
 
-        return def;
+        return EventPriority.HIGHEST;
     }
 }

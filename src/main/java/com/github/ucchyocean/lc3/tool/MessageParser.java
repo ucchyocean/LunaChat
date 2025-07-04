@@ -12,6 +12,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,13 +34,11 @@ public class MessageParser {
     private static final List<String> CLICKABLE_MESSAGES;
     static {
         CLICKABLE_MESSAGES = new ArrayList<>();
-        for ( String s : new String[] {
+        Collections.addAll(CLICKABLE_MESSAGES, new String[]{
                 "joinMessage", "quitMessage", "banMessage", "kickMessage",
                 "muteMessage", "banNGWordMessage", "kickNGWordMessage", "muteNGWordMessage", "banWithExpireMessage",
                 "muteWithExpireMessage", "pardonMessage", "unmuteMessage", "expiredBanMessage", "expiredMuteMessage",
-                "addModeratorMessage", "removeModeratorMessage", "noRecipientMessage", "listFormat", } ) {
-            CLICKABLE_MESSAGES.add(s);
-        }
+                "addModeratorMessage", "removeModeratorMessage", "noRecipientMessage", "listFormat",});
     }
 
     public static void main(String[] args) {
@@ -104,10 +103,10 @@ public class MessageParser {
                 keywords.add(matcher.group(1));
             }
 
-            String arguments = "";
+            StringBuilder arguments = new StringBuilder();
             for ( String keyword : keywords ) {
-                if ( arguments.length() > 0 ) arguments += ", ";
-                arguments += "Object " + keyword;
+                if (!arguments.isEmpty()) arguments.append(", ");
+                arguments.append("Object ").append(keyword);
             }
 
             // 出力
@@ -117,7 +116,7 @@ public class MessageParser {
                 result.add("     * " + value);
                 result.add("     */");
                 result.add(String.format(
-                        "    public static String %s(%s) {", key, arguments));
+                        "    public static String %s(%s) {", key, arguments.toString()));
                 result.add(String.format(
                         "        String msg = resources.getString(\"%s\");", key));
                 result.add(String.format(
@@ -142,7 +141,7 @@ public class MessageParser {
                 result.add("     * " + value);
                 result.add("     */");
                 result.add(String.format(
-                        "    public static BaseComponent[] %s(%s) {", key, arguments));
+                        "    public static BaseComponent[] %s(%s) {", key, arguments.toString()));
                 result.add(String.format(
                         "        String msg = resources.getString(\"%s\");", key));
                 result.add(String.format(

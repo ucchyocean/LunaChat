@@ -14,7 +14,7 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  */
 public class LunaChatBukkitPreChatEvent extends LunaChatBukkitBaseCancellableEvent {
 
-    private ChannelMember member;
+    private final ChannelMember member;
     private String message;
 
     public LunaChatBukkitPreChatEvent(String channelName, ChannelMember member, String message) {

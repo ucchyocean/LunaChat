@@ -135,12 +135,7 @@ public abstract class ChannelPlayer implements Comparable<ChannelPlayer> {
             String id = nameOrUuid.substring(1);
             return new ChannelPlayerUUID(id);
         }
-        ChannelPlayer player =
-                ChannelPlayerUUID.getChannelPlayerUUIDFromName(nameOrUuid);
-        if ( player != null ) {
-            return player;
-        }
-        return new ChannelPlayerName(nameOrUuid);
+        return ChannelPlayerUUID.getChannelPlayerUUIDFromName(nameOrUuid);
     }
 
     /**

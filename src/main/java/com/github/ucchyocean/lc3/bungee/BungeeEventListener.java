@@ -50,9 +50,9 @@ public class BungeeEventListener implements Listener {
 
     private static final int MAX_LIST_ITEMS = 8;
 
-    private LunaChatBungee parent;
-    private LunaChatConfig config;
-    private LunaChatAPI api;
+    private final LunaChatBungee parent;
+    private final LunaChatConfig config;
+    private final LunaChatAPI api;
 
     /**
      * コンストラクタ
@@ -142,7 +142,7 @@ public class BungeeEventListener implements Listener {
         forceJoinToForceJoinChannels(player);
 
         // グローバルチャンネル設定がある場合
-        if ( !config.getGlobalChannel().equals("") ) {
+        if (!config.getGlobalChannel().isEmpty()) {
             tryJoinToGlobalChannel(player);
         }
 
@@ -206,8 +206,7 @@ public class BungeeEventListener implements Listener {
         if ( msg == null ) return;
 
         // 受信者と発言者が一致しない場合は無視する
-        if ( event.getReceiver() instanceof ProxiedPlayer ) {
-            ProxiedPlayer receiver = (ProxiedPlayer)event.getReceiver();
+        if (event.getReceiver() instanceof ProxiedPlayer receiver) {
             if ( !receiver.getName().equals(msg.getMember().getName()) ) {
                 return;
             }
@@ -262,7 +261,7 @@ public class BungeeEventListener implements Listener {
 
         // 頭にglobalMarkerが付いている場合は、グローバル発言にする
         if ( config.getGlobalMarker() != null &&
-                !config.getGlobalMarker().equals("") &&
+                !config.getGlobalMarker().isEmpty() &&
                 message.startsWith(config.getGlobalMarker()) &&
                 message.length() > config.getGlobalMarker().length() ) {
 
@@ -323,7 +322,7 @@ public class BungeeEventListener implements Listener {
 
         LunaChatConfig config = LunaChat.getConfig();
 
-        if ( !config.getGlobalChannel().equals("") ) {
+        if (!config.getGlobalChannel().isEmpty()) {
             // グローバルチャンネル設定がある場合
 
             // グローバルチャンネルの取得、無ければ作成
@@ -354,7 +353,7 @@ public class BungeeEventListener implements Listener {
 
             // 一時的なJapanizeスキップが指定されているか確認する
             String marker = config.getNoneJapanizeMarker();
-            if ( !marker.equals("") && message.startsWith(marker) ) {
+            if (!marker.isEmpty() && message.startsWith(marker) ) {
                 message = message.substring(marker.length());
                 skipJapanize = true;
             }
@@ -373,7 +372,7 @@ public class BungeeEventListener implements Listener {
 
                 String japanize = Japanizer.japanize(Utility.stripColorCode(message), config.getJapanizeType(),
                         LunaChat.getAPI().getAllDictionary());
-                if ( japanize.length() > 0 ) {
+                if (!japanize.isEmpty()) {
 
                     // NGワードのマスク
                     japanize = maskNGWord(japanize, config.getNgwordCompiled());
@@ -382,7 +381,7 @@ public class BungeeEventListener implements Listener {
                     String japanizeFormat = config.getJapanizeDisplayLine() == 1 ?
                             config.getJapanizeLine1Format() :
                             "%msg\n" + config.getJapanizeLine2Format();
-                    String preMessage = new String(message);
+                    String preMessage = message;
                     message = japanizeFormat.replace("%msg", preMessage).replace("%japanize", japanize);
                 }
             }
@@ -539,9 +538,9 @@ public class BungeeEventListener implements Listener {
 
         // チャンネル一覧を取得して、参加人数でソートする
         ArrayList<Channel> channels = new ArrayList<>(api.getChannels());
-        Collections.sort(channels, new Comparator<Channel>() {
+        channels.sort(new Comparator<Channel>() {
             public int compare(Channel c1, Channel c2) {
-                if ( c1.getOnlineNum() == c2.getOnlineNum() ) return c1.getName().compareTo(c2.getName());
+                if (c1.getOnlineNum() == c2.getOnlineNum()) return c1.getName().compareTo(c2.getName());
                 return c2.getOnlineNum() - c1.getOnlineNum();
             }
         });

@@ -13,8 +13,8 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  */
 public class LunaChatBukkitChannelChatEvent extends LunaChatBukkitBaseCancellableEvent {
 
-    private ChannelMember member;
-    private String originalMessage;
+    private final ChannelMember member;
+    private final String originalMessage;
     private String ngMaskedMessage;
     private String messageFormat;
 

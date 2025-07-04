@@ -289,8 +289,7 @@ public class BukkitEventSender implements EventSenderInterface {
             return ChannelPlayer.getChannelPlayer(cm.toString());
         } else if ( cm instanceof ChannelMemberBukkitConsole ) {
             return new ChannelPlayerConsole(Bukkit.getConsoleSender());
-        } else if ( cm instanceof ChannelMemberBlock ) {
-            ChannelMemberBlock cmb = (ChannelMemberBlock)cm;
+        } else if (cm instanceof ChannelMemberBlock cmb) {
             if ( cmb.getBlockCommandSender() != null ) {
                 return new ChannelPlayerBlock(cmb.getBlockCommandSender());
             }
@@ -309,8 +308,7 @@ public class BukkitEventSender implements EventSenderInterface {
             return ChannelMember.getChannelMember(cp.toString());
         } else if ( cp instanceof ChannelPlayerConsole ) {
             return new ChannelMemberBukkitConsole(Bukkit.getConsoleSender());
-        } else if ( cp instanceof ChannelPlayerBlock ) {
-            ChannelPlayerBlock cpb = (ChannelPlayerBlock)cp;
+        } else if (cp instanceof ChannelPlayerBlock cpb) {
             if ( cpb.getBlockCommandSender() != null ) {
                 return new ChannelMemberBlock(cpb.getBlockCommandSender());
             }

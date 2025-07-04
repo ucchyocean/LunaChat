@@ -18,7 +18,7 @@ import net.md_5.bungee.api.plugin.Plugin;
  */
 public class LuckPermsBridge {
 
-    private LuckPerms api;
+    private final LuckPerms api;
 
     // コンストラクタは外から利用不可
     private LuckPermsBridge(LuckPerms api) {

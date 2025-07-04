@@ -18,7 +18,7 @@ import net.md_5.bungee.api.plugin.TabExecutor;
  */
 public class LunaChatCommandBungee extends Command implements TabExecutor {
 
-    private LunaChatCommand command;
+    private final LunaChatCommand command;
 
     /**
      * コンストラクタ

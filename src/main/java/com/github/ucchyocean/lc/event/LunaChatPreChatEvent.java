@@ -15,7 +15,7 @@ import com.github.ucchyocean.lc.channel.ChannelPlayer;
  */
 public class LunaChatPreChatEvent extends LunaChatBaseCancellableEvent {
 
-    private ChannelPlayer player;
+    private final ChannelPlayer player;
     private String message;
 
     public LunaChatPreChatEvent(String channelName, ChannelPlayer player, String message) {

@@ -23,10 +23,10 @@ import com.github.ucchyocean.lc3.member.ChannelMemberPlayer;
  */
 public class BukkitNormalChatJapanizeTask extends BukkitRunnable {
 
-    private ChannelMember player;
-    private AsyncPlayerChatEvent event;
+    private final ChannelMember player;
+    private final AsyncPlayerChatEvent event;
 
-    private JapanizeConvertTask task;
+    private final JapanizeConvertTask task;
 
     /**
      * コンストラクタ

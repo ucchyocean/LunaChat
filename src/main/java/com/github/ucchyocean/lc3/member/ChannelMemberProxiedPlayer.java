@@ -26,7 +26,7 @@ import net.md_5.bungee.api.connection.Server;
  */
 public class ChannelMemberProxiedPlayer extends ChannelMemberBungee {
 
-    private UUID id;
+    private final UUID id;
 
     /**
      * コンストラクタ

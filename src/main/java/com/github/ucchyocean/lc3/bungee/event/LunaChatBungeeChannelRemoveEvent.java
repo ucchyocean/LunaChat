@@ -13,7 +13,7 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  */
 public class LunaChatBungeeChannelRemoveEvent extends LunaChatBungeeBaseCancellableEvent {
 
-    private ChannelMember member;
+    private final ChannelMember member;
 
     public LunaChatBungeeChannelRemoveEvent(String channelName, ChannelMember member) {
         super(channelName);

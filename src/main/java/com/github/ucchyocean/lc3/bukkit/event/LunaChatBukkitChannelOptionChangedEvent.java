@@ -16,7 +16,7 @@ import com.github.ucchyocean.lc3.member.ChannelMember;
  */
 public class LunaChatBukkitChannelOptionChangedEvent extends LunaChatBukkitBaseCancellableEvent {
 
-    private ChannelMember member;
+    private final ChannelMember member;
     private Map<String, String> options;
 
     public LunaChatBukkitChannelOptionChangedEvent(String channelName,

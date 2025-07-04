@@ -162,17 +162,14 @@ public class LunaChatBukkit extends JavaPlugin implements PluginInterface {
     public boolean onCommand(
             CommandSender sender, Command command, String label, String[] args) {
 
-        if ( command.getName().equals("lunachat") ) {
-            return lunachatCommand.execute(ChannelMember.getChannelMember(sender), label, args);
-        } else if ( command.getName().equals("tell") ) {
-            return messageCommand.execute(ChannelMember.getChannelMember(sender), label, args);
-        } else if ( command.getName().equals("reply") ) {
-            return replyCommand.execute(ChannelMember.getChannelMember(sender), label, args);
-        } else if ( command.getName().equals("japanize") ) {
-            return lcjapanizeCommand.execute(ChannelMember.getChannelMember(sender), label, args);
-        }
+        return switch (command.getName()) {
+            case "lunachat" -> lunachatCommand.execute(ChannelMember.getChannelMember(sender), label, args);
+            case "tell" -> messageCommand.execute(ChannelMember.getChannelMember(sender), label, args);
+            case "reply" -> replyCommand.execute(ChannelMember.getChannelMember(sender), label, args);
+            case "japanize" -> lcjapanizeCommand.execute(ChannelMember.getChannelMember(sender), label, args);
+            default -> false;
+        };
 
-        return false;
     }
 
     /**

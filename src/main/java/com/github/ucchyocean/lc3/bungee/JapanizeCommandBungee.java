@@ -17,7 +17,7 @@ import net.md_5.bungee.api.plugin.Command;
  */
 public class JapanizeCommandBungee extends Command {
 
-    private LunaChatJapanizeCommand command;
+    private final LunaChatJapanizeCommand command;
 
     /**
      * コンストラクタ
